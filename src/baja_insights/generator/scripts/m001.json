@@ -1,0 +1,89 @@
+{
+  "_nota": "Guion del partido de demo. Los momentos clave salen de beats_source tal cual; el resto lo genera el simulador con la semilla. form y phases sesgan el relleno para que la historia sea coherente.",
+  "match_id": "m001",
+  "beats_source": "mocks/events_sample.json",
+  "lock_scoreline": true,
+  "phases": [
+    {
+      "team": "Real Cardón",
+      "from": "00:00",
+      "to": "45:00",
+      "pass_acc": 0.86,
+      "tempo": 1.2,
+      "press": 0.22,
+      "directness": 0.35
+    },
+    {
+      "team": "Bahía FC",
+      "from": "00:00",
+      "to": "45:00",
+      "pass_acc": 0.72,
+      "tempo": 0.9,
+      "press": 0.26,
+      "directness": 0.55
+    },
+    {
+      "team": "Bahía FC",
+      "from": "48:00",
+      "to": "90:00",
+      "pass_acc": 0.74,
+      "tempo": 1.05,
+      "press": 0.45,
+      "directness": 0.6
+    },
+    {
+      "team": "Real Cardón",
+      "from": "48:00",
+      "to": "90:00",
+      "pass_acc": 0.82,
+      "tempo": 1.0,
+      "press": 0.22,
+      "directness": 0.45
+    }
+  ],
+  "form": [
+    {
+      "player": "J. Torres",
+      "from": "22:00",
+      "to": "90:00",
+      "press": 1.9,
+      "recover": 1.7,
+      "duel_win": 1.4
+    },
+    {
+      "player": "F. Cota",
+      "from": "00:00",
+      "to": "90:00",
+      "recover": 1.25,
+      "duel": 1.8,
+      "duel_win": 1.5,
+      "receive": 1.2
+    },
+    {
+      "player": "K. Rosas",
+      "from": "00:00",
+      "to": "90:00",
+      "receive": 1.8,
+      "pass_lines": 2.0
+    },
+    {
+      "player": "R. Salgado",
+      "from": "00:00",
+      "to": "90:00",
+      "receive": 1.0,
+      "pass_lines": 1.0
+    },
+    {
+      "player": "D. Mena",
+      "from": "25:00",
+      "to": "90:00",
+      "duel_win": 1.4
+    },
+    {
+      "player": "D. Verdugo",
+      "from": "00:00",
+      "to": "25:00",
+      "duel_win": 1.5
+    }
+  ]
+}
