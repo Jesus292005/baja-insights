@@ -36,7 +36,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": -0.35
+      "bar": -0.5
     }
   },
   {
@@ -56,7 +56,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": -0.35
+      "bar": -0.5
     }
   },
   {
@@ -76,7 +76,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": -0.35
+      "bar": -0.5
     }
   },
   {
@@ -96,7 +96,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": -0.35
+      "bar": -0.5
     }
   },
   {
@@ -121,8 +121,8 @@
         "S. Leyva"
       ],
       "credit": [
-        0.15,
-        0.35,
+        0.2,
+        0.3,
         0.25,
         0.25
       ]
@@ -150,8 +150,8 @@
         "S. Leyva"
       ],
       "credit": [
-        0.15,
-        0.35,
+        0.2,
+        0.3,
         0.25,
         0.25
       ]
@@ -179,8 +179,8 @@
         "S. Leyva"
       ],
       "credit": [
-        0.15,
-        0.35,
+        0.2,
+        0.3,
         0.25,
         0.25
       ]
@@ -208,8 +208,8 @@
         "S. Leyva"
       ],
       "credit": [
-        0.15,
-        0.35,
+        0.2,
+        0.3,
         0.25,
         0.25
       ]
@@ -357,7 +357,7 @@
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "score": 6.2
+      "mvp_score": 6.2
     }
   },
   {
@@ -386,7 +386,7 @@
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "score": 6.2
+      "mvp_score": 6.2
     }
   },
   {
@@ -415,7 +415,7 @@
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "score": 6.2
+      "mvp_score": 6.2
     }
   },
   {
@@ -444,7 +444,7 @@
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "score": 6.2
+      "mvp_score": 6.2
     }
   },
   {
@@ -484,7 +484,7 @@
     "language": "es",
     "type": "card_upgrade",
     "title": "+2 Visión · R. Salgado",
-    "text": "Pase de 27.9 m bajo presión que rompió 2 líneas. Dificultad 0.82. Terminó en remate de Ramírez.",
+    "text": "Pase de 27.9 m bajo presión que rompió 2 líneas. Dificultad 0.88. Terminó en remate de Ramírez.",
     "card": {
       "player": "R. Salgado",
       "team": "Bahía FC",
@@ -532,7 +532,7 @@
     "language": "en",
     "type": "card_upgrade",
     "title": "+2 Vision · R. Salgado",
-    "text": "27.9 m pass under pressure breaking 2 lines. Difficulty 0.82. Led to a Ramírez shot.",
+    "text": "27.9 m pass under pressure breaking 2 lines. Difficulty 0.88. Led to a Ramírez shot.",
     "card": {
       "player": "R. Salgado",
       "team": "Bahía FC",
@@ -680,7 +680,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": 0.15
+      "bar": 0.1
     }
   },
   {
@@ -700,7 +700,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": 0.15
+      "bar": 0.1
     }
   },
   {
@@ -720,7 +720,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": 0.15
+      "bar": 0.1
     }
   },
   {
@@ -740,7 +740,7 @@
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
-      "bar": 0.15
+      "bar": 0.1
     }
   },
   {
@@ -879,7 +879,7 @@
     "text": "Bahía adelantó sus líneas y ahora le roba la pelota a Cardón en su propia cancha.",
     "data": {
       "label": "pressure_shift",
-      "avg_line_height_m": 58.4
+      "def_action_height_m": 58.4
     }
   },
   {
@@ -895,10 +895,10 @@
     "language": "es",
     "type": "team_phase",
     "title": "Cambio de presión",
-    "text": "5 recuperaciones en mitad rival entre el 48 y el 58, contra 1.2 por tramo en el primer tiempo. Línea media de 47.9 a 58.4 m.",
+    "text": "5 recuperaciones en mitad rival entre el 48 y el 58, contra 1.2 por tramo en el primer tiempo. Altura media de sus acciones defensivas de 47.9 a 58.4 m.",
     "data": {
       "label": "pressure_shift",
-      "avg_line_height_m": 58.4
+      "def_action_height_m": 58.4
     }
   },
   {
@@ -917,7 +917,7 @@
     "text": "Bahía pushed up and are now winning the ball in Cardón's half.",
     "data": {
       "label": "pressure_shift",
-      "avg_line_height_m": 58.4
+      "def_action_height_m": 58.4
     }
   },
   {
@@ -933,10 +933,10 @@
     "language": "en",
     "type": "team_phase",
     "title": "Pressure shift",
-    "text": "5 recoveries in the opponent's half from 48 to 58 vs 1.2 per window in the first half. Line height 47.9 to 58.4 m.",
+    "text": "5 recoveries in the opponent's half from 48 to 58 vs 1.2 per window in the first half. Average defensive action height 47.9 to 58.4 m.",
     "data": {
       "label": "pressure_shift",
-      "avg_line_height_m": 58.4
+      "def_action_height_m": 58.4
     }
   },
   {
@@ -956,15 +956,15 @@
     "data": {
       "chain": [
         "F. Cota",
-        "R. Salgado",
         "J. Torres",
+        "R. Salgado",
         "M. Ramírez"
       ],
       "credit": [
-        0.15,
+        0.18,
         0.25,
-        0.3,
-        0.3
+        0.35,
+        0.22
       ],
       "invisible_assist": "J. Torres"
     }
@@ -982,19 +982,19 @@
     "language": "es",
     "type": "goal_analysis",
     "title": "Cadena del gol 1-1",
-    "text": "Cota recupera, Salgado rompe 2 líneas, Torres arrastra a Cárdenas y abre 9.5 m, Ramírez define. xG 0.41. Crédito de Torres 30% sin tocar el balón.",
+    "text": "Cota recupera, Torres arrastra a Cárdenas y abre 9.5 m, Salgado rompe 2 líneas y Ramírez define. xG 0.41. Crédito de Torres 25% sin tocar el balón.",
     "data": {
       "chain": [
         "F. Cota",
-        "R. Salgado",
         "J. Torres",
+        "R. Salgado",
         "M. Ramírez"
       ],
       "credit": [
-        0.15,
+        0.18,
         0.25,
-        0.3,
-        0.3
+        0.35,
+        0.22
       ],
       "invisible_assist": "J. Torres"
     }
@@ -1016,15 +1016,15 @@
     "data": {
       "chain": [
         "F. Cota",
-        "R. Salgado",
         "J. Torres",
+        "R. Salgado",
         "M. Ramírez"
       ],
       "credit": [
-        0.15,
+        0.18,
         0.25,
-        0.3,
-        0.3
+        0.35,
+        0.22
       ],
       "invisible_assist": "J. Torres"
     }
@@ -1042,19 +1042,19 @@
     "language": "en",
     "type": "goal_analysis",
     "title": "Goal chain 1-1",
-    "text": "Cota recovers, Salgado breaks 2 lines, Torres drags Cárdenas to open 9.5 m, Ramírez finishes. xG 0.41. Torres 30% credit without touching the ball.",
+    "text": "Cota recovers, Torres drags Cárdenas to open 9.5 m, Salgado breaks 2 lines, Ramírez finishes. xG 0.41. Torres 25% credit without touching the ball.",
     "data": {
       "chain": [
         "F. Cota",
-        "R. Salgado",
         "J. Torres",
+        "R. Salgado",
         "M. Ramírez"
       ],
       "credit": [
-        0.15,
+        0.18,
         0.25,
-        0.3,
-        0.3
+        0.35,
+        0.22
       ],
       "invisible_assist": "J. Torres"
     }
@@ -1194,17 +1194,17 @@
         {
           "rank": 1,
           "player": "J. Torres",
-          "score": 8.9
+          "mvp_score": 8.9
         },
         {
           "rank": 2,
           "player": "F. Cota",
-          "score": 8.1
+          "mvp_score": 8.1
         },
         {
           "rank": 3,
           "player": "K. Rosas",
-          "score": 7.0
+          "mvp_score": 7.0
         }
       ]
     }
@@ -1222,23 +1222,23 @@
     "language": "es",
     "type": "top3",
     "title": "Top 3 del partido",
-    "text": "1. Torres 8.9, 5 recuperaciones en campo rival y el desmarque del gol. 2. Cota 8.1, 9 recuperaciones, el doble de lo esperado. 3. Rosas 7.0, 4 pases que rompieron líneas.",
+    "text": "1. Torres 8.9, 5 recuperaciones en campo rival y el desmarque del gol. 2. Cota 8.1, 9 recuperaciones, 2 más de lo esperado para su rol. 3. Rosas 7.0, 4 pases que rompieron líneas.",
     "data": {
       "cards": [
         {
           "rank": 1,
           "player": "J. Torres",
-          "score": 8.9
+          "mvp_score": 8.9
         },
         {
           "rank": 2,
           "player": "F. Cota",
-          "score": 8.1
+          "mvp_score": 8.1
         },
         {
           "rank": 3,
           "player": "K. Rosas",
-          "score": 7.0
+          "mvp_score": 7.0
         }
       ]
     }
@@ -1262,17 +1262,17 @@
         {
           "rank": 1,
           "player": "J. Torres",
-          "score": 8.9
+          "mvp_score": 8.9
         },
         {
           "rank": 2,
           "player": "F. Cota",
-          "score": 8.1
+          "mvp_score": 8.1
         },
         {
           "rank": 3,
           "player": "K. Rosas",
-          "score": 7.0
+          "mvp_score": 7.0
         }
       ]
     }
@@ -1290,23 +1290,23 @@
     "language": "en",
     "type": "top3",
     "title": "Match top 3",
-    "text": "1. Torres 8.9, 5 recoveries in the opponent's half and the run behind the goal. 2. Cota 8.1, 9 recoveries, twice his role baseline. 3. Rosas 7.0, 4 line-breaking passes.",
+    "text": "1. Torres 8.9, 5 recoveries in the opponent's half and the run behind the goal. 2. Cota 8.1, 9 recoveries, 2 above his role baseline. 3. Rosas 7.0, 4 line-breaking passes.",
     "data": {
       "cards": [
         {
           "rank": 1,
           "player": "J. Torres",
-          "score": 8.9
+          "mvp_score": 8.9
         },
         {
           "rank": 2,
           "player": "F. Cota",
-          "score": 8.1
+          "mvp_score": 8.1
         },
         {
           "rank": 3,
           "player": "K. Rosas",
-          "score": 7.0
+          "mvp_score": 7.0
         }
       ]
     }

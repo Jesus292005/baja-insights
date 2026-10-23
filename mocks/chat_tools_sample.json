@@ -1,19 +1,38 @@
 {
-  "_nota": "Funciones que expone el motor para el agente Pregúntale al partido. El agente solo responde con lo que devuelven.",
+  "_nota": "Funciones que expone el motor para el agente Pregúntale al partido. El agente solo responde con lo que devuelven. Contrato v1.",
+  "contract_version": "1.0",
   "tools": [
     {
-      "name": "get_mvp_ranking",
-      "description": "Ranking MVP en un momento del partido.",
+      "name": "get_match_state",
+      "description": "Marcador, goles con su goal_event_id, xG y posesión acumulados hasta un momento del partido. Úsala primero si necesitas el id de un gol.",
       "parameters": {
         "type": "object",
         "properties": {
           "at": {
             "type": "string",
-            "description": "mm:ss"
+            "description": "Momento del partido en MM:SS (por ejemplo 63:09). También acepta segundos del partido como número."
+          }
+        },
+        "required": [
+          "at"
+        ]
+      }
+    },
+    {
+      "name": "get_mvp_ranking",
+      "description": "Ranking MVP en un momento del partido. Devuelve {at, at_s, ranking: [{rank, player, team, position, mvp_score}]}.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "description": "Momento del partido en MM:SS (por ejemplo 63:09). También acepta segundos del partido como número."
           },
           "top": {
             "type": "integer",
-            "default": 5
+            "default": 5,
+            "minimum": 1,
+            "maximum": 22
           }
         },
         "required": [
@@ -23,15 +42,17 @@
     },
     {
       "name": "get_player_summary",
-      "description": "Estadísticas acumuladas, carta y jugadas clave de un jugador.",
+      "description": "Estadísticas acumuladas, comparación con su rol, carta actual con sus cambios y jugadas clave de un jugador. Los datos que el sistema no registra aparecen en not_tracked.",
       "parameters": {
         "type": "object",
         "properties": {
           "player": {
-            "type": "string"
+            "type": "string",
+            "description": "Nombre como aparece en el partido, por ejemplo J. Torres. También acepta solo el apellido."
           },
           "at": {
-            "type": "string"
+            "type": "string",
+            "description": "Momento del partido en MM:SS (por ejemplo 63:09). También acepta segundos del partido como número."
           }
         },
         "required": [
@@ -42,7 +63,7 @@
     },
     {
       "name": "get_duel",
-      "description": "Estado del duelo entre dos jugadores.",
+      "description": "Estado del duelo entre dos jugadores rivales, con la misma forma que los facts de un insight duel_state. player_a siempre es el jugador local.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -53,7 +74,8 @@
             "type": "string"
           },
           "at": {
-            "type": "string"
+            "type": "string",
+            "description": "Momento del partido en MM:SS (por ejemplo 63:09). También acepta segundos del partido como número."
           }
         },
         "required": [
@@ -65,7 +87,7 @@
     },
     {
       "name": "get_team_phase",
-      "description": "Posesión, presión y ritmo de un equipo en una ventana de tiempo.",
+      "description": "Posesión, precisión de pase, ritmo, tiros, xG, recuperaciones en campo rival y altura media de las acciones defensivas de un equipo en una ventana de tiempo.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -73,10 +95,12 @@
             "type": "string"
           },
           "from": {
-            "type": "string"
+            "type": "string",
+            "description": "Momento del partido en MM:SS (por ejemplo 63:09). También acepta segundos del partido como número."
           },
           "to": {
-            "type": "string"
+            "type": "string",
+            "description": "Momento del partido en MM:SS (por ejemplo 63:09). También acepta segundos del partido como número."
           }
         },
         "required": [
@@ -88,7 +112,7 @@
     },
     {
       "name": "get_goal_chain",
-      "description": "Cadena de acciones de un gol con el crédito de cada jugador.",
+      "description": "Cadena de acciones de un gol con el crédito de cada jugador, con la misma forma que los facts de un insight goal_chain.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -118,23 +142,33 @@
             "at": "35:00",
             "top": 3
           },
-          "result": [
-            {
-              "rank": 1,
-              "player": "J. Torres",
-              "score": 6.2
-            },
-            {
-              "rank": 2,
-              "player": "K. Rosas",
-              "score": 5.9
-            },
-            {
-              "rank": 3,
-              "player": "R. Salgado",
-              "score": 5.1
-            }
-          ]
+          "result": {
+            "at": "35:00",
+            "at_s": 2100,
+            "ranking": [
+              {
+                "rank": 1,
+                "player": "J. Torres",
+                "team": "Bahía FC",
+                "position": "ED",
+                "mvp_score": 6.2
+              },
+              {
+                "rank": 2,
+                "player": "K. Rosas",
+                "team": "Real Cardón",
+                "position": "MC",
+                "mvp_score": 5.9
+              },
+              {
+                "rank": 3,
+                "player": "R. Salgado",
+                "team": "Bahía FC",
+                "position": "MC",
+                "mvp_score": 5.1
+              }
+            ]
+          }
         },
         {
           "name": "get_player_summary",
@@ -143,14 +177,77 @@
             "at": "35:00"
           },
           "result": {
-            "recoveries": 3,
-            "recoveries_in_opp_half": 3,
-            "expected_for_role": 0.9,
-            "shots": 1,
+            "player": "J. Torres",
+            "team": "Bahía FC",
+            "position": "ED",
+            "at": "35:00",
+            "at_s": 2100,
+            "minutes_played": 35.0,
+            "mvp_rank": 1,
+            "mvp_score": 6.2,
+            "vs_role": 0.25,
+            "stats": {
+              "passes": 9,
+              "passes_completed": 7,
+              "progressive_passes": 1,
+              "line_breaking_passes": 0,
+              "key_passes": 0,
+              "assists": 0,
+              "shots": 1,
+              "shots_on_target": 0,
+              "xg": 0.07,
+              "goals": 0,
+              "recoveries": 3,
+              "recoveries_opp_half": 3,
+              "tackles": 0,
+              "tackles_won": 0,
+              "duels_total": 2,
+              "duels_won": 1,
+              "pressures": 4,
+              "fouls_committed": 0,
+              "fouls_received": 0,
+              "off_ball_runs": 0
+            },
+            "expected_for_role": {
+              "duels_won": 1.75,
+              "recoveries": 0.97,
+              "progressive_passes": 0.97,
+              "key_passes": 0.62
+            },
+            "card": {
+              "ritmo": 84,
+              "disparo": 68,
+              "vision": 66,
+              "regate": 78,
+              "defensa": 60,
+              "fisico": 66,
+              "sin_balon": 68,
+              "overall": 70
+            },
+            "card_changes": [
+              {
+                "attribute": "defensa",
+                "from": 58,
+                "to": 60,
+                "delta": 2,
+                "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+                "overall_from": 70,
+                "overall_to": 70,
+                "event_id": 739,
+                "t_s": 2020
+              }
+            ],
             "key_events": [
-              531,
+              739,
               642,
-              739
+              531
+            ],
+            "not_tracked": [
+              "distance_km",
+              "sprints",
+              "top_speed_kmh",
+              "heatmap",
+              "touches_off_ball"
             ]
           }
         }
@@ -174,10 +271,50 @@
             "to": "40:00"
           },
           "result": {
+            "team": "Real Cardón",
+            "from": "00:00",
+            "to": "40:00",
             "possession_pct": 59,
             "pass_accuracy_pct": 87,
+            "passes": 212,
+            "passes_per_min": 5.3,
+            "shots": 4,
             "shots_on_target": 2,
-            "xg": 0.52
+            "xg": 0.52,
+            "recoveries_opp_half": 3,
+            "def_action_height_m": 41.2
+          }
+        },
+        {
+          "name": "get_match_state",
+          "arguments": {
+            "at": "40:00"
+          },
+          "result": {
+            "at": "40:00",
+            "at_s": 2400,
+            "period": 1,
+            "scoreline": {
+              "home": 0,
+              "away": 1
+            },
+            "goals": [
+              {
+                "event_id": 393,
+                "t_s": 1060,
+                "team": "Real Cardón",
+                "scorer": "S. Leyva",
+                "assist": "L. Montaño"
+              }
+            ],
+            "xg": {
+              "home": 0.36,
+              "away": 0.52
+            },
+            "possession_pct": {
+              "home": 41,
+              "away": 59
+            }
           }
         },
         {
@@ -186,14 +323,45 @@
             "goal_event_id": 393
           },
           "result": {
+            "scoreline": {
+              "home": 0,
+              "away": 1
+            },
             "scorer": "S. Leyva",
+            "assist": "L. Montaño",
+            "xg": 0.38,
+            "duration_s": 18,
             "chain": [
-              "V. Meza",
-              "K. Rosas",
-              "L. Montaño",
-              "S. Leyva"
+              {
+                "event_id": 388,
+                "player": "V. Meza",
+                "action": "recuperación",
+                "credit": 0.2,
+                "t_s": 1042
+              },
+              {
+                "event_id": 390,
+                "player": "K. Rosas",
+                "action": "pase que rompió 2 líneas",
+                "credit": 0.3,
+                "t_s": 1051
+              },
+              {
+                "event_id": 391,
+                "player": "L. Montaño",
+                "action": "centro",
+                "credit": 0.25,
+                "t_s": 1058
+              },
+              {
+                "event_id": 392,
+                "player": "S. Leyva",
+                "action": "remate",
+                "credit": 0.25,
+                "t_s": 1060
+              }
             ],
-            "key": "pase de Rosas que rompió 2 líneas"
+            "invisible_assist": null
           }
         }
       ],
@@ -216,12 +384,17 @@
             "at": "46:00"
           },
           "result": {
-            "bar": 0.15,
+            "player_a": "D. Mena",
+            "player_b": "D. Verdugo",
+            "bar": 0.1,
             "a_vs_role": 0.3,
             "b_vs_role": 0.1,
             "duels_won_a": 2,
             "duels_won_b": 1,
-            "chances_created_b": 1
+            "direct_duels": 3,
+            "chances_created_a": 0,
+            "chances_created_b": 1,
+            "flipped": false
           }
         }
       ],
@@ -244,13 +417,73 @@
             "to": "60:00"
           },
           "result": {
+            "team": "Bahía FC",
+            "from": "48:00",
+            "to": "60:00",
+            "possession_pct": 49,
+            "pass_accuracy_pct": 79,
+            "passes": 49,
+            "passes_per_min": 4.1,
+            "shots": 2,
+            "shots_on_target": 1,
+            "xg": 0.31,
             "recoveries_opp_half": 5,
-            "avg_line_height_m": 58.4,
-            "shots": 2
+            "def_action_height_m": 58.4
           }
         }
       ],
       "answer": "No hago predicciones, pero sí te digo qué necesita cada equipo. Bahía está presionando mucho más arriba que en el primer tiempo, con 5 robos en campo rival, y si lo sostiene va a seguir generando llegadas. Cardón necesita volver a quedarse con la pelota para bajar ese ritmo."
+    },
+    {
+      "at": "65:00",
+      "user_profile": {
+        "mode": "fan",
+        "language": "es",
+        "favorite_team": null
+      },
+      "question": "¿Cómo va el partido?",
+      "tool_calls": [
+        {
+          "name": "get_match_state",
+          "arguments": {
+            "at": "65:00"
+          },
+          "result": {
+            "at": "65:00",
+            "at_s": 3900,
+            "period": 2,
+            "scoreline": {
+              "home": 1,
+              "away": 1
+            },
+            "goals": [
+              {
+                "event_id": 393,
+                "t_s": 1060,
+                "team": "Real Cardón",
+                "scorer": "S. Leyva",
+                "assist": "L. Montaño"
+              },
+              {
+                "event_id": 1357,
+                "t_s": 3789,
+                "team": "Bahía FC",
+                "scorer": "M. Ramírez",
+                "assist": "R. Salgado"
+              }
+            ],
+            "xg": {
+              "home": 0.98,
+              "away": 0.71
+            },
+            "possession_pct": {
+              "home": 45,
+              "away": 55
+            }
+          }
+        }
+      ],
+      "answer": "Van 1-1. Cardón se adelantó en el 17 con gol de Leyva y Bahía empató en el 63 con Ramírez. Desde el medio tiempo Bahía viene generando más peligro, 0.98 de xG contra 0.71."
     },
     {
       "at": "70:00",
@@ -268,10 +501,89 @@
             "at": "70:00"
           },
           "result": {
-            "recoveries": 4,
-            "shots": 1,
-            "off_ball_runs": 1,
-            "distance_km": null
+            "player": "J. Torres",
+            "team": "Bahía FC",
+            "position": "ED",
+            "at": "70:00",
+            "at_s": 4200,
+            "minutes_played": 70.0,
+            "mvp_rank": 1,
+            "mvp_score": 7.9,
+            "vs_role": 0.4,
+            "stats": {
+              "passes": 21,
+              "passes_completed": 16,
+              "progressive_passes": 3,
+              "line_breaking_passes": 1,
+              "key_passes": 1,
+              "assists": 0,
+              "shots": 1,
+              "shots_on_target": 0,
+              "xg": 0.07,
+              "goals": 0,
+              "recoveries": 4,
+              "recoveries_opp_half": 4,
+              "tackles": 0,
+              "tackles_won": 0,
+              "duels_total": 3,
+              "duels_won": 2,
+              "pressures": 9,
+              "fouls_committed": 0,
+              "fouls_received": 1,
+              "off_ball_runs": 1
+            },
+            "expected_for_role": {
+              "duels_won": 3.5,
+              "recoveries": 1.94,
+              "progressive_passes": 1.94,
+              "key_passes": 1.24
+            },
+            "card": {
+              "ritmo": 84,
+              "disparo": 68,
+              "vision": 66,
+              "regate": 78,
+              "defensa": 60,
+              "fisico": 66,
+              "sin_balon": 71,
+              "overall": 70
+            },
+            "card_changes": [
+              {
+                "attribute": "defensa",
+                "from": 58,
+                "to": 60,
+                "delta": 2,
+                "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+                "overall_from": 70,
+                "overall_to": 70,
+                "event_id": 739,
+                "t_s": 2020
+              },
+              {
+                "attribute": "sin_balon",
+                "from": 68,
+                "to": 71,
+                "delta": 3,
+                "reason": "arrastró al central y abrió el espacio del gol",
+                "overall_from": 70,
+                "overall_to": 70,
+                "event_id": 1357,
+                "t_s": 3789
+              }
+            ],
+            "key_events": [
+              1353,
+              739,
+              642
+            ],
+            "not_tracked": [
+              "distance_km",
+              "sprints",
+              "top_speed_kmh",
+              "heatmap",
+              "touches_off_ball"
+            ]
           }
         }
       ],

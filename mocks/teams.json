@@ -1,4 +1,5 @@
 {
+  "contract_version": "1.0",
   "match": {
     "match_id": "m001",
     "home": "Bahía FC",
@@ -6,7 +7,7 @@
     "venue": "Estadio Punta Morro",
     "competition": "Liga Baja (ficticia)",
     "kickoff_local": "2026-10-24T19:00:00-07:00",
-    "final_score": {
+    "final_scoreline": {
       "home": 1,
       "away": 1
     }
@@ -18,7 +19,7 @@
     ],
     "origin": "esquina inferior izquierda",
     "attack_direction": "Bahía FC ataca siempre hacia x=105 y Real Cardón hacia x=0, en ambos tiempos, para simplificar",
-    "clock": "minuto y segundo continuos del partido, sin tiempo agregado; el segundo tiempo arranca en 45:00",
+    "clock": "minuto y segundo continuos del partido, sin tiempo agregado; el segundo tiempo arranca en 45:00. t_s = minute * 60 + second",
     "positions": {
       "POR": "portero",
       "LD": "lateral derecho",
@@ -29,7 +30,8 @@
       "ED": "extremo derecho",
       "EI": "extremo izquierdo",
       "DC": "delantero centro"
-    }
+    },
+    "possession": "possession_id pertenece al equipo con el balón. Las acciones defensivas (pressure, tackle, foul, duel del defensor) llevan el possession_id del rival. Una recovery abre una posesión nueva para quien recupera."
   },
   "teams": [
     {

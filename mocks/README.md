@@ -1,6 +1,6 @@
-# Datos de ejemplo de Baja-Insights
+# Datos de ejemplo de Baja-Insights, contrato v1
 
-Estos archivos sirven para que cada integrante avance **sin esperar a los demás**. Son datos escritos a mano que respetan los contratos acordados. Cuando el motor real esté listo, solo se cambia la fuente de datos.
+Estos archivos sirven para que cada integrante avance **sin esperar a los demás**. Son datos escritos a mano que respetan los esquemas de `contracts/`. El partido real generado por el motor está en `data/m001/` con la misma forma, así que cambiar de fuente es cambiar una ruta.
 
 El partido de ejemplo es **Bahía FC 1-1 Real Cardón**. Equipos, jugadores y estadio son ficticios.
 
@@ -23,15 +23,15 @@ El partido de ejemplo es **Bahía FC 1-1 Real Cardón**. Equipos, jugadores y es
 | **events_sample.jsonl** | Los mismos eventos, uno por línea, para simular el streaming | Integrante 1 |
 | **insights_sample.json** | 15 insights como los que producirá el motor | Integrante 2 para construir los agentes |
 | **overlays_sample.json** | 53 órdenes de gráfico en cuatro variantes, aficionado y analista en español e inglés | Integrante 3 para construir la interfaz |
-| **chat_tools_sample.json** | Funciones de consulta para Pregúntale al partido y 5 conversaciones de ejemplo | Integrante 2 y el chat de la interfaz |
+| **chat_tools_sample.json** | Las 6 funciones de consulta de Pregúntale al partido y 6 conversaciones de ejemplo | Integrante 2 y el chat de la interfaz |
 
 ---
 
 ## Cómo usarlos
 
-**Integrante 1, motor.** Su meta es que el generador y el motor produzcan archivos con exactamente esta forma. Los insights de ejemplo sirven como prueba. Si el motor recibe estos eventos, debería producir algo parecido a estos insights.
+**Integrante 1, motor.** El generador y el motor ya producen archivos con exactamente esta forma. `tests/test_engine.py` comprueba que, al recibir estos eventos, el motor reproduce las cadenas de gol, la subida de Torres al primer lugar y las cartas de estos insights.
 
-**Integrante 2, agentes.** Cargar `insights_sample.json` y mandarlos uno por uno al curador como si llegaran en vivo. La salida de los agentes debe tener la forma de `overlays_sample.json`. Para el chat, implementar las funciones de `chat_tools_sample.json` leyendo los archivos de ejemplo y usar las conversaciones como casos de prueba.
+**Integrante 2, agentes.** Cargar `insights_sample.json` y mandarlos uno por uno al curador como si llegaran en vivo. La salida de los agentes debe tener la forma de `overlays_sample.json`. Las funciones del chat ya están implementadas en `src/baja_insights/engine/tools.py`. Usa las conversaciones de `chat_tools_sample.json` como casos de prueba.
 
 **Integrante 3, interfaz.** Reproducir `overlays_sample.json` con un reloj simulado. Mostrar cada orden cuando `show_at_s` coincide con el reloj, filtrando por el `mode` y el `language` elegidos. Las órdenes con `mode` y `language` en `all` se muestran siempre. Con esto se puede construir la interfaz completa, incluido el cambio de modo e idioma.
 
@@ -49,59 +49,12 @@ El partido de ejemplo es **Bahía FC 1-1 Real Cardón**. Equipos, jugadores y es
 
 ---
 
-## Cambios a los esquemas que hay que aprobar hoy
+## Cambios respecto a la versión anterior
 
-Para construir estos ejemplos hizo falta agregar algunos campos. Revísenlos juntos y, si están de acuerdo, quedan como contrato.
+La lista completa, con el motivo de cada cambio y los números que se recalcularon, está en `docs/cambios-contrato-v1.md`. La referencia de todos los campos está en `contracts/README.md`.
 
-**Evento de entrada.** Campos nuevos respecto a la propuesta.
+Para revisar que un archivo cumpla el contrato:
 
-| Campo | Para qué | Tipos de evento |
-| --- | --- | --- |
-| **period** | Primer o segundo tiempo | Todos |
-| **receiver** | A quién iba el pase, para reconstruir la cadena del gol | pass |
-| **opponent** | Rival directo, para los duelos | duel, tackle |
-| **target** | A quién se presionó | pressure |
-| **xg** | Goles esperados del tiro | shot |
-| **cross** | Si el pase fue centro | pass |
-| **assist** y **score** | Asistencia y marcador después del gol | goal, half_time, match_end |
-| **dragged_defender** y **space_opened_m** | Para la asistencia invisible | off_ball_run |
-| **fouled** | Quién recibió la falta | foul |
-| **player_in** y **player_out** | Cambios | substitution |
-
-Tipos de evento nuevos `recovery`, `duel`, `off_ball_run` y `second_half_start`.
-
-**Insight del motor.** Este esquema no estaba en la propuesta y es el contrato entre los integrantes 1 y 2.
-
-```json
-{
-  "insight_id": "i05",
-  "match_id": "m001",
-  "period": 1,
-  "minute": 33,
-  "second": 40,
-  "type": "mvp_rank_change",
-  "priority": 0.85,
-  "players": ["J. Torres"],
-  "team": "Bahía FC",
-  "facts": { "from_rank": 3, "to_rank": 1, "score": 6.2, "recoveries": 3 },
-  "evidence": [531, 642, 739]
-}
+```bash
+python -m baja_insights validate mocks/insights_sample.json
 ```
-
-- **type** puede ser `mvp_rank_change`, `duel_state`, `standout_milestone`, `card_upgrade`, `goal_chain`, `team_phase`, `match_keys`, `top3` o `match_summary`.
-- **priority** va de 0 a 1 y la calcula el motor. El curador la usa para decidir qué mostrar.
-- **facts** cambia según el tipo. Ver los ejemplos del archivo.
-- **evidence** son los `event_id` que respaldan el insight. Así el narrador y el chat pueden citar jugadas reales.
-
-**Orden de gráfico.** Campos nuevos respecto a la propuesta.
-
-| Campo | Para qué |
-| --- | --- |
-| **overlay_id** | Identificador único |
-| **source_insight** | De qué insight salió, o `null` para las animaciones de la barra de duelo |
-| **show_at_s** | Segundo del partido en número, más fácil de ordenar que `show_at` |
-| **period** | Primer o segundo tiempo |
-
-Valores de **slot** `top_right`, `lower_third`, `side_panel`, `bottom_bar`, `center` y `full_screen`.
-
-Valores de **type** `mvp_update`, `duel_bar`, `standout_milestone`, `card_upgrade`, `goal_analysis`, `team_phase`, `match_keys`, `top3` y `chat_answer`.

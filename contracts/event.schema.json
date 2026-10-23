@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baja-insights/contracts/event.schema.json",
+  "title": "Baja-Insights match event (contract v1)",
+  "description": "One event of the synthetic match stream. Pitch 105 x 68 m, origin bottom-left. Home attacks towards x=105.",
+  "type": "object",
+  "required": ["match_id", "event_id", "period", "minute", "second", "t_s", "type", "team", "player", "position",
+               "start", "end", "outcome", "speed_kmh", "under_pressure", "lines_broken", "possession_id"],
+  "properties": {
+    "match_id": {"type": "string"},
+    "event_id": {"type": "integer", "minimum": 1},
+    "period": {"enum": [1, 2]},
+    "minute": {"type": "integer", "minimum": 0, "maximum": 90},
+    "second": {"type": "integer", "minimum": 0, "maximum": 59},
+    "t_s": {"type": "integer", "minimum": 0, "maximum": 5400, "description": "minute * 60 + second"},
+    "type": {"enum": ["match_start", "pass", "shot", "tackle", "recovery", "duel", "pressure", "foul", "goal",
+                      "substitution", "off_ball_run", "half_time", "second_half_start", "match_end"]},
+    "team": {"type": ["string", "null"]},
+    "player": {"type": ["string", "null"]},
+    "position": {"enum": ["POR", "LD", "LI", "DFC", "MCD", "MC", "ED", "EI", "DC", null]},
+    "start": {"$ref": "#/$defs/point_or_null"},
+    "end": {"$ref": "#/$defs/point_or_null"},
+    "outcome": {"enum": ["complete", "incomplete", "goal", "saved", "off_target", "blocked", "won", "lost", null]},
+    "speed_kmh": {"type": ["number", "null"], "minimum": 0},
+    "under_pressure": {"type": "boolean"},
+    "lines_broken": {"type": "integer", "minimum": 0, "maximum": 4},
+    "possession_id": {"type": ["integer", "null"]},
+    "receiver": {"type": ["string", "null"]},
+    "cross": {"type": "boolean"},
+    "opponent": {"type": "string"},
+    "target": {"type": "string"},
+    "xg": {"type": "number", "minimum": 0, "maximum": 1},
+    "assist": {"type": ["string", "null"]},
+    "scoreline": {"$ref": "#/$defs/scoreline"},
+    "dragged_defender": {"type": ["string", "null"]},
+    "space_opened_m": {"type": ["number", "null"], "minimum": 0},
+    "fouled": {"type": "string"},
+    "player_in": {"type": "string"},
+    "player_out": {"type": "string"},
+    "home": {"type": "string"},
+    "away": {"type": "string"}
+  },
+  "allOf": [
+    {"if": {"properties": {"type": {"const": "pass"}}},
+     "then": {"required": ["receiver"], "properties": {"outcome": {"enum": ["complete", "incomplete"]}}}},
+    {"if": {"properties": {"type": {"const": "shot"}}},
+     "then": {"required": ["xg"], "properties": {"outcome": {"enum": ["goal", "saved", "off_target", "blocked"]}}}},
+    {"if": {"properties": {"type": {"enum": ["duel", "tackle"]}}},
+     "then": {"required": ["opponent"], "properties": {"outcome": {"enum": ["won", "lost"]}}}},
+    {"if": {"properties": {"type": {"const": "recovery"}}},
+     "then": {"properties": {"outcome": {"const": "won"}}}},
+    {"if": {"properties": {"type": {"const": "pressure"}}}, "then": {"required": ["target"]}},
+    {"if": {"properties": {"type": {"const": "foul"}}}, "then": {"required": ["fouled"]}},
+    {"if": {"properties": {"type": {"const": "goal"}}}, "then": {"required": ["assist", "scoreline"]}},
+    {"if": {"properties": {"type": {"enum": ["half_time", "match_end"]}}}, "then": {"required": ["scoreline"]}},
+    {"if": {"properties": {"type": {"const": "substitution"}}}, "then": {"required": ["player_in", "player_out"]}},
+    {"if": {"properties": {"type": {"const": "off_ball_run"}}}, "then": {"required": ["dragged_defender", "space_opened_m"]}},
+    {"if": {"properties": {"type": {"const": "match_start"}}}, "then": {"required": ["home", "away"]}}
+  ],
+  "$defs": {
+    "point_or_null": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "array", "prefixItems": [{"type": "number", "minimum": 0, "maximum": 105},
+                                          {"type": "number", "minimum": 0, "maximum": 68}],
+         "minItems": 2, "maxItems": 2}
+      ]
+    },
+    "scoreline": {
+      "type": "object", "required": ["home", "away"],
+      "properties": {"home": {"type": "integer", "minimum": 0}, "away": {"type": "integer", "minimum": 0}},
+      "additionalProperties": false
+    }
+  }
+}

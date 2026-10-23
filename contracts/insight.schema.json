@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baja-insights/contracts/insight.schema.json",
+  "title": "Baja-Insights engine insight (contract v1)",
+  "description": "Produced by the deterministic engine (member 1), consumed by the agents (member 2). Numbers are exact; agents explain them but never change them.",
+  "type": "object",
+  "required": ["insight_id", "match_id", "period", "minute", "second", "t_s", "type", "priority", "players",
+               "team", "facts", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "insight_id": {"type": "string", "pattern": "^i[0-9]{2,}$"},
+    "match_id": {"type": "string"},
+    "period": {"enum": [1, 2]},
+    "minute": {"type": "integer", "minimum": 0, "maximum": 90},
+    "second": {"type": "integer", "minimum": 0, "maximum": 59},
+    "t_s": {"type": "integer", "minimum": 0, "maximum": 5400},
+    "type": {"enum": ["mvp_rank_change", "duel_state", "standout_milestone", "card_upgrade", "goal_chain",
+                      "team_phase", "match_keys", "top3", "match_summary"]},
+    "priority": {"type": "number", "minimum": 0, "maximum": 1},
+    "players": {"type": "array", "items": {"type": "string"}},
+    "team": {"type": ["string", "null"]},
+    "facts": {"type": "object"},
+    "evidence": {"type": "array", "items": {"type": "integer"}, "description": "event_id values that back the insight"}
+  },
+  "allOf": [
+    {"if": {"properties": {"type": {"const": "mvp_rank_change"}}},
+     "then": {"properties": {"facts": {"required": ["player", "from_rank", "to_rank", "mvp_score", "trigger_event_id", "stats", "expected_for_role"],
+                                       "properties": {"card_change": {"$ref": "#/$defs/card_change"}}}}}},
+    {"if": {"properties": {"type": {"const": "duel_state"}}},
+     "then": {"properties": {"facts": {"required": ["player_a", "player_b", "bar", "a_vs_role", "b_vs_role", "duels_won_a",
+                                                    "duels_won_b", "direct_duels", "chances_created_a", "chances_created_b", "flipped"],
+                                       "properties": {"bar": {"type": "number", "minimum": -1, "maximum": 1}}}}}},
+    {"if": {"properties": {"type": {"const": "standout_milestone"}}},
+     "then": {"properties": {"facts": {"required": ["player", "position", "profile", "stats", "expected_for_role", "vs_role", "mvp_rank"],
+                                       "properties": {"profile": {"enum": ["defensive", "creative"]},
+                                                      "card_change": {"$ref": "#/$defs/card_change"}}}}}},
+    {"if": {"properties": {"type": {"const": "card_upgrade"}}},
+     "then": {"properties": {"facts": {"allOf": [{"$ref": "#/$defs/card_change"}, {"required": ["player"]}]}}}},
+    {"if": {"properties": {"type": {"const": "goal_chain"}}},
+     "then": {"properties": {"facts": {"required": ["scoreline", "scorer", "assist", "xg", "duration_s", "chain", "invisible_assist"],
+                                       "properties": {"scoreline": {"$ref": "#/$defs/scoreline"},
+                                                      "chain": {"type": "array", "minItems": 1, "items": {
+                                                        "type": "object", "required": ["event_id", "player", "action", "credit", "t_s"]}}}}}}},
+    {"if": {"properties": {"type": {"const": "team_phase"}}},
+     "then": {"properties": {"facts": {"required": ["label", "window"],
+                                       "properties": {"label": {"enum": ["control", "pressure_shift"]}}}}}},
+    {"if": {"properties": {"type": {"const": "match_keys"}}},
+     "then": {"properties": {"facts": {"required": ["scoreline", "xg", "possession_pct", "keys", "no_prediction"],
+                                       "properties": {"no_prediction": {"const": true}}}}}},
+    {"if": {"properties": {"type": {"const": "top3"}}},
+     "then": {"properties": {"facts": {"required": ["final_scoreline", "top3"],
+                                       "properties": {"top3": {"type": "array", "maxItems": 3, "items": {
+                                         "type": "object", "required": ["rank", "player", "team", "position", "mvp_score", "why", "key_events"]}}}}}}},
+    {"if": {"properties": {"type": {"const": "match_summary"}}},
+     "then": {"properties": {"facts": {"required": ["final_scoreline", "xg", "possession_pct", "goals", "phases", "story",
+                                                    "who_really_won", "who_really_won_basis"]}}}}
+  ],
+  "$defs": {
+    "scoreline": {
+      "type": "object", "required": ["home", "away"],
+      "properties": {"home": {"type": "integer", "minimum": 0}, "away": {"type": "integer", "minimum": 0}}
+    },
+    "card_change": {
+      "type": "object",
+      "required": ["attribute", "from", "to", "delta", "reason", "overall_from", "overall_to"],
+      "properties": {
+        "attribute": {"enum": ["ritmo", "disparo", "vision", "regate", "defensa", "fisico", "sin_balon"]},
+        "from": {"type": "integer"}, "to": {"type": "integer", "maximum": 99},
+        "delta": {"type": "integer", "minimum": 1}, "reason": {"type": "string"},
+        "overall_from": {"type": "integer"}, "overall_to": {"type": "integer"}
+      }
+    }
+  }
+}

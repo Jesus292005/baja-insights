@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baja-insights/contracts/overlay.schema.json",
+  "title": "Baja-Insights graphics order (contract v1)",
+  "description": "Produced by the agents (member 2), drawn by the web UI or any broadcast engine (member 3).",
+  "type": "object",
+  "required": ["overlay_id", "match_id", "source_insight", "period", "show_at", "show_at_s", "duration_s", "slot",
+               "mode", "language", "type", "title", "text"],
+  "properties": {
+    "overlay_id": {"type": "string"},
+    "match_id": {"type": "string"},
+    "source_insight": {"type": ["string", "null"], "description": "insight_id it came from, null for duel-bar animation frames"},
+    "period": {"enum": [1, 2]},
+    "show_at": {"type": "string", "pattern": "^[0-9]{2}:[0-5][0-9]$"},
+    "show_at_s": {"type": "integer", "minimum": 0, "maximum": 5520},
+    "duration_s": {"type": "number", "exclusiveMinimum": 0, "maximum": 60},
+    "slot": {"enum": ["top_right", "lower_third", "side_panel", "bottom_bar", "center", "full_screen"]},
+    "mode": {"enum": ["fan", "analyst", "all"]},
+    "language": {"type": "string", "description": "BCP-47 code such as es or en, or all"},
+    "type": {"enum": ["mvp_update", "duel_bar", "standout_milestone", "card_upgrade", "goal_analysis", "team_phase",
+                      "match_keys", "top3", "chat_answer"]},
+    "title": {"type": ["string", "null"]},
+    "text": {"type": ["string", "null"]},
+    "card": {
+      "type": "object",
+      "required": ["player", "team", "position", "attribute", "from", "to", "delta"],
+      "properties": {
+        "player": {"type": "string"}, "team": {"type": "string"},
+        "position": {"enum": ["POR", "LD", "LI", "DFC", "MCD", "MC", "ED", "EI", "DC"]},
+        "attribute": {"enum": ["ritmo", "disparo", "vision", "regate", "defensa", "fisico", "sin_balon"]},
+        "from": {"type": "integer"}, "to": {"type": "integer"}, "delta": {"type": "integer"}
+      }
+    },
+    "data": {"type": "object"}
+  },
+  "allOf": [
+    {"if": {"properties": {"type": {"const": "duel_bar"}}},
+     "then": {"required": ["data"], "properties": {"data": {"required": ["player_a", "player_b", "bar"],
+                                                            "properties": {"bar": {"type": "number", "minimum": -1, "maximum": 1}}}}}},
+    {"if": {"properties": {"type": {"const": "mvp_update"}}},
+     "then": {"required": ["data"], "properties": {"data": {"required": ["rank", "mvp_score"]}}}},
+    {"if": {"properties": {"type": {"const": "top3"}}},
+     "then": {"required": ["data"], "properties": {"data": {"required": ["cards"],
+              "properties": {"cards": {"type": "array", "items": {"required": ["rank", "player", "mvp_score"]}}}}}}},
+    {"if": {"properties": {"type": {"const": "goal_analysis"}}},
+     "then": {"required": ["data"], "properties": {"data": {"required": ["chain", "credit"]}}}},
+    {"if": {"properties": {"type": {"const": "card_upgrade"}}}, "then": {"required": ["card"]}}
+  ]
+}
