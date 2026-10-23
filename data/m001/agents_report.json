@@ -1,0 +1,669 @@
+{
+  "match_id": "m001",
+  "model_calls": {
+    "calls": 126,
+    "cache_hits": 1,
+    "failures": 0,
+    "skipped": 0,
+    "calls_by_agent": {
+      "narrator": 28,
+      "personalizer": 43,
+      "verifier": 43,
+      "curator": 12
+    }
+  },
+  "graphics": 28,
+  "versions_by_agent": 108,
+  "versions_by_template": 4,
+  "curator": [
+    {
+      "block": "10:00-15:00",
+      "insight_id": "i01",
+      "show": false,
+      "by": "agent",
+      "reason": "Duel con bajo impacto y sin cambio en la tendencia."
+    },
+    {
+      "block": "10:00-15:00",
+      "insight_id": "i02",
+      "show": true,
+      "by": "agent",
+      "reason": "El dominio de Real Cardón refleja control del juego y un alto porcentaje de pases."
+    },
+    {
+      "block": "10:00-15:00",
+      "insight_id": "i03",
+      "show": true,
+      "by": "agent",
+      "reason": "L. Montaño sube al tercer puesto de MVP, cambiando la historia del liderazgo."
+    },
+    {
+      "block": "10:00-15:00",
+      "insight_id": "i04",
+      "show": true,
+      "by": "agent",
+      "reason": "Duel destacado donde D. Verdugo gana y crea dos oportunidades."
+    },
+    {
+      "block": "15:00-20:00",
+      "insight_id": "i06",
+      "show": true,
+      "by": "rule",
+      "reason": "siempre se muestra"
+    },
+    {
+      "block": "15:00-20:00",
+      "insight_id": "i05",
+      "show": true,
+      "by": "agent",
+      "reason": "D. Verdugo asciende en el ranking MVP, cambiando la dinámica individual."
+    },
+    {
+      "block": "15:00-20:00",
+      "insight_id": "i07",
+      "show": true,
+      "by": "agent",
+      "reason": "Mejora de atributo de K. Rosas por pase clave bajo presión."
+    },
+    {
+      "block": "15:00-20:00",
+      "insight_id": "i08",
+      "show": false,
+      "by": "agent",
+      "reason": "Ya se mostró una mejora de atributo similar a N. Ruelas, para evitar repetición visual."
+    },
+    {
+      "block": "20:00-25:00",
+      "insight_id": "i09",
+      "show": true,
+      "by": "agent",
+      "reason": "Mejora física de R. Salgado tras ganar duelos consecutivos."
+    },
+    {
+      "block": "20:00-25:00",
+      "insight_id": "i10",
+      "show": false,
+      "by": "agent",
+      "reason": "fuera del cupo del bloque"
+    },
+    {
+      "block": "20:00-25:00",
+      "insight_id": "i11",
+      "show": true,
+      "by": "agent",
+      "reason": "Destaca un hito relevante de J. Torres que cambia su valoración defensiva."
+    },
+    {
+      "block": "25:00-30:00",
+      "insight_id": "i13",
+      "show": false,
+      "by": "rule",
+      "reason": "prioridad baja"
+    },
+    {
+      "block": "25:00-30:00",
+      "insight_id": "i12",
+      "show": false,
+      "by": "agent",
+      "reason": "Duel no cambia tendencia ni invierte protagonismo reciente, evita saturación."
+    },
+    {
+      "block": "25:00-30:00",
+      "insight_id": "i14",
+      "show": true,
+      "by": "agent",
+      "reason": "Sandoval sube al tercer lugar de MVP, cambiando la historia reciente en Real Cardón."
+    },
+    {
+      "block": "30:00-35:00",
+      "insight_id": "i15",
+      "show": false,
+      "by": "agent",
+      "reason": "Ya se mostró reciente un cambio de rango MVP sobre Verdugo."
+    },
+    {
+      "block": "30:00-35:00",
+      "insight_id": "i16",
+      "show": true,
+      "by": "agent",
+      "reason": "Mejora notable en la visión de Salgado con impacto directo en la jugada de gol."
+    },
+    {
+      "block": "30:00-35:00",
+      "insight_id": "i17",
+      "show": true,
+      "by": "agent",
+      "reason": "Leyva sube al tercer lugar en MVP con gol y buen rendimiento, cambia la historia del partido."
+    },
+    {
+      "block": "30:00-35:00",
+      "insight_id": "i18",
+      "show": false,
+      "by": "agent",
+      "reason": "Se ha mostrado recientemente a Verdugo sobresaliendo, evitar saturar con mismo jugador y tipo."
+    },
+    {
+      "block": "35:00-40:00",
+      "insight_id": "i20",
+      "show": false,
+      "by": "rule",
+      "reason": "prioridad baja"
+    },
+    {
+      "block": "35:00-40:00",
+      "insight_id": "i19",
+      "show": true,
+      "by": "rule",
+      "reason": "elegido por prioridad"
+    },
+    {
+      "block": "40:00-45:00",
+      "insight_id": "i21",
+      "show": false,
+      "by": "rule",
+      "reason": "prioridad baja"
+    },
+    {
+      "block": "40:00-45:00",
+      "insight_id": "i25",
+      "show": false,
+      "by": "rule",
+      "reason": "prioridad baja"
+    },
+    {
+      "block": "40:00-45:00",
+      "insight_id": "i22",
+      "show": true,
+      "by": "agent",
+      "reason": "Montaño asume el liderazgo MVP, cambiando la historia del partido."
+    },
+    {
+      "block": "40:00-45:00",
+      "insight_id": "i23",
+      "show": true,
+      "by": "agent",
+      "reason": "Ruelas destaca defensivamente por encima de lo esperado, aportando variedad."
+    },
+    {
+      "block": "40:00-45:00",
+      "insight_id": "i24",
+      "show": false,
+      "by": "agent",
+      "reason": "Se mostró una mejora de carta recientemente y esta aporta poco nuevo."
+    },
+    {
+      "block": "45:00-50:00",
+      "insight_id": "i26",
+      "show": true,
+      "by": "rule",
+      "reason": "siempre se muestra"
+    },
+    {
+      "block": "45:00-50:00",
+      "insight_id": "i28",
+      "show": false,
+      "by": "rule",
+      "reason": "prioridad baja"
+    },
+    {
+      "block": "45:00-50:00",
+      "insight_id": "i27",
+      "show": true,
+      "by": "agent",
+      "reason": "Torres se convierte en el nuevo MVP líder, cambiando la narrativa del partido."
+    },
+    {
+      "block": "45:00-50:00",
+      "insight_id": "i29",
+      "show": false,
+      "by": "agent",
+      "reason": "Torres ya ha sido destacado recientemente y este logro es similar, para evitar saturación."
+    },
+    {
+      "block": "50:00-55:00",
+      "insight_id": "i30",
+      "show": true,
+      "by": "agent",
+      "reason": "Mejora en defensa de F. Cota aporta nuevo valor a Bahía FC."
+    },
+    {
+      "block": "50:00-55:00",
+      "insight_id": "i31",
+      "show": true,
+      "by": "agent",
+      "reason": "R. Salgado asciende en MVP, cambio relevante en la historia del partido."
+    },
+    {
+      "block": "50:00-55:00",
+      "insight_id": "i32",
+      "show": false,
+      "by": "agent",
+      "reason": "Repetición reciente del protagonismo defensivo de N. Ruelas."
+    },
+    {
+      "block": "50:00-55:00",
+      "insight_id": "i33",
+      "show": false,
+      "by": "agent",
+      "reason": "Duelo sin cambio significativo ni giro en la narrativa actual."
+    },
+    {
+      "block": "55:00-60:00",
+      "insight_id": "i34",
+      "show": true,
+      "by": "agent",
+      "reason": "Bahía mantiene control y precisión muy superior, marco táctico importante."
+    },
+    {
+      "block": "55:00-60:00",
+      "insight_id": "i35",
+      "show": false,
+      "by": "agent",
+      "reason": "fuera del cupo del bloque"
+    },
+    {
+      "block": "55:00-60:00",
+      "insight_id": "i36",
+      "show": true,
+      "by": "agent",
+      "reason": "R. Salgado sigue destacando con estadísticas muy por encima de su rol."
+    },
+    {
+      "block": "60:00-65:00",
+      "insight_id": "i38",
+      "show": true,
+      "by": "rule",
+      "reason": "siempre se muestra"
+    },
+    {
+      "block": "60:00-65:00",
+      "insight_id": "i37",
+      "show": false,
+      "by": "agent",
+      "reason": "Ya se mostró movilidad en rankings MVP y se ha saturado con jugadores similares."
+    },
+    {
+      "block": "60:00-65:00",
+      "insight_id": "i40",
+      "show": false,
+      "by": "agent",
+      "reason": "Reciente gráfico de R. Salgado, evitar saturación repitiendo jugador y tipo."
+    },
+    {
+      "block": "60:00-65:00",
+      "insight_id": "i39",
+      "show": true,
+      "by": "agent",
+      "reason": "Mejora significativa de J. Torres tras clave acción ofensiva."
+    },
+    {
+      "block": "60:00-65:00",
+      "insight_id": "i41",
+      "show": true,
+      "by": "agent",
+      "reason": "D. Verdugo destaca creativamente más allá de su rol."
+    },
+    {
+      "block": "70:00-75:00",
+      "insight_id": "i42",
+      "show": true,
+      "by": "agent",
+      "reason": "Olvera sorprende con un desempeño defensivo muy por encima de su rol, aportando equilibrio al equipo."
+    },
+    {
+      "block": "70:00-75:00",
+      "insight_id": "i43",
+      "show": false,
+      "by": "agent",
+      "reason": "Duelos entre Torres y Haro muestran equilibrio sin cambio de historia ni liderazgos nuevos."
+    },
+    {
+      "block": "75:00-80:00",
+      "insight_id": "i44",
+      "show": true,
+      "by": "agent",
+      "reason": "Esquer destaca por encima de su rol defensivo, aportando más en pases progresivos y recuperaciones."
+    },
+    {
+      "block": "75:00-80:00",
+      "insight_id": "i45",
+      "show": true,
+      "by": "agent",
+      "reason": "La mejora en el disparo de Rosas añade una nueva dimensión ofensiva para Real Cardón."
+    },
+    {
+      "block": "80:00-85:00",
+      "insight_id": "i46",
+      "show": true,
+      "by": "agent",
+      "reason": "Cota destaca en defensa superando expectativas en el rol defensivo."
+    },
+    {
+      "block": "80:00-85:00",
+      "insight_id": "i47",
+      "show": false,
+      "by": "agent",
+      "reason": "Torres ya tuvo mejora reciente y no aporta novedad significativa ahora."
+    },
+    {
+      "block": "85:00-90:00",
+      "insight_id": "i48",
+      "show": false,
+      "by": "rule",
+      "reason": "prioridad baja"
+    },
+    {
+      "block": "final",
+      "insight_id": "i49",
+      "show": true,
+      "by": "rule",
+      "reason": "siempre se muestra"
+    },
+    {
+      "block": "final",
+      "insight_id": "i50",
+      "show": false,
+      "by": "rule",
+      "reason": "no tiene gráfico, sirve de contexto"
+    }
+  ],
+  "texts": [
+    {
+      "insight_id": "i02",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i03",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i04",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i05",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i07",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i06",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i09",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i11",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i14",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i16",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "fallback",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {
+        "analyst_es": [
+          "numbers not in the insight: [28.0]"
+        ]
+      }
+    },
+    {
+      "insight_id": "i17",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "fallback",
+        "fan_en": "fallback",
+        "analyst_en": "agent"
+      },
+      "problems": {
+        "analyst_es": [
+          "text has more than 30 words"
+        ],
+        "fan_en": [
+          "fan text shows 2 figures, the limit is 1 besides the scoreline"
+        ]
+      }
+    },
+    {
+      "insight_id": "i19",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i22",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i23",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i26",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i27",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i30",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i31",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i34",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i36",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i38",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "fallback",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {
+        "analyst_es": [
+          "title has more than 6 words"
+        ]
+      }
+    },
+    {
+      "insight_id": "i39",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i41",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i42",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i44",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i45",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i46",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
+      "insight_id": "i49",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    }
+  ],
+  "unscheduled": [],
+  "duel_frames": 7
+}

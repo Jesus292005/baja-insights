@@ -1,0 +1,3130 @@
+[
+  {
+    "overlay_id": "o001",
+    "match_id": "m001",
+    "source_insight": "i02",
+    "period": 1,
+    "show_at": "11:02",
+    "show_at_s": 662,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "team_phase",
+    "title": "Real Cardón domina el balón",
+    "text": "A los 11 minutos, Real Cardón tiene el balón más de la mitad del tiempo y domina con una precisión impresionante.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "away": 91,
+        "home": 66
+      },
+      "passes_per_min": {
+        "away": 8.9,
+        "home": 3.2
+      }
+    }
+  },
+  {
+    "overlay_id": "o002",
+    "match_id": "m001",
+    "source_insight": "i02",
+    "period": 1,
+    "show_at": "11:02",
+    "show_at_s": 662,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "team_phase",
+    "title": "Control y precisión real Cardón",
+    "text": "En 11 minutos del partido, Real Cardón posee 64% de la posesión y 91% en precisión de pases, doble que Bahía FC.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "away": 91,
+        "home": 66
+      },
+      "passes_per_min": {
+        "away": 8.9,
+        "home": 3.2
+      }
+    }
+  },
+  {
+    "overlay_id": "o003",
+    "match_id": "m001",
+    "source_insight": "i02",
+    "period": 1,
+    "show_at": "11:02",
+    "show_at_s": 662,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "team_phase",
+    "title": "Real Cardón controls possession",
+    "text": "By minute 11, Real Cardón holds the ball most of the time with outstanding passing accuracy.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "away": 91,
+        "home": 66
+      },
+      "passes_per_min": {
+        "away": 8.9,
+        "home": 3.2
+      }
+    }
+  },
+  {
+    "overlay_id": "o004",
+    "match_id": "m001",
+    "source_insight": "i02",
+    "period": 1,
+    "show_at": "11:02",
+    "show_at_s": 662,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "team_phase",
+    "title": "Real Cardón's control, precision",
+    "text": "Within 11 minutes, Real Cardón holds 64% possession and 91% pass accuracy, notably outperforming Bahía FC.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "away": 91,
+        "home": 66
+      },
+      "passes_per_min": {
+        "away": 8.9,
+        "home": 3.2
+      }
+    }
+  },
+  {
+    "overlay_id": "o005",
+    "match_id": "m001",
+    "source_insight": "i03",
+    "period": 1,
+    "show_at": "11:22",
+    "show_at_s": 682,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Montaño brilla en Real Cardón",
+    "text": "A los 11 minutos, Montaño sube al tercer mejor jugador, brillante con recuperaciones y pases que dominan el juego en el empate sin goles.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.3
+    }
+  },
+  {
+    "overlay_id": "o006",
+    "match_id": "m001",
+    "source_insight": "i03",
+    "period": 1,
+    "show_at": "11:22",
+    "show_at_s": 682,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Montaño sube al tercer puesto",
+    "text": "Con 2 duelos ganados, 1 recuperación en campo rival y 2 pases progresivos a los 11 minutos, Montaño supera sus expectativas y mejora la clasificación MVP.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.3
+    }
+  },
+  {
+    "overlay_id": "o007",
+    "match_id": "m001",
+    "source_insight": "i03",
+    "period": 1,
+    "show_at": "11:22",
+    "show_at_s": 682,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Montaño Shines for Real Cardón",
+    "text": "By 11 minutes, Montaño rises as third-best, standing out with key recoveries and passes in a 0-0 game full of control.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.3
+    }
+  },
+  {
+    "overlay_id": "o008",
+    "match_id": "m001",
+    "source_insight": "i03",
+    "period": 1,
+    "show_at": "11:22",
+    "show_at_s": 682,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Montaño Moves Up to Third",
+    "text": "At 11 minutes, Montaño leads with 2 duels won, 1 recovery in opposition half, and 2 progressive passes, exceeding role expectations and increasing his MVP rank.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.3
+    }
+  },
+  {
+    "overlay_id": "o009",
+    "match_id": "m001",
+    "source_insight": "i04",
+    "period": 1,
+    "show_at": "12:27",
+    "show_at_s": 747,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "fan",
+    "language": "es",
+    "type": "duel_bar",
+    "title": "Verdugo domina en el aire",
+    "text": "A los 12 minutos, Verdugo ganó el único duelo ante Mena y creó dos ocasiones en el empate 0-0.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.43
+    }
+  },
+  {
+    "overlay_id": "o010",
+    "match_id": "m001",
+    "source_insight": "i04",
+    "period": 1,
+    "show_at": "12:27",
+    "show_at_s": 747,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "analyst",
+    "language": "es",
+    "type": "duel_bar",
+    "title": "Verdugo domina duelo aereo",
+    "text": "A los 12:25, Verdugo ganó el único duelo directo frente a Mena y creó dos ocasiones; Mena no ganó ninguno.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.43
+    }
+  },
+  {
+    "overlay_id": "o011",
+    "match_id": "m001",
+    "source_insight": "i04",
+    "period": 1,
+    "show_at": "12:27",
+    "show_at_s": 747,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "fan",
+    "language": "en",
+    "type": "duel_bar",
+    "title": "Verdugo dominates aerial duel",
+    "text": "At 12 minutes, Verdugo won the only duel against Mena and created two chances in the 0-0 match.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.43
+    }
+  },
+  {
+    "overlay_id": "o012",
+    "match_id": "m001",
+    "source_insight": "i04",
+    "period": 1,
+    "show_at": "12:27",
+    "show_at_s": 747,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "analyst",
+    "language": "en",
+    "type": "duel_bar",
+    "title": "Verdugo dominates aerial duel",
+    "text": "At 12:25, Verdugo won the single direct duel versus Mena, creating two chances; Mena won none.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.43
+    }
+  },
+  {
+    "overlay_id": "o013",
+    "match_id": "m001",
+    "source_insight": "i05",
+    "period": 1,
+    "show_at": "15:28",
+    "show_at_s": 928,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Verdugo impulsa a Real Cardón",
+    "text": "Con el marcador 0-0, Verdugo eleva su juego con pases clave y rompe la defensa contraria, liderando el ataque.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.6
+    }
+  },
+  {
+    "overlay_id": "o014",
+    "match_id": "m001",
+    "source_insight": "i05",
+    "period": 1,
+    "show_at": "15:28",
+    "show_at_s": 928,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Verdugo asciende al tercero en MVP",
+    "text": "A los 15:26, Verdugo sube del 4º al 3º puesto MVP con 2 pases clave, 1 pase que rompe líneas y 1 duelo ganado.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.6
+    }
+  },
+  {
+    "overlay_id": "o015",
+    "match_id": "m001",
+    "source_insight": "i05",
+    "period": 1,
+    "show_at": "15:28",
+    "show_at_s": 928,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Verdugo Drives Real Cardón Attack",
+    "text": "At 0-0, Verdugo shines with key passes and breaking the lines, leading Real Cardón’s offense.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.6
+    }
+  },
+  {
+    "overlay_id": "o016",
+    "match_id": "m001",
+    "source_insight": "i05",
+    "period": 1,
+    "show_at": "15:28",
+    "show_at_s": 928,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Verdugo Moves Up to Third MVP",
+    "text": "At 15:26, Verdugo rises from 4th to 3rd in MVP ranking with 2 key passes, 1 line-breaking pass, and 1 duel won.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 2.6
+    }
+  },
+  {
+    "overlay_id": "o017",
+    "match_id": "m001",
+    "source_insight": "i07",
+    "period": 1,
+    "show_at": "17:33",
+    "show_at_s": 1053,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Rosas brilla en Real Cardón",
+    "text": "Rosas rompió dos líneas bajo presión con un pase largo que casi acaba en gol. Esto puede ser la clave para desbloquear el empate 0-0.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o018",
+    "match_id": "m001",
+    "source_insight": "i07",
+    "period": 1,
+    "show_at": "17:33",
+    "show_at_s": 1053,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Incremento en visión de K. Rosas",
+    "text": "K. Rosas mejoró su visión de 78 a 80 tras un pase de 25.6 m con dificultad 0.84 que generó un remate con xG de 0.38.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o019",
+    "match_id": "m001",
+    "source_insight": "i07",
+    "period": 1,
+    "show_at": "17:33",
+    "show_at_s": 1053,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Rosas shines for Real Cardón",
+    "text": "Rosas broke two lines under pressure with a long pass that nearly led to a goal. This might unlock the 0-0 deadlock.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o020",
+    "match_id": "m001",
+    "source_insight": "i07",
+    "period": 1,
+    "show_at": "17:33",
+    "show_at_s": 1053,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "K. Rosas’s vision increases",
+    "text": "K. Rosas’s vision rose from 78 to 80 after a 25.6m pass with 0.84 difficulty, creating a shot with 0.38 expected goals.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o021",
+    "match_id": "m001",
+    "source_insight": "i06",
+    "period": 1,
+    "show_at": "17:42",
+    "show_at_s": 1062,
+    "duration_s": 10,
+    "slot": "center",
+    "mode": "fan",
+    "language": "es",
+    "type": "goal_analysis",
+    "title": "Real Cardón domina y anota",
+    "text": "S. Leyva marcó tras una gran jugada que empezó con una recuperación y un pase profundo. Real Cardón tomó la ventaja 0-1.",
+    "data": {
+      "chain": [
+        "V. Meza",
+        "K. Rosas",
+        "L. Montaño",
+        "S. Leyva"
+      ],
+      "credit": [
+        0.2,
+        0.3,
+        0.25,
+        0.25
+      ],
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": 0.38
+    }
+  },
+  {
+    "overlay_id": "o022",
+    "match_id": "m001",
+    "source_insight": "i06",
+    "period": 1,
+    "show_at": "17:42",
+    "show_at_s": 1062,
+    "duration_s": 10,
+    "slot": "center",
+    "mode": "analyst",
+    "language": "es",
+    "type": "goal_analysis",
+    "title": "Efectividad Real Cardón gol 18’",
+    "text": "Gol de S. Leyva con xG 0.38 tras recuperación de Meza y pase que rompió dos líneas de Rosas, asistencia de Montaño.",
+    "data": {
+      "chain": [
+        "V. Meza",
+        "K. Rosas",
+        "L. Montaño",
+        "S. Leyva"
+      ],
+      "credit": [
+        0.2,
+        0.3,
+        0.25,
+        0.25
+      ],
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": 0.38
+    }
+  },
+  {
+    "overlay_id": "o023",
+    "match_id": "m001",
+    "source_insight": "i06",
+    "period": 1,
+    "show_at": "17:42",
+    "show_at_s": 1062,
+    "duration_s": 10,
+    "slot": "center",
+    "mode": "fan",
+    "language": "en",
+    "type": "goal_analysis",
+    "title": "Real Cardón dominates and scores",
+    "text": "Leyva scored after a great play starting with a recovery and a deep pass. Real Cardón leads 0-1.",
+    "data": {
+      "chain": [
+        "V. Meza",
+        "K. Rosas",
+        "L. Montaño",
+        "S. Leyva"
+      ],
+      "credit": [
+        0.2,
+        0.3,
+        0.25,
+        0.25
+      ],
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": 0.38
+    }
+  },
+  {
+    "overlay_id": "o024",
+    "match_id": "m001",
+    "source_insight": "i06",
+    "period": 1,
+    "show_at": "17:42",
+    "show_at_s": 1062,
+    "duration_s": 10,
+    "slot": "center",
+    "mode": "analyst",
+    "language": "en",
+    "type": "goal_analysis",
+    "title": "Real Cardón goal at 18’",
+    "text": "Leyva scored with xG 0.38 after Meza’s recovery and Rosas’ line-breaking pass, assisted by Montaño.",
+    "data": {
+      "chain": [
+        "V. Meza",
+        "K. Rosas",
+        "L. Montaño",
+        "S. Leyva"
+      ],
+      "credit": [
+        0.2,
+        0.3,
+        0.25,
+        0.25
+      ],
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": 0.38
+    }
+  },
+  {
+    "overlay_id": "o025",
+    "match_id": "m001",
+    "source_insight": "i09",
+    "period": 1,
+    "show_at": "21:28",
+    "show_at_s": 1288,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Salgado se crece en el campo",
+    "text": "Bahía FC va perdiendo 0-1, pero Salgado ganó cuatro duelos y mejoró su físico. ¡Está más fuerte para ayudar a su equipo en el mediocampo!",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "fisico",
+      "from": 66,
+      "to": 67,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o026",
+    "match_id": "m001",
+    "source_insight": "i09",
+    "period": 1,
+    "show_at": "21:28",
+    "show_at_s": 1288,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Mejora física de Salgado tras duelos",
+    "text": "R. Salgado incrementó su físico de 66 a 67 tras ganar cuatro duelos consecutivos. Esto puede fortalecer el mediocampo de Bahía FC mientras intenta revertir el 0-1.",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "fisico",
+      "from": 66,
+      "to": 67,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o027",
+    "match_id": "m001",
+    "source_insight": "i09",
+    "period": 1,
+    "show_at": "21:28",
+    "show_at_s": 1288,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Salgado steps up physically",
+    "text": "Bahía FC is down 0-1, but Salgado won four duels in a row and boosted his physical ability. He’s stronger now to help the midfield battle!",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "fisico",
+      "from": 66,
+      "to": 67,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o028",
+    "match_id": "m001",
+    "source_insight": "i09",
+    "period": 1,
+    "show_at": "21:28",
+    "show_at_s": 1288,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Salgado’s physical upgrade after duels",
+    "text": "R. Salgado improved his physical attribute from 66 to 67 following four consecutive duels won, potentially strengthening Bahía FC's midfield while trailing 0-1.",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "fisico",
+      "from": 66,
+      "to": 67,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o029",
+    "match_id": "m001",
+    "source_insight": "i11",
+    "period": 1,
+    "show_at": "24:12",
+    "show_at_s": 1452,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Torres destaca pese al 0-1",
+    "text": "J. Torres brilla con 5 recuperaciones y un pase clave, luchando para que Bahía FC empiece a cambiar el partido.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "defensa",
+      "from": 58,
+      "to": 60,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 0,
+      "duels_total": 0,
+      "progressive_passes": 3,
+      "key_passes": 1,
+      "vs_role": 0.89,
+      "mvp_rank": 2
+    }
+  },
+  {
+    "overlay_id": "o030",
+    "match_id": "m001",
+    "source_insight": "i11",
+    "period": 1,
+    "show_at": "24:12",
+    "show_at_s": 1452,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Torres supera expectativas defensivas",
+    "text": "J. Torres logra 5 recuperaciones, 3 pases progresivos y 1 pase clave, mejorando la defensa a pesar del 0-1 en el minuto 24.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "defensa",
+      "from": 58,
+      "to": 60,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 0,
+      "duels_total": 0,
+      "progressive_passes": 3,
+      "key_passes": 1,
+      "vs_role": 0.89,
+      "mvp_rank": 2
+    }
+  },
+  {
+    "overlay_id": "o031",
+    "match_id": "m001",
+    "source_insight": "i11",
+    "period": 1,
+    "show_at": "24:12",
+    "show_at_s": 1452,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Torres shines despite 0-1",
+    "text": "J. Torres stands out with 5 recoveries and a key pass, fighting to help Bahía FC turn the game around.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "defensa",
+      "from": 58,
+      "to": 60,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 0,
+      "duels_total": 0,
+      "progressive_passes": 3,
+      "key_passes": 1,
+      "vs_role": 0.89,
+      "mvp_rank": 2
+    }
+  },
+  {
+    "overlay_id": "o032",
+    "match_id": "m001",
+    "source_insight": "i11",
+    "period": 1,
+    "show_at": "24:12",
+    "show_at_s": 1452,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Torres exceeds defensive expectations",
+    "text": "At 24 minutes, J. Torres records 5 recoveries, 3 progressive passes, and 1 key pass, improving defense despite the 0-1 scoreline.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "defensa",
+      "from": 58,
+      "to": 60,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 0,
+      "duels_total": 0,
+      "progressive_passes": 3,
+      "key_passes": 1,
+      "vs_role": 0.89,
+      "mvp_rank": 2
+    }
+  },
+  {
+    "overlay_id": "o033",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 1,
+    "show_at": "25:00",
+    "show_at_s": 1500,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.3
+    }
+  },
+  {
+    "overlay_id": "o034",
+    "match_id": "m001",
+    "source_insight": "i14",
+    "period": 1,
+    "show_at": "28:16",
+    "show_at_s": 1696,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Sandoval impulsa a Real Cardón",
+    "text": "Sandoval sube al tercer MVP con destellos en el medio, ayudando a Real Cardón a mantener su ventaja 0-1.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 4.2
+    }
+  },
+  {
+    "overlay_id": "o035",
+    "match_id": "m001",
+    "source_insight": "i14",
+    "period": 1,
+    "show_at": "28:16",
+    "show_at_s": 1696,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Sandoval asciende en ranking MVP",
+    "text": "Sandoval sube del cuarto al tercer lugar con 8 pases progresivos y 2 pases que rompen líneas, fortaleciendo a Real Cardón en el 0-1.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 4.2
+    }
+  },
+  {
+    "overlay_id": "o036",
+    "match_id": "m001",
+    "source_insight": "i14",
+    "period": 1,
+    "show_at": "28:16",
+    "show_at_s": 1696,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Sandoval lifts Real Cardón",
+    "text": "Sandoval rises to third in the MVP ranking with bursts of control, helping Real Cardón keep the 0-1 lead.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 4.2
+    }
+  },
+  {
+    "overlay_id": "o037",
+    "match_id": "m001",
+    "source_insight": "i14",
+    "period": 1,
+    "show_at": "28:16",
+    "show_at_s": 1696,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Sandoval climbs to third MVP",
+    "text": "Sandoval rises from fourth to third with 8 progressive passes and 2 line-breaking passes, strengthening Real Cardón's position at 0-1.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 4.2
+    }
+  },
+  {
+    "overlay_id": "o038",
+    "match_id": "m001",
+    "source_insight": "i16",
+    "period": 1,
+    "show_at": "34:14",
+    "show_at_s": 2054,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Salgado brilla con pase clave",
+    "text": "Perdiendo 0-1, Salgado rompió líneas con un gran pase que casi iguala el juego.",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 74,
+      "to": 76,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o039",
+    "match_id": "m001",
+    "source_insight": "i16",
+    "period": 1,
+    "show_at": "34:14",
+    "show_at_s": 2054,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "+2 Visión",
+    "text": "Visión de 74 a 76: pase que rompió 2 líneas bajo presión. Media 68 a 68.",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 74,
+      "to": 76,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o040",
+    "match_id": "m001",
+    "source_insight": "i16",
+    "period": 1,
+    "show_at": "34:14",
+    "show_at_s": 2054,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Salgado shines with key pass",
+    "text": "Down 0-1, Salgado broke lines with a great pass creating a near equalizing chance.",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 74,
+      "to": 76,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o041",
+    "match_id": "m001",
+    "source_insight": "i16",
+    "period": 1,
+    "show_at": "34:14",
+    "show_at_s": 2054,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Salgado upgrades vision, creates chance",
+    "text": "At 34:12, Salgado raised his vision from 74 to 76 after a 27.9m pressured pass that led to a shot with 0.29 xG.",
+    "card": {
+      "player": "R. Salgado",
+      "team": "Bahía FC",
+      "position": "MC",
+      "attribute": "vision",
+      "from": 74,
+      "to": 76,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o042",
+    "match_id": "m001",
+    "source_insight": "i17",
+    "period": 1,
+    "show_at": "34:47",
+    "show_at_s": 2087,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Leyva marca y aumenta ventaja",
+    "text": "Leyva anotó el único gol que pone a Real Cardón 0-1, destacándose con un pase clave en el minuto 34.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 5,
+      "mvp_score": 4.9
+    }
+  },
+  {
+    "overlay_id": "o043",
+    "match_id": "m001",
+    "source_insight": "i17",
+    "period": 1,
+    "show_at": "34:47",
+    "show_at_s": 2087,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Leyva: del 5.º al 3.º",
+    "text": "Puntaje MVP 4.9. 1 gol, 1 duelo ganado, 1 pase clave.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 5,
+      "mvp_score": 4.9
+    }
+  },
+  {
+    "overlay_id": "o044",
+    "match_id": "m001",
+    "source_insight": "i17",
+    "period": 1,
+    "show_at": "34:47",
+    "show_at_s": 2087,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Leyva climbs to 3",
+    "text": "Leyva moves up to 3 in the MVP race.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 5,
+      "mvp_score": 4.9
+    }
+  },
+  {
+    "overlay_id": "o045",
+    "match_id": "m001",
+    "source_insight": "i17",
+    "period": 1,
+    "show_at": "34:47",
+    "show_at_s": 2087,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Leyva climbs to MVP top 3",
+    "text": "At 34:45, Leyva rose from 5th to 3rd in MVP ranking with 1 goal, 1 key pass, 1 progressive pass, and 1 duel won, securing Real Cardón's 0-1 lead.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 5,
+      "mvp_score": 4.9
+    }
+  },
+  {
+    "overlay_id": "o046",
+    "match_id": "m001",
+    "source_insight": "i19",
+    "period": 1,
+    "show_at": "36:15",
+    "show_at_s": 2175,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "fan",
+    "language": "es",
+    "type": "duel_bar",
+    "title": "Real Cardón domina el duelo clave",
+    "text": "Aunque Mena ganó más duelos, Verdugo creó tres ocasiones que ayudaron al 0-1 a favor de Real Cardón.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.23
+    }
+  },
+  {
+    "overlay_id": "o047",
+    "match_id": "m001",
+    "source_insight": "i19",
+    "period": 1,
+    "show_at": "36:15",
+    "show_at_s": 2175,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "analyst",
+    "language": "es",
+    "type": "duel_bar",
+    "title": "Verdugo genera ocasiones pese a duelos",
+    "text": "Mena ganó 2 de 3 duelos directos, pero Verdugo creó 3 ocasiones para Real Cardón, que lidera 0-1.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.23
+    }
+  },
+  {
+    "overlay_id": "o048",
+    "match_id": "m001",
+    "source_insight": "i19",
+    "period": 1,
+    "show_at": "36:15",
+    "show_at_s": 2175,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "fan",
+    "language": "en",
+    "type": "duel_bar",
+    "title": "Real Cardón leads key duel",
+    "text": "Mena won more duels, but Verdugo created three chances helping Real Cardón’s 0-1 lead.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.23
+    }
+  },
+  {
+    "overlay_id": "o049",
+    "match_id": "m001",
+    "source_insight": "i19",
+    "period": 1,
+    "show_at": "36:15",
+    "show_at_s": 2175,
+    "duration_s": 8,
+    "slot": "bottom_bar",
+    "mode": "analyst",
+    "language": "en",
+    "type": "duel_bar",
+    "title": "Verdugo creates key chances",
+    "text": "Mena won 2 of 3 direct duels, yet Verdugo's 3 created chances help Real Cardón lead 0-1.",
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.23
+    }
+  },
+  {
+    "overlay_id": "o050",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 1,
+    "show_at": "40:00",
+    "show_at_s": 2400,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.1
+    }
+  },
+  {
+    "overlay_id": "o051",
+    "match_id": "m001",
+    "source_insight": "i22",
+    "period": 1,
+    "show_at": "41:37",
+    "show_at_s": 2497,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Montaño domina el partido",
+    "text": "Con Real Cardón ganando 0-1, Montaño brilla con una asistencia y recuperaciones que marcan la diferencia antes del descanso.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 6.7
+    }
+  },
+  {
+    "overlay_id": "o052",
+    "match_id": "m001",
+    "source_insight": "i22",
+    "period": 1,
+    "show_at": "41:37",
+    "show_at_s": 2497,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Montaño asciende al MVP",
+    "text": "Montaño sube a líder con 4 recuperaciones en campo rival, 1 asistencia y 9 pases progresivos, superando a J. Torres en un 0-1 para Real Cardón.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 6.7
+    }
+  },
+  {
+    "overlay_id": "o053",
+    "match_id": "m001",
+    "source_insight": "i22",
+    "period": 1,
+    "show_at": "41:37",
+    "show_at_s": 2497,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Montaño leads the way",
+    "text": "Real Cardón leads 0-1 as Montaño stands out with an assist and key recoveries that shape the game before halftime.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 6.7
+    }
+  },
+  {
+    "overlay_id": "o054",
+    "match_id": "m001",
+    "source_insight": "i22",
+    "period": 1,
+    "show_at": "41:37",
+    "show_at_s": 2497,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Montaño takes over MVP spot",
+    "text": "Montaño rises to first with 4 recoveries in the opposition half, 1 assist, 9 progressive passes, overtaking J. Torres with Real Cardón leading 0-1.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 6.7
+    }
+  },
+  {
+    "overlay_id": "o055",
+    "match_id": "m001",
+    "source_insight": "i23",
+    "period": 1,
+    "show_at": "44:03",
+    "show_at_s": 2643,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Ruelas domina la defensa",
+    "text": "Ruelas impulsa a Real Cardón con recuperaciones decisivas justo antes del descanso (0-1).",
+    "card": {
+      "player": "N. Ruelas",
+      "team": "Real Cardón",
+      "position": "LD",
+      "attribute": "defensa",
+      "from": 72,
+      "to": 74,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 1,
+      "duels_total": 2,
+      "progressive_passes": 8,
+      "key_passes": 0,
+      "vs_role": 0.53,
+      "mvp_rank": 8
+    }
+  },
+  {
+    "overlay_id": "o056",
+    "match_id": "m001",
+    "source_insight": "i23",
+    "period": 1,
+    "show_at": "44:03",
+    "show_at_s": 2643,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Ruelas destaca en defensa y progresión",
+    "text": "Ruelas supera expectativas con 5 recuperaciones y 8 pases progresivos, reforzando defensa y ataque a los 44:01 (0-1).",
+    "card": {
+      "player": "N. Ruelas",
+      "team": "Real Cardón",
+      "position": "LD",
+      "attribute": "defensa",
+      "from": 72,
+      "to": 74,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 1,
+      "duels_total": 2,
+      "progressive_passes": 8,
+      "key_passes": 0,
+      "vs_role": 0.53,
+      "mvp_rank": 8
+    }
+  },
+  {
+    "overlay_id": "o057",
+    "match_id": "m001",
+    "source_insight": "i23",
+    "period": 1,
+    "show_at": "44:03",
+    "show_at_s": 2643,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Ruelas Owns Defense",
+    "text": "Ruelas leads Real Cardón with crucial recoveries just before halftime (0-1).",
+    "card": {
+      "player": "N. Ruelas",
+      "team": "Real Cardón",
+      "position": "LD",
+      "attribute": "defensa",
+      "from": 72,
+      "to": 74,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 1,
+      "duels_total": 2,
+      "progressive_passes": 8,
+      "key_passes": 0,
+      "vs_role": 0.53,
+      "mvp_rank": 8
+    }
+  },
+  {
+    "overlay_id": "o058",
+    "match_id": "m001",
+    "source_insight": "i23",
+    "period": 1,
+    "show_at": "44:03",
+    "show_at_s": 2643,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Ruelas Exceeds Defensive Role",
+    "text": "At 44:01, Ruelas registers 5 recoveries and 8 progressive passes, surpassing defensive expectations for Real Cardón (0-1).",
+    "card": {
+      "player": "N. Ruelas",
+      "team": "Real Cardón",
+      "position": "LD",
+      "attribute": "defensa",
+      "from": 72,
+      "to": 74,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 1,
+      "duels_total": 2,
+      "progressive_passes": 8,
+      "key_passes": 0,
+      "vs_role": 0.53,
+      "mvp_rank": 8
+    }
+  },
+  {
+    "overlay_id": "o059",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 2,
+    "show_at": "45:00",
+    "show_at_s": 2700,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.05
+    }
+  },
+  {
+    "overlay_id": "o060",
+    "match_id": "m001",
+    "source_insight": "i26",
+    "period": 2,
+    "show_at": "45:02",
+    "show_at_s": 2702,
+    "duration_s": 15,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "match_keys",
+    "title": "Real Cardón domina el duelo",
+    "text": "Real Cardón tiene control total con 61% de la posesión y gana 0-1, mientras Bahía FC lucha con solo un disparo a puerta.",
+    "data": {
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": {
+        "home": 0.44,
+        "away": 0.88
+      },
+      "possession_pct": {
+        "home": 39,
+        "away": 61
+      }
+    }
+  },
+  {
+    "overlay_id": "o061",
+    "match_id": "m001",
+    "source_insight": "i26",
+    "period": 2,
+    "show_at": "45:02",
+    "show_at_s": 2702,
+    "duration_s": 15,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "match_keys",
+    "title": "Dominio claro de Real Cardón",
+    "text": "Real Cardón lidera con 61% de posesión, 93% de pases completados y xG de 0.88, asegurando ventaja 0-1. Bahía FC recuperó 21 balones en campo rival, pero solo realizó un tiro a puerta.",
+    "data": {
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": {
+        "home": 0.44,
+        "away": 0.88
+      },
+      "possession_pct": {
+        "home": 39,
+        "away": 61
+      }
+    }
+  },
+  {
+    "overlay_id": "o062",
+    "match_id": "m001",
+    "source_insight": "i26",
+    "period": 2,
+    "show_at": "45:02",
+    "show_at_s": 2702,
+    "duration_s": 15,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "match_keys",
+    "title": "Real Cardón in control",
+    "text": "Real Cardón holds 61% possession and leads 0-1 as Bahía FC struggles with just one shot on goal.",
+    "data": {
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": {
+        "home": 0.44,
+        "away": 0.88
+      },
+      "possession_pct": {
+        "home": 39,
+        "away": 61
+      }
+    }
+  },
+  {
+    "overlay_id": "o063",
+    "match_id": "m001",
+    "source_insight": "i26",
+    "period": 2,
+    "show_at": "45:02",
+    "show_at_s": 2702,
+    "duration_s": 15,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "match_keys",
+    "title": "Real Cardón's possession and precision",
+    "text": "Real Cardón leads 0-1 with 61% possession, 93% pass accuracy and xG 0.88. Bahía FC recovered 21 balls in opponent half but managed only one shot on target.",
+    "data": {
+      "scoreline": {
+        "home": 0,
+        "away": 1
+      },
+      "xg": {
+        "home": 0.44,
+        "away": 0.88
+      },
+      "possession_pct": {
+        "home": 39,
+        "away": 61
+      }
+    }
+  },
+  {
+    "overlay_id": "o064",
+    "match_id": "m001",
+    "source_insight": "i27",
+    "period": 2,
+    "show_at": "47:50",
+    "show_at_s": 2870,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "J. Torres lidera a Bahía FC",
+    "text": "Torres brilla con 11 recuperaciones y destaca en ataque, vital para intentar darle la vuelta al 0-1.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 7.1
+    }
+  },
+  {
+    "overlay_id": "o065",
+    "match_id": "m001",
+    "source_insight": "i27",
+    "period": 2,
+    "show_at": "47:50",
+    "show_at_s": 2870,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Torres eleva juego y es MVP",
+    "text": "Con 11 recuperaciones —todas en campo rival—, 1 pase clave y 6 progresivos, supera claramente expectativas y desbanca a Montaño.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 7.1
+    }
+  },
+  {
+    "overlay_id": "o066",
+    "match_id": "m001",
+    "source_insight": "i27",
+    "period": 2,
+    "show_at": "47:50",
+    "show_at_s": 2870,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Torres shines for Bahía FC",
+    "text": "Torres dominates with 11 recoveries and key offensive plays, driving Bahía FC’s fightback attempt after going 0-1 down.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 7.1
+    }
+  },
+  {
+    "overlay_id": "o067",
+    "match_id": "m001",
+    "source_insight": "i27",
+    "period": 2,
+    "show_at": "47:50",
+    "show_at_s": 2870,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Torres top MVP with pivotal play",
+    "text": "Torres leads with 11 recoveries in opposition half, 1 key pass, and 6 progressive passes, surpassing expected stats and overtaking Montaño.",
+    "data": {
+      "rank": 1,
+      "previous_rank": 2,
+      "mvp_score": 7.1
+    }
+  },
+  {
+    "overlay_id": "o068",
+    "match_id": "m001",
+    "source_insight": "i30",
+    "period": 2,
+    "show_at": "53:03",
+    "show_at_s": 3183,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Cota fuerte y activo",
+    "text": "Con el marcador 0-1, F. Cota destaca con tres recuperaciones en poco tiempo y mejora la defensa para apoyar a Bahía FC.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o069",
+    "match_id": "m001",
+    "source_insight": "i30",
+    "period": 2,
+    "show_at": "53:03",
+    "show_at_s": 3183,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Defensa de Cota sube a 80",
+    "text": "Al minuto 53, F. Cota mejora su defensa de 78 a 80 tras su tercera recuperación en campo rival, buscando contener a Real Cardón.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o070",
+    "match_id": "m001",
+    "source_insight": "i30",
+    "period": 2,
+    "show_at": "53:03",
+    "show_at_s": 3183,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Cota strong and active",
+    "text": "Down 0-1, F. Cota shines with three recoveries in short time, boosting defense to support Bahía FC.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o071",
+    "match_id": "m001",
+    "source_insight": "i30",
+    "period": 2,
+    "show_at": "53:03",
+    "show_at_s": 3183,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Cota's defense up to 80",
+    "text": "At 53:01, F. Cota raises defense from 78 to 80 after third recovery in opponent half, aiming to contain Real Cardón.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 78,
+      "to": 80,
+      "delta": 2
+    }
+  },
+  {
+    "overlay_id": "o072",
+    "match_id": "m001",
+    "source_insight": "i31",
+    "period": 2,
+    "show_at": "54:03",
+    "show_at_s": 3243,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Salgado se consagra en Bahía",
+    "text": "Tras ir 0-1 abajo, Salgado está por todas partes con 7 recuperaciones y sube al tercer lugar del MVP.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 6.5
+    }
+  },
+  {
+    "overlay_id": "o073",
+    "match_id": "m001",
+    "source_insight": "i31",
+    "period": 2,
+    "show_at": "54:03",
+    "show_at_s": 3243,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "es",
+    "type": "mvp_update",
+    "title": "Salgado asciende a tercer MVP",
+    "text": "Con 7 recuperaciones, 5 duelos ganados y 9 pases progresivos, Salgado mejora su rendimiento tras el gol rival.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 6.5
+    }
+  },
+  {
+    "overlay_id": "o074",
+    "match_id": "m001",
+    "source_insight": "i31",
+    "period": 2,
+    "show_at": "54:03",
+    "show_at_s": 3243,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "fan",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Salgado shines for Bahía",
+    "text": "Down 0-1, Salgado is everywhere with 7 recoveries, rising to third in the MVP ranking.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 6.5
+    }
+  },
+  {
+    "overlay_id": "o075",
+    "match_id": "m001",
+    "source_insight": "i31",
+    "period": 2,
+    "show_at": "54:03",
+    "show_at_s": 3243,
+    "duration_s": 7,
+    "slot": "top_right",
+    "mode": "analyst",
+    "language": "en",
+    "type": "mvp_update",
+    "title": "Salgado climbs to third MVP",
+    "text": "Salgado excelled with 7 recoveries, 5 duels won, and 9 progressive passes after Real Cardón’s goal.",
+    "data": {
+      "rank": 3,
+      "previous_rank": 4,
+      "mvp_score": 6.5
+    }
+  },
+  {
+    "overlay_id": "o076",
+    "match_id": "m001",
+    "source_insight": "i34",
+    "period": 2,
+    "show_at": "55:02",
+    "show_at_s": 3302,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "team_phase",
+    "title": "Bahía domina con esperanza",
+    "text": "Aunque pierde 0-1, Bahía controla el balón y domina el juego con mucha más posesión y precisión en los pases.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "home": 86,
+        "away": 72
+      },
+      "passes_per_min": {
+        "home": 6.3,
+        "away": 3.6
+      }
+    }
+  },
+  {
+    "overlay_id": "o077",
+    "match_id": "m001",
+    "source_insight": "i34",
+    "period": 2,
+    "show_at": "55:02",
+    "show_at_s": 3302,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "team_phase",
+    "title": "Control y precisión de Bahía FC",
+    "text": "Entre el minuto 45 y 55, Bahía FC tuvo 64% de posesión y un 86% de precisión en pases, superando a Real Cardón que estuvo en 72%.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "home": 86,
+        "away": 72
+      },
+      "passes_per_min": {
+        "home": 6.3,
+        "away": 3.6
+      }
+    }
+  },
+  {
+    "overlay_id": "o078",
+    "match_id": "m001",
+    "source_insight": "i34",
+    "period": 2,
+    "show_at": "55:02",
+    "show_at_s": 3302,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "team_phase",
+    "title": "Bahía controls despite trailing",
+    "text": "Down 0-1, Bahía FC keeps the ball most of the time and shows sharp passing, pushing for a comeback.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "home": 86,
+        "away": 72
+      },
+      "passes_per_min": {
+        "home": 6.3,
+        "away": 3.6
+      }
+    }
+  },
+  {
+    "overlay_id": "o079",
+    "match_id": "m001",
+    "source_insight": "i34",
+    "period": 2,
+    "show_at": "55:02",
+    "show_at_s": 3302,
+    "duration_s": 8,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "team_phase",
+    "title": "Bahía FC's possession dominance",
+    "text": "From 45 to 55 minutes, Bahía FC held 64% possession with 86% pass accuracy, far surpassing Real Cardón's 72% accuracy.",
+    "data": {
+      "label": "control",
+      "possession_pct": 64,
+      "pass_accuracy_pct": {
+        "home": 86,
+        "away": 72
+      },
+      "passes_per_min": {
+        "home": 6.3,
+        "away": 3.6
+      }
+    }
+  },
+  {
+    "overlay_id": "o080",
+    "match_id": "m001",
+    "source_insight": "i36",
+    "period": 2,
+    "show_at": "59:26",
+    "show_at_s": 3566,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Salgado domina el mediocampo",
+    "text": "Con el marcador 0-1, Salgado está por todas, recuperando balones y conectando pases clave para Bahía FC.",
+    "data": {
+      "recoveries": 9,
+      "duels_won": 5,
+      "duels_total": 6,
+      "progressive_passes": 10,
+      "key_passes": 2,
+      "vs_role": 1.0,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o081",
+    "match_id": "m001",
+    "source_insight": "i36",
+    "period": 2,
+    "show_at": "59:26",
+    "show_at_s": 3566,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Salgado supera expectativas en mediocampo",
+    "text": "Salgado suma 9 recuperaciones, gana 5 de 6 duelos y completa 2 pases clave, destacando en un partido complicado para Bahía FC.",
+    "data": {
+      "recoveries": 9,
+      "duels_won": 5,
+      "duels_total": 6,
+      "progressive_passes": 10,
+      "key_passes": 2,
+      "vs_role": 1.0,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o082",
+    "match_id": "m001",
+    "source_insight": "i36",
+    "period": 2,
+    "show_at": "59:26",
+    "show_at_s": 3566,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Salgado controls midfield",
+    "text": "Despite trailing 0-1, Salgado is everywhere with key passes and ball recoveries driving Bahía FC's hope to turn the game around.",
+    "data": {
+      "recoveries": 9,
+      "duels_won": 5,
+      "duels_total": 6,
+      "progressive_passes": 10,
+      "key_passes": 2,
+      "vs_role": 1.0,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o083",
+    "match_id": "m001",
+    "source_insight": "i36",
+    "period": 2,
+    "show_at": "59:26",
+    "show_at_s": 3566,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Salgado excels in midfield role",
+    "text": "Salgado achieves 9 recoveries, wins 5 of 6 duels, and delivers 2 key passes, standing out amid Bahía FC's offensive struggles.",
+    "data": {
+      "recoveries": 9,
+      "duels_won": 5,
+      "duels_total": 6,
+      "progressive_passes": 10,
+      "key_passes": 2,
+      "vs_role": 1.0,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o084",
+    "match_id": "m001",
+    "source_insight": "i38",
+    "period": 2,
+    "show_at": "63:11",
+    "show_at_s": 3791,
+    "duration_s": 12,
+    "slot": "center",
+    "mode": "fan",
+    "language": "es",
+    "type": "goal_analysis",
+    "title": "Gol que iguala y emociona",
+    "text": "Ramírez marcó tras una gran jugada colectiva de Bahía FC, que abrió un amplio espacio para superar a Real Cardón y empatar 1-1.",
+    "data": {
+      "chain": [
+        "F. Cota",
+        "J. Torres",
+        "R. Salgado",
+        "M. Ramírez"
+      ],
+      "credit": [
+        0.18,
+        0.25,
+        0.35,
+        0.22
+      ],
+      "scoreline": {
+        "home": 1,
+        "away": 1
+      },
+      "xg": 0.41,
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
+    }
+  },
+  {
+    "overlay_id": "o085",
+    "match_id": "m001",
+    "source_insight": "i38",
+    "period": 2,
+    "show_at": "63:11",
+    "show_at_s": 3791,
+    "duration_s": 12,
+    "slot": "center",
+    "mode": "analyst",
+    "language": "es",
+    "type": "goal_analysis",
+    "title": "Cadena del gol 1-1",
+    "text": "Cota, Torres, Salgado, Ramírez. xG 0.41 en 93 s.",
+    "data": {
+      "chain": [
+        "F. Cota",
+        "J. Torres",
+        "R. Salgado",
+        "M. Ramírez"
+      ],
+      "credit": [
+        0.18,
+        0.25,
+        0.35,
+        0.22
+      ],
+      "scoreline": {
+        "home": 1,
+        "away": 1
+      },
+      "xg": 0.41,
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
+    }
+  },
+  {
+    "overlay_id": "o086",
+    "match_id": "m001",
+    "source_insight": "i38",
+    "period": 2,
+    "show_at": "63:11",
+    "show_at_s": 3791,
+    "duration_s": 12,
+    "slot": "center",
+    "mode": "fan",
+    "language": "en",
+    "type": "goal_analysis",
+    "title": "Equalizer excites fans",
+    "text": "Ramírez scored after a brilliant Bahía FC move, creating wide space to beat Real Cardón and level 1-1.",
+    "data": {
+      "chain": [
+        "F. Cota",
+        "J. Torres",
+        "R. Salgado",
+        "M. Ramírez"
+      ],
+      "credit": [
+        0.18,
+        0.25,
+        0.35,
+        0.22
+      ],
+      "scoreline": {
+        "home": 1,
+        "away": 1
+      },
+      "xg": 0.41,
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
+    }
+  },
+  {
+    "overlay_id": "o087",
+    "match_id": "m001",
+    "source_insight": "i38",
+    "period": 2,
+    "show_at": "63:11",
+    "show_at_s": 3791,
+    "duration_s": 12,
+    "slot": "center",
+    "mode": "analyst",
+    "language": "en",
+    "type": "goal_analysis",
+    "title": "Goal from 93-second build-up",
+    "text": "Bahía FC equalized 1-1 through Ramírez after Cota’s recovery, Torres’s 9.5 m space-opening run, and Salgado’s line-breaking pass. xG 0.41.",
+    "data": {
+      "chain": [
+        "F. Cota",
+        "J. Torres",
+        "R. Salgado",
+        "M. Ramírez"
+      ],
+      "credit": [
+        0.18,
+        0.25,
+        0.35,
+        0.22
+      ],
+      "scoreline": {
+        "home": 1,
+        "away": 1
+      },
+      "xg": 0.41,
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
+    }
+  },
+  {
+    "overlay_id": "o088",
+    "match_id": "m001",
+    "source_insight": "i39",
+    "period": 2,
+    "show_at": "63:23",
+    "show_at_s": 3803,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Torres abre paso clave",
+    "text": "Con 1-1, Torres arrastró al central y abrió un espacio enorme para Bahía, haciendo crecer la presión sobre Real Cardón.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "sin_balon",
+      "from": 68,
+      "to": 71,
+      "delta": 3
+    }
+  },
+  {
+    "overlay_id": "o089",
+    "match_id": "m001",
+    "source_insight": "i39",
+    "period": 2,
+    "show_at": "63:23",
+    "show_at_s": 3803,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Influencia sin balón de Torres crece",
+    "text": "Torres elevó su atributo sin balón de 68 a 71 arrastrando al central y abriendo un espacio de 9.5 m para la ofensiva de Bahía FC.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "sin_balon",
+      "from": 68,
+      "to": 71,
+      "delta": 3
+    }
+  },
+  {
+    "overlay_id": "o090",
+    "match_id": "m001",
+    "source_insight": "i39",
+    "period": 2,
+    "show_at": "63:23",
+    "show_at_s": 3803,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Torres creates crucial space",
+    "text": "At 1-1, Torres pulled the defender and opened a big gap, boosting Bahía's pressure on Real Cardón's defense.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "sin_balon",
+      "from": 68,
+      "to": 71,
+      "delta": 3
+    }
+  },
+  {
+    "overlay_id": "o091",
+    "match_id": "m001",
+    "source_insight": "i39",
+    "period": 2,
+    "show_at": "63:23",
+    "show_at_s": 3803,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Torres' off-ball influence rises",
+    "text": "Torres improved his off-ball attribute from 68 to 71 by dragging the central defender and opening a 9.5 m space for Bahía FC's attack.",
+    "card": {
+      "player": "J. Torres",
+      "team": "Bahía FC",
+      "position": "ED",
+      "attribute": "sin_balon",
+      "from": 68,
+      "to": 71,
+      "delta": 3
+    }
+  },
+  {
+    "overlay_id": "o092",
+    "match_id": "m001",
+    "source_insight": "i41",
+    "period": 2,
+    "show_at": "64:40",
+    "show_at_s": 3880,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Verdugo prende la chispa",
+    "text": "Con empate 1-1, Verdugo destaca con creatividad y varios pases que levantan el ataque de Real Cardón.",
+    "card": {
+      "player": "D. Verdugo",
+      "team": "Real Cardón",
+      "position": "EI",
+      "attribute": "vision",
+      "from": 63,
+      "to": 64,
+      "delta": 1
+    },
+    "data": {
+      "recoveries": 3,
+      "duels_won": 2,
+      "duels_total": 8,
+      "progressive_passes": 3,
+      "key_passes": 3,
+      "vs_role": 0.64,
+      "mvp_rank": 11
+    }
+  },
+  {
+    "overlay_id": "o093",
+    "match_id": "m001",
+    "source_insight": "i41",
+    "period": 2,
+    "show_at": "64:40",
+    "show_at_s": 3880,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Verdugo supera expectativas creativas",
+    "text": "A los 64 minutos y con empate 1-1, Verdugo registra 3 recuperaciones, 3 pases clave y progresa el juego mejor que su rol exige.",
+    "card": {
+      "player": "D. Verdugo",
+      "team": "Real Cardón",
+      "position": "EI",
+      "attribute": "vision",
+      "from": 63,
+      "to": 64,
+      "delta": 1
+    },
+    "data": {
+      "recoveries": 3,
+      "duels_won": 2,
+      "duels_total": 8,
+      "progressive_passes": 3,
+      "key_passes": 3,
+      "vs_role": 0.64,
+      "mvp_rank": 11
+    }
+  },
+  {
+    "overlay_id": "o094",
+    "match_id": "m001",
+    "source_insight": "i41",
+    "period": 2,
+    "show_at": "64:40",
+    "show_at_s": 3880,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Verdugo sparks the attack",
+    "text": "At 1-1, Verdugo shines with creativity and key passes boosting Real Cardón’s offense.",
+    "card": {
+      "player": "D. Verdugo",
+      "team": "Real Cardón",
+      "position": "EI",
+      "attribute": "vision",
+      "from": 63,
+      "to": 64,
+      "delta": 1
+    },
+    "data": {
+      "recoveries": 3,
+      "duels_won": 2,
+      "duels_total": 8,
+      "progressive_passes": 3,
+      "key_passes": 3,
+      "vs_role": 0.64,
+      "mvp_rank": 11
+    }
+  },
+  {
+    "overlay_id": "o095",
+    "match_id": "m001",
+    "source_insight": "i41",
+    "period": 2,
+    "show_at": "64:40",
+    "show_at_s": 3880,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Verdugo exceeds creative role",
+    "text": "At 64:38 with a 1-1 scoreline, Verdugo made 3 recoveries, 3 key passes and 3 progressive passes, surpassing expectations for his role.",
+    "card": {
+      "player": "D. Verdugo",
+      "team": "Real Cardón",
+      "position": "EI",
+      "attribute": "vision",
+      "from": 63,
+      "to": 64,
+      "delta": 1
+    },
+    "data": {
+      "recoveries": 3,
+      "duels_won": 2,
+      "duels_total": 8,
+      "progressive_passes": 3,
+      "key_passes": 3,
+      "vs_role": 0.64,
+      "mvp_rank": 11
+    }
+  },
+  {
+    "overlay_id": "o096",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 2,
+    "show_at": "65:00",
+    "show_at_s": 3900,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.1
+    }
+  },
+  {
+    "overlay_id": "o097",
+    "match_id": "m001",
+    "source_insight": "i42",
+    "period": 2,
+    "show_at": "70:08",
+    "show_at_s": 4208,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Olvera brilla para Bahía FC",
+    "text": "Con el partido 1-1, Olvera domina por todas partes con sus recuperaciones y pases que hacen avanzar al equipo.",
+    "card": {
+      "player": "A. Olvera",
+      "team": "Bahía FC",
+      "position": "EI",
+      "attribute": "defensa",
+      "from": 46,
+      "to": 48,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 3,
+      "duels_total": 5,
+      "progressive_passes": 7,
+      "key_passes": 1,
+      "vs_role": 0.81,
+      "mvp_rank": 13
+    }
+  },
+  {
+    "overlay_id": "o098",
+    "match_id": "m001",
+    "source_insight": "i42",
+    "period": 2,
+    "show_at": "70:08",
+    "show_at_s": 4208,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Olvera destaca en rol defensivo",
+    "text": "Olvera suma 5 recuperaciones, 3 de 5 duelos ganados y 7 pases progresivos, superando ampliamente lo esperado en su posición.",
+    "card": {
+      "player": "A. Olvera",
+      "team": "Bahía FC",
+      "position": "EI",
+      "attribute": "defensa",
+      "from": 46,
+      "to": 48,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 3,
+      "duels_total": 5,
+      "progressive_passes": 7,
+      "key_passes": 1,
+      "vs_role": 0.81,
+      "mvp_rank": 13
+    }
+  },
+  {
+    "overlay_id": "o099",
+    "match_id": "m001",
+    "source_insight": "i42",
+    "period": 2,
+    "show_at": "70:08",
+    "show_at_s": 4208,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Olvera shines for Bahía FC",
+    "text": "At 1-1, Olvera is everywhere, recovering the ball and driving the team forward with progressive passes.",
+    "card": {
+      "player": "A. Olvera",
+      "team": "Bahía FC",
+      "position": "EI",
+      "attribute": "defensa",
+      "from": 46,
+      "to": 48,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 3,
+      "duels_total": 5,
+      "progressive_passes": 7,
+      "key_passes": 1,
+      "vs_role": 0.81,
+      "mvp_rank": 13
+    }
+  },
+  {
+    "overlay_id": "o100",
+    "match_id": "m001",
+    "source_insight": "i42",
+    "period": 2,
+    "show_at": "70:08",
+    "show_at_s": 4208,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Olvera excels defensively",
+    "text": "Olvera records 5 recoveries, wins 3 of 5 duels, and completes 7 progressive passes, greatly exceeding expectations for his role.",
+    "card": {
+      "player": "A. Olvera",
+      "team": "Bahía FC",
+      "position": "EI",
+      "attribute": "defensa",
+      "from": 46,
+      "to": 48,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 5,
+      "duels_won": 3,
+      "duels_total": 5,
+      "progressive_passes": 7,
+      "key_passes": 1,
+      "vs_role": 0.81,
+      "mvp_rank": 13
+    }
+  },
+  {
+    "overlay_id": "o101",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 2,
+    "show_at": "75:00",
+    "show_at_s": 4500,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.02
+    }
+  },
+  {
+    "overlay_id": "o102",
+    "match_id": "m001",
+    "source_insight": "i44",
+    "period": 2,
+    "show_at": "76:04",
+    "show_at_s": 4564,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Esquer brilla y cambia el ritmo",
+    "text": "Con el 1-1, Esquer estaba en todas: recuperó el doble de lo esperado y lanzó muchos pases hacia adelante.",
+    "card": {
+      "player": "T. Esquer",
+      "team": "Real Cardón",
+      "position": "DFC",
+      "attribute": "defensa",
+      "from": 76,
+      "to": 78,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 9,
+      "duels_won": 4,
+      "duels_total": 9,
+      "progressive_passes": 18,
+      "key_passes": 0,
+      "vs_role": 0.56,
+      "mvp_rank": 6
+    }
+  },
+  {
+    "overlay_id": "o103",
+    "match_id": "m001",
+    "source_insight": "i44",
+    "period": 2,
+    "show_at": "76:04",
+    "show_at_s": 4564,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Esquer, clave en defensa y pase",
+    "text": "Esquer completó 9 recuperaciones y 18 pases progresivos, doblando ampliamente la expectativa defensiva para su rol en el empate 1-1.",
+    "card": {
+      "player": "T. Esquer",
+      "team": "Real Cardón",
+      "position": "DFC",
+      "attribute": "defensa",
+      "from": 76,
+      "to": 78,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 9,
+      "duels_won": 4,
+      "duels_total": 9,
+      "progressive_passes": 18,
+      "key_passes": 0,
+      "vs_role": 0.56,
+      "mvp_rank": 6
+    }
+  },
+  {
+    "overlay_id": "o104",
+    "match_id": "m001",
+    "source_insight": "i44",
+    "period": 2,
+    "show_at": "76:04",
+    "show_at_s": 4564,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Esquer shines, shifts the game",
+    "text": "At 1-1, Esquer was everywhere, recovering twice what was expected and making many forward passes.",
+    "card": {
+      "player": "T. Esquer",
+      "team": "Real Cardón",
+      "position": "DFC",
+      "attribute": "defensa",
+      "from": 76,
+      "to": 78,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 9,
+      "duels_won": 4,
+      "duels_total": 9,
+      "progressive_passes": 18,
+      "key_passes": 0,
+      "vs_role": 0.56,
+      "mvp_rank": 6
+    }
+  },
+  {
+    "overlay_id": "o105",
+    "match_id": "m001",
+    "source_insight": "i44",
+    "period": 2,
+    "show_at": "76:04",
+    "show_at_s": 4564,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Esquer crucial in defense and progression",
+    "text": "Esquer recorded 9 recoveries and 18 progressive passes, greatly exceeding defensive expectations for his role in the 1-1 draw.",
+    "card": {
+      "player": "T. Esquer",
+      "team": "Real Cardón",
+      "position": "DFC",
+      "attribute": "defensa",
+      "from": 76,
+      "to": 78,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 9,
+      "duels_won": 4,
+      "duels_total": 9,
+      "progressive_passes": 18,
+      "key_passes": 0,
+      "vs_role": 0.56,
+      "mvp_rank": 6
+    }
+  },
+  {
+    "overlay_id": "o106",
+    "match_id": "m001",
+    "source_insight": "i45",
+    "period": 2,
+    "show_at": "78:24",
+    "show_at_s": 4704,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Rosas mejora el disparo",
+    "text": "Con el partido 1-1, Rosas aumentó su disparo tras un potente remate a 112 km/h. Real Cardón gana fuerza ofensiva para el final.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "disparo",
+      "from": 74,
+      "to": 75,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o107",
+    "match_id": "m001",
+    "source_insight": "i45",
+    "period": 2,
+    "show_at": "78:24",
+    "show_at_s": 4704,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "es",
+    "type": "card_upgrade",
+    "title": "Rosas sube su disparo",
+    "text": "Al 78:22, K. Rosas mejora su disparo de 74 a 75 con un remate a 112 km/h, aumentando el potencial ofensivo en empate 1-1.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "disparo",
+      "from": 74,
+      "to": 75,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o108",
+    "match_id": "m001",
+    "source_insight": "i45",
+    "period": 2,
+    "show_at": "78:24",
+    "show_at_s": 4704,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "fan",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Rosas boosts shooting power",
+    "text": "At 1-1, Rosas raised shooting skill with a 112 km/h shot. Real Cardón gains offensive edge late in the game.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "disparo",
+      "from": 74,
+      "to": 75,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o109",
+    "match_id": "m001",
+    "source_insight": "i45",
+    "period": 2,
+    "show_at": "78:24",
+    "show_at_s": 4704,
+    "duration_s": 6,
+    "slot": "lower_third",
+    "mode": "analyst",
+    "language": "en",
+    "type": "card_upgrade",
+    "title": "Rosas upgrades shooting attribute",
+    "text": "At 78:22, K. Rosas improves shooting from 74 to 75 due to a 112 km/h shot, enhancing Real Cardón’s offensive potential at 1-1.",
+    "card": {
+      "player": "K. Rosas",
+      "team": "Real Cardón",
+      "position": "MC",
+      "attribute": "disparo",
+      "from": 74,
+      "to": 75,
+      "delta": 1
+    }
+  },
+  {
+    "overlay_id": "o110",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 2,
+    "show_at": "80:00",
+    "show_at_s": 4800,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": 0.04
+    }
+  },
+  {
+    "overlay_id": "o111",
+    "match_id": "m001",
+    "source_insight": "i46",
+    "period": 2,
+    "show_at": "81:57",
+    "show_at_s": 4917,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Cota brilla y sostiene empate",
+    "text": "Con el partido 1-1, Cota domina el juego defensivo en un momento clave para Bahía FC.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 82,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 12,
+      "duels_won": 5,
+      "duels_total": 10,
+      "progressive_passes": 16,
+      "key_passes": 0,
+      "vs_role": 0.5,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o112",
+    "match_id": "m001",
+    "source_insight": "i46",
+    "period": 2,
+    "show_at": "81:57",
+    "show_at_s": 4917,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "es",
+    "type": "standout_milestone",
+    "title": "Cota supera expectativas defensivas",
+    "text": "A 82 minutos, Cota recupera 12 balones, gana 5 de 10 duelos, y completa 16 pases progresivos, muy por encima de lo esperado para su rol defensivo.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 82,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 12,
+      "duels_won": 5,
+      "duels_total": 10,
+      "progressive_passes": 16,
+      "key_passes": 0,
+      "vs_role": 0.5,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o113",
+    "match_id": "m001",
+    "source_insight": "i46",
+    "period": 2,
+    "show_at": "81:57",
+    "show_at_s": 4917,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Cota shines to hold draw",
+    "text": "At 1-1, Cota leads defensively at a key moment for Bahía FC.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 82,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 12,
+      "duels_won": 5,
+      "duels_total": 10,
+      "progressive_passes": 16,
+      "key_passes": 0,
+      "vs_role": 0.5,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o114",
+    "match_id": "m001",
+    "source_insight": "i46",
+    "period": 2,
+    "show_at": "81:57",
+    "show_at_s": 4917,
+    "duration_s": 9,
+    "slot": "side_panel",
+    "mode": "analyst",
+    "language": "en",
+    "type": "standout_milestone",
+    "title": "Cota exceeds defensive expectations",
+    "text": "By the 82nd minute, Cota made 12 recoveries, won 5 of 10 duels, and completed 16 progressive passes, well above expected defensive role performance.",
+    "card": {
+      "player": "F. Cota",
+      "team": "Bahía FC",
+      "position": "MCD",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 82,
+      "delta": 2
+    },
+    "data": {
+      "recoveries": 12,
+      "duels_won": 5,
+      "duels_total": 10,
+      "progressive_passes": 16,
+      "key_passes": 0,
+      "vs_role": 0.5,
+      "mvp_rank": 3
+    }
+  },
+  {
+    "overlay_id": "o115",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 2,
+    "show_at": "85:00",
+    "show_at_s": 5100,
+    "duration_s": 4,
+    "slot": "bottom_bar",
+    "mode": "all",
+    "language": "all",
+    "type": "duel_bar",
+    "title": null,
+    "text": null,
+    "data": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.08
+    }
+  },
+  {
+    "overlay_id": "o116",
+    "match_id": "m001",
+    "source_insight": "i49",
+    "period": 2,
+    "show_at": "90:02",
+    "show_at_s": 5402,
+    "duration_s": 20,
+    "slot": "full_screen",
+    "mode": "fan",
+    "language": "es",
+    "type": "top3",
+    "title": "Torres, héroe del empate",
+    "text": "J. Torres brilló con recuperaciones y un desmarque secreto que abrió el camino para que Bahía FC igualara 1-1 a Real Cardón.",
+    "data": {
+      "cards": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 9.3
+        },
+        {
+          "rank": 2,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.9
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 8.1
+        }
+      ],
+      "final_scoreline": {
+        "home": 1,
+        "away": 1
+      }
+    }
+  },
+  {
+    "overlay_id": "o117",
+    "match_id": "m001",
+    "source_insight": "i49",
+    "period": 2,
+    "show_at": "90:02",
+    "show_at_s": 5402,
+    "duration_s": 20,
+    "slot": "full_screen",
+    "mode": "analyst",
+    "language": "es",
+    "type": "top3",
+    "title": "Torres domina la presión rival",
+    "text": "J. Torres tuvo 16 recuperaciones en campo rival, el doble de lo esperado, y abrió el gol con un desmarque que permitió a Bahía FC empatar 1-1. Salgado asistió y Cota inició la jugada.",
+    "data": {
+      "cards": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 9.3
+        },
+        {
+          "rank": 2,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.9
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 8.1
+        }
+      ],
+      "final_scoreline": {
+        "home": 1,
+        "away": 1
+      }
+    }
+  },
+  {
+    "overlay_id": "o118",
+    "match_id": "m001",
+    "source_insight": "i49",
+    "period": 2,
+    "show_at": "90:02",
+    "show_at_s": 5402,
+    "duration_s": 20,
+    "slot": "full_screen",
+    "mode": "fan",
+    "language": "en",
+    "type": "top3",
+    "title": "Torres: Bahía’s Equalizer Hero",
+    "text": "J. Torres dominated recoveries and made an off-ball run that set up Bahía FC’s goal to tie 1-1 against Real Cardón.",
+    "data": {
+      "cards": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 9.3
+        },
+        {
+          "rank": 2,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.9
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 8.1
+        }
+      ],
+      "final_scoreline": {
+        "home": 1,
+        "away": 1
+      }
+    }
+  },
+  {
+    "overlay_id": "o119",
+    "match_id": "m001",
+    "source_insight": "i49",
+    "period": 2,
+    "show_at": "90:02",
+    "show_at_s": 5402,
+    "duration_s": 20,
+    "slot": "full_screen",
+    "mode": "analyst",
+    "language": "en",
+    "type": "top3",
+    "title": "Torres’ Pressure Key to Equalizer",
+    "text": "Torres recorded 16 recoveries in the opponent's half—double expectations—and made the off-ball run opening Bahía FC’s 1-1 equalizer. Salgado assisted, Cota started the play.",
+    "data": {
+      "cards": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 9.3
+        },
+        {
+          "rank": 2,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.9
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 8.1
+        }
+      ],
+      "final_scoreline": {
+        "home": 1,
+        "away": 1
+      }
+    }
+  }
+]

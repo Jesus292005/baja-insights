@@ -1,0 +1,7 @@
+# Agents (member 2). Install from the repo root so the engine comes along:
+#   pip install -e ".[dev]" -r agents/requirements.txt
+agent-framework-core==1.23.0
+agent-framework-foundry==1.15.0
+azure-identity==1.26.0
+pydantic==2.14.1
+python-dotenv==1.2.4
