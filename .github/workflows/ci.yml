@@ -23,3 +23,17 @@ jobs:
         run: |
           python -m baja_insights generate --seed 23 --script m001 --out /tmp/events.jsonl
           diff -q /tmp/events.jsonl data/m001/events.jsonl
+
+  agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]" -r agents/requirements.txt
+      - name: Agent tests, offline with fake agents
+        run: python -m pytest -q agents/tests
+      - name: Demo overlays match the contract
+        run: python -m baja_insights validate data/m001/overlays.json
