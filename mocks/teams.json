@@ -1,0 +1,513 @@
+{
+  "match": {
+    "match_id": "m001",
+    "home": "Bahía FC",
+    "away": "Real Cardón",
+    "venue": "Estadio Punta Morro",
+    "competition": "Liga Baja (ficticia)",
+    "kickoff_local": "2026-10-24T19:00:00-07:00",
+    "final_score": {
+      "home": 1,
+      "away": 1
+    }
+  },
+  "conventions": {
+    "pitch_m": [
+      105,
+      68
+    ],
+    "origin": "esquina inferior izquierda",
+    "attack_direction": "Bahía FC ataca siempre hacia x=105 y Real Cardón hacia x=0, en ambos tiempos, para simplificar",
+    "clock": "minuto y segundo continuos del partido, sin tiempo agregado; el segundo tiempo arranca en 45:00",
+    "positions": {
+      "POR": "portero",
+      "LD": "lateral derecho",
+      "LI": "lateral izquierdo",
+      "DFC": "defensa central",
+      "MCD": "medio de contención",
+      "MC": "mediocampista",
+      "ED": "extremo derecho",
+      "EI": "extremo izquierdo",
+      "DC": "delantero centro"
+    }
+  },
+  "teams": [
+    {
+      "name": "Bahía FC",
+      "short": "BAH",
+      "colors": [
+        "#1F4E79",
+        "#FFFFFF"
+      ],
+      "players": [
+        {
+          "number": 1,
+          "name": "L. Arce",
+          "position": "POR",
+          "starter": true,
+          "card": {
+            "ritmo": 48,
+            "disparo": 20,
+            "vision": 55,
+            "regate": 30,
+            "defensa": 80,
+            "fisico": 70,
+            "sin_balon": 40,
+            "overall": 49
+          }
+        },
+        {
+          "number": 2,
+          "name": "D. Mena",
+          "position": "LD",
+          "starter": true,
+          "card": {
+            "ritmo": 78,
+            "disparo": 45,
+            "vision": 62,
+            "regate": 66,
+            "defensa": 72,
+            "fisico": 70,
+            "sin_balon": 64,
+            "overall": 65
+          }
+        },
+        {
+          "number": 4,
+          "name": "E. Quiroz",
+          "position": "DFC",
+          "starter": true,
+          "card": {
+            "ritmo": 60,
+            "disparo": 35,
+            "vision": 55,
+            "regate": 45,
+            "defensa": 79,
+            "fisico": 81,
+            "sin_balon": 58,
+            "overall": 59
+          }
+        },
+        {
+          "number": 5,
+          "name": "S. Beltrán",
+          "position": "DFC",
+          "starter": true,
+          "card": {
+            "ritmo": 62,
+            "disparo": 38,
+            "vision": 60,
+            "regate": 48,
+            "defensa": 77,
+            "fisico": 78,
+            "sin_balon": 56,
+            "overall": 60
+          }
+        },
+        {
+          "number": 3,
+          "name": "P. Lugo",
+          "position": "LI",
+          "starter": true,
+          "card": {
+            "ritmo": 76,
+            "disparo": 42,
+            "vision": 60,
+            "regate": 64,
+            "defensa": 70,
+            "fisico": 68,
+            "sin_balon": 62,
+            "overall": 63
+          }
+        },
+        {
+          "number": 6,
+          "name": "F. Cota",
+          "position": "MCD",
+          "starter": true,
+          "card": {
+            "ritmo": 64,
+            "disparo": 52,
+            "vision": 70,
+            "regate": 60,
+            "defensa": 78,
+            "fisico": 77,
+            "sin_balon": 72,
+            "overall": 68
+          }
+        },
+        {
+          "number": 8,
+          "name": "R. Salgado",
+          "position": "MC",
+          "starter": true,
+          "card": {
+            "ritmo": 68,
+            "disparo": 66,
+            "vision": 74,
+            "regate": 72,
+            "defensa": 60,
+            "fisico": 66,
+            "sin_balon": 70,
+            "overall": 68
+          }
+        },
+        {
+          "number": 7,
+          "name": "J. Torres",
+          "position": "ED",
+          "starter": true,
+          "card": {
+            "ritmo": 84,
+            "disparo": 68,
+            "vision": 66,
+            "regate": 78,
+            "defensa": 58,
+            "fisico": 66,
+            "sin_balon": 68,
+            "overall": 70
+          }
+        },
+        {
+          "number": 11,
+          "name": "A. Olvera",
+          "position": "EI",
+          "starter": true,
+          "card": {
+            "ritmo": 82,
+            "disparo": 64,
+            "vision": 64,
+            "regate": 76,
+            "defensa": 46,
+            "fisico": 60,
+            "sin_balon": 66,
+            "overall": 65
+          }
+        },
+        {
+          "number": 9,
+          "name": "M. Ramírez",
+          "position": "DC",
+          "starter": true,
+          "card": {
+            "ritmo": 76,
+            "disparo": 78,
+            "vision": 58,
+            "regate": 68,
+            "defensa": 36,
+            "fisico": 74,
+            "sin_balon": 70,
+            "overall": 66
+          }
+        },
+        {
+          "number": 19,
+          "name": "C. Ibarra",
+          "position": "DC",
+          "starter": false,
+          "card": {
+            "ritmo": 74,
+            "disparo": 70,
+            "vision": 52,
+            "regate": 62,
+            "defensa": 34,
+            "fisico": 72,
+            "sin_balon": 64,
+            "overall": 61
+          }
+        },
+        {
+          "number": 14,
+          "name": "O. Félix",
+          "position": "MC",
+          "starter": false,
+          "card": {
+            "ritmo": 66,
+            "disparo": 58,
+            "vision": 66,
+            "regate": 64,
+            "defensa": 62,
+            "fisico": 64,
+            "sin_balon": 62,
+            "overall": 63
+          }
+        }
+      ]
+    },
+    {
+      "name": "Real Cardón",
+      "short": "CAR",
+      "colors": [
+        "#7A1F1F",
+        "#F2C14E"
+      ],
+      "players": [
+        {
+          "number": 1,
+          "name": "H. Zamora",
+          "position": "POR",
+          "starter": true,
+          "card": {
+            "ritmo": 50,
+            "disparo": 22,
+            "vision": 58,
+            "regate": 32,
+            "defensa": 79,
+            "fisico": 72,
+            "sin_balon": 40,
+            "overall": 50
+          }
+        },
+        {
+          "number": 2,
+          "name": "N. Ruelas",
+          "position": "LD",
+          "starter": true,
+          "card": {
+            "ritmo": 74,
+            "disparo": 40,
+            "vision": 60,
+            "regate": 62,
+            "defensa": 72,
+            "fisico": 70,
+            "sin_balon": 60,
+            "overall": 63
+          }
+        },
+        {
+          "number": 4,
+          "name": "G. Cárdenas",
+          "position": "DFC",
+          "starter": true,
+          "card": {
+            "ritmo": 58,
+            "disparo": 34,
+            "vision": 54,
+            "regate": 44,
+            "defensa": 80,
+            "fisico": 82,
+            "sin_balon": 56,
+            "overall": 58
+          }
+        },
+        {
+          "number": 5,
+          "name": "T. Esquer",
+          "position": "DFC",
+          "starter": true,
+          "card": {
+            "ritmo": 60,
+            "disparo": 36,
+            "vision": 56,
+            "regate": 46,
+            "defensa": 76,
+            "fisico": 80,
+            "sin_balon": 54,
+            "overall": 58
+          }
+        },
+        {
+          "number": 3,
+          "name": "B. Haro",
+          "position": "LI",
+          "starter": true,
+          "card": {
+            "ritmo": 72,
+            "disparo": 40,
+            "vision": 58,
+            "regate": 60,
+            "defensa": 71,
+            "fisico": 68,
+            "sin_balon": 60,
+            "overall": 61
+          }
+        },
+        {
+          "number": 6,
+          "name": "V. Meza",
+          "position": "MCD",
+          "starter": true,
+          "card": {
+            "ritmo": 62,
+            "disparo": 50,
+            "vision": 68,
+            "regate": 58,
+            "defensa": 76,
+            "fisico": 76,
+            "sin_balon": 66,
+            "overall": 65
+          }
+        },
+        {
+          "number": 8,
+          "name": "K. Rosas",
+          "position": "MC",
+          "starter": true,
+          "card": {
+            "ritmo": 70,
+            "disparo": 74,
+            "vision": 78,
+            "regate": 74,
+            "defensa": 58,
+            "fisico": 64,
+            "sin_balon": 68,
+            "overall": 69
+          }
+        },
+        {
+          "number": 10,
+          "name": "E. Sandoval",
+          "position": "MC",
+          "starter": true,
+          "card": {
+            "ritmo": 68,
+            "disparo": 62,
+            "vision": 72,
+            "regate": 70,
+            "defensa": 56,
+            "fisico": 62,
+            "sin_balon": 64,
+            "overall": 65
+          }
+        },
+        {
+          "number": 7,
+          "name": "L. Montaño",
+          "position": "ED",
+          "starter": true,
+          "card": {
+            "ritmo": 80,
+            "disparo": 62,
+            "vision": 68,
+            "regate": 76,
+            "defensa": 44,
+            "fisico": 60,
+            "sin_balon": 64,
+            "overall": 65
+          }
+        },
+        {
+          "number": 11,
+          "name": "D. Verdugo",
+          "position": "EI",
+          "starter": true,
+          "card": {
+            "ritmo": 86,
+            "disparo": 66,
+            "vision": 62,
+            "regate": 80,
+            "defensa": 42,
+            "fisico": 58,
+            "sin_balon": 62,
+            "overall": 65
+          }
+        },
+        {
+          "number": 9,
+          "name": "S. Leyva",
+          "position": "DC",
+          "starter": true,
+          "card": {
+            "ritmo": 74,
+            "disparo": 80,
+            "vision": 56,
+            "regate": 66,
+            "defensa": 34,
+            "fisico": 76,
+            "sin_balon": 68,
+            "overall": 65
+          }
+        },
+        {
+          "number": 17,
+          "name": "R. Amador",
+          "position": "ED",
+          "starter": false,
+          "card": {
+            "ritmo": 78,
+            "disparo": 60,
+            "vision": 62,
+            "regate": 72,
+            "defensa": 40,
+            "fisico": 58,
+            "sin_balon": 60,
+            "overall": 61
+          }
+        },
+        {
+          "number": 16,
+          "name": "J. Castro",
+          "position": "MC",
+          "starter": false,
+          "card": {
+            "ritmo": 64,
+            "disparo": 56,
+            "vision": 64,
+            "regate": 62,
+            "defensa": 60,
+            "fisico": 64,
+            "sin_balon": 60,
+            "overall": 61
+          }
+        }
+      ]
+    }
+  ],
+  "role_baselines_per_90": {
+    "_nota": "Valor esperado por rol. Sirve para comparar jugadores de posiciones distintas en los duelos y el MVP.",
+    "LD": {
+      "duels_won": 5.5,
+      "recoveries": 5.0,
+      "progressive_passes": 3.0,
+      "key_passes": 0.6
+    },
+    "LI": {
+      "duels_won": 5.5,
+      "recoveries": 5.0,
+      "progressive_passes": 3.0,
+      "key_passes": 0.6
+    },
+    "DFC": {
+      "duels_won": 6.0,
+      "recoveries": 6.5,
+      "progressive_passes": 2.5,
+      "key_passes": 0.2
+    },
+    "MCD": {
+      "duels_won": 6.5,
+      "recoveries": 7.0,
+      "progressive_passes": 4.0,
+      "key_passes": 0.8
+    },
+    "MC": {
+      "duels_won": 5.0,
+      "recoveries": 5.0,
+      "progressive_passes": 5.0,
+      "key_passes": 1.5
+    },
+    "ED": {
+      "duels_won": 4.5,
+      "recoveries": 2.5,
+      "progressive_passes": 2.5,
+      "key_passes": 1.6
+    },
+    "EI": {
+      "duels_won": 4.5,
+      "recoveries": 2.5,
+      "progressive_passes": 2.5,
+      "key_passes": 1.6
+    },
+    "DC": {
+      "duels_won": 4.0,
+      "recoveries": 1.5,
+      "progressive_passes": 1.0,
+      "key_passes": 1.0
+    },
+    "POR": {
+      "duels_won": 0.5,
+      "recoveries": 1.0,
+      "progressive_passes": 1.0,
+      "key_passes": 0.0
+    }
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "_nota": "Funciones que expone el motor para el agente Pregúntale al partido. El agente solo responde con lo que devuelven.",
+  "tools": [
+    {
+      "name": "get_mvp_ranking",
+      "description": "Ranking MVP en un momento del partido.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "description": "mm:ss"
+          },
+          "top": {
+            "type": "integer",
+            "default": 5
+          }
+        },
+        "required": [
+          "at"
+        ]
+      }
+    },
+    {
+      "name": "get_player_summary",
+      "description": "Estadísticas acumuladas, carta y jugadas clave de un jugador.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "player": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "player",
+          "at"
+        ]
+      }
+    },
+    {
+      "name": "get_duel",
+      "description": "Estado del duelo entre dos jugadores.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "player_a": {
+            "type": "string"
+          },
+          "player_b": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "player_a",
+          "player_b",
+          "at"
+        ]
+      }
+    },
+    {
+      "name": "get_team_phase",
+      "description": "Posesión, presión y ritmo de un equipo en una ventana de tiempo.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "team": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "team",
+          "from",
+          "to"
+        ]
+      }
+    },
+    {
+      "name": "get_goal_chain",
+      "description": "Cadena de acciones de un gol con el crédito de cada jugador.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "goal_event_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "goal_event_id"
+        ]
+      }
+    }
+  ],
+  "example_conversations": [
+    {
+      "at": "35:00",
+      "user_profile": {
+        "mode": "fan",
+        "language": "es",
+        "favorite_team": "Bahía FC"
+      },
+      "question": "¿Por qué Torres va primero?",
+      "tool_calls": [
+        {
+          "name": "get_mvp_ranking",
+          "arguments": {
+            "at": "35:00",
+            "top": 3
+          },
+          "result": [
+            {
+              "rank": 1,
+              "player": "J. Torres",
+              "score": 6.2
+            },
+            {
+              "rank": 2,
+              "player": "K. Rosas",
+              "score": 5.9
+            },
+            {
+              "rank": 3,
+              "player": "R. Salgado",
+              "score": 5.1
+            }
+          ]
+        },
+        {
+          "name": "get_player_summary",
+          "arguments": {
+            "player": "J. Torres",
+            "at": "35:00"
+          },
+          "result": {
+            "recoveries": 3,
+            "recoveries_in_opp_half": 3,
+            "expected_for_role": 0.9,
+            "shots": 1,
+            "key_events": [
+              531,
+              642,
+              739
+            ]
+          }
+        }
+      ],
+      "answer": "Porque está robando balones donde más duele. Lleva 3 recuperaciones en campo rival en diez minutos, cuando un extremo normalmente tendría menos de una a estas alturas. La última terminó en el pase de Salgado y el remate de Ramírez."
+    },
+    {
+      "at": "40:00",
+      "user_profile": {
+        "mode": "fan",
+        "language": "es",
+        "favorite_team": "Bahía FC"
+      },
+      "question": "¿Por qué está perdiendo mi equipo?",
+      "tool_calls": [
+        {
+          "name": "get_team_phase",
+          "arguments": {
+            "team": "Real Cardón",
+            "from": "00:00",
+            "to": "40:00"
+          },
+          "result": {
+            "possession_pct": 59,
+            "pass_accuracy_pct": 87,
+            "shots_on_target": 2,
+            "xg": 0.52
+          }
+        },
+        {
+          "name": "get_goal_chain",
+          "arguments": {
+            "goal_event_id": 393
+          },
+          "result": {
+            "scorer": "S. Leyva",
+            "chain": [
+              "V. Meza",
+              "K. Rosas",
+              "L. Montaño",
+              "S. Leyva"
+            ],
+            "key": "pase de Rosas que rompió 2 líneas"
+          }
+        }
+      ],
+      "answer": "Cardón tiene la pelota casi 6 de cada 10 minutos y completa el 87% de sus pases, así que Bahía corre mucho detrás del balón. El gol llegó de un pase de Rosas que se saltó dos líneas de Bahía. La buena noticia es que Torres ya está robando arriba, y por ahí puede cambiar el partido."
+    },
+    {
+      "at": "46:00",
+      "user_profile": {
+        "mode": "analyst",
+        "language": "en",
+        "favorite_team": null
+      },
+      "question": "Who is winning Mena vs Verdugo?",
+      "tool_calls": [
+        {
+          "name": "get_duel",
+          "arguments": {
+            "player_a": "D. Mena",
+            "player_b": "D. Verdugo",
+            "at": "46:00"
+          },
+          "result": {
+            "bar": 0.15,
+            "a_vs_role": 0.3,
+            "b_vs_role": 0.1,
+            "duels_won_a": 2,
+            "duels_won_b": 1,
+            "chances_created_b": 1
+          }
+        }
+      ],
+      "answer": "Mena, narrowly. He has won 2 of their 3 duels and sits +0.30 above a right back's baseline, while Verdugo is +0.10 above a winger's. Verdugo did win the first one and created a chance from it."
+    },
+    {
+      "at": "60:00",
+      "user_profile": {
+        "mode": "fan",
+        "language": "es",
+        "favorite_team": "Bahía FC"
+      },
+      "question": "¿Quién va a ganar?",
+      "tool_calls": [
+        {
+          "name": "get_team_phase",
+          "arguments": {
+            "team": "Bahía FC",
+            "from": "48:00",
+            "to": "60:00"
+          },
+          "result": {
+            "recoveries_opp_half": 5,
+            "avg_line_height_m": 58.4,
+            "shots": 2
+          }
+        }
+      ],
+      "answer": "No hago predicciones, pero sí te digo qué necesita cada equipo. Bahía está presionando mucho más arriba que en el primer tiempo, con 5 robos en campo rival, y si lo sostiene va a seguir generando llegadas. Cardón necesita volver a quedarse con la pelota para bajar ese ritmo."
+    },
+    {
+      "at": "70:00",
+      "user_profile": {
+        "mode": "fan",
+        "language": "es",
+        "favorite_team": null
+      },
+      "question": "¿Cuántos kilómetros ha corrido Torres?",
+      "tool_calls": [
+        {
+          "name": "get_player_summary",
+          "arguments": {
+            "player": "J. Torres",
+            "at": "70:00"
+          },
+          "result": {
+            "recoveries": 4,
+            "shots": 1,
+            "off_ball_runs": 1,
+            "distance_km": null
+          }
+        }
+      ],
+      "answer": "Ese dato no lo tengo, porque el sistema registra las jugadas y no la distancia recorrida. Lo que sí sé es que Torres lleva 4 recuperaciones y que su desmarque abrió el espacio del gol del empate."
+    }
+  ]
+}
