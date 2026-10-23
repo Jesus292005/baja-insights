@@ -62,7 +62,7 @@ class Resume:
 
 
 class MatchGenerator:
-    def __init__(self, roster: Roster, seed: int = 7, script: dict | str | Path | None = "m001",
+    def __init__(self, roster: Roster, seed: int = 23, script: dict | str | Path | None = "m001",
                  match_id: str | None = None):
         self.roster = roster
         self.rng = random.Random(seed)
@@ -521,7 +521,7 @@ def load_script(script: dict | str | Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def generate_match(roster: Roster, seed: int = 7, script: dict | str | Path | None = "m001",
+def generate_match(roster: Roster, seed: int = 23, script: dict | str | Path | None = "m001",
                    match_id: str | None = None) -> list[dict]:
     return MatchGenerator(roster, seed=seed, script=script, match_id=match_id).generate()
 

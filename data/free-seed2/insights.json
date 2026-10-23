@@ -1010,32 +1010,6 @@
     "match_id": "m001",
     "period": 1,
     "minute": 44,
-    "second": 0,
-    "t_s": 2640,
-    "type": "team_phase",
-    "priority": 0.5,
-    "players": [],
-    "team": "Bahía FC",
-    "facts": {
-      "label": "control",
-      "window": "34:00-44:00",
-      "possession_pct": 63,
-      "pass_accuracy_pct": {
-        "home": 85,
-        "away": 75
-      },
-      "passes_per_min": {
-        "home": 4.7,
-        "away": 3.6
-      }
-    },
-    "evidence": []
-  },
-  {
-    "insight_id": "i27",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 44,
     "second": 48,
     "t_s": 2688,
     "type": "standout_milestone",
@@ -1082,7 +1056,7 @@
     ]
   },
   {
-    "insight_id": "i28",
+    "insight_id": "i27",
     "match_id": "m001",
     "period": 2,
     "minute": 45,
@@ -1141,7 +1115,7 @@
     ]
   },
   {
-    "insight_id": "i29",
+    "insight_id": "i28",
     "match_id": "m001",
     "period": 2,
     "minute": 46,
@@ -1171,7 +1145,7 @@
     ]
   },
   {
-    "insight_id": "i30",
+    "insight_id": "i29",
     "match_id": "m001",
     "period": 2,
     "minute": 49,
@@ -1212,7 +1186,7 @@
     ]
   },
   {
-    "insight_id": "i31",
+    "insight_id": "i30",
     "match_id": "m001",
     "period": 2,
     "minute": 50,
@@ -1244,7 +1218,7 @@
     ]
   },
   {
-    "insight_id": "i32",
+    "insight_id": "i31",
     "match_id": "m001",
     "period": 2,
     "minute": 51,
@@ -1285,7 +1259,7 @@
     ]
   },
   {
-    "insight_id": "i33",
+    "insight_id": "i32",
     "match_id": "m001",
     "period": 2,
     "minute": 54,
@@ -1315,7 +1289,7 @@
     ]
   },
   {
-    "insight_id": "i34",
+    "insight_id": "i33",
     "match_id": "m001",
     "period": 2,
     "minute": 55,
@@ -1365,7 +1339,7 @@
     ]
   },
   {
-    "insight_id": "i35",
+    "insight_id": "i34",
     "match_id": "m001",
     "period": 2,
     "minute": 55,
@@ -1407,7 +1381,7 @@
     ]
   },
   {
-    "insight_id": "i36",
+    "insight_id": "i35",
     "match_id": "m001",
     "period": 2,
     "minute": 57,
@@ -1438,7 +1412,7 @@
     ]
   },
   {
-    "insight_id": "i37",
+    "insight_id": "i36",
     "match_id": "m001",
     "period": 2,
     "minute": 60,
@@ -1488,7 +1462,7 @@
     ]
   },
   {
-    "insight_id": "i38",
+    "insight_id": "i37",
     "match_id": "m001",
     "period": 2,
     "minute": 65,
@@ -1538,7 +1512,7 @@
     ]
   },
   {
-    "insight_id": "i39",
+    "insight_id": "i38",
     "match_id": "m001",
     "period": 2,
     "minute": 71,
@@ -1588,7 +1562,7 @@
     ]
   },
   {
-    "insight_id": "i40",
+    "insight_id": "i39",
     "match_id": "m001",
     "period": 2,
     "minute": 71,
@@ -1617,7 +1591,7 @@
     ]
   },
   {
-    "insight_id": "i41",
+    "insight_id": "i40",
     "match_id": "m001",
     "period": 2,
     "minute": 72,
@@ -1647,7 +1621,7 @@
     ]
   },
   {
-    "insight_id": "i42",
+    "insight_id": "i41",
     "match_id": "m001",
     "period": 2,
     "minute": 74,
@@ -1688,7 +1662,7 @@
     ]
   },
   {
-    "insight_id": "i43",
+    "insight_id": "i42",
     "match_id": "m001",
     "period": 2,
     "minute": 76,
@@ -1738,7 +1712,7 @@
     ]
   },
   {
-    "insight_id": "i44",
+    "insight_id": "i43",
     "match_id": "m001",
     "period": 2,
     "minute": 78,
@@ -1766,7 +1740,7 @@
     ]
   },
   {
-    "insight_id": "i45",
+    "insight_id": "i44",
     "match_id": "m001",
     "period": 2,
     "minute": 82,
@@ -1796,7 +1770,7 @@
     ]
   },
   {
-    "insight_id": "i46",
+    "insight_id": "i45",
     "match_id": "m001",
     "period": 2,
     "minute": 83,
@@ -1846,7 +1820,7 @@
     ]
   },
   {
-    "insight_id": "i47",
+    "insight_id": "i46",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -1930,7 +1904,7 @@
     ]
   },
   {
-    "insight_id": "i48",
+    "insight_id": "i47",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -1976,16 +1950,9 @@
           "assist": "A. Olvera"
         }
       ],
-      "phases": [
-        {
-          "team": "Bahía FC",
-          "label": "control",
-          "window": "34:00-44:00"
-        }
-      ],
+      "phases": [],
       "story": [
         "Real Cardón anotó en el 28 con gol de S. Leyva",
-        "Bahía FC controló el juego con la pelota entre el 34:00 y el 44:00",
         "Bahía FC anotó en el 38 con gol de M. Ramírez",
         "Bahía FC anotó en el 42 con gol de M. Ramírez"
       ],

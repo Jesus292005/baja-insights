@@ -8,37 +8,37 @@
       "team": "Real Cardón",
       "from": "00:00",
       "to": "45:00",
-      "pass_acc": 0.86,
-      "tempo": 1.2,
+      "pass_acc": 0.9,
+      "tempo": 1.3,
       "press": 0.22,
-      "directness": 0.35
+      "directness": 0.3
     },
     {
       "team": "Bahía FC",
       "from": "00:00",
       "to": "45:00",
-      "pass_acc": 0.72,
+      "pass_acc": 0.7,
       "tempo": 0.9,
-      "press": 0.26,
+      "press": 0.14,
       "directness": 0.55
     },
     {
       "team": "Bahía FC",
       "from": "48:00",
       "to": "90:00",
-      "pass_acc": 0.74,
+      "pass_acc": 0.76,
       "tempo": 1.05,
-      "press": 0.45,
-      "directness": 0.6
+      "press": 0.55,
+      "directness": 0.65
     },
     {
       "team": "Real Cardón",
       "from": "48:00",
       "to": "90:00",
-      "pass_acc": 0.82,
+      "pass_acc": 0.8,
       "tempo": 1.0,
-      "press": 0.22,
-      "directness": 0.45
+      "press": 0.2,
+      "directness": 0.4
     }
   ],
   "form": [

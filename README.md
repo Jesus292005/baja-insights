@@ -57,7 +57,7 @@ Requires Python 3.11 or later. The core has no runtime dependencies.
 pip install -e ".[dev]"          # jsonschema + pytest for validation and tests
 
 # 1. Generate the demo match (same seed, same match)
-python -m baja_insights generate --seed 7 --script m001 --out data/m001/events.jsonl
+python -m baja_insights generate --seed 23 --script m001 --out data/m001/events.jsonl
 
 # 2. Run the insight engine
 python -m baja_insights analyze --events data/m001/events.jsonl --out data/m001/insights.json

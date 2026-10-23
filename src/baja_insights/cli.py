@@ -1,6 +1,6 @@
 """Command line entry point.
 
-    python -m baja_insights generate --seed 7 --script m001 --out data/m001/events.jsonl
+    python -m baja_insights generate --seed 23 --script m001 --out data/m001/events.jsonl
     python -m baja_insights analyze  --events data/m001/events.jsonl --out data/m001/insights.json
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60
     python -m baja_insights ask      --events data/m001/events.jsonl get_mvp_ranking '{"at": "35:00", "top": 3}'
@@ -116,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     g = sub.add_parser("generate", help="generate a synthetic match")
-    g.add_argument("--seed", type=int, default=7)
+    g.add_argument("--seed", type=int, default=23)
     g.add_argument("--script", default="m001", help="script name or path, or 'free' for an unscripted match")
     g.add_argument("--match-id", default=None)
     g.add_argument("--out", required=True)

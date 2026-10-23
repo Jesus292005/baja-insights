@@ -127,7 +127,7 @@ Se evalúan cada minuto sobre los últimos 10 minutos del mismo tiempo.
 
 Se emite una vez por equipo, etiqueta y tiempo.
 
-La **posesión** se mide en tiempo: cada posesión dura desde su primer evento hasta el primero de la siguiente, y se asigna al equipo de su primera acción con balón.
+La **posesión** se mide en tiempo de balón en juego. El tiempo entre dos eventos se asigna a la posesión en curso, hasta un máximo de 8 s; lo que pase de ese tope es balón parado (saques, celebraciones) y no cuenta para nadie. Cada posesión pertenece al equipo de su primera acción con balón.
 
 **`def_action_height_m`** es el promedio de la distancia a la propia portería de las recuperaciones, entradas, presiones y duelos del equipo.
 
@@ -177,11 +177,21 @@ Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`
 
 ## 12. Estado de la calibración al jueves 22
 
-**Ya funciona.** El partido m001 con semilla 7 conserva toda la historia de los mocks. El 1-1 cae en el 17 y en el 63, Cardón tiene la pelota en el primer tiempo y Bahía presiona en el segundo. Se generan unos 1,300 eventos y unos 25 tiros, todo válido contra el esquema. El top 3 sale con Cota, Rosas y Torres, los mismos tres de la historia pero en otro orden.
+El partido de demo es **m001 con la semilla 23**. Se eligió entre 40 semillas porque es la que mejor cumple la historia de los mocks.
+
+**Ya coincide con la historia:**
+- El 1-1 cae en el 17 y en el 63. La cadena del empate es idéntica a la del mock, con la asistencia invisible de Torres.
+- Cardón tiene el 61% de la pelota en el primer tiempo y se detecta su fase de `control`.
+- Las claves del medio tiempo son las mismas cuatro del mock.
+- El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota", con 1.20 de xG contra 1.08.
+- Torres termina primero en el MVP.
+- Hay unos 1,400 eventos y 17 tiros, todos válidos contra el esquema.
 
 **Falta calibrar el viernes:**
-- [ ] **Recuperaciones de Cota.** Lleva unas 20 y lo realista para un medio de contención destacado son 9 a 12. Hay que bajar `recover` en su forma o el `ROLE_FACTOR` del MCD.
-- [ ] **Orden del top 3.** La historia pide Torres, Cota y Rosas. Basta con ajustar la forma de Torres y de Cota.
-- [ ] **Cantidad de insights.** Hay unos 60 por partido, con demasiados `card_upgrade` y `standout_milestone`. Conviene subir los umbrales hasta llegar a unos 30 o 40. El curador igual filtra por prioridad.
-- [ ] **Eventos por partido.** Hay unos 1,300 contra los 2,000 que menciona el README de los mocks. Se sube con más pases cortos por posesión.
-- [ ] **Puntajes MVP a mitad del partido.** Hay que comparar contra los mocks, que ponen a Torres con 6.2 en el 33:40.
+- [ ] **Recuperaciones de Torres en campo rival.** Lleva 16 y la historia dice 5. Hay que bajar `press` y `recover` en su forma, o el factor de presión de los extremos.
+- [ ] **Top 3.** Sale Torres, Salgado y Cota, y la historia pide Torres, Cota y Rosas.
+- [ ] **Fase `pressure_shift` de Bahía.** No se dispara porque Bahía ya recupera mucho en el primer tiempo. Hay que bajar todavía más su presión en el primer tiempo o revisar el umbral. En su lugar sale un `control` de Bahía en el 55.
+- [ ] **Cantidad de insights.** Hay unos 50 por partido. Conviene subir umbrales de `duel_state` y `standout_milestone` para llegar a unos 35.
+- [ ] **Puntajes MVP a mitad del partido.** Hay que compararlos contra los mocks, que ponen a Torres con 6.2 en el 33:40.
+
+Cada cambio al guion o a `params.py` cambia `data/m001`. Regenera con `generate` y `analyze` y haz commit de los datos en el mismo PR. La CI revisa que el partido guardado sea el que produce el código.

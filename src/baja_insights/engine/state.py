@@ -58,6 +58,7 @@ class Possession:
     events: list = field(default_factory=list)
     last_complete_pass: dict | None = None
     off_ball_runs: list = field(default_factory=list)
+    live: list = field(default_factory=list)          # (start_t, end_t) of ball-in-play time
 
 
 class MatchState:
@@ -74,6 +75,7 @@ class MatchState:
         self.players: dict[str, PlayerState] = {}
         self.possessions: dict[int, Possession] = {}
         self.current_pid: int | None = None
+        self._last_t: int | None = None
         self.goals: list[int] = []
         self.finished = False
         self.recent_pressures: deque = deque()
@@ -162,10 +164,10 @@ class MatchState:
         for pos in self.possessions.values():
             if pos.owner is None:
                 continue
-            p_end = pos.end_t if pos.end_t is not None else self.t
-            overlap = min(p_end, end) - max(pos.start_t, start)
-            if overlap > 0:
-                owned[pos.owner] += overlap
+            for seg_start, seg_end in pos.live:
+                overlap = min(seg_end, end) - max(seg_start, start)
+                if overlap > 0:
+                    owned[pos.owner] += overlap
         total = sum(owned.values())
         return round(100 * owned[team] / total) if total else None
 
@@ -194,6 +196,7 @@ class MatchState:
         ev["t_s"] = event_t_s(ev)
         self.t = ev["t_s"]
         self.period = ev.get("period") or period_of(self.t)
+        self._credit_live_time()
         self.events.append(ev)
         self.by_id[ev["event_id"]] = ev
         effects: dict = {"event": ev}
@@ -354,6 +357,17 @@ class MatchState:
         while self.recent_pressures and self.t - self.recent_pressures[0][0] > P.COUNTERPRESS_WINDOW_S:
             self.recent_pressures.popleft()
         return effects
+
+    def _credit_live_time(self) -> None:
+        """Credit the time since the previous event to the possession in play.
+
+        Gaps longer than LIVE_GAP_CAP_S count only up to the cap: the rest is dead
+        ball (throw-ins, goal kicks, celebrations) and belongs to nobody.
+        """
+        if self._last_t is not None and self.current_pid is not None and self.t > self._last_t:
+            gap = min(self.t - self._last_t, P.LIVE_GAP_CAP_S)
+            self.possessions[self.current_pid].live.append((self._last_t, self._last_t + gap))
+        self._last_t = self.t
 
     def pair_key(self, a: str, b: str) -> tuple[str, str] | None:
         pa, pb = self.players.get(a), self.players.get(b)
