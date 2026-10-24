@@ -41,7 +41,9 @@ def card_for(insight: dict, roster: Roster) -> dict | None:
         return None
     return {"player": player.name, "team": player.team, "position": facts.get("position", player.position),
             "attribute": change["attribute"], "from": change["from"], "to": change["to"], "delta": change["delta"],
-            "overall_from": change["overall_from"], "overall_to": change["overall_to"], "reason": change["reason"]}
+            "overall_from": change["overall_from"], "overall_to": change["overall_to"], "reason": change["reason"],
+            # v1.1, only when the engine sends them: a null reason_code would break the schema's enum
+            **{k: change[k] for k in ("reason_code", "reason_params") if k in change}}
 
 
 def data_for(insight: dict) -> dict | None:
