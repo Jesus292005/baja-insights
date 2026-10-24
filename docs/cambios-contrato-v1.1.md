@@ -79,9 +79,9 @@ UI ◀──error {code, detail}── servidor
 
 ### Integrante 1, motor
 
-- [ ] Agregar `ranking` (top 5) a los `facts` de `mvp_rank_change` en `src/baja_insights/engine/core.py`. Puede salir de la misma lógica que `get_mvp_ranking` en `tools.py`.
-- [ ] Servicio de stream en Container Apps con los mensajes de `stream.schema.json`.
-- [ ] Opcional: que `python -m baja_insights validate` reconozca archivos de `stream` y `chat`. Hoy solo detecta eventos, insights y órdenes.
+- [x] Agregar `ranking` (top 5) a los `facts` de `mvp_rank_change` en `src/baja_insights/engine/core.py`. Puede salir de la misma lógica que `get_mvp_ranking` en `tools.py`.
+- [x] Servicio de stream en Container Apps con los mensajes de `stream.schema.json`. Ver `docs/stream.md`.
+- [x] Opcional: que `python -m baja_insights validate` reconozca archivos de `stream` y `chat`. Hoy solo detecta eventos, insights y órdenes.
 
 ### Integrante 2, agentes
 
@@ -100,8 +100,8 @@ Todo en `agents/baja_agents/overlays.py`, que ya copia del insight lo que no es 
 ### Los tres, ahora que está aprobada
 
 - [ ] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y cambiar `invisible_assist` del mock al objeto.
-- [ ] Subir `contract_version` a `"1.1"` en `mocks/teams.json` y `mocks/chat_tools_sample.json`.
-- [ ] Agregar `data/m001/overlays.json` a los casos de `tests/test_contracts.py`, que hoy no lo valida.
+- [x] Subir `contract_version` a `"1.1"` en `mocks/teams.json` y `mocks/chat_tools_sample.json`.
+- [x] Agregar `data/m001/overlays.json` a los casos de `tests/test_contracts.py`, que hoy no lo valida.
 
 ---
 

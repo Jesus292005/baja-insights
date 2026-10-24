@@ -54,7 +54,7 @@ class Match:
         return current
 
     def state_at(self, t_s: int) -> dict:
-        return msg.state(t_s, self.home, self.away, self.scoreline_at(t_s))
+        return msg.state(self.match_id, t_s, self.home, self.away, self.scoreline_at(t_s))
 
     def state_times(self, after: int, upto: int) -> list[int]:
         """Seconds in (after, upto] with a state-changing event (goal, half time, end)."""
@@ -91,15 +91,22 @@ class MatchClock:
 
     It starts when ``start()`` is first called (the first subscriber) at ``start_at`` match seconds and
     runs at ``speed`` match seconds per real second, up to ``MAX_T_S`` so the full-time graphics play.
+    With ``half_time_pause_s`` it stops at 45:00 for that many real seconds, in phase ``half_time``.
     """
 
-    def __init__(self, speed: float = 1.0, start_at: int = 0, now=time.monotonic):
+    def __init__(self, speed: float = 1.0, start_at: int = 0, half_time_pause_s: float = 0.0, now=time.monotonic):
         if speed <= 0:
             raise ValueError("speed must be > 0")
+        if half_time_pause_s < 0:
+            raise ValueError("half_time_pause_s must be >= 0")
         self.speed = speed
         self.start_at = start_at
         self._now = now
         self._wall0: float | None = None
+        # real seconds from the start until the clock reaches 45:00, if it has a pause to make there
+        has_pause = half_time_pause_s > 0 and start_at < msg.HALF_S
+        self._pause = half_time_pause_s if has_pause else 0.0
+        self._to_half = (msg.HALF_S - start_at) / speed if has_pause else 0.0
 
     @property
     def started(self) -> bool:
@@ -109,11 +116,18 @@ class MatchClock:
         if self._wall0 is None:
             self._wall0 = self._now()
 
+    def _elapsed(self) -> float:
+        return 0.0 if self._wall0 is None else self._now() - self._wall0
+
+    def at_half_time(self) -> bool:
+        return self._pause > 0 and self.started and self._to_half <= self._elapsed() < self._to_half + self._pause
+
     def t(self) -> float:
         """Match seconds, as a float."""
-        if self._wall0 is None:
-            return float(self.start_at)
-        return min(float(MAX_T_S), self.start_at + (self._now() - self._wall0) * self.speed)
+        e = self._elapsed()
+        if self._pause and e >= self._to_half:
+            e = max(self._to_half, e - self._pause)
+        return min(float(MAX_T_S), self.start_at + e * self.speed)
 
     def t_s(self) -> int:
         return int(self.t())
@@ -121,7 +135,8 @@ class MatchClock:
     def wall_at(self, t_s: float) -> float:
         """Real (monotonic) time at which the clock reaches ``t_s``."""
         assert self._wall0 is not None
-        return self._wall0 + (t_s - self.start_at) / self.speed
+        wall = self._wall0 + (t_s - self.start_at) / self.speed
+        return wall + self._pause if self._pause and t_s > msg.HALF_S else wall
 
     def finished(self) -> bool:
         return self.t() >= MAX_T_S
