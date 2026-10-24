@@ -68,10 +68,38 @@ def test_templates_pass_the_checks(insight):
 
 
 def test_fan_text_allows_one_figure_besides_the_scoreline():
-    insight = by_id(M001, "i46")
-    assert check_variant(insight, "Cota", "Cota está en todas con 12 recuperaciones en el 1-1.", mode="fan") == []
-    assert check_variant(insight, "Cota", "Cota suma 12 recuperaciones y 16 pases progresivos.", mode="fan")
-    assert check_variant(insight, "Cota", "Cota suma 12 recuperaciones y 16 pases progresivos.", mode="analyst") == []
+    insight = by_id(M001, "i35")
+    assert check_variant(insight, "Cota", "Cota está en todas con 10 recuperaciones en el 0-1.", mode="fan") == []
+    assert check_variant(insight, "Cota", "Cota suma 10 recuperaciones y 4 pases progresivos.", mode="fan")
+    assert check_variant(insight, "Cota", "Cota suma 10 recuperaciones y 4 pases progresivos.", mode="analyst") == []
+
+
+def test_english_templates_use_the_engine_codes():
+    goal = by_id(M001, "i44")  # the 1-1: Cota's recovery, Torres' run, Salgado's pass, Ramírez's shot
+    v = fallback.variants(goal, ROSTER.home)
+    assert v["fan_en"]["text"].startswith("It starts with Cota's recovery")
+    assert "Salgado (pass that broke 2 lines)" in v["analyst_en"]["text"]
+    assert v["fan_es"]["text"].startswith("La jugada nace con una recuperación de Cota")
+    card = by_id(M001, "i07")  # Regate: reason_code dribbles, count 2 written as a word
+    assert fallback.variants(card)["fan_en"]["text"] == "Cota: two dribbles won in under 10 minutes."
+    for code, params, text in [
+        ("opp_half_recoveries", {"count": 3, "window_min": 10}, "third recovery in the opposition half in under 10 minutes"),
+        ("run_opened_goal", {"dragged_defender": "G. Cárdenas", "dragged_position": "DFC"},
+         "dragged the centre-back and opened the space for the goal"),
+        ("run_ended_in_shot", {"dragged_defender": "E. Quiroz"}, "dragged E. Quiroz and the move ended in a shot"),
+        ("line_breaking_pass", {"lines": 1, "under_pressure": False}, "pass that broke 1 line"),
+    ]:
+        assert fallback.card_reason_en({"reason_code": code, "reason_params": params}) == text
+
+
+def test_english_templates_without_codes_keep_the_old_text():
+    goal = by_id(M001, "i44")
+    old = {**goal, "facts": {**goal["facts"], "chain": [{k: v for k, v in link.items() if k not in ("type", "lines_broken", "cross")}
+                                                       for link in goal["facts"]["chain"]]}}
+    assert fallback.variants(old)["fan_en"]["text"].startswith("It starts with Cota and")
+    card = by_id(M001, "i07")
+    old_card = {**card, "facts": {k: v for k, v in card["facts"].items() if k not in ("reason_code", "reason_params")}}
+    assert fallback.variants(old_card)["fan_en"]["text"] == "Cota earns +1 Dribbling."
 
 
 def test_check_flags_invented_numbers_and_long_titles():
@@ -82,30 +110,30 @@ def test_check_flags_invented_numbers_and_long_titles():
 
 
 def test_check_flags_numbers_moved_to_another_stat():
-    cota = by_id(M001, "i46")  # 12 recoveries, 16 progressive passes, 0 key passes
-    assert check_variant(cota, "Cota", "Cota suma 12 recuperaciones y 16 pases progresivos.") == []
-    problems = check_variant(cota, "Cota", "Cota recuperó 12 balones y dio 16 pases clave.")
-    assert problems and "16 pases clave" in problems[0]
+    cota = by_id(M001, "i35")  # 10 recoveries, 4 progressive passes, 0 key passes
+    assert check_variant(cota, "Cota", "Cota suma 10 recuperaciones y 4 pases progresivos.") == []
+    problems = check_variant(cota, "Cota", "Cota recuperó 10 balones y dio 4 pases clave.")
+    assert problems and "4 pases clave" in problems[0]
 
 
 def test_check_flags_a_scoreline_written_backwards():
-    insight = by_id(M001, "i22")
+    insight = by_id(M001, "i25")
     score = {"home": 0, "away": 1}
-    assert check_variant(insight, "Montaño", "Real Cardón gana 0-1.", scoreline=score) == []
-    assert "scoreline 1-0" in check_variant(insight, "Montaño", "Real Cardón gana 1-0.", scoreline=score)[0]
-    assert check_variant(by_id(M001, "i02"), "Control", "64% de posesión entre 01:00-11:00.") == []
+    assert check_variant(insight, "Leyva", "Real Cardón gana 0-1.", scoreline=score) == []
+    assert "scoreline 1-0" in check_variant(insight, "Leyva", "Real Cardón gana 1-0.", scoreline=score)[0]
+    assert check_variant(by_id(M001, "i11"), "Control", "62% de posesión entre 05:00-15:00.") == []
 
 
 def test_ranking_and_ids_are_not_numbers_a_text_may_use():
-    montano = by_id(M001, "i03")  # 2.3 for Montaño; 2.7 and 2.5 belong to others in the ranking
-    assert montano["facts"]["ranking"]
-    assert check_variant(montano, "Montaño", "Montaño sube con 2.3 puntos.") == []
-    assert check_variant(montano, "Montaño", "Montaño sube con 2.7 puntos.")
-    trigger = montano["facts"]["trigger_event_id"]
-    assert check_variant(montano, "Montaño", f"Jugada {montano['evidence'][0]}.")
-    assert check_variant(montano, "Montaño", f"Jugada {trigger}.")
-    keys = by_id(M001, "i26")  # match_keys: its keys' `evidence` is worded data, not event ids
-    assert check_variant(keys, "Claves", "Bahía FC suma 21 recuperaciones en mitad rival, 9 de Torres.") == []
+    cota = by_id(M001, "i06")  # 2.7 for Cota; 2.6 belongs to Rosas in the ranking
+    assert cota["facts"]["ranking"]
+    assert check_variant(cota, "Cota", "Cota sube con 2.7 puntos.") == []
+    assert check_variant(cota, "Cota", "Cota sube con 2.6 puntos.")
+    trigger = cota["facts"]["trigger_event_id"]
+    assert check_variant(cota, "Cota", f"Jugada {cota['evidence'][0]}.")
+    assert check_variant(cota, "Cota", f"Jugada {trigger}.")
+    keys = by_id(M001, "i34")  # match_keys: its keys' `evidence` is worded data, not event ids
+    assert check_variant(keys, "Claves", "Bahía FC suma 15 recuperaciones en mitad rival, 7 de Torres.") == []
 
 
 def test_curator_does_not_see_the_ranking():
@@ -117,10 +145,10 @@ def test_curator_does_not_see_the_ranking():
 
 def test_scoreline_from_context_is_allowed():
     from baja_agents.checks import allowed_numbers
-    insight = by_id(M001, "i22")
-    text = "Montaño lidera con el 0-1."
-    assert check_variant(insight, "Montaño", text) != []
-    assert check_variant(insight, "Montaño", text, allowed_numbers(insight, {"scoreline": {"home": 0, "away": 1}})) == []
+    insight = by_id(M001, "i25")
+    text = "Leyva sube con el 0-1."
+    assert check_variant(insight, "Leyva", text) != []
+    assert check_variant(insight, "Leyva", text, allowed_numbers(insight, {"scoreline": {"home": 0, "away": 1}})) == []
 
 
 # ----------------------------------------------------------------- curator
@@ -146,7 +174,7 @@ def test_curator_falls_back_to_priority_when_the_model_fails():
 
 
 def test_curator_drops_repeats():
-    duel = by_id(M001, "i01")
+    duel = by_id(M001, "i09")  # Mena vs Verdugo at 12:25, not flipped
     history = [{"t_s": duel["t_s"] - 60, "insight_type": "duel_state", "players": duel["players"],
                 "team": None, "title": "x"}]
     _, candidates, decided = Curator(runner()).triage([duel], history)
@@ -203,10 +231,11 @@ def test_team_tags_for_the_verifier():
 
 def test_agents_see_teams_instead_of_home_and_away():
     from baja_agents.narrator import slim
-    view = slim(by_id(M001, "i26"), ROSTER)
-    assert view["facts"]["possession_pct"] == {"Bahía FC": 39, "Real Cardón": 61}
+    view = slim(by_id(M001, "i34"), ROSTER)
+    assert view["facts"]["possession_pct"] == {"Bahía FC": 43, "Real Cardón": 57}
     assert view["facts"]["scoreline"] == "Bahía FC 0-1 Real Cardón"
-    assert view["who_is_who"]["D. Mena"]["team"] == "Bahía FC"
+    assert view["who_is_who"]["J. Torres"]["team"] == "Bahía FC"
+    assert view["who_is_who"]["B. Haro"]["team"] == "Real Cardón"
 
 
 def test_cache_avoids_a_second_call(tmp_path):
@@ -216,6 +245,16 @@ def test_cache_avoids_a_second_call(tmp_path):
     again = asyncio.run(Personalizer(shared, FakeAgent()).adapt(insight, None))
     assert shared.stats.calls == 1 and shared.stats.cache_hits == 1
     assert set(again.sources.values()) == {"agent"}
+
+
+def test_rate_limit_is_retried(monkeypatch):
+    import baja_agents.llm as llm
+    monkeypatch.setattr(llm, "RATE_LIMIT_WAITS_S", (0, 0))
+    shared = runner()
+    agent = FakeAgent(RuntimeError("Error code: 429 - rate_limit_exceeded"), good_variants())
+    result = asyncio.run(Personalizer(shared, agent).adapt(by_id(SAMPLE, "i05"), None))
+    assert shared.stats.rate_limited == 1 and shared.stats.failures == 0 and shared.stats.calls == 1
+    assert set(result.sources.values()) == {"agent"}
 
 
 def test_budget_stops_calls():
@@ -271,12 +310,21 @@ def test_v11_fields_are_copied_from_the_insight(jsonschema_validator):
     assert {k: order["card"][k] for k in ("overall_from", "overall_to", "reason")} == \
         {k: change[k] for k in ("overall_from", "overall_to", "reason")}
 
-    goal = by_id(M001, "i38")
+    goal = by_id(M001, "i44")  # the 1-1, with Torres' invisible assist
     order = build(goal, texts, goal["t_s"] + 2, ROSTER)[0]
     assert order["data"]["chain_detail"] == goal["facts"]["chain"]
     assert order["data"]["invisible_assist"]["player"] == "J. Torres"
 
-    for insight in (mvp, goal, by_id(M001, "i07")):
+    assert {"type", "lines_broken"} <= set(order["data"]["chain_detail"][0])
+
+    card = by_id(M001, "i07")  # Cota's Regate card, with reason_code from the engine
+    order = build(card, texts, card["t_s"] + 2, ROSTER)[0]
+    assert order["card"]["reason_code"] == card["facts"]["reason_code"]
+    assert order["card"]["reason_params"] == card["facts"]["reason_params"]
+    old = {**card, "facts": {k: v for k, v in card["facts"].items() if k not in ("reason_code", "reason_params")}}
+    assert "reason_code" not in build(old, texts, card["t_s"] + 2, ROSTER)[0]["card"]
+
+    for insight in (mvp, goal, card, old):
         for o in build(insight, texts, insight["t_s"] + 2, ROSTER):
             assert [e.message for e in jsonschema_validator.iter_errors({**o, "overlay_id": "o001"})] == []
 

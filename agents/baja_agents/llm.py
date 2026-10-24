@@ -19,6 +19,14 @@ from pydantic import BaseModel, ValidationError
 log = logging.getLogger(__name__)
 T = TypeVar("T", bound=BaseModel)
 
+# Waits before retrying a call the deployment rejected for its tokens-per-minute limit (HTTP 429).
+RATE_LIMIT_WAITS_S = (10, 30)
+
+
+def is_rate_limit(exc: BaseException) -> bool:
+    text = str(exc)
+    return "429" in text or "rate_limit" in text.lower()
+
 
 @dataclass
 class Stats:
@@ -26,11 +34,12 @@ class Stats:
     cache_hits: int = 0
     failures: int = 0
     skipped: int = 0
+    rate_limited: int = 0
     by_agent: dict[str, int] = field(default_factory=dict)
 
     def as_dict(self) -> dict:
         return {"calls": self.calls, "cache_hits": self.cache_hits, "failures": self.failures,
-                "skipped": self.skipped, "calls_by_agent": dict(self.by_agent)}
+                "skipped": self.skipped, "rate_limit_retries": self.rate_limited, "calls_by_agent": dict(self.by_agent)}
 
 
 class LLMRunner:
@@ -69,17 +78,23 @@ class LLMRunner:
 
         self.stats.calls += 1
         self.stats.by_agent[agent_name] = self.stats.by_agent.get(agent_name, 0) + 1
-        try:
-            async with self._sem:
-                response = await asyncio.wait_for(
-                    agent.run(json.dumps(payload, ensure_ascii=False), options={"response_format": schema}),
-                    timeout=self.timeout_s,
-                )
-            value = response.value if isinstance(response.value, schema) else schema.model_validate_json(response.text)
-        except Exception as exc:  # noqa: BLE001 - any failure means "use the template"
-            self.stats.failures += 1
-            log.warning("%s failed: %s", agent_name, str(exc)[:200])
-            return None
+        for attempt in range(len(RATE_LIMIT_WAITS_S) + 1):
+            try:
+                async with self._sem:
+                    response = await asyncio.wait_for(
+                        agent.run(json.dumps(payload, ensure_ascii=False), options={"response_format": schema}),
+                        timeout=self.timeout_s,
+                    )
+                value = response.value if isinstance(response.value, schema) else schema.model_validate_json(response.text)
+                break
+            except Exception as exc:  # noqa: BLE001 - any failure means "use the template"
+                if is_rate_limit(exc) and attempt < len(RATE_LIMIT_WAITS_S):
+                    self.stats.rate_limited += 1
+                    await asyncio.sleep(RATE_LIMIT_WAITS_S[attempt])
+                    continue
+                self.stats.failures += 1
+                log.warning("%s failed: %s", agent_name, str(exc)[:200])
+                return None
 
         if path:
             path.parent.mkdir(parents=True, exist_ok=True)
