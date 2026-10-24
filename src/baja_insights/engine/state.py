@@ -124,6 +124,18 @@ class MatchState:
         rows.sort(key=lambda r: (-r[1], -self.players[r[0]].raw_points, r[0]))
         return rows
 
+    def ranking_rows(self, top: int, ranking: list[tuple[str, float]] | None = None) -> list[dict]:
+        """Top of the MVP ranking as ``[{rank, player, team, position, mvp_score}]``.
+
+        One shape for ``mvp_rank_change.facts.ranking`` and ``get_mvp_ranking``.
+        """
+        rows = ranking if ranking is not None else self.ranking()
+        out = []
+        for rank, (name, score) in enumerate(rows[: max(1, int(top))], start=1):
+            ps = self.players[name]
+            out.append({"rank": rank, "player": name, "team": ps.team, "position": ps.position, "mvp_score": score})
+        return out
+
     def rank_of(self, name: str, ranking: list[tuple[str, float]] | None = None) -> int | None:
         for i, (n, _) in enumerate(ranking or self.ranking(), start=1):
             if n == name:

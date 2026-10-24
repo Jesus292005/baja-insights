@@ -52,6 +52,7 @@ MVP_SCALE = 5.0                            # mvp = 10 * (1 - exp(-adj / scale))
 # --- Detectors ---------------------------------------------------------------
 MVP_MIN_T_S = 10 * 60                      # no ranking overlays in the first 10 minutes
 MVP_ANNOUNCE_TOP = 3                       # only climbs into the top 3 are announced
+MVP_RANKING_TOP = 5                        # rows of facts.ranking in mvp_rank_change (contract v1.1)
 MVP_PLAYER_COOLDOWN_S = 600
 MVP_GLOBAL_COOLDOWN_S = 180
 
