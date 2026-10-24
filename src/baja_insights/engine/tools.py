@@ -76,11 +76,7 @@ class MatchQuery:
     def get_mvp_ranking(self, at, top: int = 5) -> dict:
         at_s, engine = self._at(at)
         st = engine.state
-        rows = []
-        for rank, (name, score) in enumerate(st.ranking()[: max(1, int(top))], start=1):
-            ps = st.players[name]
-            rows.append({"rank": rank, "player": name, "team": ps.team, "position": ps.position, "mvp_score": score})
-        return {"at": fmt_clock(at_s), "at_s": at_s, "ranking": rows}
+        return {"at": fmt_clock(at_s), "at_s": at_s, "ranking": st.ranking_rows(top)}
 
     def get_player_summary(self, player: str, at) -> dict:
         found = self.roster.find(player)

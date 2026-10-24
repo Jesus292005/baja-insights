@@ -4,7 +4,8 @@ import helpers  # noqa: F401  (puts src/ on sys.path)
 import unittest
 
 from baja_insights.engine import InsightEngine
-from helpers import MOCKS, load, roster
+from baja_insights.engine.tools import MatchQuery
+from helpers import DATA, MOCKS, load, roster
 
 
 def run_mock():
@@ -75,6 +76,53 @@ class MockStoryTest(unittest.TestCase):
         keys = self.by_type("match_keys")[0]["facts"]
         self.assertIs(keys["no_prediction"], True)
         self.assertNotIn("win_probability", keys)
+
+
+class MvpRankingTest(unittest.TestCase):
+    """Contract v1.1: mvp_rank_change.facts.ranking is the top of the MVP right after the change."""
+
+    @classmethod
+    def setUpClass(cls):
+        from baja_insights.engine import params
+
+        cls.top = params.MVP_RANKING_TOP
+        events = load(DATA / "m001" / "events.jsonl")
+        cls.insights = InsightEngine(roster()).run(events)
+        cls.query = MatchQuery(events, roster())
+        cls.changes = [i for i in cls.insights if i["type"] == "mvp_rank_change"]
+
+    def test_every_change_carries_the_top(self):
+        self.assertTrue(self.changes)
+        for insight in self.changes:
+            facts = insight["facts"]
+            ranking = facts["ranking"]
+            self.assertEqual(len(ranking), self.top, insight["insight_id"])
+            self.assertEqual([r["rank"] for r in ranking], list(range(1, self.top + 1)))
+            scores = [r["mvp_score"] for r in ranking]
+            self.assertEqual(scores, sorted(scores, reverse=True))
+            announced = ranking[facts["to_rank"] - 1]
+            self.assertEqual((announced["player"], announced["mvp_score"]), (facts["player"], facts["mvp_score"]))
+            self.assertEqual(ranking[0]["player"], facts.get("leader", facts["player"]))
+
+    def test_same_shape_as_the_chat_function(self):
+        sample = self.query.get_mvp_ranking("45:00", self.top)["ranking"]
+        for insight in self.changes:
+            for row, chat_row in zip(insight["facts"]["ranking"], sample):
+                self.assertEqual(set(row), set(chat_row))
+
+    def test_matches_the_chat_function_when_nothing_else_happens_that_second(self):
+        events = load(DATA / "m001" / "events.jsonl")
+        per_second = {}
+        for e in events:
+            per_second[e["t_s"]] = per_second.get(e["t_s"], 0) + 1
+        checked = 0
+        for insight in self.changes:
+            if per_second[insight["t_s"]] > 1:
+                continue  # the insight is a snapshot after its trigger event, not after the whole second
+            at = f"{insight['t_s'] // 60:02d}:{insight['t_s'] % 60:02d}"
+            self.assertEqual(insight["facts"]["ranking"], self.query.get_mvp_ranking(at, self.top)["ranking"])
+            checked += 1
+        self.assertGreater(checked, 0)
 
 
 if __name__ == "__main__":

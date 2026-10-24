@@ -70,7 +70,44 @@
         "recoveries": 0.2,
         "progressive_passes": 0.13,
         "key_passes": 0.13
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 2.8
+        },
+        {
+          "rank": 2,
+          "player": "S. Beltrán",
+          "team": "Bahía FC",
+          "position": "DFC",
+          "mvp_score": 2.5
+        },
+        {
+          "rank": 3,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 2.4
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 2.4
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 2.2
+        }
+      ]
     },
     "evidence": [
       167,
@@ -110,7 +147,44 @@
         "recoveries": 0.96,
         "progressive_passes": 0.96,
         "key_passes": 0.29
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.4
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.1
+        },
+        {
+          "rank": 3,
+          "player": "S. Beltrán",
+          "team": "Bahía FC",
+          "position": "DFC",
+          "mvp_score": 2.9
+        },
+        {
+          "rank": 4,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 5,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 2.6
+        }
+      ]
     },
     "evidence": [
       143,
@@ -176,7 +250,44 @@
         "recoveries": 1.13,
         "progressive_passes": 1.13,
         "key_passes": 0.34
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.8
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 3.8
+        },
+        {
+          "rank": 3,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 3.6
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 3.1
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.0
+        }
+      ]
     },
     "evidence": [
       200,
@@ -290,7 +401,44 @@
         "recoveries": 1.34,
         "progressive_passes": 1.34,
         "key_passes": 0.4
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 4.2
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.1
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 4,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 5,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 3.5
+        }
+      ]
     },
     "evidence": [
       266,
@@ -371,7 +519,44 @@
         "recoveries": 1.51,
         "progressive_passes": 1.51,
         "key_passes": 0.45
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.5
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 4.3
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 4.1
+        },
+        {
+          "rank": 4,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.8
+        }
+      ]
     },
     "evidence": [
       253,
@@ -514,7 +699,44 @@
         "recoveries": 0.51,
         "progressive_passes": 0.34,
         "key_passes": 0.34
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.4
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.6
+        },
+        {
+          "rank": 3,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 4.4
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 4.3
+        },
+        {
+          "rank": 5,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 4.3
+        }
+      ]
     },
     "evidence": [
       322,
@@ -730,7 +952,44 @@
         "recoveries": 1.94,
         "progressive_passes": 1.94,
         "key_passes": 0.58
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.8
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.7
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 5.1
+        },
+        {
+          "rank": 4,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 5,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 4.4
+        }
+      ]
     },
     "evidence": [
       405,
@@ -801,7 +1060,44 @@
         "recoveries": 1.06,
         "progressive_passes": 1.06,
         "key_passes": 0.68
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.8
+        },
+        {
+          "rank": 3,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 5.2
+        },
+        {
+          "rank": 4,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 5.0
+        },
+        {
+          "rank": 5,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 5.0
+        }
+      ]
     },
     "evidence": [
       541,
@@ -942,7 +1238,44 @@
         "recoveries": 0.7,
         "progressive_passes": 0.46,
         "key_passes": 0.46
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 2,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 3,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 4,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.0
+        },
+        {
+          "rank": 5,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.3
+        }
+      ]
     },
     "evidence": [
       486,
@@ -1249,7 +1582,44 @@
         "recoveries": 2.86,
         "progressive_passes": 2.86,
         "key_passes": 0.86
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 7.6
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.4
+        },
+        {
+          "rank": 4,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.4
+        },
+        {
+          "rank": 5,
+          "player": "A. Olvera",
+          "team": "Bahía FC",
+          "position": "EI",
+          "mvp_score": 6.3
+        }
+      ]
     },
     "evidence": [
       607,
@@ -1372,7 +1742,44 @@
         "recoveries": 3.1,
         "progressive_passes": 3.1,
         "key_passes": 0.93
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 7.9
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.5
+        },
+        {
+          "rank": 3,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.8
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.7
+        },
+        {
+          "rank": 5,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.4
+        }
+      ]
     },
     "evidence": [
       785,
@@ -1652,7 +2059,44 @@
         "recoveries": 4.15,
         "progressive_passes": 4.15,
         "key_passes": 1.25
-      }
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 8.0
+        },
+        {
+          "rank": 2,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 8.0
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 7.5
+        },
+        {
+          "rank": 4,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.5
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 7.3
+        }
+      ]
     },
     "evidence": [
       963,

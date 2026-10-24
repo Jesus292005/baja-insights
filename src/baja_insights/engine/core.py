@@ -204,6 +204,7 @@ class InsightEngine:
             facts["leader"] = after[0][0]
         facts["stats"] = _headline_stats(ps)
         facts["expected_for_role"] = st.expected(ps)
+        facts["ranking"] = st.ranking_rows(P.MVP_RANKING_TOP, after)
         evidence = [ev["event_id"]] + _recent_top_events(st, ps, st.t, 10 * 60, 3)
         for c in cards:
             if c["player"] == name and not c.get("used") and not c.get("defer"):
