@@ -14,7 +14,7 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
-from ..contract import event_t_s, fmt_clock, parse_clock, period_of
+from ..contract import MATCH_LENGTH_S, event_t_s, fmt_clock, parse_clock, period_of
 from ..roster import Roster, overall
 from .core import InsightEngine
 from .state import NOT_TRACKED
@@ -49,7 +49,7 @@ class MatchQuery:
         return engine
 
     def _at(self, at) -> tuple[int, InsightEngine]:
-        at_s = parse_clock(at)
+        at_s = min(parse_clock(at), MATCH_LENGTH_S)  # after the final whistle the answer is the final state
         engine = self.engine_at(at_s)
         engine.state.t = max(engine.state.t, min(at_s, 5400))
         return at_s, engine
