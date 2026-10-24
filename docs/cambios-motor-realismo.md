@@ -112,7 +112,7 @@ Son opcionales en `card_change` de `insight.schema.json` y en `card` de `overlay
 
 ## 4. Integrante 2, agentes (Diego)
 
-**Código: un solo cambio, de una línea.** `data_for` ya copia el eslabón completo a `chain_detail`, así que los campos de la cadena llegan solos. Los de la carta no: `card_for` copia los campos uno por uno. Se probó en local, sin tocar tus archivos: tus plantillas pasan `check_variant` con los 63 insights nuevos de `m001`, los 15 del mock y 482 de 10 partidos libres.
+**Código: un solo cambio, de una línea.** `data_for` ya copia el eslabón completo a `chain_detail`, así que los campos de la cadena llegan solos. Los de la carta no: `card_for` copia los campos uno por uno. Se probó en local, sin tocar tus archivos y con tu `checks.py` de `main` (después del PR #7): tus plantillas pasan `check_variant` con los 63 insights nuevos de `m001` y los 15 del mock, y tus 100 tests pasan con las equivalencias de la tabla de abajo.
 
 **Lo que tienes que hacer:**
 
@@ -120,26 +120,29 @@ Son opcionales en `card_change` de `insight.schema.json` y en `card` de `overlay
 
   ```python
   "overall_from": change["overall_from"], "overall_to": change["overall_to"], "reason": change["reason"],
-  "reason_code": change.get("reason_code"), "reason_params": change.get("reason_params", {})}
+  **{k: change[k] for k in ("reason_code", "reason_params") if k in change}}
   ```
 
-  Con `.get` sigue funcionando con insights viejos que no los traen. Puedes extender `test_v11_fields_are_copied_from_the_insight` para que los revise.
-- [ ] **Regenerar `data/m001/overlays.json` y `agents_report.json`** con `python -m baja_agents run`, una sola vez, después del merge. Las órdenes actuales apuntan a insights que ya cambiaron.
+  Solo se copian si vienen, así que sigue funcionando con insights viejos. No uses `change.get("reason_code")`: con un insight viejo pondría `null` y la orden ya no cumpliría el esquema, porque `reason_code` es un `enum`. Con este cambio, las 500 órdenes de prueba (insights nuevos, viejos y del mock) cumplen `overlay.schema.json`. Puedes extender `test_v11_fields_are_copied_from_the_insight` para que los revise.
+- [ ] **Regenerar `data/m001/overlays.json` y `agents_report.json`** con `python -m baja_agents run`, una sola vez, después del merge. Ya lo hiciste en el PR #7 (`4a10aae`), pero esas órdenes salieron de los insights de antes y apuntan a insights que ya cambiaron. Esta vez la caché no sirve para los insights nuevos, así que sí habrá llamadas al modelo.
 - [ ] **Actualizar los tests que buscan insights de `m001` por identificador.** Mientras no se actualicen, el job `agents` de la CI va a fallar. Las equivalencias se comprobaron con las mismas aserciones de tus tests y con `checks.py` tal como está en `main`:
 
 | Antes | Ahora | Qué es | Cambia en el test |
 | --- | --- | --- | --- |
-| `i01` | `i01` | Duelo Lugo contra Montaño, sin cambio de signo | Nada |
+| `i01` | `i09` | Duelo de Mena contra Verdugo (12:25), sin cambio de signo, prioridad 0.45 | Solo el identificador. El `i01` nuevo tiene prioridad 0.37, menos que `MIN_PRIORITY`, así que el curador lo descarta por «prioridad baja» y no por «repetido» |
+| `i03` | `i06` | Sube en el MVP con ranking (Cota, 2.7) | «Cota sube con 2.7 puntos» pasa y «Cota sube con 2.6 puntos» se marca (el 2.6 es de otro jugador del ranking), en vez de Montaño con 2.3 y 2.7 |
 | `i02` | `i11` | Control de Real Cardón | «62% de posesión entre 05:00-15:00» en vez de «64%… 01:00-11:00» |
 | `i07` | `i07` | Carta (ahora de Regate de Cota) | Nada, solo valida el esquema |
 | `i22` | `i25` | MVP mientras va 0-1 (Leyva, minuto 30) | El nombre del texto: Leyva en vez de Montaño |
-| `i26` | `i34` | Claves del medio tiempo | Posesión `{"Bahía FC": 43, "Real Cardón": 57}`; D. Mena ya no aparece, usar J. Torres o B. Haro en `who_is_who` |
+| `i26` | `i34` | Claves del medio tiempo | Posesión `{"Bahía FC": 43, "Real Cardón": 57}`; D. Mena ya no aparece, usar J. Torres o B. Haro en `who_is_who`. En el test del ranking: «Bahía FC suma 15 recuperaciones en mitad rival, 7 de Torres» en vez de 21 y 9 |
 | `i38` | `i44` | Gol del 1-1 con la asistencia invisible de Torres | Solo el identificador |
 | `i46` | `i35` | Hito de Cota, minuto 45 | 10 recuperaciones y 4 pases progresivos en vez de 12 y 16; el caso del pase clave mal etiquetado queda «4 pases clave» |
 
 **Opcional:**
 - [ ] Usar `type` y `lines_broken` cuando el Narrador cuenta la cadena en inglés, en lugar de traducir `action`.
-- [ ] Sigue pendiente lo que ya estaba en `docs/estado-motor-v1.1.md`: `allowed_numbers` todavía ve el ranking, y el endpoint `POST /api/ask`.
+- [ ] Sigue pendiente lo que ya estaba en `docs/estado-motor-v1.1.md`: el endpoint `POST /api/ask`. Lo de `allowed_numbers` y el ranking ya quedó resuelto en tu PR #7.
+
+El test del curador que no ve el ranking (bloque 10:00-15:00) no necesita cambios.
 
 ---
 
