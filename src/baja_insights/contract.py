@@ -59,16 +59,30 @@ def fmt_clock(seconds: int) -> str:
 
 
 def parse_clock(value: str | int | float) -> int:
-    """Accept '63:09', '63', 3789 or '3789s' and return match seconds."""
+    """Accept '63:09', '63', 3789 or '3789s' and return match seconds.
+
+    Raises ValueError for negative times and for seconds outside 0-59 ('99:99'), so a bad
+    moment from the chat is reported as ``bad_arguments`` instead of read as minute 100.
+    """
+    if isinstance(value, bool):
+        raise ValueError(f"not a match time: {value!r}")
     if isinstance(value, (int, float)):
-        return int(value)
-    text = str(value).strip().lower().rstrip("s")
-    if ":" in text:
-        minute, second = text.split(":", 1)
-        return int(minute) * 60 + int(second)
-    number = int(text)
-    # A bare number up to 90 is read as a minute, anything larger as seconds.
-    return number * 60 if number <= 90 else number
+        seconds = int(value)
+    else:
+        text = str(value).strip().lower().rstrip("s")
+        if ":" in text:
+            minute_text, second_text = text.split(":", 1)
+            minute, second = int(minute_text), int(second_text)
+            if not 0 <= second <= 59 or minute < 0 or minute_text.strip().startswith("-"):
+                raise ValueError(f"not a match time: {value!r}")
+            seconds = minute * 60 + second
+        else:
+            number = int(text)
+            # A bare number up to 90 is read as a minute, anything larger as seconds.
+            seconds = number * 60 if 0 <= number <= 90 else number
+    if seconds < 0:
+        raise ValueError(f"not a match time: {value!r}")
+    return seconds
 
 
 def period_of(seconds: int) -> int:
