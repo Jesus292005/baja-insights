@@ -35,7 +35,10 @@
         "from": {"type": "integer"}, "to": {"type": "integer"}, "delta": {"type": "integer"},
         "overall_from": {"type": "integer", "description": "v1.1. Copied from the insight's card_change. The UI never computes the overall."},
         "overall_to": {"type": "integer", "maximum": 99, "description": "v1.1"},
-        "reason": {"type": "string", "description": "v1.1. The engine's reason, in Spanish with digits, as in the insight."}
+        "reason": {"type": "string", "description": "v1.1. The engine's reason, in Spanish with digits, as in the insight."},
+        "reason_code": {"description": "v1.1, optional. Copied from the insight's card_change; the UI writes the text in each language.",
+                        "enum": ["line_breaking_pass", "opp_half_recoveries", "shot_speed", "duel_streak", "run_speed", "dribbles", "run_ended_in_shot", "run_opened_goal", "standout_defensive", "standout_creative"]},
+        "reason_params": {"description": "v1.1, optional. Copied from the insight's card_change.", "type": "object"}
       }
     },
     "data": {"type": "object"}

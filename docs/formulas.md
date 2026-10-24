@@ -86,17 +86,19 @@ El perfil es `defensive` si el umbral alcanzado es de recuperaciones o duelos, y
 
 ## 7. Cartas
 
-| Regla | Atributo |
-| --- | --- |
-| Pase completo con dificultad de 0.80 o más que rompe al menos 2 líneas | Visión +2 |
-| Tercera recuperación en campo rival dentro de 10 minutos, y cada tercera después | Defensa +2 |
-| Remate a puerta a 105 km/h o más | Disparo +1 |
-| 4 duelos ganados seguidos | Físico +1 |
-| Desmarque que arrastró a un defensa y abrió 8 m o más en una jugada que terminó en gol | Sin balón +3 |
-| Desmarque que arrastró a un defensa y abrió 5 m o más en una jugada que terminó en remate sin gol | Sin balón +1 |
-| Desmarque a 30 km/h o más | Ritmo +1 |
-| 2 regates (duelos ganados con el balón) en menos de 10 minutos | Regate +1 |
-| Hito del destacado | Defensa +2 o Visión +1 |
+| Regla | Atributo | `reason_code` | `reason_params` |
+| --- | --- | --- | --- |
+| Pase completo con dificultad de 0.80 o más que rompe al menos 2 líneas | Visión +2 | `line_breaking_pass` | `lines`, `under_pressure` |
+| Tercera recuperación en campo rival dentro de 10 minutos, y cada tercera después | Defensa +2 | `opp_half_recoveries` | `count`, `window_min` |
+| Remate a puerta a 105 km/h o más | Disparo +1 | `shot_speed` | `speed_kmh` |
+| 4 duelos ganados seguidos | Físico +1 | `duel_streak` | `count` |
+| Desmarque que arrastró a un defensa y abrió 8 m o más en una jugada que terminó en gol | Sin balón +3 | `run_opened_goal` | `dragged_defender`, `dragged_position` |
+| Desmarque que arrastró a un defensa y abrió 5 m o más en una jugada que terminó en remate sin gol | Sin balón +1 | `run_ended_in_shot` | `dragged_defender` |
+| Desmarque a 30 km/h o más | Ritmo +1 | `run_speed` | `speed_kmh` |
+| 2 regates (duelos ganados con el balón) en menos de 10 minutos | Regate +1 | `dribbles` | `count`, `window_min` |
+| Hito del destacado | Defensa +2 o Visión +1 | `standout_defensive` o `standout_creative` | ninguno |
+
+`reason` es el texto en español, con una cifra como máximo para que quepa en los textos de aficionado. `reason_code` y `reason_params` dicen lo mismo como datos, para que cada idioma escriba su propio texto (contrato v1.1).
 
 Límites: el mismo atributo no sube dos veces en 10 minutos, gana como máximo +6 por partido y no pasa de 99. El `overall` es el promedio redondeado de los siete atributos.
 

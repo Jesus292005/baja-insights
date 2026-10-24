@@ -149,6 +149,10 @@
       "to": 77,
       "delta": 1,
       "reason": "desmarque a 31 km/h",
+      "reason_code": "run_speed",
+      "reason_params": {
+        "speed_kmh": 31
+      },
       "overall_from": 66,
       "overall_to": 66,
       "run_speed_kmh": 31.0
@@ -253,6 +257,11 @@
       "to": 61,
       "delta": 1,
       "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
       "overall_from": 68,
       "overall_to": 68
     },
@@ -281,6 +290,10 @@
       "to": 78,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 68,
       "overall_to": 68
     },
@@ -549,6 +562,11 @@
       "to": 80,
       "delta": 2,
       "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
       "overall_from": 69,
       "overall_to": 70,
       "pass_distance_m": 25.6,
@@ -707,6 +725,8 @@
         "to": 80,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 68,
         "overall_to": 68
       }
@@ -739,6 +759,10 @@
       "to": 67,
       "delta": 1,
       "reason": "remate a 110 km/h",
+      "reason_code": "shot_speed",
+      "reason_params": {
+        "speed_kmh": 110
+      },
       "overall_from": 65,
       "overall_to": 65,
       "shot_speed_kmh": 109.7
@@ -767,6 +791,11 @@
       "to": 60,
       "delta": 2,
       "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
       "overall_from": 70,
       "overall_to": 70,
       "recoveries_window": "14:10-24:10"
@@ -905,6 +934,10 @@
       "to": 83,
       "delta": 1,
       "reason": "desmarque a 30 km/h",
+      "reason_code": "run_speed",
+      "reason_params": {
+        "speed_kmh": 30
+      },
       "overall_from": 65,
       "overall_to": 66,
       "run_speed_kmh": 30.4
@@ -1084,6 +1117,10 @@
       "to": 87,
       "delta": 1,
       "reason": "desmarque a 30 km/h",
+      "reason_code": "run_speed",
+      "reason_params": {
+        "speed_kmh": 30
+      },
       "overall_from": 65,
       "overall_to": 65,
       "run_speed_kmh": 30.5
@@ -1112,6 +1149,11 @@
       "to": 76,
       "delta": 2,
       "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
       "overall_from": 68,
       "overall_to": 68,
       "pass_distance_m": 27.9,
@@ -1202,6 +1244,11 @@
         "to": 81,
         "delta": 1,
         "reason": "dos regates ganados en menos de 10 minutos",
+        "reason_code": "dribbles",
+        "reason_params": {
+          "count": 2,
+          "window_min": 10
+        },
         "overall_from": 65,
         "overall_to": 66
       }
@@ -1232,6 +1279,10 @@
       "to": 79,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 68,
       "overall_to": 68
     },
@@ -1417,6 +1468,11 @@
       "to": 58,
       "delta": 2,
       "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
       "overall_from": 65,
       "overall_to": 65,
       "recoveries_window": "35:55-44:02"
@@ -1553,6 +1609,8 @@
         "to": 82,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 68,
         "overall_to": 69
       }
@@ -1585,6 +1643,10 @@
       "to": 71,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 65,
       "overall_to": 65
     },
@@ -1630,6 +1692,8 @@
         "to": 62,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 70,
         "overall_to": 70
       }
@@ -1738,6 +1802,11 @@
       "to": 58,
       "delta": 2,
       "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
       "overall_from": 58,
       "overall_to": 59,
       "pass_distance_m": 34.4,
@@ -1798,6 +1867,10 @@
       "to": 69,
       "delta": 1,
       "reason": "desmarque a 30 km/h",
+      "reason_code": "run_speed",
+      "reason_params": {
+        "speed_kmh": 30
+      },
       "overall_from": 68,
       "overall_to": 68,
       "run_speed_kmh": 30.0
@@ -1826,6 +1899,11 @@
       "to": 71,
       "delta": 1,
       "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
       "overall_from": 65,
       "overall_to": 65
     },
@@ -2014,6 +2092,11 @@
       "to": 71,
       "delta": 3,
       "reason": "arrastró al central y abrió el espacio del gol",
+      "reason_code": "run_opened_goal",
+      "reason_params": {
+        "dragged_defender": "G. Cárdenas",
+        "dragged_position": "DFC"
+      },
       "overall_from": 70,
       "overall_to": 71,
       "space_opened_m": 9.5
@@ -2043,6 +2126,11 @@
       "to": 78,
       "delta": 2,
       "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
       "overall_from": 68,
       "overall_to": 69,
       "pass_distance_m": 23.3,
@@ -2119,6 +2207,8 @@
         "to": 62,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 69,
         "overall_to": 69
       }
@@ -2261,6 +2351,10 @@
       "to": 65,
       "delta": 1,
       "reason": "remate a 107 km/h",
+      "reason_code": "shot_speed",
+      "reason_params": {
+        "speed_kmh": 107
+      },
       "overall_from": 66,
       "overall_to": 66,
       "shot_speed_kmh": 106.7
@@ -2289,6 +2383,10 @@
       "to": 88,
       "delta": 1,
       "reason": "desmarque a 30 km/h",
+      "reason_code": "run_speed",
+      "reason_params": {
+        "speed_kmh": 30
+      },
       "overall_from": 66,
       "overall_to": 66,
       "run_speed_kmh": 30.3
@@ -2343,6 +2441,10 @@
       "to": 67,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 71,
       "overall_to": 71
     },
@@ -2404,6 +2506,11 @@
       "to": 64,
       "delta": 2,
       "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
       "overall_from": 69,
       "overall_to": 69,
       "recoveries_window": "68:03-75:20"
@@ -2434,6 +2541,10 @@
       "to": 75,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 66,
       "overall_to": 66
     },
@@ -2461,6 +2572,11 @@
       "to": 38,
       "delta": 2,
       "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
       "overall_from": 66,
       "overall_to": 66,
       "recoveries_window": "69:37-76:06"
@@ -2518,6 +2634,10 @@
       "to": 75,
       "delta": 1,
       "reason": "remate a 112 km/h",
+      "reason_code": "shot_speed",
+      "reason_params": {
+        "speed_kmh": 112
+      },
       "overall_from": 70,
       "overall_to": 70,
       "shot_speed_kmh": 112

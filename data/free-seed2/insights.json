@@ -19,6 +19,11 @@
       "to": 62,
       "delta": 2,
       "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
       "overall_from": 60,
       "overall_to": 60,
       "pass_distance_m": 32.2,
@@ -114,6 +119,10 @@
       "to": 79,
       "delta": 1,
       "reason": "remate a 109 km/h",
+      "reason_code": "shot_speed",
+      "reason_params": {
+        "speed_kmh": 109
+      },
       "overall_from": 66,
       "overall_to": 66,
       "shot_speed_kmh": 109.2
@@ -485,6 +494,10 @@
       "to": 63,
       "delta": 1,
       "reason": "remate a 106 km/h",
+      "reason_code": "shot_speed",
+      "reason_params": {
+        "speed_kmh": 106
+      },
       "overall_from": 65,
       "overall_to": 65,
       "shot_speed_kmh": 106.5
@@ -563,6 +576,10 @@
       "to": 65,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 63,
       "overall_to": 63
     },
@@ -699,6 +716,11 @@
       "to": 64,
       "delta": 2,
       "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
       "overall_from": 63,
       "overall_to": 64,
       "recoveries_window": "29:02-31:48"
@@ -729,6 +751,11 @@
       "to": 69,
       "delta": 1,
       "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
       "overall_from": 66,
       "overall_to": 66
     },
@@ -889,6 +916,8 @@
         "to": 60,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 69,
         "overall_to": 70
       }
@@ -921,6 +950,10 @@
       "to": 69,
       "delta": 1,
       "reason": "arrastró a E. Quiroz y la jugada terminó en remate",
+      "reason_code": "run_ended_in_shot",
+      "reason_params": {
+        "dragged_defender": "E. Quiroz"
+      },
       "overall_from": 65,
       "overall_to": 65,
       "space_opened_m": 8.2
@@ -1027,6 +1060,10 @@
       "to": 75,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 66,
       "overall_to": 66
     },
@@ -1072,6 +1109,8 @@
         "to": 81,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 59,
         "overall_to": 59
       }
@@ -1104,6 +1143,11 @@
       "to": 77,
       "delta": 1,
       "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
       "overall_from": 65,
       "overall_to": 65
     },
@@ -1179,6 +1223,10 @@
       "to": 69,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 61,
       "overall_to": 61
     },
@@ -1363,6 +1411,8 @@
         "to": 62,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 70,
         "overall_to": 70
       }
@@ -1490,6 +1540,8 @@
         "to": 69,
         "delta": 1,
         "reason": "partido creativo por encima de lo esperado para su rol",
+        "reason_code": "standout_creative",
+        "reason_params": {},
         "overall_from": 65,
         "overall_to": 65
       }
@@ -1539,6 +1591,8 @@
         "to": 80,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 68,
         "overall_to": 68
       }
@@ -1603,6 +1657,11 @@
       "to": 62,
       "delta": 2,
       "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
       "overall_from": 68,
       "overall_to": 68,
       "recoveries_window": "61:28-69:50"
@@ -1712,6 +1771,10 @@
       "to": 77,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 65,
       "overall_to": 65
     },
@@ -1739,6 +1802,10 @@
       "to": 63,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 65,
       "overall_to": 65
     },
@@ -1766,6 +1833,10 @@
       "to": 71,
       "delta": 1,
       "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
       "overall_from": 63,
       "overall_to": 63
     },

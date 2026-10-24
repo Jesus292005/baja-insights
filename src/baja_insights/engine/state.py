@@ -146,7 +146,9 @@ class MatchState:
         return "home" if team == self.home else "away"
 
     # ---------------------------------------------------------------- cards
-    def card_change(self, name: str, attribute: str, delta: int, reason: str, event_id: int) -> dict | None:
+    def card_change(self, name: str, attribute: str, delta: int, reason: str, event_id: int,
+                    reason_code: str | None = None, reason_params: dict | None = None) -> dict | None:
+        """``reason`` is the Spanish text; ``reason_code`` and ``reason_params`` let each language write its own."""
         ps = self.players.get(name)
         if ps is None or attribute not in ps.card:
             return None
@@ -164,7 +166,8 @@ class MatchState:
         ps.card_last_t[attribute] = self.t
         change = {
             "attribute": attribute, "from": before, "to": before + delta, "delta": delta,
-            "reason": reason, "overall_from": overall_from, "overall_to": overall(ps.card),
+            "reason": reason, "reason_code": reason_code, "reason_params": dict(reason_params or {}),
+            "overall_from": overall_from, "overall_to": overall(ps.card),
             "event_id": event_id, "t_s": self.t,
         }
         ps.card_changes.append(change)

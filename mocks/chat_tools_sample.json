@@ -231,6 +231,11 @@
                 "to": 60,
                 "delta": 2,
                 "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+                "reason_code": "opp_half_recoveries",
+                "reason_params": {
+                  "count": 3,
+                  "window_min": 10
+                },
                 "overall_from": 70,
                 "overall_to": 70,
                 "event_id": 739,
@@ -564,6 +569,11 @@
                 "to": 60,
                 "delta": 2,
                 "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+                "reason_code": "opp_half_recoveries",
+                "reason_params": {
+                  "count": 3,
+                  "window_min": 10
+                },
                 "overall_from": 70,
                 "overall_to": 70,
                 "event_id": 739,
@@ -575,6 +585,11 @@
                 "to": 71,
                 "delta": 3,
                 "reason": "arrastró al central y abrió el espacio del gol",
+                "reason_code": "run_opened_goal",
+                "reason_params": {
+                  "dragged_defender": "G. Cárdenas",
+                  "dragged_position": "DFC"
+                },
                 "overall_from": 70,
                 "overall_to": 70,
                 "event_id": 1357,

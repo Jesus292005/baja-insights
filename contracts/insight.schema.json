@@ -90,6 +90,9 @@
         "attribute": {"enum": ["ritmo", "disparo", "vision", "regate", "defensa", "fisico", "sin_balon"]},
         "from": {"type": "integer"}, "to": {"type": "integer", "maximum": 99},
         "delta": {"type": "integer", "minimum": 1}, "reason": {"type": "string"},
+        "reason_code": {"description": "v1.1, optional. What the reason says, so each language writes its own text (contracts/README.md).",
+                        "enum": ["line_breaking_pass", "opp_half_recoveries", "shot_speed", "duel_streak", "run_speed", "dribbles", "run_ended_in_shot", "run_opened_goal", "standout_defensive", "standout_creative"]},
+        "reason_params": {"description": "v1.1, optional. The numbers and names of the reason, by reason_code.", "type": "object"},
         "overall_from": {"type": "integer"}, "overall_to": {"type": "integer"}
       }
     }
