@@ -1,5 +1,7 @@
 # Contrato v1.1: lo que hizo el integrante 1 y lo que falta
 
+> **Actualización.** La rama `motor-realism` recalibró el generador, el motor y el partido de demo `m001`, así que los identificadores y las cifras de `m001` de este documento ya no aplican. Qué cambia para cada uno: `docs/cambios-motor-realismo.md`.
+
 Integrante 1: motor de insights, generador y servicio de stream. Resumen de todo lo hecho para el contrato v1.1 y de lo que le toca a cada quien.
 
 | PR | Rama | Qué trae | Estado |

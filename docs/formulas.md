@@ -30,7 +30,7 @@ Un **pase progresivo** es un pase completo que avanza al menos 10 m.
 | Recuperación | 0.20, más 0.15 si es en campo rival |
 | Entrada ganada o perdida | +0.20 o −0.05 |
 | Duelo ganado o perdido | +0.12 o −0.06, y el rival recibe lo contrario |
-| Presión | +0.02, más 0.10 si su equipo recupera en los 5 s siguientes |
+| Presión | +0.02, más 0.10 si su equipo recupera el balón (recuperación o entrada ganada) en los 5 s siguientes |
 | Falta cometida o recibida | −0.10 o +0.03 |
 | Desmarque | 0.05, más 0.02 × metros abiertos si arrastró a un defensa. Si la posesión termina en tiro suma 0.10, y si termina en gol suma 0.50 × min(metros / 10, 1) |
 
@@ -44,16 +44,16 @@ término  = clip((real − esperado) / max(esperado, 1), −1, 2)
 vs_role  = clip(promedio de los cuatro términos, −1, 1)
 ```
 
-0 significa "justo lo que hace un jugador de ese rol en esos minutos". El piso de 1 en el denominador evita que al minuto 3 una sola acción dispare el valor. Los valores por rol están en `mocks/teams.json`, en `role_baselines_per_90`.
+0 significa "justo lo que hace un jugador de ese rol en esos minutos". El piso de 1 en el denominador evita que al minuto 3 una sola acción dispare el valor. Los valores por rol están en `mocks/teams.json`, en `role_baselines_per_90`. Son el promedio por 90 minutos de cada posición en 60 partidos libres del generador (semillas 201 a 260), así que un jugador típico de su puesto queda cerca de 0. Si cambia el generador, hay que recalcularlos.
 
 ## 4. Puntaje MVP, de 0 a 10
 
 ```
-ajustado  = puntos_acumulados + 1.2 · vs_role · min(minutos, 90) / 90
-mvp_score = 10 · (1 − e^(−ajustado / 5.0))
+ajustado  = puntos_acumulados + 5.0 · vs_role · min(minutos, 90) / 90
+mvp_score = 10 · (1 − e^(−ajustado / 7.0))
 ```
 
-Es acumulado, así que sube a lo largo del partido, y se satura cerca de 10 para que un partido extraordinario no rompa la escala. El ajuste por rol hace que un medio de contención que recupera mucho compita contra un delantero que remata mucho. Los porteros no entran al ranking.
+Es acumulado, así que sube a lo largo del partido, y se satura cerca de 10 para que un partido extraordinario no rompa la escala; con la escala 7 el líder suele terminar entre 7 y 9. El ajuste por rol hace que un medio de contención que recupera mucho compita contra un delantero que remata mucho: en 40 partidos libres el MVP es un atacante la mitad de las veces, un mediocampista el 42% y un defensa el 8%. Los porteros no entran al ranking.
 
 **Cuándo se emite `mvp_rank_change`:** solo cuando un jugador que participó en la jugada sube y entra al top 3, después del minuto 10, con al menos 10 minutos entre avisos del mismo jugador, salvo que llegue al primer lugar, y 3 minutos entre avisos de cualquiera. Si alguien sube porque otro bajó, no se avisa.
 
@@ -69,7 +69,7 @@ bar = clip((vs_role_A − vs_role_B) / 2, −1, 1)
 
 `A` es siempre el jugador local. Un valor positivo indica que gana el local.
 
-El insight `duel_state` se emite al terminar la posesión en la que hubo un duelo directo, para poder contar la ocasión que generó. Entre dos avisos del mismo par pasan al menos 3 minutos, salvo que la barra cambie de signo (`flipped`).
+El insight `duel_state` se emite al terminar la posesión en la que hubo un duelo directo, para poder contar la ocasión que generó. Entre dos avisos del mismo par pasan al menos 5 minutos, salvo que la barra cambie de signo (`flipped`). Solo cuenta como cambio de signo si la barra nueva queda al menos a 0.10 del cero, para no avisar cuando oscila alrededor del empate.
 
 **Prioridad:** 0.35 + 0.20 × |bar| + 0.15 si se invirtió.
 
@@ -90,9 +90,12 @@ El perfil es `defensive` si el umbral alcanzado es de recuperaciones o duelos, y
 | --- | --- |
 | Pase completo con dificultad de 0.80 o más que rompe al menos 2 líneas | Visión +2 |
 | Tercera recuperación en campo rival dentro de 10 minutos, y cada tercera después | Defensa +2 |
-| Remate a puerta a 110 km/h o más | Disparo +1 |
+| Remate a puerta a 105 km/h o más | Disparo +1 |
 | 4 duelos ganados seguidos | Físico +1 |
 | Desmarque que arrastró a un defensa y abrió 8 m o más en una jugada que terminó en gol | Sin balón +3 |
+| Desmarque que arrastró a un defensa y abrió 5 m o más en una jugada que terminó en remate sin gol | Sin balón +1 |
+| Desmarque a 30 km/h o más | Ritmo +1 |
+| 2 regates (duelos ganados con el balón) en menos de 10 minutos | Regate +1 |
 | Hito del destacado | Defensa +2 o Visión +1 |
 
 Límites: el mismo atributo no sube dos veces en 10 minutos, gana como máximo +6 por partido y no pasa de 99. El `overall` es el promedio redondeado de los siete atributos.
@@ -158,11 +161,41 @@ xG = logística(−1.2 + 1.6 · ángulo − 0.09 · distancia − 0.4 · bajo_pr
 
 ### Simulación de posesiones
 
-En cada paso el rival puede presionar, con más probabilidad cuanto más arriba esté. La presión puede recuperar el balón en el acto. También puede haber un duelo uno contra uno, un tiro desde el último tercio, una falta, un desmarque o un pase.
+En cada paso el rival puede presionar, con más probabilidad cuanto más arriba esté. Una presión puede convertirse en una **entrada** (más probable si quien presiona es defensa o contención), que si se gana le da el balón a su equipo sin evento de recuperación y si se pierde puede terminar en falta. Si no hay entrada, la presión puede recuperar el balón en el acto. También puede haber un duelo uno contra uno, un tiro desde el último tercio, una falta, un desmarque o un pase.
 
-El pase elige un objetivo según la verticalidad del equipo y un receptor cercano a esa zona. La probabilidad de completarlo baja con su dificultad. Un pase fallado sale de la cancha la mitad de las veces, lo que provoca un saque sin recuperación. La otra mitad termina en una recuperación del rival.
+El pase elige un objetivo según la verticalidad del equipo y un receptor cercano a esa zona. La probabilidad de completarlo baja con su dificultad. Un pase fallado sale de la cancha la mitad de las veces, lo que provoca un saque sin recuperación. La otra mitad termina en una recuperación del rival. Desde el propio tercio, a veces el pase va **atrás al portero**; esos pases casi nunca se pierden (97%) y, si fallan, el balón sale de la cancha.
 
 Quién presiona o recupera depende de la cercanía al balón, del rol (un medio de contención recupera más que un delantero) y de la forma del jugador según el guion.
+
+Todas las tasas están en `GEN`, al inicio de `generator/simulate.py`:
+
+| Tasa | Valor | Qué controla |
+| --- | --- | --- |
+| `tackle_attempt` | 0.20 | Una presión se vuelve entrada, por el factor de recuperación del rol |
+| `tackle_win` | 0.60 | Entradas ganadas, antes de la forma en duelos |
+| `foul_on_lost_tackle` | 0.20 | Una entrada perdida es falta |
+| `shot_base` y `shot_slope` | 0.12 y 0.04 | Probabilidad de tiro por paso desde 83 m de avance, más 0.04 por metro más cerca |
+| `foul` | 0.022 | Falta recibida por paso |
+| `backpass` y `backpass_pressure` | 0.20 y 0.20 | Pase atrás al portero desde el propio tercio, más si hay presión |
+
+### Realismo
+
+`python -m baja_insights realism --seeds 30` mide los partidos libres (la tabla usa esas mismas 30 semillas) contra rangos aproximados de la Premier League, por equipo y partido salvo que se indique. `tests/test_realism.py` exige que los 40 primeros partidos libres caigan dentro de todos los rangos.
+
+| Métrica | Antes del 23 de octubre | Ahora | Referencia |
+| --- | --- | --- | --- |
+| Goles por partido | 1.1 | 2.9 | 2.2 a 3.4 |
+| Empates | 37% | 23% | 12% a 35% |
+| Tiros | 6.8 | 11.3 | 9 a 16 |
+| Tiros a puerta | 2.7 | 4.8 | 3 a 6 |
+| xG | 0.58 | 1.47 | 1.0 a 1.8 |
+| xG por tiro | 0.08 | 0.14 | 0.08 a 0.14 |
+| Faltas | 5.7 | 10.5 | 8 a 14 |
+| Entradas | 0 | 15 | 10 a 22 |
+| Acciones del portero con balón | 9 | 24 | 20 a 50 |
+| Titulares | 10.5 (Bahía jugaba con 10) | 11 | 11 |
+| Pases | 455 | 424 | 350 a 600 |
+| Precisión de pase | 82% | 83% | 75% a 88% |
 
 ### Guion
 
@@ -175,23 +208,19 @@ Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`
 
 ---
 
-## 12. Estado de la calibración al jueves 22
+## 12. Partido de demo
 
-El partido de demo es **m001 con la semilla 23**. Se eligió entre 40 semillas porque es la que mejor cumple la historia de los mocks.
+El partido de demo es **m001 con la semilla 44** (`DEMO_SEED` en `generator/simulate.py`). Se eligió entre 90 semillas porque es la que cumple toda la historia con el generador calibrado. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
 
-**Ya coincide con la historia:**
-- El 1-1 cae en el 17 y en el 63. La cadena del empate es idéntica a la del mock, con la asistencia invisible de Torres.
-- Cardón tiene el 61% de la pelota en el primer tiempo y se detecta su fase de `control`.
-- Las claves del medio tiempo son las mismas cuatro del mock.
-- El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota", con 1.20 de xG contra 1.08.
-- Torres termina primero en el MVP.
-- Hay unos 1,400 eventos y 17 tiros, todos válidos contra el esquema.
+- El 1-1 cae en el 17 y en el 63, y la cadena del empate tiene los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres.
+- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 19. Cota lo supera entre el 43 y el 68, y Torres termina primero, empatado con Cota en 8.2.
+- Real Cardón tiene la fase de `control` en el primer tiempo, y Bahía su `pressure_shift` en el segundo.
+- El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota".
 
-**Falta calibrar el viernes:**
-- [ ] **Recuperaciones de Torres en campo rival.** Lleva 16 y la historia dice 5. Hay que bajar `press` y `recover` en su forma, o el factor de presión de los extremos.
-- [ ] **Top 3.** Sale Torres, Salgado y Cota, y la historia pide Torres, Cota y Rosas.
-- [ ] **Fase `pressure_shift` de Bahía.** No se dispara porque Bahía ya recupera mucho en el primer tiempo. Hay que bajar todavía más su presión en el primer tiempo o revisar el umbral. En su lugar sale un `control` de Bahía en el 55.
-- [ ] **Cantidad de insights.** Hay unos 50 por partido. Conviene subir umbrales de `duel_state` y `standout_milestone` para llegar a unos 35.
-- [ ] **Puntajes MVP a mitad del partido.** Hay que compararlos contra los mocks, que ponen a Torres con 6.2 en el 33:40.
+Cambios del guion respecto al jueves 22: Torres un 30% más intenso en su forma (presión 2.17, recuperación 1.91, duelos 1.52), Rosas recibe menos (1.4) y Bahía presiona menos en el primer tiempo (0.10) y más en el segundo (0.70).
 
-Cada cambio al guion o a `params.py` cambia `data/m001`. Regenera con `generate` y `analyze` y haz commit de los datos en el mismo PR. La CI revisa que el partido guardado sea el que produce el código.
+**Pendiente:**
+- [ ] Cota hace 17 recuperaciones, una cifra alta para un contención real. Bajarla mueve la carrera del MVP, así que conviene hacerlo junto con otra búsqueda de semilla.
+- [ ] No hay un aviso de "Torres sube al primer lugar" antes del minuto 35: llega al primer lugar cuando Cota baja, y esos cambios no se anuncian. La carrera en pantalla sí lo muestra arriba.
+
+Cada cambio al guion, a `GEN` o a `params.py` cambia `data/m001`. Regenera con `generate` y `analyze` y haz commit de los datos en el mismo PR. La CI revisa que el partido guardado sea el que produce el código.
