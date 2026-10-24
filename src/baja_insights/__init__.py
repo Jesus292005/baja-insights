@@ -7,5 +7,5 @@ The package is split in two layers that never call an LLM:
   exposes the query functions used by the "Ask the match" agent.
 """
 
-CONTRACT_VERSION = "1.0"
+CONTRACT_VERSION = "1.1"
 __version__ = "0.1.0"

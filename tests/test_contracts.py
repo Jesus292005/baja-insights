@@ -15,6 +15,9 @@ class SchemaTest(unittest.TestCase):
         ("overlay", MOCKS / "overlays_sample.json"),
         ("event", DATA / "m001" / "events.jsonl"),
         ("insight", DATA / "m001" / "insights.json"),
+        ("overlay", DATA / "m001" / "overlays.json"),
+        ("event", DATA / "free-seed2" / "events.jsonl"),
+        ("insight", DATA / "free-seed2" / "insights.json"),
     ]
 
     def test_all_files_validate(self):
