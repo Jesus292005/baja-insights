@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baja-insights/contracts/stream.schema.json",
+  "title": "Baja-Insights live stream message (contract v1.1)",
+  "description": "One message of the WebSocket between the stream service (Azure Container Apps) and the UI. New in v1.1. The order inside an 'overlay' message is validated separately with overlay.schema.json.",
+  "oneOf": [
+    {"$ref": "#/$defs/subscribe"},
+    {"$ref": "#/$defs/overlay"},
+    {"$ref": "#/$defs/clock"},
+    {"$ref": "#/$defs/state"},
+    {"$ref": "#/$defs/error"}
+  ],
+  "$defs": {
+    "t_s": {"type": "integer", "minimum": 0, "maximum": 5520},
+    "scoreline": {
+      "type": "object", "required": ["home", "away"], "additionalProperties": false,
+      "properties": {"home": {"type": "integer", "minimum": 0}, "away": {"type": "integer", "minimum": 0}}
+    },
+    "subscribe": {
+      "description": "UI to server, on connect and on every reconnect. from_t_s is the last match second the UI already has; the server answers with a 'state' and replays the orders with show_at_s >= from_t_s.",
+      "type": "object", "required": ["kind", "match_id", "from_t_s"], "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "subscribe"},
+        "match_id": {"type": "string"},
+        "from_t_s": {"$ref": "#/$defs/t_s"}
+      }
+    },
+    "overlay": {
+      "description": "Server to UI. A graphics order. The server sends every variant; the UI filters by mode and language.",
+      "type": "object", "required": ["kind", "order"], "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "overlay"},
+        "order": {"type": "object", "required": ["overlay_id", "type", "show_at_s"],
+                  "description": "Full order, see overlay.schema.json"}
+      }
+    },
+    "clock": {
+      "description": "Server to UI, once per second of wall time. It is the heartbeat: three seconds without one means the UI shows 'reconnecting'.",
+      "type": "object", "required": ["kind", "match_id", "t_s", "period", "phase"], "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "clock"},
+        "match_id": {"type": "string"},
+        "t_s": {"$ref": "#/$defs/t_s"},
+        "period": {"enum": [1, 2]},
+        "phase": {"enum": ["pre", "live", "half_time", "full_time"]},
+        "speed": {"type": "number", "exclusiveMinimum": 0, "description": "Replay speed, 1 for real time, 60 for the demo"}
+      }
+    },
+    "state": {
+      "description": "Server to UI, after 'subscribe' and after every goal, half time and full time. The scoreline comes from the events, the UI never works it out.",
+      "type": "object", "required": ["kind", "match_id", "t_s", "home", "away", "scoreline"], "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "state"},
+        "match_id": {"type": "string"},
+        "t_s": {"$ref": "#/$defs/t_s"},
+        "home": {"type": "string"},
+        "away": {"type": "string"},
+        "scoreline": {"$ref": "#/$defs/scoreline"}
+      }
+    },
+    "error": {
+      "description": "Server to UI. The UI keeps the last confirmed data on screen and shows the message.",
+      "type": "object", "required": ["kind", "code"], "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "error"},
+        "code": {"enum": ["match_not_found", "stream_ended", "server_error"]},
+        "detail": {"type": "string"}
+      }
+    }
+  }
+}

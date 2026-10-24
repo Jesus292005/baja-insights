@@ -1,4 +1,6 @@
-# Contratos de Baja-Insights, versión 1.0
+# Contratos de Baja-Insights, versión 1.1
+
+> **v1.1, aprobada el 23 de octubre de 2026.** Solo agrega campos opcionales y dos esquemas nuevos. Detalle y tareas pendientes en `../docs/cambios-contrato-v1.1.md`.
 
 Esta carpeta es la **fuente de verdad** de los formatos que se pasan entre las tres partes del sistema.
 
@@ -12,6 +14,8 @@ Generador ──eventos──▶ Motor ──insights──▶ Agentes ──ór
 | `event.schema.json` | Un evento del partido | Generador, integrante 1 | Motor, integrante 1 |
 | `insight.schema.json` | Un insight del motor | Motor, integrante 1 | Agentes, integrante 2 |
 | `overlay.schema.json` | Una orden de gráfico | Agentes, integrante 2 | Interfaz, integrante 3 |
+| `stream.schema.json` | Un mensaje del WebSocket en vivo (v1.1) | Servicio de stream, integrante 1 | Interfaz, integrante 3 |
+| `chat.schema.json` | Petición y respuesta de `POST /api/ask` (v1.1) | Interfaz y agente Pregúntale | Agente Pregúntale e interfaz |
 | `../mocks/chat_tools_sample.json` | Definición y ejemplos de las funciones del chat | Motor, integrante 1 | Agente Pregúntale, integrante 2 |
 
 Para validar cualquier archivo, JSON o JSONL:
@@ -67,7 +71,7 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 
 | `type` | Campos clave de `facts` |
 | --- | --- |
-| `mvp_rank_change` | `player`, `from_rank`, `to_rank`, `mvp_score`, `trigger_event_id`, `leader` o `previous_leader`, `stats`, `expected_for_role`, y `card_change` opcional |
+| `mvp_rank_change` | `player`, `from_rank`, `to_rank`, `mvp_score`, `trigger_event_id`, `leader` o `previous_leader`, `stats`, `expected_for_role`, y opcionales `card_change` y `ranking` (v1.1, top 5 con la forma de `get_mvp_ranking`) |
 | `duel_state` | `player_a` (local), `player_b`, `bar` (de −1 a 1), `a_vs_role`, `b_vs_role`, `duels_won_a`, `duels_won_b`, `direct_duels`, `chances_created_a`, `chances_created_b`, `flipped` |
 | `standout_milestone` | `player`, `position`, `profile` (`defensive` o `creative`), `stats`, `expected_for_role`, `vs_role`, `mvp_rank`, y `card_change` opcional |
 | `card_upgrade` | `player`, `attribute`, `from`, `to`, `delta`, `reason`, `overall_from`, `overall_to`, más extras según la regla, como `pass_difficulty`, `led_to` o `space_opened_m` |
@@ -83,7 +87,17 @@ Ejemplos completos en `../mocks/insights_sample.json`, y un partido real en `../
 
 ## Orden de gráfico
 
-Campos: `overlay_id`, `match_id`, `source_insight` (null para los fotogramas de la barra de duelo), `period`, `show_at` en formato MM:SS, `show_at_s`, `duration_s`, `slot`, `mode` (`fan`, `analyst` o `all`), `language` (`es`, `en` o `all`), `type`, `title`, `text`, y `card` y `data` opcionales.
+Campos: `overlay_id`, `match_id`, `source_insight` (null para los fotogramas de la barra de duelo), `period`, `show_at` en formato MM:SS, `show_at_s`, `duration_s`, `slot`, `mode` (`fan`, `analyst` o `all`), `language` (`es`, `en` o `all`), `type`, `title`, `text`, y `card`, `data` y `evidence` (v1.1) opcionales.
+
+**Campos opcionales de v1.1.** Todos se copian del insight, la interfaz nunca los calcula.
+
+| Dónde | Campo |
+| --- | --- |
+| Toda orden salvo los fotogramas | `evidence`, los `event_id` del insight |
+| `card` | `overall_from`, `overall_to` y `reason` |
+| `mvp_update` | `data.ranking` |
+| `goal_analysis` | `data.chain_detail` con los eslabones completos, e `invisible_assist` como objeto (el texto queda obsoleto) |
+| `chat_answer` | `data` obligatorio: `question`, `status`, `tools` y `evidence` opcional |
 
 - **slot:** `top_right`, `lower_third`, `side_panel`, `bottom_bar`, `center` o `full_screen`.
 - **type:** `mvp_update`, `duel_bar`, `standout_milestone`, `card_upgrade`, `goal_analysis`, `team_phase`, `match_keys`, `top3` o `chat_answer`.
@@ -104,3 +118,11 @@ Implementadas en `src/baja_insights/engine/tools.py` (`MatchQuery.dispatch(nombr
 | `get_goal_chain(goal_event_id)` | Misma forma que `goal_chain.facts` |
 
 Si un dato no existe, la función responde con `error` (`player_not_found`, `goal_not_found`, etc.) o lo lista en `not_tracked`. El agente nunca debe completar esos huecos por su cuenta.
+
+## Stream en vivo (v1.1)
+
+`stream.schema.json`. La interfaz manda `subscribe` con el último `t_s` que tiene. El servidor responde con `state` y reenvía las órdenes desde ese segundo, y después manda `overlay`, `clock` una vez por segundo como latido, `state` en cada gol, medio tiempo y final, y `error` si algo falla. Tres segundos sin `clock` significan reconexión.
+
+## Pregúntale al partido (v1.1)
+
+`chat.schema.json`, para `POST /api/ask`. La petición lleva `match_id`, `question`, `at`, `mode`, `language` y opcionales `favorite_team` e `history`. La respuesta lleva `status` (`answered`, `not_tracked`, `not_found`, `no_prediction` o `error`), `answer`, las `tools` que la respaldan y `evidence` opcional.

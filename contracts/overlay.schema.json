@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://baja-insights/contracts/overlay.schema.json",
-  "title": "Baja-Insights graphics order (contract v1)",
-  "description": "Produced by the agents (member 2), drawn by the web UI or any broadcast engine (member 3).",
+  "title": "Baja-Insights graphics order (contract v1.1)",
+  "description": "Produced by the agents (member 2), drawn by the web UI or any broadcast engine (member 3). v1.1 only adds optional fields; see docs/cambios-contrato-v1.1.md.",
   "type": "object",
   "required": ["overlay_id", "match_id", "source_insight", "period", "show_at", "show_at_s", "duration_s", "slot",
                "mode", "language", "type", "title", "text"],
@@ -21,14 +21,21 @@
                       "match_keys", "top3", "chat_answer"]},
     "title": {"type": ["string", "null"]},
     "text": {"type": ["string", "null"]},
+    "evidence": {
+      "type": "array", "items": {"type": "integer", "minimum": 1},
+      "description": "v1.1. event_id values that back the order, copied from the insight's evidence. Omitted in duel-bar frames."
+    },
     "card": {
       "type": "object",
       "required": ["player", "team", "position", "attribute", "from", "to", "delta"],
       "properties": {
         "player": {"type": "string"}, "team": {"type": "string"},
-        "position": {"enum": ["POR", "LD", "LI", "DFC", "MCD", "MC", "ED", "EI", "DC"]},
+        "position": {"$ref": "#/$defs/position"},
         "attribute": {"enum": ["ritmo", "disparo", "vision", "regate", "defensa", "fisico", "sin_balon"]},
-        "from": {"type": "integer"}, "to": {"type": "integer"}, "delta": {"type": "integer"}
+        "from": {"type": "integer"}, "to": {"type": "integer"}, "delta": {"type": "integer"},
+        "overall_from": {"type": "integer", "description": "v1.1. Copied from the insight's card_change. The UI never computes the overall."},
+        "overall_to": {"type": "integer", "maximum": 99, "description": "v1.1"},
+        "reason": {"type": "string", "description": "v1.1. The engine's reason, in Spanish with digits, as in the insight."}
       }
     },
     "data": {"type": "object"}
@@ -38,12 +45,60 @@
      "then": {"required": ["data"], "properties": {"data": {"required": ["player_a", "player_b", "bar"],
                                                             "properties": {"bar": {"type": "number", "minimum": -1, "maximum": 1}}}}}},
     {"if": {"properties": {"type": {"const": "mvp_update"}}},
-     "then": {"required": ["data"], "properties": {"data": {"required": ["rank", "mvp_score"]}}}},
+     "then": {"required": ["data"], "properties": {"data": {"required": ["rank", "mvp_score"],
+              "properties": {"ranking": {"$ref": "#/$defs/ranking"}}}}}},
     {"if": {"properties": {"type": {"const": "top3"}}},
      "then": {"required": ["data"], "properties": {"data": {"required": ["cards"],
               "properties": {"cards": {"type": "array", "items": {"required": ["rank", "player", "mvp_score"]}}}}}}},
     {"if": {"properties": {"type": {"const": "goal_analysis"}}},
-     "then": {"required": ["data"], "properties": {"data": {"required": ["chain", "credit"]}}}},
-    {"if": {"properties": {"type": {"const": "card_upgrade"}}}, "then": {"required": ["card"]}}
-  ]
+     "then": {"required": ["data"], "properties": {"data": {"required": ["chain", "credit"], "properties": {
+              "invisible_assist": {
+                "description": "v1.1 accepts the object the agents already emit (same shape as goal_chain.facts.invisible_assist). The plain player name used by the v1 mock is deprecated and will be removed in v2.",
+                "anyOf": [{"type": "null"}, {"type": "string"}, {"$ref": "#/$defs/invisible_assist"}]},
+              "chain_detail": {
+                "description": "v1.1. Same items as goal_chain.facts.chain, in time order, credits summing to 1.",
+                "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/chain_link"}}}}}}},
+    {"if": {"properties": {"type": {"const": "card_upgrade"}}}, "then": {"required": ["card"]}},
+    {"if": {"properties": {"type": {"const": "chat_answer"}}},
+     "then": {"required": ["data"], "properties": {"data": {"$ref": "#/$defs/chat_answer_data"}}}}
+  ],
+  "$defs": {
+    "position": {"enum": ["POR", "LD", "LI", "DFC", "MCD", "MC", "ED", "EI", "DC"]},
+    "ranking": {
+      "description": "v1.1. MVP ranking snapshot at the moment of the order, same items as get_mvp_ranking. Top 5 recommended.",
+      "type": "array", "minItems": 1, "maxItems": 22,
+      "items": {
+        "type": "object", "required": ["rank", "player", "team", "position", "mvp_score"],
+        "properties": {
+          "rank": {"type": "integer", "minimum": 1}, "player": {"type": "string"}, "team": {"type": "string"},
+          "position": {"$ref": "#/$defs/position"}, "mvp_score": {"type": "number"}
+        }
+      }
+    },
+    "chain_link": {
+      "type": "object", "required": ["event_id", "player", "action", "credit", "t_s"],
+      "properties": {
+        "event_id": {"type": "integer", "minimum": 1}, "player": {"type": "string"}, "action": {"type": "string"},
+        "credit": {"type": "number", "minimum": 0, "maximum": 1}, "t_s": {"type": "integer", "minimum": 0, "maximum": 5400}
+      }
+    },
+    "invisible_assist": {
+      "type": "object", "required": ["player", "dragged_defender", "space_opened_m", "touched_ball"],
+      "properties": {
+        "player": {"type": "string"}, "dragged_defender": {"type": ["string", "null"]},
+        "space_opened_m": {"type": ["number", "null"], "minimum": 0}, "touched_ball": {"type": "boolean"}
+      }
+    },
+    "chat_answer_data": {
+      "description": "v1.1. Same fields as the chat response in chat.schema.json, for when the producer puts an answer on screen.",
+      "type": "object", "required": ["question", "status", "tools"],
+      "properties": {
+        "question": {"type": "string", "minLength": 1},
+        "status": {"enum": ["answered", "not_tracked", "not_found", "no_prediction"]},
+        "tools": {"type": "array", "items": {"enum": ["get_match_state", "get_mvp_ranking", "get_player_summary",
+                                                      "get_duel", "get_team_phase", "get_goal_chain"]}},
+        "evidence": {"type": "array", "items": {"type": "integer", "minimum": 1}}
+      }
+    }
+  }
 }

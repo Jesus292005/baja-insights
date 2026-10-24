@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://baja-insights/contracts/insight.schema.json",
-  "title": "Baja-Insights engine insight (contract v1)",
+  "title": "Baja-Insights engine insight (contract v1.1)",
   "description": "Produced by the deterministic engine (member 1), consumed by the agents (member 2). Numbers are exact; agents explain them but never change them.",
   "type": "object",
   "required": ["insight_id", "match_id", "period", "minute", "second", "t_s", "type", "priority", "players",
@@ -25,7 +25,8 @@
   "allOf": [
     {"if": {"properties": {"type": {"const": "mvp_rank_change"}}},
      "then": {"properties": {"facts": {"required": ["player", "from_rank", "to_rank", "mvp_score", "trigger_event_id", "stats", "expected_for_role"],
-                                       "properties": {"card_change": {"$ref": "#/$defs/card_change"}}}}}},
+                                       "properties": {"card_change": {"$ref": "#/$defs/card_change"},
+                                                      "ranking": {"$ref": "#/$defs/ranking"}}}}}},
     {"if": {"properties": {"type": {"const": "duel_state"}}},
      "then": {"properties": {"facts": {"required": ["player_a", "player_b", "bar", "a_vs_role", "b_vs_role", "duels_won_a",
                                                     "duels_won_b", "direct_duels", "chances_created_a", "chances_created_b", "flipped"],
@@ -56,6 +57,17 @@
                                                     "who_really_won", "who_really_won_basis"]}}}}
   ],
   "$defs": {
+    "ranking": {
+      "description": "v1.1. MVP ranking right after the change, same items as get_mvp_ranking. Top 5 recommended.",
+      "type": "array", "minItems": 1, "maxItems": 22,
+      "items": {
+        "type": "object", "required": ["rank", "player", "team", "position", "mvp_score"],
+        "properties": {
+          "rank": {"type": "integer", "minimum": 1}, "player": {"type": "string"}, "team": {"type": "string"},
+          "position": {"enum": ["POR", "LD", "LI", "DFC", "MCD", "MC", "ED", "EI", "DC"]}, "mvp_score": {"type": "number"}
+        }
+      }
+    },
     "scoreline": {
       "type": "object", "required": ["home", "away"],
       "properties": {"home": {"type": "integer", "minimum": 0}, "away": {"type": "integer", "minimum": 0}}
