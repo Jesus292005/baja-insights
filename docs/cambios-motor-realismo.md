@@ -1,12 +1,19 @@
-# Generador y motor más realistas: qué cambia para cada uno
+# Nueva versión del generador y el motor: guía para el equipo
 
-Rama `motor-realism`, del integrante 1. **No cambia el contrato**: los esquemas, los campos y los tipos son los mismos. Lo que cambia son los **datos**: los eventos y los insights de `m001`, y algunos valores de `mocks/teams.json`.
+Rama `motor-realism`, del integrante 1. Explica qué cambió, qué no cambió y qué tiene que hacer cada quien para que todo funcione.
+
+**Resumen en tres líneas**
+1. Los partidos sintéticos ahora se parecen al fútbol real, el MVP está equilibrado y las cartas usan los 7 atributos.
+2. El partido de demo `m001` se regeneró (semilla 44), con la misma historia en lo esencial.
+3. Los eslabones de la cadena del gol traen el tipo de acción, así que la interfaz puede mostrarla en cualquier idioma.
 
 ---
 
-## Por qué
+## 1. Qué cambió
 
-Los partidos sintéticos no se parecían lo suficiente al fútbol real, y el demo estaba ajustado a una sola historia. Medidos contra promedios aproximados de la Premier League, 9 de 14 métricas estaban fuera de rango:
+### Generador: partidos más realistas
+
+Medido contra promedios aproximados de la Premier League con `python -m baja_insights realism`. Antes, 9 de 14 métricas estaban fuera de rango; ahora todas están dentro.
 
 | Por equipo y partido | Antes | Ahora | Premier League aprox. |
 | --- | --- | --- | --- |
@@ -18,18 +25,53 @@ Los partidos sintéticos no se parecían lo suficiente al fútbol real, y el dem
 | Acciones del portero | 9 | 24 | 20 a 50 |
 | Titulares | Bahía jugaba con 10 | 11 | 11 |
 
-Ahora todas están dentro de rango. Además:
+### Motor: MVP equilibrado y cartas completas
 
-- **MVP más equilibrado.** Antes ningún defensa quedaba primero. Ahora gana un atacante la mitad de las veces, un mediocampista el 42% y un defensa el 8%. Las referencias por rol no correspondían al generador; se recalcularon.
-- **Cartas.** Antes Ritmo y Regate no subían nunca, y el 70% de las subidas eran de Defensa. Ahora suben los 7 atributos, y Defensa es el 37%.
+- **MVP.** Antes ningún defensa quedaba primero. Las referencias por rol no correspondían al generador y se recalcularon. Ahora el MVP es un atacante la mitad de las veces, un mediocampista el 42% y un defensa el 8%.
+- **Cartas.** Antes Ritmo y Regate no subían nunca y el 70% de las subidas eran de Defensa. Ahora suben los 7 atributos, con reglas nuevas para Ritmo (desmarque a 30 km/h o más), Regate (2 regates en 10 minutos) y Sin balón (+1 cuando el desmarque termina en remate). Cada motivo de carta trae una cifra como máximo, que es lo que permiten los textos para aficionados.
+- **Duelos.** Un aviso cada 5 minutos como mínimo, y un cambio de signo solo cuenta si la barra queda a 0.10 o más del cero.
 
-Todo queda protegido por tests: `tests/test_realism.py` para el realismo, `tests/test_demo_story.py` para la historia del demo y uno nuevo que exige que cada motivo de carta tenga una cifra como máximo. El detalle de fórmulas y valores está en `docs/formulas.md`, secciones 11 y 12.
+### Cadena del gol en cualquier idioma (propuesta del integrante 2)
+
+Cada eslabón de `goal_chain.facts.chain` trae tres campos nuevos, copiados del evento. `action` se queda igual, en español, para no romper nada.
+
+| Campo | Qué es | Ejemplo |
+| --- | --- | --- |
+| `type` | El tipo del evento, el mismo vocabulario de `event.schema.json` | `pass`, `recovery`, `shot`, `off_ball_run`, `tackle` |
+| `lines_broken` | Líneas rotas por el pase, 0 si no aplica | `2` |
+| `cross` | Solo aparece, en `true`, si el pase es un centro | `true` |
+
+```json
+{"event_id": 1355, "player": "R. Salgado", "action": "pase que rompió 2 líneas", "credit": 0.35, "t_s": 3787,
+ "type": "pass", "lines_broken": 2}
+```
+
+Son opcionales en `insight.schema.json` y en `chain_link` de `overlay.schema.json`. También los devuelve `get_goal_chain`. Ya hay ejemplos en `mocks/insights_sample.json` (`i02` con un centro, `i11` con el desmarque) y en `mocks/chat_tools_sample.json`. **Como toca `contracts/`, el PR necesita el visto bueno de los tres.**
+
+### Datos de prueba que cambiaron
+
+- `mocks/teams.json`: O. Félix (MC, Bahía FC) ahora es **titular**, y cambiaron los valores de `role_baselines_per_90`.
+- `mocks/insights_sample.json` y `mocks/chat_tools_sample.json`: solo se agregaron los tres campos a los eslabones. Nada más cambia en los mocks.
+- `data/m001` y `data/free-seed2`: eventos e insights regenerados.
 
 ---
 
-## La historia del demo (`m001`, ahora semilla 44)
+## 2. Qué no cambió
 
-Se mantiene lo esencial: el 1-1 en el 17 y el 63, la misma cadena del empate que el mock con la asistencia invisible de Torres, Torres primero a las 35:00 y al final, y el veredicto «Bahía FC generó más peligro aunque tuvo menos la pelota». Cambian algunos momentos:
+- **El contrato**, salvo los tres campos opcionales de la cadena. Nada que ya exista deja de validar.
+- **El servicio de stream** y sus mensajes.
+- **Las funciones del chat.** Solo cambian las cifras de `m001`; la forma de las respuestas es la misma, más los campos de la cadena.
+- **La historia del demo, en lo esencial.** Se mantienen:
+  - el 1-1 en el 17 y en el 63;
+  - la cadena del empate con la asistencia invisible de Torres;
+  - Torres primero a las 35:00 y al final;
+  - el veredicto «Bahía FC generó más peligro aunque tuvo menos la pelota».
+
+  `tests/test_demo_story.py` lo protege.
+
+---
+
+## 3. La historia del demo, minuto a minuto
 
 | Momento | Qué pasa |
 | --- | --- |
@@ -37,24 +79,26 @@ Se mantiene lo esencial: el 1-1 en el 17 y el 63, la misma cadena del empate que
 | 14:10 | Torres sube al 2.º |
 | 15:00 | Fase de control de Real Cardón |
 | 17:40 | Gol 0-1 de Leyva |
-| 19:00 a 40:00 | Torres lidera la carrera MVP (se ve en `data.ranking` de cada `mvp_update`) |
-| 45:00 | Claves del medio tiempo |
+| 19:00 a 40:00 | Torres lidera la carrera MVP (en `data.ranking` de cada `mvp_update`) |
 | 43:00 a 68:00 | Cota lidera |
-| 63:09 | Gol 1-1 de Ramírez, asistencia invisible de Torres |
+| 45:00 | Claves del medio tiempo |
+| 63:09 | Gol 1-1 de Ramírez, con la asistencia invisible de Torres |
 | 77:00 | Fase de presión de Bahía (antes no salía) |
-| 79:06 | Torres sube al 1.º |
+| 79:06 | Torres sube al 1.º y termina empatado con Cota en 8.2 |
 | 90:00 | Top 3: Torres, Cota y Salgado (el mock dice Torres, Cota y Rosas) |
 
 **Para el guion del video:** no hay un aviso «Torres sube al primer lugar» antes de las 35:00. Torres llega ahí cuando Cota baja, y esos cambios no se anuncian. Para «¿Por qué Torres va primero?» conviene mostrar la carrera MVP, donde sí aparece primero.
 
 ---
 
-## Integrante 2, agentes (Diego)
+## 4. Integrante 2, agentes (Diego)
 
-Ningún cambio de código es obligatorio. Se probó en local, sin tocar sus archivos: sus plantillas pasan `check_variant` con los 63 insights nuevos de `m001`, los 15 del mock y 482 de 10 partidos libres.
+**Código: no es obligatorio cambiar nada.** `data_for` ya copia el eslabón completo a `chain_detail`, así que los campos nuevos llegan solos. Se probó en local, sin tocar tus archivos: tus plantillas pasan `check_variant` con los 63 insights nuevos de `m001`, los 15 del mock y 482 de 10 partidos libres.
 
-- [ ] **Regenerar `data/m001/overlays.json` y `agents_report.json`** con `python -m baja_agents run`, una sola vez, después del merge. Las órdenes actuales apuntan a insights que ya cambiaron. Si ya agregaste el ranking a mano, igual hay que regenerar.
-- [ ] **Actualizar los tests que buscan insights de `m001` por identificador.** Mientras no se actualicen, el job `agents` de la CI va a fallar. Equivalencias, comprobadas con las mismas aserciones de sus tests y con `checks.py` tal como está en `main`:
+**Lo que tienes que hacer:**
+
+- [ ] **Regenerar `data/m001/overlays.json` y `agents_report.json`** con `python -m baja_agents run`, una sola vez, después del merge. Las órdenes actuales apuntan a insights que ya cambiaron.
+- [ ] **Actualizar los tests que buscan insights de `m001` por identificador.** Mientras no se actualicen, el job `agents` de la CI va a fallar. Las equivalencias se comprobaron con las mismas aserciones de tus tests y con `checks.py` tal como está en `main`:
 
 | Antes | Ahora | Qué es | Cambia en el test |
 | --- | --- | --- | --- |
@@ -63,26 +107,68 @@ Ningún cambio de código es obligatorio. Se probó en local, sin tocar sus arch
 | `i07` | `i07` | Carta (ahora de Regate de Cota) | Nada, solo valida el esquema |
 | `i22` | `i25` | MVP mientras va 0-1 (Leyva, minuto 30) | El nombre del texto: Leyva en vez de Montaño |
 | `i26` | `i34` | Claves del medio tiempo | Posesión `{"Bahía FC": 43, "Real Cardón": 57}`; D. Mena ya no aparece, usar J. Torres o B. Haro en `who_is_who` |
-| `i38` | `i44` | Gol del 1-1 con la asistencia invisible de Torres | Nada más que el identificador |
-| `i46` | `i35` | Hito de Cota, minuto 45 | 10 recuperaciones y 4 pases progresivos en vez de 12 y 16; el caso de pase clave mal etiquetado queda «4 pases clave» |
+| `i38` | `i44` | Gol del 1-1 con la asistencia invisible de Torres | Solo el identificador |
+| `i46` | `i35` | Hito de Cota, minuto 45 | 10 recuperaciones y 4 pases progresivos en vez de 12 y 16; el caso del pase clave mal etiquetado queda «4 pases clave» |
 
-- [ ] **Agente Pregúntale:** las cifras de `m001` cambian, así que las respuestas de ejemplo de `mocks/chat_tools_sample.json` ya no coinciden con el partido. Eso ya pasaba antes con algunas cifras: el mock es un ejemplo, no el partido real.
-
----
-
-## Integrante 3, interfaz (luismar)
-
-Ningún cambio de código. Los tipos ya incluyen los 7 atributos de carta y todas las posiciones.
-
-- [ ] **`mocks/teams.json`:** O. Félix (MC, Bahía FC) ahora es **titular**, porque Bahía jugaba con 10. Si la interfaz muestra alineaciones, aparecerá. También cambiaron los valores de `role_baselines_per_90`, que la interfaz no usa.
-- [ ] **Cartas de Ritmo, Regate y Sin balón:** antes nunca salían y ahora sí. Conviene revisar que se vean bien.
-- [ ] **Grabar el video con las órdenes regeneradas** por Diego, no con las actuales.
-- [ ] Sigue pendiente, como antes: el motivo de la carta llega en español también en las órdenes en inglés.
+**Opcional:**
+- [ ] Usar `type` y `lines_broken` cuando el Narrador cuenta la cadena en inglés, en lugar de traducir `action`.
+- [ ] Sigue pendiente lo que ya estaba en `docs/estado-motor-v1.1.md`: `allowed_numbers` todavía ve el ranking, y el endpoint `POST /api/ask`.
 
 ---
 
-## Orden sugerido
+## 5. Integrante 3, interfaz (luismar)
 
-1. Merge de `motor-realism`. El job `test` pasa; el job `agents` fallará en los tests de la tabla de arriba hasta que Diego los actualice.
-2. Diego actualiza sus tests y regenera las órdenes, idealmente en el mismo día.
-3. Datos congelados: nadie cambia `m001` hasta después de grabar el video.
+**Código: nada es obligatorio para que siga funcionando.** Los campos nuevos son opcionales.
+
+**Para que funcione perfecto:**
+
+- [ ] **Agregar los campos a `ChainLink`** en `web/src/contracts/overlay.ts`:
+
+  ```ts
+  export interface ChainLink {
+    event_id: number; player: string; action: string; credit: number; t_s: number;
+    type?: 'pass' | 'shot' | 'tackle' | 'recovery' | 'duel' | 'pressure' | 'foul' | 'off_ball_run';
+    lines_broken?: number;
+    cross?: boolean;
+  }
+  ```
+
+- [ ] **Armar la etiqueta en cada idioma** en `web/src/i18n/strings.ts`, con `action` como respaldo si falta `type`. Estas son las mismas reglas que usa el motor para la etiqueta en español:
+
+| `type` y campos | Español (igual que `action`) | Inglés sugerido |
+| --- | --- | --- |
+| `recovery` | recuperación | recovery |
+| `tackle` | entrada ganada | tackle won |
+| `shot` | remate | shot |
+| `off_ball_run` | desmarque y arrastre de marca | off-ball run that dragged a marker |
+| `pass` con `cross` | centro | cross |
+| `pass` con `lines_broken` ≥ 2 | pase que rompió N líneas | pass that broke N lines |
+| `pass` con `lines_broken` = 1 | pase que rompió 1 línea | pass that broke 1 line |
+| `pass` sin líneas | pase | pass |
+
+- [ ] **Revisar las cartas de Ritmo, Regate y Sin balón**, que antes nunca salían.
+- [ ] **Alineaciones:** si la interfaz las muestra, ahora aparece O. Félix como titular de Bahía FC.
+- [ ] **Grabar el video con las órdenes que regenere Diego**, no con las actuales.
+
+---
+
+## 6. Pendiente de decidir entre los tres: `card.reason`
+
+El motivo de la carta llega en español también en las órdenes en inglés, por ejemplo «tercera recuperación en campo rival en menos de 10 minutos». Aquí no basta el tipo de evento, porque el motivo combina varias cosas. Hay dos caminos:
+
+| Camino | Cómo | Quién trabaja | Ventaja | Costo |
+| --- | --- | --- | --- | --- |
+| **A. Código del motor** | El motor agrega `reason_code` y sus números, por ejemplo `{"code": "opp_half_recoveries", "count": 3, "window_min": 10}`. La interfaz arma el texto | Integrante 1 (motor) e integrante 3 (textos) | Igual que la cadena: datos exactos y cada idioma arma su texto | Cambio menor del contrato; hay 10 reglas de carta que traducir |
+| **B. Traducción del agente** | El agente escribe el motivo en inglés junto con sus textos | Integrante 2 | No toca el contrato ni la interfaz | Más llamadas al modelo, y un texto que el verificador tiene que revisar |
+
+Si eligen A, el motor lo puede tener en unas horas.
+
+---
+
+## 7. Orden sugerido
+
+1. Los tres revisan el PR de `motor-realism`, porque toca `contracts/`.
+2. Merge. El job `test` de la CI pasa; el job `agents` falla en los tests de la tabla de arriba hasta que Diego los actualice.
+3. Diego actualiza sus tests y regenera las órdenes, idealmente el mismo día del merge.
+4. Datos congelados: nadie cambia `m001` hasta después de grabar el video.
+5. Decidir el camino de `card.reason`.

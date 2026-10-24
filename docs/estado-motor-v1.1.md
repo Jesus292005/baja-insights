@@ -108,14 +108,8 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
 
 ### Detectado en la revisión
 
-- [ ] **`chain_detail.action` viene en español libre** («pase que rompió 2 líneas», «recuperación»), así que en las variantes en inglés sale en español. Hay dos caminos:
-  - Que el motor agregue un código (`pass`, `recovery`, `cross`, `shot`, `off_ball_run`) y `lines_broken` como número aparte. Es un cambio menor del contrato que puede hacer el integrante 1 si los tres lo aprueban.
-  - Que el agente traduzca la acción, sin tocar el contrato.
-  - **Decisión:** el primer camino. Lo hace el integrante 1 en el motor: un código de acción por eslabón y `lines_broken` como número aparte. Del lado de los agentes no hay que cambiar nada, porque `data_for` copia cada eslabón completo a `chain_detail`. Solo hay que regenerar `data/m001/overlays.json` cuando cambie `insights.json`.
-  - **Nota del integrante 2:** `contract.EVENT_TYPES`, el `enum` de `type` en `event.schema.json`, ya tiene casi todo ese vocabulario, y `chain_action_label` (`engine/scoring.py`) arma la etiqueta justo con el `type` del evento, `cross` y `lines_broken`. Conviene que los códigos cuadren con él:
-    - `cross` no es un tipo de evento, sino un `pass` con `cross: true`.
-    - A la lista le falta `tackle`, que la cadena sí usa («entrada ganada»).
-  - `card.reason` tiene el mismo problema de idioma. Ahí no basta un código, porque el motivo combina varias cosas («tercera recuperación en campo rival en menos de 10 minutos»). Hay que decidirlo aparte.
+- [x] **`chain_detail.action` venía en español libre.** Resuelto en `motor-realism` con la propuesta del integrante 2: cada eslabón trae `type`, `lines_broken` y `cross` (solo en centros), copiados del evento, y `action` se queda igual. Como pedía su nota, un centro es un `pass` con `cross: true` y la entrada ganada es `tackle`. Detalle en `docs/cambios-motor-realismo.md`.
+- [ ] **`card.reason` tiene el mismo problema de idioma.** Pendiente de decidir aparte; opciones en `docs/cambios-motor-realismo.md`.
 - [x] `agents/test_1_hi.py`, `test_2_narrator.py` y `test_3_tool.py` son prototipos del PR #1 que quedaron sueltos. Se pueden borrar o mover a `agents/scratch/`.
   - **Resuelto en `4a10aae`:** se movieron a `agents/scratch/`.
 
@@ -150,4 +144,5 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
 - [ ] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y pasar `invisible_assist` del mock (o037 a o040) de texto a objeto.
   - Las cifras del mock están escritas a mano y no coinciden con lo que da el motor sobre los 50 eventos del mock, así que el ranking de ejemplo hay que escribirlo también a mano.
   - Para que cuadre con el resto del mock, puede salir del ranking de las 35:00 de `chat_tools_sample.json`.
-- [x] Decidir el camino para `chain_detail.action` (ver integrante 2). Decidido: el motor agrega el código de acción y `lines_broken`, a cargo del integrante 1.
+- [x] Camino para `chain_detail.action`: campos del evento en cada eslabón (propuesta del integrante 2), a cargo del integrante 1.
+- [ ] Decidir el camino para `card.reason`.
