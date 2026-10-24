@@ -1,17 +1,17 @@
 import helpers  # noqa: F401  (puts src/ on sys.path)
 import unittest
 
-from baja_insights.generator import generate_match
+from baja_insights.generator import DEMO_SEED, generate_match
 from helpers import roster, validator
 
 
 class ScriptedMatchTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.events = generate_match(roster(), seed=23, script="m001")
+        cls.events = generate_match(roster(), seed=DEMO_SEED, script="m001")
 
     def test_deterministic(self):
-        self.assertEqual(generate_match(roster(), seed=23, script="m001"), self.events)
+        self.assertEqual(generate_match(roster(), seed=DEMO_SEED, script="m001"), self.events)
 
     def test_story_beats_are_kept(self):
         goals = [(e["t_s"], e["player"], e["scoreline"]) for e in self.events if e["type"] == "goal"]

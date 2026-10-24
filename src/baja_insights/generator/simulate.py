@@ -34,6 +34,8 @@ from ..roster import Player, Roster
 from .xg import expected_goals
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+# Seed of the demo match m001: the one that keeps the whole story of the mocks (tests/test_demo_story.py).
+DEMO_SEED = 44
 SCRIPTS_DIR = Path(__file__).resolve().parent / "scripts"
 
 # Typical zone of each position for a team attacking towards +x:
@@ -44,6 +46,24 @@ ZONES = {
 }
 PAIRED_LANES = {"DFC": (26.0, 42.0), "MC": (24.0, 44.0)}
 DEFAULT_STYLE = {"pass_acc": 0.80, "tempo": 1.0, "press": 0.25, "directness": 0.5}
+# Rates of the possession simulator, calibrated against Premier League averages with
+# ``python -m baja_insights realism`` (see docs/formulas.md, section 11).
+GEN = {
+    "press_win": 0.07,            # a pressure wins the ball back on the spot (before style and form)
+    "tackle_attempt": 0.20,       # a pressure turns into a tackle, times the role's recover factor
+    "tackle_win": 0.60,           # tackles won, before duel form
+    "foul_on_lost_tackle": 0.20,  # a lost tackle is a foul
+    "duel": 0.06,                 # 1 v 1 duel per step
+    "shot_min_prog": 83.0,        # metres from own goal where shots start
+    "shot_base": 0.12,            # per-step shot chance at shot_min_prog ...
+    "shot_slope": 0.04,           # ... plus this per metre closer to goal
+    "cross_shot": 0.35,           # a completed cross ends in a shot
+    "foul": 0.022,                # foul suffered per step
+    "backpass": 0.20,             # pass back to the goalkeeper from the own third
+    "backpass_pressure": 0.20,    # extra when under pressure
+    "backpass_max_prog": 38.0,
+    "backpass_success": 0.97,
+}
 # How likely each role is to be the one who presses or wins the ball back near the ball.
 ROLE_FACTOR = {
     "recover": {"POR": 0.2, "DFC": 1.3, "LD": 1.1, "LI": 1.1, "MCD": 1.6, "MC": 1.0, "ED": 0.55, "EI": 0.55, "DC": 0.3},
@@ -53,7 +73,7 @@ ROLE_FACTOR = {
 
 @dataclass
 class Resume:
-    kind: str                  # kickoff | keeper | recovery | restart | continue
+    kind: str                  # kickoff | keeper | recovery | tackle | restart | continue
     team: str
     x: float = PITCH_LENGTH / 2
     y: float = PITCH_WIDTH / 2
@@ -62,7 +82,7 @@ class Resume:
 
 
 class MatchGenerator:
-    def __init__(self, roster: Roster, seed: int = 23, script: dict | str | Path | None = "m001",
+    def __init__(self, roster: Roster, seed: int = DEMO_SEED, script: dict | str | Path | None = "m001",
                  match_id: str | None = None):
         self.roster = roster
         self.rng = random.Random(seed)
@@ -157,17 +177,32 @@ class MatchGenerator:
                 self._emit("pressure", opp, presser, [x, y], pid=pid, target=carrier)
                 under = True
                 self.t += self.rng.uniform(0.5, 2.0)
-                win = clip(0.07 * self._form(presser, "recover") * opp_style["press"] / 0.3, 0.02, 0.4)
-                if self.roster.players[presser].position in ("DC", "ED", "EI"):
-                    win *= 0.4
-                if self.rng.random() < win:
-                    self.t += self.rng.uniform(0.5, 2.0)
-                    return Resume("recovery", opp, x, y, presser)
+                position = self.roster.players[presser].position
+                if self.rng.random() < GEN["tackle_attempt"] * ROLE_FACTOR["recover"].get(position, 1.0):
+                    odds = GEN["tackle_win"] * self._form(presser, "duel_win") / self._form(carrier, "duel_win")
+                    won = self.rng.random() < clip(odds, 0.2, 0.85)
+                    self._emit("tackle", opp, presser, [x, y], outcome="won" if won else "lost", pid=pid,
+                               opponent=carrier)
+                    self.t += self.rng.uniform(1.0, 2.5)
+                    if won:
+                        return Resume("tackle", opp, x, y, presser)
+                    if self.rng.random() < GEN["foul_on_lost_tackle"]:
+                        self._emit("foul", opp, presser, [x, y], pid=pid, fouled=carrier)
+                        self.t += self.rng.uniform(12, 25)
+                        under = False
+                else:
+                    win = clip(GEN["press_win"] * self._form(presser, "recover") * opp_style["press"] / 0.3,
+                               0.02, 0.4)
+                    if position in ("DC", "ED", "EI"):
+                        win *= 0.4
+                    if self.rng.random() < win:
+                        self.t += self.rng.uniform(0.5, 2.0)
+                        return Resume("recovery", opp, x, y, presser)
                 if self.t + 3 > limit:
                     return None
 
             # --- 1 v 1 duel
-            if self.rng.random() < 0.06:
+            if self.rng.random() < GEN["duel"]:
                 defender = self._pick(opp, x, y, weight_key="duel", exclude=("POR",))
                 fa, fd = self._form(carrier, "duel_win"), self._form(defender, "duel_win")
                 attacker_wins = self.rng.random() < fa / (fa + fd)
@@ -179,11 +214,12 @@ class MatchGenerator:
                     return Resume("recovery", opp, x, y, defender)
 
             # --- shot
-            if prog >= 83 and self.rng.random() < 0.07 + 0.015 * (prog - 83):
+            if prog >= GEN["shot_min_prog"] and \
+                    self.rng.random() < GEN["shot_base"] + GEN["shot_slope"] * (prog - GEN["shot_min_prog"]):
                 return self._shot(team, carrier, x, y, under, pid, cross=False)
 
             # --- foul suffered
-            if self.rng.random() < 0.012:
+            if self.rng.random() < GEN["foul"]:
                 fouler = self._pick(opp, x, y, exclude=("POR",))
                 self._emit("foul", opp, fouler, [x, y], pid=pid, fouled=carrier)
                 self.t += self.rng.uniform(12, 25)
@@ -212,7 +248,7 @@ class MatchGenerator:
             self.t += self.rng.uniform(2.5, 5.5) / style["tempo"]
             if result["outcome"] == "complete":
                 carrier, x, y = result["receiver"], result["end"][0], result["end"][1]
-                if result.get("cross") and self.rng.random() < 0.35:
+                if result.get("cross") and self.rng.random() < GEN["cross_shot"]:
                     if self.t + 2 > limit:
                         return None
                     return self._shot(team, carrier, x, y, True, pid, cross=True)
@@ -221,7 +257,7 @@ class MatchGenerator:
                         if self._prog(x, team) > 70 else Resume("recovery", opp, x, y)
             else:
                 ex, ey = result["end"]
-                if self.rng.random() < 0.50:
+                if result["back"] or self.rng.random() < 0.50:  # a misplaced pass back goes out of play
                     self.t += self.rng.uniform(6, 14)
                     return Resume("restart", opp, ex, ey)
                 return Resume("recovery", opp, ex, ey, self._pick(opp, ex, ey, weight_key="recover"))
@@ -229,14 +265,21 @@ class MatchGenerator:
     def _pass(self, team, carrier, x, y, under, pid, style) -> dict:
         prog = self._prog(x, team)
         lines_form = self._form(carrier, "pass_lines")
-        if prog > 86:
-            dp = self.rng.gauss(-3, 6)
+        back = GEN["backpass"] + (GEN["backpass_pressure"] if under else 0.0)
+        is_back = (prog < GEN["backpass_max_prog"] and self.roster.players[carrier].position != "POR"
+                   and self.rng.random() < back)
+        if is_back:
+            dp = self.rng.uniform(4, 9) - prog  # back to the goalkeeper
+            target_y = clip(34 + self.rng.gauss(0, 6), 2, 66)
         else:
-            dp = self.rng.gauss(-1 + 10 * style["directness"] * lines_form, 10)
-            if prog < 20:
-                dp += 8
+            if prog > 86:
+                dp = self.rng.gauss(-3, 6)
+            else:
+                dp = self.rng.gauss(-1 + 10 * style["directness"] * lines_form, 10)
+                if prog < 20:
+                    dp += 8
+            target_y = clip(y + self.rng.gauss(0, 14), 2, 66)
         target_p = clip(prog + dp, 2, 103)
-        target_y = clip(y + self.rng.gauss(0, 14), 2, 66)
         tx = self._to_x(target_p, team)
         exclude = () if target_p < 15 else ("POR",)
         receiver = self._pick(team, tx, target_y, weight_key="receive", exclude=exclude, exclude_names=(carrier,))
@@ -254,6 +297,8 @@ class MatchGenerator:
         hard = (0.3 * min(dist / 40, 1) + 0.25 * under + 0.25 * min(lines / 2, 1)
                 + 0.2 * clip(progress / 30, 0, 1))
         success = clip(style["pass_acc"] + 0.10 - 0.35 * hard, 0.3, 0.98)
+        if is_back:  # a pass back to the keeper is almost never lost
+            success = GEN["backpass_success"]
         complete = self.rng.random() < success
         cross = self._prog(ex, team) >= 90 and (y < 18 or y > 50) and (ey > 20 and ey < 48)
         extra = {"receiver": receiver}
@@ -264,7 +309,7 @@ class MatchGenerator:
                    speed=round(clip(25 + 1.3 * dist + self.rng.gauss(0, 5), 15, 110), 1),
                    under=under, lines=lines, pid=pid, **extra)
         return {"outcome": "complete" if complete else "incomplete", "receiver": receiver,
-                "end": [ex, ey], "cross": cross}
+                "end": [ex, ey], "cross": cross, "back": is_back}
 
     def _shot(self, team, shooter, x, y, under, pid, cross) -> Resume:
         opp = self.roster.opponent(team)
@@ -521,9 +566,9 @@ def load_script(script: dict | str | Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def generate_match(roster: Roster, seed: int = 23, script: dict | str | Path | None = "m001",
+def generate_match(roster: Roster, seed: int = DEMO_SEED, script: dict | str | Path | None = "m001",
                    match_id: str | None = None) -> list[dict]:
     return MatchGenerator(roster, seed=seed, script=script, match_id=match_id).generate()
 
 
-__all__ = ["MatchGenerator", "generate_match", "load_script", "STRUCTURAL_EVENTS"]
+__all__ = ["DEMO_SEED", "MatchGenerator", "generate_match", "load_script", "STRUCTURAL_EVENTS"]

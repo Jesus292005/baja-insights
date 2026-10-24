@@ -1,11 +1,12 @@
 """Command line entry point.
 
-    python -m baja_insights generate --seed 23 --script m001 --out data/m001/events.jsonl
+    python -m baja_insights generate --seed 44 --script m001 --out data/m001/events.jsonl
     python -m baja_insights analyze  --events data/m001/events.jsonl --out data/m001/insights.json
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60
     python -m baja_insights ask      --events data/m001/events.jsonl get_mvp_ranking '{"at": "35:00", "top": 3}'
     python -m baja_insights validate data/m001/events.jsonl data/m001/insights.json
     python -m baja_insights serve    --data data --port 8080 --speed 1
+    python -m baja_insights realism  --seeds 30
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ from pathlib import Path
 from .contract import event_t_s
 from .engine import InsightEngine
 from .engine.tools import MatchQuery
-from .generator import generate_match
+from .generator import DEMO_SEED, generate_match
 from .roster import Roster
 
 CONTRACTS = Path(__file__).resolve().parents[2] / "contracts"
@@ -142,6 +143,14 @@ def cmd_validate(args) -> int:
     return 1 if failed else 0
 
 
+def cmd_realism(args) -> int:
+    from .realism import format_report, measure, out_of_range
+
+    report = measure(Roster.load(args.teams), range(1, args.seeds + 1))
+    print(format_report(report))
+    return 1 if out_of_range(report) else 0
+
+
 def cmd_serve(args) -> int:
     import asyncio
     import logging
@@ -163,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     g = sub.add_parser("generate", help="generate a synthetic match")
-    g.add_argument("--seed", type=int, default=23)
+    g.add_argument("--seed", type=int, default=DEMO_SEED)
     g.add_argument("--script", default="m001", help="script name or path, or 'free' for an unscripted match")
     g.add_argument("--match-id", default=None)
     g.add_argument("--out", required=True)
@@ -188,6 +197,10 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("validate", help="validate JSON/JSONL files against the contracts")
     v.add_argument("files", nargs="+")
     v.set_defaults(func=cmd_validate)
+
+    r = sub.add_parser("realism", help="compare free matches against Premier League reference ranges")
+    r.add_argument("--seeds", type=int, default=30, help="number of free matches to measure")
+    r.set_defaults(func=cmd_realism)
 
     w = sub.add_parser("serve", help="WebSocket stream for the UI: clock, scoreline and graphics orders")
     w.add_argument("--data", default=str(Path(__file__).resolve().parents[2] / "data"),
