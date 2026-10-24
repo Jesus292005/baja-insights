@@ -1,16 +1,11 @@
 {
   "match_id": "m001",
   "model_calls": {
-    "calls": 126,
-    "cache_hits": 1,
+    "calls": 0,
+    "cache_hits": 127,
     "failures": 0,
     "skipped": 0,
-    "calls_by_agent": {
-      "narrator": 28,
-      "personalizer": 43,
-      "verifier": 43,
-      "curator": 12
-    }
+    "calls_by_agent": {}
   },
   "graphics": 28,
   "versions_by_agent": 108,

@@ -55,22 +55,29 @@ def name_sides(value, roster: Roster):
 INSTRUCTIONS += DATA_NOTES
 
 
+# Facts copied to the overlay for the UI that the agents don't need. Keeping them out of the
+# prompts keeps the cache valid and gives the model fewer numbers to misplace.
+UI_ONLY_FACTS = ("ranking",)
+
+
 def who_is_who(insight: dict, roster: Roster) -> dict:
     """Team and position of every player named anywhere in the insight."""
-    text = json.dumps(insight["facts"], ensure_ascii=False) + " ".join(insight["players"])
+    facts = {k: v for k, v in insight["facts"].items() if k not in UI_ONLY_FACTS}
+    text = json.dumps(facts, ensure_ascii=False) + " ".join(insight["players"])
     return {p.name: {"team": p.team, "position": p.position}
             for p in roster.players.values() if p.name in text}
 
 
 def slim(insight: dict, roster: Roster | None = None) -> dict:
     """The parts of an insight the agents need, without the evidence list, with the stats already worded."""
+    facts = {k: v for k, v in insight["facts"].items() if k not in UI_ONLY_FACTS}
     out = {"insight_id": insight["insight_id"], "type": insight["type"], "clock": fmt_clock(insight["t_s"]),
            "period": insight["period"], "players": insight["players"], "team": insight["team"],
-           "facts": insight["facts"]}
+           "facts": facts}
     if insight["facts"].get("stats"):
         out["stats_worded"] = readable_stats(insight["facts"]["stats"])
     if roster is not None:
-        out["facts"] = name_sides(insight["facts"], roster)
+        out["facts"] = name_sides(facts, roster)
         out["home_team"], out["away_team"] = roster.home, roster.away
         out["who_is_who"] = who_is_who(insight, roster)
     return out
