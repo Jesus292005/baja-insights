@@ -40,13 +40,17 @@ def card_for(insight: dict, roster: Roster) -> dict | None:
     if player is None:
         return None
     return {"player": player.name, "team": player.team, "position": facts.get("position", player.position),
-            "attribute": change["attribute"], "from": change["from"], "to": change["to"], "delta": change["delta"]}
+            "attribute": change["attribute"], "from": change["from"], "to": change["to"], "delta": change["delta"],
+            "overall_from": change["overall_from"], "overall_to": change["overall_to"], "reason": change["reason"]}
 
 
 def data_for(insight: dict) -> dict | None:
     facts, kind = insight["facts"], insight["type"]
     if kind == "mvp_rank_change":
-        return {"rank": facts["to_rank"], "previous_rank": facts["from_rank"], "mvp_score": facts["mvp_score"]}
+        data = {"rank": facts["to_rank"], "previous_rank": facts["from_rank"], "mvp_score": facts["mvp_score"]}
+        if facts.get("ranking"):  # v1.1, once the engine emits it
+            data["ranking"] = [dict(item) for item in facts["ranking"]]
+        return data
     if kind == "duel_state":
         return {"player_a": facts["player_a"], "player_b": facts["player_b"], "bar": facts["bar"]}
     if kind == "standout_milestone":
@@ -54,6 +58,7 @@ def data_for(insight: dict) -> dict | None:
     if kind == "goal_chain":
         data = {"chain": [link["player"] for link in facts["chain"]],
                 "credit": [link["credit"] for link in facts["chain"]],
+                "chain_detail": [dict(link) for link in facts["chain"]],
                 "scoreline": facts["scoreline"], "xg": facts["xg"]}
         if facts.get("invisible_assist"):
             data["invisible_assist"] = facts["invisible_assist"]
@@ -119,6 +124,7 @@ def build(insight: dict, texts: dict[str, dict], show_at_s: int, roster: Roster)
             "type": overlay_type,
             "title": texts[key]["title"],
             "text": texts[key]["text"],
+            "evidence": list(insight["evidence"]),
         }
         if card:
             overlay["card"] = card

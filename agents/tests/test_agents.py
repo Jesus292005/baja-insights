@@ -235,6 +235,40 @@ def test_no_frames_before_the_first_duel_notice():
     assert duel_frames([notice(1000, 0.3)], lambda a, b, t: {"bar": 0.9}, "m001", end_s=1000) == []
 
 
+# ------------------------------------------------------- contract v1.1
+RANKING = [{"rank": 1, "player": "J. Torres", "team": "Bahía FC", "position": "ED", "mvp_score": 6.2},
+           {"rank": 2, "player": "L. Montaño", "team": "Real Cardón", "position": "EI", "mvp_score": 5.9}]
+
+
+def test_v11_fields_are_copied_from_the_insight(jsonschema_validator):
+    from baja_agents.overlays import build
+    texts = {k: {"title": "t", "text": "x"} for k in ("fan_es", "analyst_es", "fan_en", "analyst_en")}
+
+    mvp = by_id(SAMPLE, "i05")
+    mvp = {**mvp, "facts": {**mvp["facts"], "ranking": RANKING}}
+    order = build(mvp, texts, mvp["t_s"] + 2, ROSTER)[0]
+    assert order["data"]["ranking"] == RANKING and order["evidence"] == mvp["evidence"]
+    change = mvp["facts"]["card_change"]
+    assert {k: order["card"][k] for k in ("overall_from", "overall_to", "reason")} == \
+        {k: change[k] for k in ("overall_from", "overall_to", "reason")}
+
+    goal = by_id(M001, "i38")
+    order = build(goal, texts, goal["t_s"] + 2, ROSTER)[0]
+    assert order["data"]["chain_detail"] == goal["facts"]["chain"]
+    assert order["data"]["invisible_assist"]["player"] == "J. Torres"
+
+    for insight in (mvp, goal, by_id(M001, "i07")):
+        for o in build(insight, texts, insight["t_s"] + 2, ROSTER):
+            assert [e.message for e in jsonschema_validator.iter_errors({**o, "overlay_id": "o001"})] == []
+
+
+def test_ranking_stays_out_of_the_agents_view():
+    from baja_agents.narrator import slim
+    mvp = by_id(SAMPLE, "i05")
+    with_ranking = {**mvp, "facts": {**mvp["facts"], "ranking": RANKING}}
+    assert slim(with_ranking, ROSTER) == slim(mvp, ROSTER)
+
+
 # ----------------------------------------------------------- whole match
 def test_offline_match_matches_the_contract(jsonschema_validator):
     from baja_insights.engine.tools import MatchQuery
