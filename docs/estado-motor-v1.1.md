@@ -41,18 +41,24 @@ Rama `motor-v1.1`, del integrante 1 (motor y stream). Va sobre `main` después d
 
 ## Lo que falta: integrante 2, agentes
 
-### Urgente, antes o junto con el merge de esta rama
+El PR #4 (`agents-001`) ya resuelve buena parte. Se revisó combinado con esta rama: se mezcla sin conflictos.
 
-- [ ] **`checks.py` se vuelve más permisivo con el ranking.** `allowed_numbers` acepta cualquier número del insight, y ahora el insight trae las puntuaciones de cinco jugadores. Se comprobó: «L. Montaño sube con 2.5 puntos» pasa la validación, aunque Montaño tiene 2.3 y el 2.5 es de otro jugador.
-  - Solución: sacar `ranking` del insight en `narrator.slim` y en `allowed_numbers`. La orden lo copia directo del insight, así que el modelo no necesita verlo.
+### Ya resuelto en el PR #4
+
+- [x] `card_for` copia `overall_from`, `overall_to` y `reason`.
+- [x] `data_for` copia `ranking` en `mvp_update` (cuando el motor lo emite) y `chain_detail` en `goal_analysis`.
+- [x] `build` copia `evidence` en cada orden.
+- [x] `UI_ONLY_FACTS` saca `ranking` de `slim` y de `who_is_who`, así que el modelo no ve el ranking.
+
+### Urgente, al hacer merge de los dos PR
+
+- [ ] **`allowed_numbers` todavía ve el ranking.** `personalizer.py` (línea 83) la llama con el insight completo, así que las puntuaciones de los cinco jugadores cuentan como permitidas. Se comprobó con los dos PR combinados: «L. Montaño sube con 2.5 puntos» pasa la validación, aunque Montaño tiene 2.3 y el 2.5 es de otro jugador.
+  - Solución: filtrar `UI_ONLY_FACTS` también en `checks.allowed_numbers`.
   - Ya pasaba algo parecido con `evidence`: los `event_id` (1340, 1353…) cuentan como números permitidos.
-- [ ] **Regenerar `data/m001/overlays.json`.** El payload de los `mvp_rank_change` cambió, así que esas respuestas ya no están en caché y habrá llamadas nuevas a Foundry.
+- [ ] **Regenerar `data/m001/overlays.json` después de los dos merge.** El del PR #4 se generó con el motor de `main`, que aún no emite `ranking`, así que ninguna de sus órdenes `mvp_update` trae `data.ranking`. Si `UI_ONLY_FACTS` también se filtra en `allowed_numbers`, la caché sigue sirviendo.
 
-### Tareas del contrato v1.1 (en `agents/baja_agents/overlays.py`)
+### Pendiente del contrato v1.1
 
-- [ ] `data_for`: copiar `facts["ranking"]` en `mvp_update.data.ranking` y `facts["chain"]` como `goal_analysis.data.chain_detail`.
-- [ ] `card_for`: copiar `overall_from`, `overall_to` y `reason`. Todos los `card_change` y `card_upgrade` actuales ya los traen.
-- [ ] `build`: copiar `insight["evidence"]` en cada orden, salvo en los fotogramas de la barra de duelo.
 - [ ] Endpoint `POST /api/ask` con `chat.schema.json`. La pregunta de los kilómetros de Torres debe responder `not_tracked`, y «¿Quién va a ganar?» debe responder `no_prediction`.
 - [ ] Orden `chat_answer` con `data` cuando el productor la ponga en pantalla.
 
