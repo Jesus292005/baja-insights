@@ -150,14 +150,18 @@
           "player": "M. Ramírez",
           "action": "recuperación",
           "credit": 0.44,
-          "t_s": 451
+          "t_s": 451,
+          "type": "recovery",
+          "lines_broken": 0
         },
         {
           "event_id": 118,
           "player": "M. Ramírez",
           "action": "remate",
           "credit": 0.56,
-          "t_s": 452
+          "t_s": 452,
+          "type": "shot",
+          "lines_broken": 0
         }
       ],
       "invisible_assist": null
@@ -517,14 +521,18 @@
           "player": "L. Montaño",
           "action": "recuperación",
           "credit": 0.44,
-          "t_s": 1416
+          "t_s": 1416,
+          "type": "recovery",
+          "lines_broken": 0
         },
         {
           "event_id": 330,
           "player": "L. Montaño",
           "action": "remate",
           "credit": 0.56,
-          "t_s": 1418
+          "t_s": 1418,
+          "type": "shot",
+          "lines_broken": 0
         }
       ],
       "invisible_assist": null

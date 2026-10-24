@@ -40,8 +40,7 @@
     {"if": {"properties": {"type": {"const": "goal_chain"}}},
      "then": {"properties": {"facts": {"required": ["scoreline", "scorer", "assist", "xg", "duration_s", "chain", "invisible_assist"],
                                        "properties": {"scoreline": {"$ref": "#/$defs/scoreline"},
-                                                      "chain": {"type": "array", "minItems": 1, "items": {
-                                                        "type": "object", "required": ["event_id", "player", "action", "credit", "t_s"]}}}}}}},
+                                                      "chain": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/chain_link"}}}}}}},
     {"if": {"properties": {"type": {"const": "team_phase"}}},
      "then": {"properties": {"facts": {"required": ["label", "window"],
                                        "properties": {"label": {"enum": ["control", "pressure_shift"]}}}}}},
@@ -57,6 +56,18 @@
                                                     "who_really_won", "who_really_won_basis"]}}}}
   ],
   "$defs": {
+    "chain_link": {
+      "type": "object", "required": ["event_id", "player", "action", "credit", "t_s"],
+      "properties": {
+        "event_id": {"type": "integer", "minimum": 1}, "player": {"type": "string"},
+        "action": {"type": "string", "description": "Label in Spanish, kept for v1 consumers. Build other languages from type, lines_broken and cross."},
+        "credit": {"type": "number", "minimum": 0, "maximum": 1}, "t_s": {"type": "integer", "minimum": 0, "maximum": 5400},
+        "type": {"description": "v1.1, optional. The event type of the link, as in event.schema.json.",
+                 "enum": ["pass", "shot", "tackle", "recovery", "duel", "pressure", "foul", "off_ball_run"]},
+        "lines_broken": {"description": "v1.1, optional. Copied from the event.", "type": "integer", "minimum": 0, "maximum": 4},
+        "cross": {"description": "v1.1, optional. Only on passes that are crosses.", "type": "boolean"}
+      }
+    },
     "ranking": {
       "description": "v1.1. MVP ranking right after the change, same items as get_mvp_ranking. Top 5 recommended.",
       "type": "array", "minItems": 1, "maxItems": 22,

@@ -27,6 +27,17 @@ ORDINALS = {3: "tercera", 6: "sexta", 9: "novena", 12: "duodécima"}
 COUNT_WORDS = {2: "dos", 3: "tres", 4: "cuatro", 5: "cinco", 6: "seis", 7: "siete", 8: "ocho"}
 
 
+def chain_link(event: dict, credit: float) -> dict:
+    """One link of a goal chain. ``action`` is the Spanish label; ``type``, ``lines_broken`` and ``cross``
+    (only on crosses) come from the event, so each language can build its own label (contract v1.1)."""
+    link = {"event_id": event["event_id"], "player": event["player"], "action": chain_action_label(event),
+            "credit": credit, "t_s": event["t_s"], "type": event["type"],
+            "lines_broken": int(event.get("lines_broken") or 0)}
+    if event.get("cross"):
+        link["cross"] = True
+    return link
+
+
 class InsightEngine:
     def __init__(self, roster: Roster, match_id: str | None = None):
         self.roster = roster
@@ -364,8 +375,7 @@ class InsightEngine:
                 candidates.append((e, weight))
         candidates.sort(key=lambda item: (item[0]["t_s"], item[0]["event_id"]))
         credits = split_credit([w for _, w in candidates])
-        chain = [{"event_id": e["event_id"], "player": e["player"], "action": chain_action_label(e),
-                  "credit": c, "t_s": e["t_s"]} for (e, _), c in zip(candidates, credits)]
+        chain = [chain_link(e, c) for (e, _), c in zip(candidates, credits)]
         invisible = None
         for e, _ in candidates:
             if e["type"] == "off_ball_run":

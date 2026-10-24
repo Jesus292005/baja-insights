@@ -75,7 +75,7 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 | `duel_state` | `player_a` (local), `player_b`, `bar` (de −1 a 1), `a_vs_role`, `b_vs_role`, `duels_won_a`, `duels_won_b`, `direct_duels`, `chances_created_a`, `chances_created_b`, `flipped` |
 | `standout_milestone` | `player`, `position`, `profile` (`defensive` o `creative`), `stats`, `expected_for_role`, `vs_role`, `mvp_rank`, y `card_change` opcional |
 | `card_upgrade` | `player`, `attribute`, `from`, `to`, `delta`, `reason`, `overall_from`, `overall_to`, más extras según la regla, como `pass_difficulty`, `led_to` o `space_opened_m` |
-| `goal_chain` | `scoreline`, `scorer`, `assist`, `xg`, `duration_s`, `chain` (con `event_id`, `player`, `action`, `credit` y `t_s`, ordenada por tiempo y con créditos que suman 1), `invisible_assist` |
+| `goal_chain` | `scoreline`, `scorer`, `assist`, `xg`, `duration_s`, `chain` (con `event_id`, `player`, `action`, `credit` y `t_s`, ordenada por tiempo y con créditos que suman 1, y opcionales `type`, `lines_broken` y `cross`), `invisible_assist` |
 | `team_phase` | `label` (`control` o `pressure_shift`), `window`, y métricas según la etiqueta |
 | `match_keys` | `scoreline`, `xg`, `possession_pct`, `keys` (por equipo, con `code`, `key` y `evidence`), `no_prediction: true` |
 | `top3` | `final_scoreline`, `top3` (con `rank`, `player`, `team`, `position`, `mvp_score`, `why` y `key_events`) |
@@ -97,6 +97,7 @@ Campos: `overlay_id`, `match_id`, `source_insight` (null para los fotogramas de 
 | `card` | `overall_from`, `overall_to` y `reason` |
 | `mvp_update` | `data.ranking` |
 | `goal_analysis` | `data.chain_detail` con los eslabones completos, e `invisible_assist` como objeto (el texto queda obsoleto) |
+| Eslabones de `chain` y `chain_detail` | `type` (el tipo del evento), `lines_broken` y `cross` (solo en centros), para armar la acción en cada idioma. `action` sigue en español |
 | `chat_answer` | `data` obligatorio: `question`, `status`, `tools` y `evidence` opcional |
 
 - **slot:** `top_right`, `lower_third`, `side_panel`, `bottom_bar`, `center` o `full_screen`.

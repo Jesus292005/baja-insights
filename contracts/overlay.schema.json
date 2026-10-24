@@ -78,8 +78,13 @@
     "chain_link": {
       "type": "object", "required": ["event_id", "player", "action", "credit", "t_s"],
       "properties": {
-        "event_id": {"type": "integer", "minimum": 1}, "player": {"type": "string"}, "action": {"type": "string"},
-        "credit": {"type": "number", "minimum": 0, "maximum": 1}, "t_s": {"type": "integer", "minimum": 0, "maximum": 5400}
+        "event_id": {"type": "integer", "minimum": 1}, "player": {"type": "string"},
+        "action": {"type": "string", "description": "Label in Spanish, kept for v1 consumers. Build other languages from type, lines_broken and cross."},
+        "credit": {"type": "number", "minimum": 0, "maximum": 1}, "t_s": {"type": "integer", "minimum": 0, "maximum": 5400},
+        "type": {"description": "v1.1, optional. The event type of the link, as in event.schema.json.",
+                 "enum": ["pass", "shot", "tackle", "recovery", "duel", "pressure", "foul", "off_ball_run"]},
+        "lines_broken": {"description": "v1.1, optional. Copied from the event.", "type": "integer", "minimum": 0, "maximum": 4},
+        "cross": {"description": "v1.1, optional. Only on passes that are crosses.", "type": "boolean"}
       }
     },
     "invisible_assist": {

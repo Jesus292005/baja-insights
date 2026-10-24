@@ -117,6 +117,8 @@ Se toman las acciones del equipo que anotó dentro de la posesión del gol y se 
 
 Entran a la cadena las acciones con peso de 2.0 o más, y el remate siempre. El crédito es el peso normalizado, redondeado a centésimas y ajustado para que la suma sea exactamente 1.00. La cadena va ordenada por tiempo.
 
+Cada eslabón lleva `action`, la etiqueta en español, y además `type`, `lines_broken` y `cross` (solo en centros), copiados del evento, para que cada idioma arme su propia etiqueta.
+
 La **asistencia invisible** es el desmarque de la cadena cuyo autor no tocó el balón en esa posesión.
 
 ## 9. Fases de equipo

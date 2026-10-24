@@ -337,28 +337,37 @@
                 "player": "V. Meza",
                 "action": "recuperación",
                 "credit": 0.2,
-                "t_s": 1042
+                "t_s": 1042,
+                "type": "recovery",
+                "lines_broken": 0
               },
               {
                 "event_id": 390,
                 "player": "K. Rosas",
                 "action": "pase que rompió 2 líneas",
                 "credit": 0.3,
-                "t_s": 1051
+                "t_s": 1051,
+                "type": "pass",
+                "lines_broken": 2
               },
               {
                 "event_id": 391,
                 "player": "L. Montaño",
                 "action": "centro",
                 "credit": 0.25,
-                "t_s": 1058
+                "t_s": 1058,
+                "type": "pass",
+                "lines_broken": 1,
+                "cross": true
               },
               {
                 "event_id": 392,
                 "player": "S. Leyva",
                 "action": "remate",
                 "credit": 0.25,
-                "t_s": 1060
+                "t_s": 1060,
+                "type": "shot",
+                "lines_broken": 0
               }
             ],
             "invisible_assist": null
