@@ -5,12 +5,14 @@
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60
     python -m baja_insights ask      --events data/m001/events.jsonl get_mvp_ranking '{"at": "35:00", "top": 3}'
     python -m baja_insights validate data/m001/events.jsonl data/m001/insights.json
+    python -m baja_insights serve    --data data --port 8080 --speed 1
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -109,6 +111,20 @@ def cmd_validate(args) -> int:
     return 1 if failed else 0
 
 
+def cmd_serve(args) -> int:
+    import asyncio
+    import logging
+
+    from .stream import serve
+
+    logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
+    try:
+        asyncio.run(serve(args.data, args.host, args.port, args.speed, args.start_at))
+    except KeyboardInterrupt:
+        pass
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="baja_insights", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -141,6 +157,16 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("validate", help="validate JSON/JSONL files against the contracts")
     v.add_argument("files", nargs="+")
     v.set_defaults(func=cmd_validate)
+
+    w = sub.add_parser("serve", help="WebSocket stream for the UI: clock, scoreline and graphics orders")
+    w.add_argument("--data", default=str(Path(__file__).resolve().parents[2] / "data"),
+                   help="folder with one <match>/events.jsonl (+ overlays.json) per match")
+    w.add_argument("--host", default="0.0.0.0")
+    w.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8080")))
+    w.add_argument("--speed", type=float, default=float(os.environ.get("STREAM_SPEED", "1")),
+                   help="match seconds per real second")
+    w.add_argument("--start-at", type=int, default=0, help="match second where the clock starts")
+    w.set_defaults(func=cmd_serve)
 
     args = parser.parse_args(argv)
     return args.func(args)

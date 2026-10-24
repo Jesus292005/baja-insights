@@ -71,6 +71,9 @@ python -m baja_insights ask --events data/m001/events.jsonl get_mvp_ranking '{"a
 # 5. Validate any file against the contracts
 python -m baja_insights validate data/m001/events.jsonl data/m001/insights.json mocks/overlays_sample.json
 
+# 6. WebSocket stream for the UI: clock, scoreline and graphics orders (see docs/stream.md)
+python -m baja_insights serve --data data --port 8080 --speed 60
+
 # Tests
 python -m pytest
 ```
