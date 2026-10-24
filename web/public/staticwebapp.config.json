@@ -1,0 +1,13 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/*.{json,svg,png,ico,txt,map}"]
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  },
+  "routes": [
+    { "route": "/broadcast", "rewrite": "/index.html", "headers": { "Cache-Control": "no-store" } }
+  ]
+}
