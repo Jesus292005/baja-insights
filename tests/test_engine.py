@@ -78,6 +78,24 @@ class MockStoryTest(unittest.TestCase):
         self.assertNotIn("win_probability", keys)
 
 
+class CardReasonTest(unittest.TestCase):
+    """Card reasons reach fan texts as they are, and fan texts carry one figure at most."""
+
+    def test_every_reason_has_at_most_one_figure(self):
+        import re
+        from baja_insights.generator import generate_match
+        reasons = set()
+        matches = [load(DATA / "m001" / "events.jsonl")] + [generate_match(roster(), seed=s, script=None) for s in range(1, 9)]
+        for events in matches:
+            for i in InsightEngine(roster()).run(events):
+                change = i["facts"].get("card_change") or (i["facts"] if i["type"] == "card_upgrade" else None)
+                if change:
+                    reasons.add(change["reason"])
+        self.assertTrue(reasons)
+        for reason in reasons:
+            self.assertLessEqual(len(re.findall(r"\d+(?:[.,]\d+)?", reason)), 1, reason)
+
+
 class MvpRankingTest(unittest.TestCase):
     """Contract v1.1: mvp_rank_change.facts.ranking is the top of the MVP right after the change."""
 

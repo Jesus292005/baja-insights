@@ -24,6 +24,7 @@ from .state import MatchState, PlayerState
 
 FLANK_MATCHUPS = {("LD", "EI"), ("LI", "ED"), ("ED", "LI"), ("EI", "LD")}
 ORDINALS = {3: "tercera", 6: "sexta", 9: "novena", 12: "duodécima"}
+COUNT_WORDS = {2: "dos", 3: "tres", 4: "cuatro", 5: "cinco", 6: "seis", 7: "siete", 8: "ocho"}
 
 
 class InsightEngine:
@@ -41,6 +42,7 @@ class InsightEngine:
         self._pending_duels: dict[tuple[str, str], dict] = {}
         self._last_duel: dict[tuple[str, str], dict] = {}
         self._pending_cards: list[dict] = []
+        self._dribbles: dict[str, list[tuple[int, int]]] = {}  # player -> (t, event_id) of duels won on the ball
         self.goal_chains: dict[int, dict] = {}
 
     # ------------------------------------------------------------------ API
@@ -135,6 +137,34 @@ class InsightEngine:
                     f"{word} recuperación en campo rival en menos de 10 minutos",
                     [e for _, e in window],
                     {"recoveries_window": f"{fmt_clock(window[0][0])}-{fmt_clock(st.t)}"})
+
+        if kind == "off_ball_run":
+            speed = ev.get("speed_kmh") or 0
+            if speed >= P.CARD_PACE_KMH:
+                add(ev["player"], "ritmo", 1, f"desmarque a {round(speed)} km/h", [ev["event_id"]],
+                    {"run_speed_kmh": speed})
+
+        if kind == "duel" and ev.get("outcome") == "won":
+            pos = st.possessions.get(ev.get("possession_id"))
+            if pos is not None and pos.owner == ev.get("team"):  # won by the player on the ball: a dribble
+                runs = self._dribbles.setdefault(ev["player"], [])
+                runs.append((st.t, ev["event_id"]))
+                window = [(t, e) for t, e in runs if st.t - t <= P.CARD_DRIBBLE_WINDOW_S]
+                if len(window) >= P.CARD_DRIBBLE_COUNT and len(window) % P.CARD_DRIBBLE_COUNT == 0:
+                    count = COUNT_WORDS.get(len(window), str(len(window)))  # in words: a reason carries one figure
+                    add(ev["player"], "regate", 1,
+                        f"{count} regates ganados en menos de {P.CARD_DRIBBLE_WINDOW_S // 60} minutos",
+                        [e for _, e in window])
+
+        if kind == "shot" and ev.get("outcome") != "goal":  # a run that ends in a goal has its own rule
+            pos = st.possessions.get(ev.get("possession_id"))
+            for run in (pos.off_ball_runs if pos else []):
+                space = run.get("space_opened_m") or 0
+                if run.get("team") == ev.get("team") and run.get("dragged_defender") \
+                        and space >= P.CARD_OFF_BALL_SHOT_MIN_SPACE_M:
+                    add(run["player"], "sin_balon", 1,
+                        f"arrastró a {run['dragged_defender']} y la jugada terminó en remate",
+                        [run["event_id"], ev["event_id"]], {"space_opened_m": space})
 
         if kind == "shot":
             speed = ev.get("speed_kmh") or 0
@@ -284,7 +314,8 @@ class InsightEngine:
         for pair, pending in list(self._pending_duels.items()):
             facts = self.duel_facts(*pair)
             last = self._last_duel.get(pair)
-            flipped = bool(last and last["bar"] * facts["bar"] < 0)
+            # a flip only counts once the bar clearly changed side, not when it wobbles around 0
+            flipped = bool(last and last["bar"] * facts["bar"] < 0 and abs(facts["bar"]) >= P.DUEL_FLIP_MIN_BAR)
             if last and not flipped and st.t - last["t"] < P.DUEL_PAIR_COOLDOWN_S:
                 del self._pending_duels[pair]
                 continue
