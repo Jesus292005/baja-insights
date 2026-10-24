@@ -2,10 +2,11 @@
 
 Rama `motor-realism`, del integrante 1. Explica qué cambió, qué no cambió y qué tiene que hacer cada quien para que todo funcione.
 
-**Resumen en tres líneas**
+**Resumen en cuatro líneas**
 1. Los partidos sintéticos ahora se parecen al fútbol real, el MVP está equilibrado y las cartas usan los 7 atributos.
 2. El partido de demo `m001` se regeneró (semilla 44), con la misma historia en lo esencial.
 3. Los eslabones de la cadena del gol traen el tipo de acción, así que la interfaz puede mostrarla en cualquier idioma.
+4. El motivo de cada carta trae un código y sus números (opción A, acordada por los tres), con el mismo fin.
 
 ---
 
@@ -48,17 +49,35 @@ Cada eslabón de `goal_chain.facts.chain` trae tres campos nuevos, copiados del 
 
 Son opcionales en `insight.schema.json` y en `chain_link` de `overlay.schema.json`. También los devuelve `get_goal_chain`. Ya hay ejemplos en `mocks/insights_sample.json` (`i02` con un centro, `i11` con el desmarque) y en `mocks/chat_tools_sample.json`. **Como toca `contracts/`, el PR necesita el visto bueno de los tres.**
 
+### Motivo de la carta en cualquier idioma (opción A)
+
+Cada cambio de carta (`card_change` dentro de `mvp_rank_change` y `standout_milestone`, y los facts de `card_upgrade`) trae dos campos nuevos. `reason` se queda igual, en español.
+
+| Campo | Qué es |
+| --- | --- |
+| `reason_code` | Qué dice el motivo, uno de 10 códigos |
+| `reason_params` | Los números y nombres del motivo, según el código |
+
+```json
+{"attribute": "defensa", "from": 58, "to": 60, "delta": 2,
+ "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+ "reason_code": "opp_half_recoveries", "reason_params": {"count": 3, "window_min": 10},
+ "overall_from": 70, "overall_to": 70}
+```
+
+Son opcionales en `card_change` de `insight.schema.json` y en `card` de `overlay.schema.json`. La tabla completa de códigos está en la sección 5 y en `contracts/README.md`. También los devuelve `get_player_summary` en `card_changes`. Ya hay ejemplos en `mocks/insights_sample.json` y en `mocks/chat_tools_sample.json`.
+
 ### Datos de prueba que cambiaron
 
 - `mocks/teams.json`: O. Félix (MC, Bahía FC) ahora es **titular**, y cambiaron los valores de `role_baselines_per_90`.
-- `mocks/insights_sample.json` y `mocks/chat_tools_sample.json`: solo se agregaron los tres campos a los eslabones. Nada más cambia en los mocks.
+- `mocks/insights_sample.json` y `mocks/chat_tools_sample.json`: solo se agregaron los campos nuevos de la cadena y de la carta. Nada más cambia en los mocks.
 - `data/m001` y `data/free-seed2`: eventos e insights regenerados.
 
 ---
 
 ## 2. Qué no cambió
 
-- **El contrato**, salvo los tres campos opcionales de la cadena. Nada que ya exista deja de validar.
+- **El contrato**, salvo los campos opcionales de la cadena (`type`, `lines_broken`, `cross`) y de la carta (`reason_code`, `reason_params`). Nada que ya exista deja de validar.
 - **El servicio de stream** y sus mensajes.
 - **Las funciones del chat.** Solo cambian las cifras de `m001`; la forma de las respuestas es la misma, más los campos de la cadena.
 - **La historia del demo, en lo esencial.** Se mantienen:
@@ -93,10 +112,18 @@ Son opcionales en `insight.schema.json` y en `chain_link` de `overlay.schema.jso
 
 ## 4. Integrante 2, agentes (Diego)
 
-**Código: no es obligatorio cambiar nada.** `data_for` ya copia el eslabón completo a `chain_detail`, así que los campos nuevos llegan solos. Se probó en local, sin tocar tus archivos: tus plantillas pasan `check_variant` con los 63 insights nuevos de `m001`, los 15 del mock y 482 de 10 partidos libres.
+**Código: un solo cambio, de una línea.** `data_for` ya copia el eslabón completo a `chain_detail`, así que los campos de la cadena llegan solos. Los de la carta no: `card_for` copia los campos uno por uno. Se probó en local, sin tocar tus archivos: tus plantillas pasan `check_variant` con los 63 insights nuevos de `m001`, los 15 del mock y 482 de 10 partidos libres.
 
 **Lo que tienes que hacer:**
 
+- [ ] **Copiar `reason_code` y `reason_params` en `card_for`** (`agents/baja_agents/overlays.py`), junto a `reason`:
+
+  ```python
+  "overall_from": change["overall_from"], "overall_to": change["overall_to"], "reason": change["reason"],
+  "reason_code": change.get("reason_code"), "reason_params": change.get("reason_params", {})}
+  ```
+
+  Con `.get` sigue funcionando con insights viejos que no los traen. Puedes extender `test_v11_fields_are_copied_from_the_insight` para que los revise.
 - [ ] **Regenerar `data/m001/overlays.json` y `agents_report.json`** con `python -m baja_agents run`, una sola vez, después del merge. Las órdenes actuales apuntan a insights que ya cambiaron.
 - [ ] **Actualizar los tests que buscan insights de `m001` por identificador.** Mientras no se actualicen, el job `agents` de la CI va a fallar. Las equivalencias se comprobaron con las mismas aserciones de tus tests y con `checks.py` tal como está en `main`:
 
@@ -118,7 +145,7 @@ Son opcionales en `insight.schema.json` y en `chain_link` de `overlay.schema.jso
 
 ## 5. Integrante 3, interfaz (luismar)
 
-**Código: nada es obligatorio para que siga funcionando.** Los campos nuevos son opcionales.
+**Código: nada es obligatorio para que siga funcionando.** Todos los campos nuevos son opcionales.
 
 **Para que funcione perfecto:**
 
@@ -146,22 +173,39 @@ Son opcionales en `insight.schema.json` y en `chain_link` de `overlay.schema.jso
 | `pass` con `lines_broken` = 1 | pase que rompió 1 línea | pass that broke 1 line |
 | `pass` sin líneas | pase | pass |
 
+- [ ] **Agregar los campos a la carta** en `web/src/contracts/overlay.ts`, junto a `reason`:
+
+  ```ts
+  reason_code?: 'line_breaking_pass' | 'opp_half_recoveries' | 'shot_speed' | 'duel_streak' | 'run_speed'
+    | 'dribbles' | 'run_ended_in_shot' | 'run_opened_goal' | 'standout_defensive' | 'standout_creative';
+  reason_params?: Record<string, number | string | boolean | null>;
+  ```
+
+- [ ] **Escribir el motivo de la carta en cada idioma** en `web/src/i18n/strings.ts`, con `reason` como respaldo si falta `reason_code`. El español puede ser el mismo texto de `reason`:
+
+| `reason_code` | `reason_params` | Inglés sugerido |
+| --- | --- | --- |
+| `line_breaking_pass` | `lines`, `under_pressure` | pass that broke {lines} lines (under pressure) |
+| `opp_half_recoveries` | `count`, `window_min` | {count} recoveries in the opposition half in under {window_min} minutes |
+| `shot_speed` | `speed_kmh` | shot at {speed_kmh} km/h |
+| `duel_streak` | `count` | {count} duels won in a row |
+| `run_speed` | `speed_kmh` | run at {speed_kmh} km/h |
+| `dribbles` | `count`, `window_min` | {count} dribbles in under {window_min} minutes |
+| `run_ended_in_shot` | `dragged_defender` | dragged {dragged_defender} and the move ended in a shot |
+| `run_opened_goal` | `dragged_defender`, `dragged_position` | dragged {dragged_defender} and opened the space for the goal |
+| `standout_defensive` | ninguno | defensive game above what the role expects |
+| `standout_creative` | ninguno | creative game above what the role expects |
+
+  En modo aficionado cuida que el texto lleve una cifra como máximo, igual que los textos de los agentes: por ejemplo, el número con letra en `dribbles`.
 - [ ] **Revisar las cartas de Ritmo, Regate y Sin balón**, que antes nunca salían.
 - [ ] **Alineaciones:** si la interfaz las muestra, ahora aparece O. Félix como titular de Bahía FC.
 - [ ] **Grabar el video con las órdenes que regenere Diego**, no con las actuales.
 
 ---
 
-## 6. Pendiente de decidir entre los tres: `card.reason`
+## 6. `card.reason`: decidido, opción A
 
-El motivo de la carta llega en español también en las órdenes en inglés, por ejemplo «tercera recuperación en campo rival en menos de 10 minutos». Aquí no basta el tipo de evento, porque el motivo combina varias cosas. Hay dos caminos:
-
-| Camino | Cómo | Quién trabaja | Ventaja | Costo |
-| --- | --- | --- | --- | --- |
-| **A. Código del motor** | El motor agrega `reason_code` y sus números, por ejemplo `{"code": "opp_half_recoveries", "count": 3, "window_min": 10}`. La interfaz arma el texto | Integrante 1 (motor) e integrante 3 (textos) | Igual que la cadena: datos exactos y cada idioma arma su texto | Cambio menor del contrato; hay 10 reglas de carta que traducir |
-| **B. Traducción del agente** | El agente escribe el motivo en inglés junto con sus textos | Integrante 2 | No toca el contrato ni la interfaz | Más llamadas al modelo, y un texto que el verificador tiene que revisar |
-
-Si eligen A, el motor lo puede tener en unas horas.
+Los tres eligieron que el motor mande un código. Ya está hecho en esta rama (sección 1). Lo que queda: Diego copia los dos campos en `card_for` y luismar escribe los textos por código (secciones 4 y 5).
 
 ---
 
@@ -170,5 +214,5 @@ Si eligen A, el motor lo puede tener en unas horas.
 1. Los tres revisan el PR de `motor-realism`, porque toca `contracts/`.
 2. Merge. El job `test` de la CI pasa; el job `agents` falla en los tests de la tabla de arriba hasta que Diego los actualice.
 3. Diego actualiza sus tests y regenera las órdenes, idealmente el mismo día del merge.
-4. Datos congelados: nadie cambia `m001` hasta después de grabar el video.
-5. Decidir el camino de `card.reason`.
+4. Luismar agrega los campos nuevos a los tipos y los textos por idioma.
+5. Datos congelados: nadie cambia `m001` hasta después de grabar el video.

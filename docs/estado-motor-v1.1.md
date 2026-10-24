@@ -109,7 +109,7 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
 ### Detectado en la revisión
 
 - [x] **`chain_detail.action` venía en español libre.** Resuelto en `motor-realism` con la propuesta del integrante 2: cada eslabón trae `type`, `lines_broken` y `cross` (solo en centros), copiados del evento, y `action` se queda igual. Como pedía su nota, un centro es un `pass` con `cross: true` y la entrada ganada es `tackle`. Detalle en `docs/cambios-motor-realismo.md`.
-- [ ] **`card.reason` tiene el mismo problema de idioma.** Pendiente de decidir aparte; opciones en `docs/cambios-motor-realismo.md`.
+- [x] **`card.reason` tenía el mismo problema de idioma.** Decidido por los tres: opción A, el motor manda `reason_code` y `reason_params`. Hecho en `motor-realism`; falta copiarlos en `card_for` (ver `docs/cambios-motor-realismo.md`).
 - [x] `agents/test_1_hi.py`, `test_2_narrator.py` y `test_3_tool.py` son prototipos del PR #1 que quedaron sueltos. Se pueden borrar o mover a `agents/scratch/`.
   - **Resuelto en `4a10aae`:** se movieron a `agents/scratch/`.
 
@@ -145,4 +145,4 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
   - Las cifras del mock están escritas a mano y no coinciden con lo que da el motor sobre los 50 eventos del mock, así que el ranking de ejemplo hay que escribirlo también a mano.
   - Para que cuadre con el resto del mock, puede salir del ranking de las 35:00 de `chat_tools_sample.json`.
 - [x] Camino para `chain_detail.action`: campos del evento en cada eslabón (propuesta del integrante 2), a cargo del integrante 1.
-- [ ] Decidir el camino para `card.reason`.
+- [x] Camino para `card.reason`: opción A, código del motor.
