@@ -96,6 +96,25 @@ def test_check_flags_a_scoreline_written_backwards():
     assert check_variant(by_id(M001, "i02"), "Control", "64% de posesión entre 01:00-11:00.") == []
 
 
+def test_ranking_and_ids_are_not_numbers_a_text_may_use():
+    montano = by_id(M001, "i03")  # 2.3 for Montaño; 2.7 and 2.5 belong to others in the ranking
+    assert montano["facts"]["ranking"]
+    assert check_variant(montano, "Montaño", "Montaño sube con 2.3 puntos.") == []
+    assert check_variant(montano, "Montaño", "Montaño sube con 2.7 puntos.")
+    trigger = montano["facts"]["trigger_event_id"]
+    assert check_variant(montano, "Montaño", f"Jugada {montano['evidence'][0]}.")
+    assert check_variant(montano, "Montaño", f"Jugada {trigger}.")
+    keys = by_id(M001, "i26")  # match_keys: its keys' `evidence` is worded data, not event ids
+    assert check_variant(keys, "Claves", "Bahía FC suma 21 recuperaciones en mitad rival, 9 de Torres.") == []
+
+
+def test_curator_does_not_see_the_ranking():
+    block = [i for i in M001 if 600 <= i["t_s"] < 900]
+    agent = FakeAgent(CuratorDecision(show=[], drop=[]))
+    asyncio.run(Curator(runner(), agent).decide("10:00-15:00", block, history=[]))
+    assert all("ranking" not in c["facts"] for c in agent.prompts[0]["candidates"])
+
+
 def test_scoreline_from_context_is_allowed():
     from baja_agents.checks import allowed_numbers
     insight = by_id(M001, "i22")
