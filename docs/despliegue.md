@@ -8,8 +8,11 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Foundry | `diegomanzo-2526-resource`, proyecto `diegomanzo-2526` | Modelo `gpt-4.1-mini-baja-insights` |
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
 | Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-c81b433`, una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
+| Servicio del chat | `baja-chat` | `POST /api/ask`. Por ahora corre la imagen de ejemplo. Escala de 0 a 1 réplica, 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`
+
+**URL del chat:** `https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/api/ask`, cuando exista el servicio.
 
 Probado: `/healthz` responde `ok`, el WebSocket abre y, al suscribirse a `m001`, llegan `state` y un `clock` por segundo. Todos los mensajes validan con `stream.schema.json`.
 
@@ -70,8 +73,37 @@ Para apagarlo después del 10 de noviembre:
 
 ```bash
 az containerapp delete -n baja-stream -g rg-baja-insights --yes
+az containerapp delete -n baja-chat -g rg-baja-insights --yes
 ```
 
-## El chat, después
+## El chat
 
-Cuando exista `POST /api/ask`, el contenedor que lo sirva necesita una identidad administrada con el rol **Foundry User** sobre `diegomanzo-2526-resource`. Los comandos están en `agents/README.md`, en "Credentials and deployment".
+`baja-chat` es un container app propio, separado del stream:
+
+- El stream no puede tener más de una réplica, porque su reloj vive en memoria.
+- Cada redespliegue del chat reiniciaría el reloj del partido.
+- El stream usa solo la biblioteca estándar, mientras que el chat necesita Agent Framework y Azure.
+
+**Ya está listo:**
+- El container app existe en `baja-env`, con perfil `Consumption`.
+- Tiene una identidad administrada del sistema con el rol **Foundry User** sobre `diegomanzo-2526-resource`. Los agentes la usan con `DefaultAzureCredential` y no necesitan claves.
+- Escala a cero: no cobra mientras nadie pregunta. La primera pregunta después de un rato tarda unos segundos más, mientras arranca.
+
+**Falta, con el agente Pregúntale al partido:**
+1. El servidor HTTP con `GET /healthz` y `POST /api/ask` (`contracts/chat.schema.json`).
+2. Un Dockerfile y su workflow para publicar `ghcr.io/jesus292005/baja-chat`, igual que el stream.
+3. Las variables de entorno `FOUNDRY_PROJECT_ENDPOINT` y `FOUNDRY_MODEL`.
+4. Cambiar la imagen y el puerto:
+
+```bash
+az containerapp update -n baja-chat -g rg-baja-insights --image ghcr.io/jesus292005/baja-chat:sha-<commit corto>   --set-env-vars FOUNDRY_PROJECT_ENDPOINT=<endpoint del proyecto> FOUNDRY_MODEL=gpt-4.1-mini-baja-insights
+az containerapp ingress update -n baja-chat -g rg-baja-insights --target-port <puerto>
+```
+
+Si se cambia el puerto después de la imagen, hay que forzar una revisión nueva, por ejemplo cambiando una variable de entorno, para que las sondas de salud tomen el puerto nuevo.
+
+Para comprobar el rol:
+
+```bash
+az role assignment list --assignee $(az containerapp identity show -n baja-chat -g rg-baja-insights --query principalId -o tsv) --all -o table
+```
