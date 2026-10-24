@@ -93,8 +93,9 @@ class MatchQuery:
             "minutes_played": round(ps.minutes(at_s), 1), "mvp_rank": st.rank_of(ps.name), "mvp_score": st.mvp(ps),
             "vs_role": st.vs_role(ps), "stats": dict(ps.stats), "expected_for_role": st.expected(ps),
             "card": card,
-            "card_changes": [{k: c[k] for k in ("attribute", "from", "to", "delta", "reason", "overall_from",
-                                                "overall_to", "event_id", "t_s")} for c in ps.card_changes],
+            "card_changes": [{k: c[k] for k in ("attribute", "from", "to", "delta", "reason", "reason_code",
+                                                "reason_params", "overall_from", "overall_to", "event_id", "t_s")}
+                             for c in ps.card_changes],
             "key_events": key_events, "not_tracked": list(NOT_TRACKED),
         }
 

@@ -24,6 +24,21 @@ from .state import MatchState, PlayerState
 
 FLANK_MATCHUPS = {("LD", "EI"), ("LI", "ED"), ("ED", "LI"), ("EI", "LD")}
 ORDINALS = {3: "tercera", 6: "sexta", 9: "novena", 12: "duodécima"}
+# Fields of a card change in the insights (contract v1.1: reason_code and reason_params are optional)
+CARD_CHANGE_KEYS = ("attribute", "from", "to", "delta", "reason", "reason_code", "reason_params",
+                    "overall_from", "overall_to")
+COUNT_WORDS = {2: "dos", 3: "tres", 4: "cuatro", 5: "cinco", 6: "seis", 7: "siete", 8: "ocho"}
+
+
+def chain_link(event: dict, credit: float) -> dict:
+    """One link of a goal chain. ``action`` is the Spanish label; ``type``, ``lines_broken`` and ``cross``
+    (only on crosses) come from the event, so each language can build its own label (contract v1.1)."""
+    link = {"event_id": event["event_id"], "player": event["player"], "action": chain_action_label(event),
+            "credit": credit, "t_s": event["t_s"], "type": event["type"],
+            "lines_broken": int(event.get("lines_broken") or 0)}
+    if event.get("cross"):
+        link["cross"] = True
+    return link
 
 
 class InsightEngine:
@@ -41,6 +56,7 @@ class InsightEngine:
         self._pending_duels: dict[tuple[str, str], dict] = {}
         self._last_duel: dict[tuple[str, str], dict] = {}
         self._pending_cards: list[dict] = []
+        self._dribbles: dict[str, list[tuple[int, int]]] = {}  # player -> (t, event_id) of duels won on the ball
         self.goal_chains: dict[int, dict] = {}
 
     # ------------------------------------------------------------------ API
@@ -110,8 +126,8 @@ class InsightEngine:
         kind = ev["type"]
         found: list[dict] = []
 
-        def add(player, attribute, delta, reason, evidence, extra=None, defer=False):
-            change = st.card_change(player, attribute, delta, reason, ev["event_id"])
+        def add(player, attribute, delta, reason, evidence, extra=None, defer=False, code=None, params=None):
+            change = st.card_change(player, attribute, delta, reason, ev["event_id"], code, params)
             if change:
                 found.append({"player": player, "change": change, "evidence": evidence,
                               "extra": extra or {}, "defer": defer, "t": st.t,
@@ -123,7 +139,8 @@ class InsightEngine:
                 reason = f"pase que rompió {lines} líneas" + (" bajo presión" if ev.get("under_pressure") else "")
                 add(ev["player"], "vision", 2, reason, [ev["event_id"]],
                     {"pass_distance_m": round(distance(ev["start"], ev["end"]), 1),
-                     "pass_difficulty": effects["difficulty"]}, defer=True)
+                     "pass_difficulty": effects["difficulty"]}, defer=True,
+                    code="line_breaking_pass", params={"lines": lines, "under_pressure": bool(ev.get("under_pressure"))})
 
         if kind == "recovery" and effects.get("opp_half_recovery"):
             ps = st.players[ev["player"]]
@@ -134,13 +151,44 @@ class InsightEngine:
                 add(ev["player"], "defensa", 2,
                     f"{word} recuperación en campo rival en menos de 10 minutos",
                     [e for _, e in window],
-                    {"recoveries_window": f"{fmt_clock(window[0][0])}-{fmt_clock(st.t)}"})
+                    {"recoveries_window": f"{fmt_clock(window[0][0])}-{fmt_clock(st.t)}"},
+                    code="opp_half_recoveries", params={"count": n, "window_min": P.CARD_DEFENSE_WINDOW_S // 60})
+
+        if kind == "off_ball_run":
+            speed = ev.get("speed_kmh") or 0
+            if speed >= P.CARD_PACE_KMH:
+                add(ev["player"], "ritmo", 1, f"desmarque a {round(speed)} km/h", [ev["event_id"]],
+                    {"run_speed_kmh": speed}, code="run_speed", params={"speed_kmh": round(speed)})
+
+        if kind == "duel" and ev.get("outcome") == "won":
+            pos = st.possessions.get(ev.get("possession_id"))
+            if pos is not None and pos.owner == ev.get("team"):  # won by the player on the ball: a dribble
+                runs = self._dribbles.setdefault(ev["player"], [])
+                runs.append((st.t, ev["event_id"]))
+                window = [(t, e) for t, e in runs if st.t - t <= P.CARD_DRIBBLE_WINDOW_S]
+                if len(window) >= P.CARD_DRIBBLE_COUNT and len(window) % P.CARD_DRIBBLE_COUNT == 0:
+                    count = COUNT_WORDS.get(len(window), str(len(window)))  # in words: a reason carries one figure
+                    add(ev["player"], "regate", 1,
+                        f"{count} regates ganados en menos de {P.CARD_DRIBBLE_WINDOW_S // 60} minutos",
+                        [e for _, e in window],
+                        code="dribbles", params={"count": len(window), "window_min": P.CARD_DRIBBLE_WINDOW_S // 60})
+
+        if kind == "shot" and ev.get("outcome") != "goal":  # a run that ends in a goal has its own rule
+            pos = st.possessions.get(ev.get("possession_id"))
+            for run in (pos.off_ball_runs if pos else []):
+                space = run.get("space_opened_m") or 0
+                if run.get("team") == ev.get("team") and run.get("dragged_defender") \
+                        and space >= P.CARD_OFF_BALL_SHOT_MIN_SPACE_M:
+                    add(run["player"], "sin_balon", 1,
+                        f"arrastró a {run['dragged_defender']} y la jugada terminó en remate",
+                        [run["event_id"], ev["event_id"]], {"space_opened_m": space},
+                        code="run_ended_in_shot", params={"dragged_defender": run["dragged_defender"]})
 
         if kind == "shot":
             speed = ev.get("speed_kmh") or 0
             if speed >= P.CARD_SHOT_SPEED_KMH and ev.get("outcome") in ("goal", "saved"):
                 add(ev["player"], "disparo", 1, f"remate a {round(speed)} km/h", [ev["event_id"]],
-                    {"shot_speed_kmh": speed})
+                    {"shot_speed_kmh": speed}, code="shot_speed", params={"speed_kmh": round(speed)})
 
         if kind == "goal":
             pos = st.possessions.get(ev.get("possession_id"))
@@ -150,19 +198,23 @@ class InsightEngine:
                     defender = st.players.get(run["dragged_defender"])
                     who = "al central" if defender and defender.position == "DFC" else f"a {run['dragged_defender']}"
                     add(run["player"], "sin_balon", 3, f"arrastró {who} y abrió el espacio del gol",
-                        [run["event_id"], ev["event_id"]], {"space_opened_m": space})
+                        [run["event_id"], ev["event_id"]], {"space_opened_m": space},
+                        code="run_opened_goal", params={"dragged_defender": run["dragged_defender"],
+                                                       "dragged_position": defender.position if defender else None})
 
         if kind in ("duel", "tackle"):
             for name in (ev.get("player"), ev.get("opponent")):
                 ps = st.players.get(name)
                 if ps and ps.duel_streak and ps.duel_streak % P.CARD_DUEL_STREAK == 0:
-                    add(name, "fisico", 1, f"{ps.duel_streak} duelos ganados seguidos", [ev["event_id"]])
+                    add(name, "fisico", 1, f"{ps.duel_streak} duelos ganados seguidos", [ev["event_id"]],
+                        code="duel_streak", params={"count": ps.duel_streak})
         return found
 
     def _card_insight(self, c: dict) -> dict:
         ch = c["change"]
         facts = {"player": c["player"], "attribute": ch["attribute"], "from": ch["from"], "to": ch["to"],
-                 "delta": ch["delta"], "reason": ch["reason"], "overall_from": ch["overall_from"],
+                 "delta": ch["delta"], "reason": ch["reason"], "reason_code": ch["reason_code"],
+                 "reason_params": ch["reason_params"], "overall_from": ch["overall_from"],
                  "overall_to": ch["overall_to"], **c["extra"]}
         team = self.state.players[c["player"]].team
         return self._make("card_upgrade", priority_card(ch["delta"]), [c["player"]], team,
@@ -171,7 +223,7 @@ class InsightEngine:
     @staticmethod
     def _card_change_fact(c: dict) -> dict:
         ch = c["change"]
-        return {k: ch[k] for k in ("attribute", "from", "to", "delta", "reason", "overall_from", "overall_to")}
+        return {k: ch[k] for k in CARD_CHANGE_KEYS}
 
     # ----------------------------------------------------------------- MVP
     def _mvp(self, ev: dict, before: list, touched: list[str], cards: list[dict]) -> list[dict]:
@@ -242,10 +294,10 @@ class InsightEngine:
             evidence = _recent_top_events(st, ps, st.t, 45 * 60, 4) + [ev["event_id"]]
             change = st.card_change(name, "defensa" if defensive else "vision", 2 if defensive else 1,
                                     "partido defensivo por encima de lo esperado para su rol" if defensive
-                                    else "partido creativo por encima de lo esperado para su rol", ev["event_id"])
+                                    else "partido creativo por encima de lo esperado para su rol", ev["event_id"],
+                                    "standout_defensive" if defensive else "standout_creative", {})
             if change:
-                facts["card_change"] = {k: change[k] for k in ("attribute", "from", "to", "delta", "reason",
-                                                               "overall_from", "overall_to")}
+                facts["card_change"] = {k: change[k] for k in CARD_CHANGE_KEYS}
             for c in cards:
                 if c["player"] == name and not c.get("used") and not c.get("defer"):
                     facts.setdefault("card_change", self._card_change_fact(c))
@@ -284,7 +336,8 @@ class InsightEngine:
         for pair, pending in list(self._pending_duels.items()):
             facts = self.duel_facts(*pair)
             last = self._last_duel.get(pair)
-            flipped = bool(last and last["bar"] * facts["bar"] < 0)
+            # a flip only counts once the bar clearly changed side, not when it wobbles around 0
+            flipped = bool(last and last["bar"] * facts["bar"] < 0 and abs(facts["bar"]) >= P.DUEL_FLIP_MIN_BAR)
             if last and not flipped and st.t - last["t"] < P.DUEL_PAIR_COOLDOWN_S:
                 del self._pending_duels[pair]
                 continue
@@ -333,8 +386,7 @@ class InsightEngine:
                 candidates.append((e, weight))
         candidates.sort(key=lambda item: (item[0]["t_s"], item[0]["event_id"]))
         credits = split_credit([w for _, w in candidates])
-        chain = [{"event_id": e["event_id"], "player": e["player"], "action": chain_action_label(e),
-                  "credit": c, "t_s": e["t_s"]} for (e, _), c in zip(candidates, credits)]
+        chain = [chain_link(e, c) for (e, _), c in zip(candidates, credits)]
         invisible = None
         for e, _ in candidates:
             if e["type"] == "off_ball_run":

@@ -222,7 +222,7 @@
           "number": 14,
           "name": "O. Félix",
           "position": "MC",
-          "starter": false,
+          "starter": true,
           "card": {
             "ritmo": 66,
             "disparo": 58,
@@ -456,59 +456,59 @@
     }
   ],
   "role_baselines_per_90": {
-    "_nota": "Valor esperado por rol. Sirve para comparar jugadores de posiciones distintas en los duelos y el MVP.",
+    "_nota": "Valor esperado por rol: promedio por 90 minutos de los partidos libres del generador (semillas 201 a 260). Sirve para comparar jugadores de posiciones distintas en los duelos y el MVP.",
     "LD": {
-      "duels_won": 5.5,
-      "recoveries": 5.0,
-      "progressive_passes": 3.0,
-      "key_passes": 0.6
+      "duels_won": 3.5,
+      "recoveries": 4.5,
+      "progressive_passes": 8.5,
+      "key_passes": 0.0
     },
     "LI": {
-      "duels_won": 5.5,
+      "duels_won": 3.5,
       "recoveries": 5.0,
-      "progressive_passes": 3.0,
-      "key_passes": 0.6
+      "progressive_passes": 8.5,
+      "key_passes": 0.0
     },
     "DFC": {
-      "duels_won": 6.0,
-      "recoveries": 6.5,
-      "progressive_passes": 2.5,
-      "key_passes": 0.2
+      "duels_won": 3.0,
+      "recoveries": 5.0,
+      "progressive_passes": 10.0,
+      "key_passes": 0.0
     },
     "MCD": {
-      "duels_won": 6.5,
-      "recoveries": 7.0,
-      "progressive_passes": 4.0,
-      "key_passes": 0.8
+      "duels_won": 5.5,
+      "recoveries": 7.5,
+      "progressive_passes": 9.5,
+      "key_passes": 0.0
     },
     "MC": {
-      "duels_won": 5.0,
-      "recoveries": 5.0,
-      "progressive_passes": 5.0,
-      "key_passes": 1.5
+      "duels_won": 5.5,
+      "recoveries": 7.5,
+      "progressive_passes": 12.5,
+      "key_passes": 0.5
     },
     "ED": {
-      "duels_won": 4.5,
-      "recoveries": 2.5,
-      "progressive_passes": 2.5,
-      "key_passes": 1.6
+      "duels_won": 3.5,
+      "recoveries": 3.5,
+      "progressive_passes": 5.5,
+      "key_passes": 2.5
     },
     "EI": {
-      "duels_won": 4.5,
-      "recoveries": 2.5,
-      "progressive_passes": 2.5,
-      "key_passes": 1.6
+      "duels_won": 3.5,
+      "recoveries": 3.5,
+      "progressive_passes": 5.5,
+      "key_passes": 2.5
     },
     "DC": {
-      "duels_won": 4.0,
-      "recoveries": 1.5,
-      "progressive_passes": 1.0,
-      "key_passes": 1.0
+      "duels_won": 5.0,
+      "recoveries": 4.0,
+      "progressive_passes": 2.0,
+      "key_passes": 2.0
     },
     "POR": {
-      "duels_won": 0.5,
-      "recoveries": 1.0,
-      "progressive_passes": 1.0,
+      "duels_won": 1.0,
+      "recoveries": 0.5,
+      "progressive_passes": 15.0,
       "key_passes": 0.0
     }
   }

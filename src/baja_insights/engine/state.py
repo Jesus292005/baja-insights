@@ -146,7 +146,9 @@ class MatchState:
         return "home" if team == self.home else "away"
 
     # ---------------------------------------------------------------- cards
-    def card_change(self, name: str, attribute: str, delta: int, reason: str, event_id: int) -> dict | None:
+    def card_change(self, name: str, attribute: str, delta: int, reason: str, event_id: int,
+                    reason_code: str | None = None, reason_params: dict | None = None) -> dict | None:
+        """``reason`` is the Spanish text; ``reason_code`` and ``reason_params`` let each language write its own."""
         ps = self.players.get(name)
         if ps is None or attribute not in ps.card:
             return None
@@ -164,7 +166,8 @@ class MatchState:
         ps.card_last_t[attribute] = self.t
         change = {
             "attribute": attribute, "from": before, "to": before + delta, "delta": delta,
-            "reason": reason, "overall_from": overall_from, "overall_to": overall(ps.card),
+            "reason": reason, "reason_code": reason_code, "reason_params": dict(reason_params or {}),
+            "overall_from": overall_from, "overall_to": overall(ps.card),
             "event_id": event_id, "t_s": self.t,
         }
         ps.card_changes.append(change)
@@ -294,12 +297,7 @@ class MatchState:
                 actor.stats["recoveries_opp_half"] += 1
                 actor.opp_half_recovery_times.append((self.t, ev["event_id"]))
             effects["opp_half_recovery"] = opp_half
-            for (pt, pteam, pname, pid) in list(self.recent_pressures):
-                if pteam == team and self.t - pt <= P.COUNTERPRESS_WINDOW_S:
-                    presser = self.player(pname)
-                    if presser:
-                        presser.add_points(P.POINTS["counterpress"], pid)
-            self.recent_pressures.clear()
+            self._credit_counterpress(team)
 
         elif kind in ("tackle", "duel"):
             won = ev.get("outcome") == "won"
@@ -309,6 +307,8 @@ class MatchState:
                 if won:
                     actor.stats["tackles_won"] += 1
                 actor.add_points(P.POINTS["tackle_won"] if won else P.POINTS["tackle_lost"], ev["event_id"])
+                if won:  # a won tackle wins the ball back, like a recovery
+                    self._credit_counterpress(team)
             else:
                 actor.add_points(P.POINTS["duel_won"] if won else P.POINTS["duel_lost"], ev["event_id"])
             actor.stats["duels_total"] += 1
@@ -380,6 +380,15 @@ class MatchState:
             gap = min(self.t - self._last_t, P.LIVE_GAP_CAP_S)
             self.possessions[self.current_pid].live.append((self._last_t, self._last_t + gap))
         self._last_t = self.t
+
+    def _credit_counterpress(self, team: str) -> None:
+        """Pressers of ``team`` from the last few seconds share in winning the ball back."""
+        for (pt, pteam, pname, pid) in list(self.recent_pressures):
+            if pteam == team and self.t - pt <= P.COUNTERPRESS_WINDOW_S:
+                presser = self.player(pname)
+                if presser:
+                    presser.add_points(P.POINTS["counterpress"], pid)
+        self.recent_pressures.clear()
 
     def pair_key(self, a: str, b: str) -> tuple[str, str] | None:
         pa, pb = self.players.get(a), self.players.get(b)

@@ -63,28 +63,37 @@
           "player": "V. Meza",
           "action": "recuperación",
           "credit": 0.2,
-          "t_s": 1042
+          "t_s": 1042,
+          "type": "recovery",
+          "lines_broken": 0
         },
         {
           "event_id": 390,
           "player": "K. Rosas",
           "action": "pase que rompió 2 líneas",
           "credit": 0.3,
-          "t_s": 1051
+          "t_s": 1051,
+          "type": "pass",
+          "lines_broken": 2
         },
         {
           "event_id": 391,
           "player": "L. Montaño",
           "action": "centro",
           "credit": 0.25,
-          "t_s": 1058
+          "t_s": 1058,
+          "type": "pass",
+          "lines_broken": 1,
+          "cross": true
         },
         {
           "event_id": 392,
           "player": "S. Leyva",
           "action": "remate",
           "credit": 0.25,
-          "t_s": 1060
+          "t_s": 1060,
+          "type": "shot",
+          "lines_broken": 0
         }
       ],
       "invisible_assist": null
@@ -197,6 +206,11 @@
         "to": 60,
         "delta": 2,
         "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+        "reason_code": "opp_half_recoveries",
+        "reason_params": {
+          "count": 3,
+          "window_min": 10
+        },
         "overall_from": 70,
         "overall_to": 70
       },
@@ -228,6 +242,11 @@
       "to": 76,
       "delta": 2,
       "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
       "overall_from": 68,
       "overall_to": 68,
       "pass_distance_m": 27.9,
@@ -278,6 +297,8 @@
         "to": 80,
         "delta": 2,
         "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
         "overall_from": 68,
         "overall_to": 68
       }
@@ -435,28 +456,36 @@
           "player": "F. Cota",
           "action": "recuperación",
           "credit": 0.18,
-          "t_s": 3690
+          "t_s": 3690,
+          "type": "recovery",
+          "lines_broken": 0
         },
         {
           "event_id": 1353,
           "player": "J. Torres",
           "action": "desmarque y arrastre de marca",
           "credit": 0.25,
-          "t_s": 3778
+          "t_s": 3778,
+          "type": "off_ball_run",
+          "lines_broken": 0
         },
         {
           "event_id": 1355,
           "player": "R. Salgado",
           "action": "pase que rompió 2 líneas",
           "credit": 0.35,
-          "t_s": 3786
+          "t_s": 3786,
+          "type": "pass",
+          "lines_broken": 2
         },
         {
           "event_id": 1356,
           "player": "M. Ramírez",
           "action": "remate",
           "credit": 0.22,
-          "t_s": 3789
+          "t_s": 3789,
+          "type": "shot",
+          "lines_broken": 0
         }
       ],
       "invisible_assist": {
@@ -497,6 +526,11 @@
       "to": 71,
       "delta": 3,
       "reason": "arrastró al central y abrió el espacio del gol",
+      "reason_code": "run_opened_goal",
+      "reason_params": {
+        "dragged_defender": "G. Cárdenas",
+        "dragged_position": "DFC"
+      },
       "overall_from": 70,
       "overall_to": 70,
       "space_opened_m": 9.5
@@ -542,6 +576,10 @@
         "to": 75,
         "delta": 1,
         "reason": "remate a 112 km/h",
+        "reason_code": "shot_speed",
+        "reason_params": {
+          "speed_kmh": 112
+        },
         "overall_from": 70,
         "overall_to": 70
       }
