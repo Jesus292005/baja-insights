@@ -12,7 +12,8 @@ COPY data ./data
 ENV PYTHONPATH=/app/src \
     PYTHONUNBUFFERED=1 \
     PORT=8080 \
-    STREAM_SPEED=1
+    STREAM_SPEED=1 \
+    STREAM_HALF_TIME_PAUSE=0
 EXPOSE 8080
 USER nobody
-CMD ["sh", "-c", "exec python -m baja_insights serve --data /app/data --host 0.0.0.0 --port $PORT --speed $STREAM_SPEED"]
+CMD ["sh", "-c", "exec python -m baja_insights serve --data /app/data --host 0.0.0.0 --port $PORT --speed $STREAM_SPEED --half-time-pause $STREAM_HALF_TIME_PAUSE"]
