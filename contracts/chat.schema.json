@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baja-insights/contracts/chat.schema.json",
+  "title": "Baja-Insights 'Ask the match' request and response (contract v1.1)",
+  "description": "POST /api/ask. The UI sends a request, the Ask-the-match agent answers only from the engine's query functions. New in v1.1.",
+  "oneOf": [
+    {"$ref": "#/$defs/request"},
+    {"$ref": "#/$defs/response"}
+  ],
+  "$defs": {
+    "tool": {"enum": ["get_match_state", "get_mvp_ranking", "get_player_summary", "get_duel", "get_team_phase", "get_goal_chain"]},
+    "at": {
+      "description": "Match moment, 'MM:SS' or match seconds, as the chat functions accept.",
+      "anyOf": [{"type": "string", "pattern": "^[0-9]{1,2}(:[0-5][0-9])?$"}, {"type": "integer", "minimum": 0, "maximum": 5520}]
+    },
+    "request": {
+      "type": "object", "required": ["match_id", "question", "at", "mode", "language"], "additionalProperties": false,
+      "properties": {
+        "match_id": {"type": "string"},
+        "question": {"type": "string", "minLength": 1, "maxLength": 500},
+        "at": {"$ref": "#/$defs/at"},
+        "mode": {"enum": ["fan", "analyst"]},
+        "language": {"enum": ["es", "en"]},
+        "favorite_team": {"type": ["string", "null"]},
+        "history": {
+          "description": "Last turns of this conversation, oldest first, so follow-ups like 'and Cota?' work.",
+          "type": "array", "maxItems": 6,
+          "items": {"type": "object", "required": ["role", "text"], "additionalProperties": false,
+                    "properties": {"role": {"enum": ["user", "match"]}, "text": {"type": "string"}}}
+        }
+      }
+    },
+    "response": {
+      "type": "object", "required": ["match_id", "question", "at_s", "status", "answer", "tools"], "additionalProperties": false,
+      "properties": {
+        "match_id": {"type": "string"},
+        "question": {"type": "string"},
+        "at_s": {"type": "integer", "minimum": 0, "maximum": 5520},
+        "status": {
+          "description": "answered: from the functions. not_tracked: the data is in not_tracked. not_found: player or goal not in the match. no_prediction: asked about the future. error: the agent or the engine failed, answer is null.",
+          "enum": ["answered", "not_tracked", "not_found", "no_prediction", "error"]
+        },
+        "answer": {"type": ["string", "null"], "description": "Text in the requested language and mode. null only when status is error."},
+        "tools": {"type": "array", "items": {"$ref": "#/$defs/tool"}, "description": "Functions whose results back the answer, in call order."},
+        "evidence": {"type": "array", "items": {"type": "integer", "minimum": 1}, "description": "event_id values cited in the answer, if any."},
+        "error": {"enum": ["timeout", "engine_unavailable", "agent_failed"], "description": "Only when status is error."}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "error"}}},
+         "then": {"required": ["error"], "properties": {"answer": {"type": "null"}}},
+         "else": {"properties": {"answer": {"type": "string", "minLength": 1}}}}
+      ]
+    }
+  }
+}

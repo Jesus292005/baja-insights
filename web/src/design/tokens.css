@@ -1,0 +1,224 @@
+/*
+ * Baja-Insights · dirección visual "Litoral"
+ * Tokens de diseño. Fuente única de verdad para colores, tipografía, espaciado, radios y movimiento.
+ * Espejo en TypeScript: ./tokens.ts (mantener sincronizados).
+ *
+ * Temas:
+ *   - sin atributo o data-theme="video": superficie oscura para overlay de transmisión (por defecto)
+ *   - data-theme="light": app web clara
+ *   - data-theme="dark": app web oscura (mismos valores que "video" pero paneles opacos)
+ *
+ * Contraste medido (WCAG 2.1): todo texto ≥ 4.5:1 sobre su superficie; gráficos ≥ 3:1.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Spline+Sans+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* ---------- Primitivos ---------- */
+  --bi-ink-950: #0c1418;
+  --bi-ink-900: #121e24;
+  --bi-ink-800: #1b2b33;
+  --bi-ink-700: #2a3f49;
+  --bi-ink-600: #3b5560;
+  --bi-ink-500: #5e7883;
+  --bi-ink-300: #a3b4bb;
+  --bi-ink-100: #dce4e7;
+
+  --bi-sand-50: #fbf8f2;
+  --bi-sand-100: #f3ede2;
+  --bi-sand-200: #e7decf;
+  --bi-sand-300: #d4c8b4;
+
+  --bi-sol-300: #ffb08f;   /* atardecer, acento */
+  --bi-sol-400: #ff8a5c;
+  --bi-sol-700: #b4421c;
+
+  --bi-cortez-300: #8fe3d8; /* mar de Cortés: subida, verificado */
+  --bi-cortez-400: #4fd1c1;
+  --bi-cortez-700: #0b6e65;
+
+  --bi-alerta-400: #ff7a7a;
+  --bi-alerta-700: #b3261e;
+
+  /* Colores de equipo (vienen de mocks/teams.json; revisar contraste si cambian) */
+  --bi-bahia-solid: #1f4e79;  /* relleno con texto blanco: 8.7:1 */
+  --bi-bahia-tint: #86bdeb;   /* gráfico sobre oscuro: 9.3:1 */
+  --bi-cardon-solid: #7a1f1f; /* relleno con texto blanco: 10.3:1 */
+  --bi-cardon-tint: #f2c14e;  /* gráfico sobre oscuro: 11.1:1 */
+
+  /* Niveles de carta, según overall_to que manda el motor */
+  --bi-tier-arena: #c9b48a;   /* overall < 60 */
+  --bi-tier-coral: #ff8a5c;   /* 60–69 */
+  --bi-tier-perla: #e6e1f5;   /* 70–79 */
+  --bi-tier-ballena: #6fb3dd; /* 80+ */
+
+  /* ---------- Semánticos · tema "video" (por defecto) ---------- */
+  --bi-bg: var(--bi-ink-950);
+  --bi-surface: var(--bi-ink-900);
+  --bi-surface-raised: var(--bi-ink-800);
+  --bi-surface-overlay: rgb(12 20 24 / 0.92); /* panel sobre video */
+  --bi-scrim: rgb(12 20 24 / 0.72);           /* full_screen */
+  --bi-text: var(--bi-sand-100);
+  --bi-text-muted: var(--bi-ink-300);
+  --bi-text-on-accent: var(--bi-ink-950);
+  --bi-text-on-team: #ffffff;
+  --bi-line: var(--bi-ink-700);        /* separadores decorativos */
+  --bi-line-strong: var(--bi-ink-500); /* bordes de controles: ≥ 3:1 */
+  --bi-accent: var(--bi-sol-400);
+  --bi-up: var(--bi-cortez-400);
+  --bi-verified: var(--bi-cortez-400);
+  --bi-live: var(--bi-sol-400);
+  --bi-error: var(--bi-alerta-400);
+  --bi-focus: #ffd9a8;
+  --bi-team-home: var(--bi-bahia-tint);
+  --bi-team-away: var(--bi-cardon-tint);
+  --bi-team-home-solid: var(--bi-bahia-solid);
+  --bi-team-away-solid: var(--bi-cardon-solid);
+  --bi-skeleton: var(--bi-ink-800);
+  --bi-skeleton-shine: var(--bi-ink-700);
+
+  /* ---------- Tipografía ---------- */
+  --bi-font-display: "Archivo", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --bi-font-body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bi-font-data: "Spline Sans Mono", ui-monospace, "Cascadia Mono", "Consolas", monospace;
+  --bi-stretch-condensed: 75%;  /* titulares y cifras grandes */
+  --bi-stretch-normal: 100%;
+  --bi-weight-regular: 400;
+  --bi-weight-medium: 500;
+  --bi-weight-bold: 700;
+  --bi-weight-black: 850;
+  --bi-tracking-label: 0.06em;  /* etiquetas en mayúsculas */
+  --bi-numeric: tabular-nums;   /* toda cifra en vivo usa números tabulares */
+
+  /* Escala web (rem, base 16px) */
+  --bi-text-2xs: 0.75rem;   /* 12 · solo etiquetas con mayúsculas */
+  --bi-text-xs: 0.8125rem;  /* 13 */
+  --bi-text-sm: 0.875rem;   /* 14 */
+  --bi-text-md: 1rem;       /* 16 · cuerpo */
+  --bi-text-lg: 1.125rem;   /* 18 */
+  --bi-text-xl: 1.375rem;   /* 22 */
+  --bi-text-2xl: 1.75rem;   /* 28 */
+  --bi-text-3xl: 2.25rem;   /* 36 */
+  --bi-text-4xl: 3rem;      /* 48 · cifra héroe */
+  --bi-leading-tight: 1.1;
+  --bi-leading-snug: 1.3;
+  --bi-leading-body: 1.5;
+
+  /* Escala de transmisión (px sobre lienzo 1920×1080; mínimo 22px para TV) */
+  --bi-bc-text-label: 22px;
+  --bi-bc-text-body: 28px;
+  --bi-bc-text-title: 36px;
+  --bi-bc-text-headline: 48px;
+  --bi-bc-text-hero: 72px;
+  --bi-bc-text-score: 96px;
+
+  /* ---------- Espaciado (base 4px) ---------- */
+  --bi-space-0: 0;
+  --bi-space-1: 2px;
+  --bi-space-2: 4px;
+  --bi-space-3: 8px;
+  --bi-space-4: 12px;
+  --bi-space-5: 16px;
+  --bi-space-6: 20px;
+  --bi-space-7: 24px;
+  --bi-space-8: 32px;
+  --bi-space-9: 40px;
+  --bi-space-10: 48px;
+  --bi-space-11: 64px;
+
+  /* ---------- Radios y forma ---------- */
+  --bi-radius-xs: 2px;
+  --bi-radius-sm: 4px;
+  --bi-radius-md: 8px;
+  --bi-radius-lg: 12px;
+  --bi-radius-pill: 999px;
+  /* Corte litoral: esquina superior izquierda recortada a 45°, firma de los paneles */
+  --bi-notch: 14px;
+  --bi-notch-bc: 24px;
+  --bi-clip-notch: polygon(var(--bi-notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--bi-notch));
+  --bi-clip-notch-bc: polygon(var(--bi-notch-bc) 0, 100% 0, 100% 100%, 0 100%, 0 var(--bi-notch-bc));
+  /* Línea de marea: barra de 3px bajo el título que se vacía con duration_s */
+  --bi-tide-height: 3px;
+
+  --bi-border-width: 1px;
+  --bi-focus-ring: 0 0 0 2px var(--bi-bg), 0 0 0 5px var(--bi-focus);
+  --bi-shadow-panel: 0 8px 24px rgb(0 0 0 / 0.45);
+  --bi-shadow-raised: 0 2px 8px rgb(0 0 0 / 0.25);
+
+  /* ---------- Movimiento ---------- */
+  --bi-dur-instant: 80ms;
+  --bi-dur-fast: 160ms;
+  --bi-dur-base: 240ms;
+  --bi-dur-slow: 400ms;
+  --bi-dur-reveal: 640ms;  /* entrada de gol, top 3 */
+  --bi-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --bi-ease-in: cubic-bezier(0.6, 0, 0.8, 0.4);
+  --bi-ease-in-out: cubic-bezier(0.6, 0, 0.4, 1);
+  /* Regla: las cifras NUNCA cuentan hacia arriba (no hay valores intermedios en el motor).
+     Solo la geometría (barra, ancho) se interpola entre dos valores reales. */
+
+  /* ---------- Layout ---------- */
+  --bi-rail-width: 380px;
+  --bi-content-max: 1440px;
+  --bi-bp-sm: 600px;
+  --bi-bp-md: 900px;
+  --bi-bp-lg: 1200px;
+  --bi-touch-target: 44px;
+
+  /* Lienzo de transmisión 1920×1080 */
+  --bi-bc-width: 1920px;
+  --bi-bc-height: 1080px;
+  --bi-bc-safe-x: 96px;   /* title-safe 5% */
+  --bi-bc-safe-y: 54px;
+
+  /* Capas */
+  --bi-z-slot: 10;
+  --bi-z-center: 20;
+  --bi-z-fullscreen: 30;
+  --bi-z-status: 40;
+  --bi-z-toast: 50;
+
+  color-scheme: dark;
+}
+
+/* App web oscura: paneles opacos en lugar de translúcidos */
+:root[data-theme="dark"] {
+  --bi-surface-overlay: var(--bi-ink-900);
+  color-scheme: dark;
+}
+
+/* App web clara */
+:root[data-theme="light"] {
+  --bi-bg: var(--bi-sand-50);
+  --bi-surface: #ffffff;
+  --bi-surface-raised: var(--bi-sand-100);
+  --bi-surface-overlay: #ffffff;
+  --bi-scrim: rgb(19 32 42 / 0.55);
+  --bi-text: #13202a;
+  --bi-text-muted: #4e6069;
+  --bi-text-on-accent: #ffffff;
+  --bi-line: var(--bi-sand-200);
+  --bi-line-strong: #6e7e86;
+  --bi-accent: var(--bi-sol-700);
+  --bi-up: var(--bi-cortez-700);
+  --bi-verified: var(--bi-cortez-700);
+  --bi-live: var(--bi-sol-700);
+  --bi-error: var(--bi-alerta-700);
+  --bi-focus: var(--bi-sol-700);
+  --bi-team-home: var(--bi-bahia-solid);
+  --bi-team-away: var(--bi-cardon-solid);
+  --bi-skeleton: var(--bi-sand-100);
+  --bi-skeleton-shine: var(--bi-sand-200);
+  --bi-shadow-panel: 0 6px 20px rgb(19 32 42 / 0.12);
+  --bi-shadow-raised: 0 1px 4px rgb(19 32 42 / 0.1);
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --bi-dur-fast: 0ms;
+    --bi-dur-base: 0ms;
+    --bi-dur-slow: 0ms;
+    --bi-dur-reveal: 0ms;
+  }
+}
