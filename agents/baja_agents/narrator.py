@@ -7,6 +7,7 @@ import json
 from baja_insights.contract import fmt_clock
 from baja_insights.roster import Roster
 
+from .checks import UI_ONLY_FACTS
 from .fallback import readable_stats
 from .models import Story
 
@@ -53,11 +54,6 @@ def name_sides(value, roster: Roster):
     return {k: score_text(v, roster) if k in ("scoreline", "final_scoreline") else name_sides(v, roster)
             for k, v in value.items()}
 INSTRUCTIONS += DATA_NOTES
-
-
-# Facts copied to the overlay for the UI that the agents don't need. Keeping them out of the
-# prompts keeps the cache valid and gives the model fewer numbers to misplace.
-UI_ONLY_FACTS = ("ranking",)
 
 
 def who_is_who(insight: dict, roster: Roster) -> dict:

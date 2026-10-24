@@ -134,7 +134,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.3
+      "mvp_score": 2.3,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 2.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.5
+        },
+        {
+          "rank": 3,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 2.3
+        },
+        {
+          "rank": 4,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        },
+        {
+          "rank": 5,
+          "player": "T. Esquer",
+          "team": "Real Cardón",
+          "position": "DFC",
+          "mvp_score": 2.0
+        }
+      ]
     }
   },
   {
@@ -160,7 +197,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.3
+      "mvp_score": 2.3,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 2.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.5
+        },
+        {
+          "rank": 3,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 2.3
+        },
+        {
+          "rank": 4,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        },
+        {
+          "rank": 5,
+          "player": "T. Esquer",
+          "team": "Real Cardón",
+          "position": "DFC",
+          "mvp_score": 2.0
+        }
+      ]
     }
   },
   {
@@ -186,7 +260,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.3
+      "mvp_score": 2.3,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 2.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.5
+        },
+        {
+          "rank": 3,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 2.3
+        },
+        {
+          "rank": 4,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        },
+        {
+          "rank": 5,
+          "player": "T. Esquer",
+          "team": "Real Cardón",
+          "position": "DFC",
+          "mvp_score": 2.0
+        }
+      ]
     }
   },
   {
@@ -212,7 +323,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.3
+      "mvp_score": 2.3,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 2.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.5
+        },
+        {
+          "rank": 3,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 2.3
+        },
+        {
+          "rank": 4,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        },
+        {
+          "rank": 5,
+          "player": "T. Esquer",
+          "team": "Real Cardón",
+          "position": "DFC",
+          "mvp_score": 2.0
+        }
+      ]
     }
   },
   {
@@ -337,7 +485,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.6
+      "mvp_score": 2.6,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 3.6
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.3
+        },
+        {
+          "rank": 3,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 4,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 5,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        }
+      ]
     }
   },
   {
@@ -362,7 +547,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.6
+      "mvp_score": 2.6,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 3.6
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.3
+        },
+        {
+          "rank": 3,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 4,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 5,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        }
+      ]
     }
   },
   {
@@ -387,7 +609,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.6
+      "mvp_score": 2.6,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 3.6
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.3
+        },
+        {
+          "rank": 3,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 4,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 5,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        }
+      ]
     }
   },
   {
@@ -412,7 +671,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 2.6
+      "mvp_score": 2.6,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 3.6
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 3.3
+        },
+        {
+          "rank": 3,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 4,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 2.6
+        },
+        {
+          "rank": 5,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 2.2
+        }
+      ]
     }
   },
   {
@@ -1161,7 +1457,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 4.2
+      "mvp_score": 4.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 5.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 3,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.2
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.0
+        }
+      ]
     }
   },
   {
@@ -1186,7 +1519,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 4.2
+      "mvp_score": 4.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 5.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 3,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.2
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.0
+        }
+      ]
     }
   },
   {
@@ -1211,7 +1581,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 4.2
+      "mvp_score": 4.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 5.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 3,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.2
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.0
+        }
+      ]
     }
   },
   {
@@ -1236,7 +1643,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 4.2
+      "mvp_score": 4.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 5.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 3,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.2
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.0
+        }
+      ]
     }
   },
   {
@@ -1386,7 +1830,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 5,
-      "mvp_score": 4.9
+      "mvp_score": 4.9,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 4,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1412,7 +1893,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 5,
-      "mvp_score": 4.9
+      "mvp_score": 4.9,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 4,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1438,7 +1956,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 5,
-      "mvp_score": 4.9
+      "mvp_score": 4.9,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 4,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1464,7 +2019,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 5,
-      "mvp_score": 4.9
+      "mvp_score": 4.9,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.4
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 4,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        },
+        {
+          "rank": 5,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1601,7 +2193,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 6.7
+      "mvp_score": 6.7,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1626,7 +2255,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 6.7
+      "mvp_score": 6.7,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1651,7 +2317,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 6.7
+      "mvp_score": 6.7,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -1676,7 +2379,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 6.7
+      "mvp_score": 6.7,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 6.7
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.9
+        }
+      ]
     }
   },
   {
@@ -2033,7 +2773,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 7.1
+      "mvp_score": 7.1,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.1
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.3
+        }
+      ]
     }
   },
   {
@@ -2058,7 +2835,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 7.1
+      "mvp_score": 7.1,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.1
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.3
+        }
+      ]
     }
   },
   {
@@ -2083,7 +2897,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 7.1
+      "mvp_score": 7.1,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.1
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.3
+        }
+      ]
     }
   },
   {
@@ -2108,7 +2959,44 @@
     "data": {
       "rank": 1,
       "previous_rank": 2,
-      "mvp_score": 7.1
+      "mvp_score": 7.1,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.1
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 4,
+          "player": "D. Verdugo",
+          "team": "Real Cardón",
+          "position": "EI",
+          "mvp_score": 5.6
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.3
+        }
+      ]
     }
   },
   {
@@ -2261,7 +3149,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 6.5
+      "mvp_score": 6.5,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.6
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 6.1
+        }
+      ]
     }
   },
   {
@@ -2286,7 +3211,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 6.5
+      "mvp_score": 6.5,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.6
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 6.1
+        }
+      ]
     }
   },
   {
@@ -2311,7 +3273,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 6.5
+      "mvp_score": 6.5,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.6
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 6.1
+        }
+      ]
     }
   },
   {
@@ -2336,7 +3335,44 @@
     "data": {
       "rank": 3,
       "previous_rank": 4,
-      "mvp_score": 6.5
+      "mvp_score": 6.5,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 7.6
+        },
+        {
+          "rank": 2,
+          "player": "L. Montaño",
+          "team": "Real Cardón",
+          "position": "ED",
+          "mvp_score": 7.0
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.5
+        },
+        {
+          "rank": 4,
+          "player": "S. Leyva",
+          "team": "Real Cardón",
+          "position": "DC",
+          "mvp_score": 6.3
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 6.1
+        }
+      ]
     }
   },
   {

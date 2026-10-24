@@ -75,6 +75,42 @@ venv/Scripts/python.exe -m pytest tests -q
 
 For live use, `Crew.process_block(label, insights)` in `baja_agents/pipeline.py` processes one block and returns its orders.
 
+## Credentials and deployment
+
+The agents authenticate with `DefaultAzureCredential` (`baja_agents/config.py`). There are no API keys:
+
+- **On a laptop** it uses `az login`. Your account needs the **Foundry User** role on the Foundry resource (or its resource group).
+- **In Azure Container Apps** it uses the container's managed identity. With a user-assigned identity, also set `AZURE_CLIENT_ID` to its client id.
+
+Environment variables, the same as in `agents/.env`:
+
+| Variable | Value |
+| --- | --- |
+| `FOUNDRY_PROJECT_ENDPOINT` | `https://<resource>.services.ai.azure.com/api/projects/<project>` |
+| `FOUNDRY_MODEL` | Model deployment name, e.g. `gpt-4.1-mini-baja-insights` |
+| `FOUNDRY_VERIFIER_MODEL` | Optional, a deployment for the verifier only |
+| `AZURE_CLIENT_ID` | Only with a user-assigned managed identity |
+
+**The container must live in the same subscription and tenant as the Foundry resource.** A managed identity cannot get tokens for a Foundry resource in another tenant, and each Azure for Students account usually has its own tenant. The Foundry resource is `diegomanzo-2526-resource` in `rg-baja-insights`.
+
+One-time setup, by the owner of that subscription:
+
+```bash
+az provider register --namespace Microsoft.App
+az provider register --namespace Microsoft.OperationalInsights
+```
+
+After creating the container app with a system-assigned identity, give it access to Foundry:
+
+```bash
+PRINCIPAL=$(az containerapp identity show -g rg-baja-insights -n <app> --query principalId -o tsv)
+FOUNDRY=$(az cognitiveservices account show -g rg-baja-insights -n diegomanzo-2526-resource --query id -o tsv)
+az role assignment create --assignee-object-id "$PRINCIPAL" --assignee-principal-type ServicePrincipal \
+  --role "Foundry User" --scope "$FOUNDRY"
+```
+
+In Git Bash on Windows, run `export MSYS_NO_PATHCONV=1` first, or it rewrites the `/subscriptions/...` scope. The role can take a few minutes to apply; until then the agents get a 401 or 403 and fall back to templates.
+
 ## Reading insights live from the engine
 
 ```bash

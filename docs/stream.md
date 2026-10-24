@@ -43,6 +43,8 @@ Valida cada mensaje con `stream.schema.json` y la orden de cada `overlay` con `o
 
 ## Despliegue en Azure Container Apps
 
+> En la suscripción del proyecto ACR Tasks no está permitido, así que la imagen se construye en GitHub Actions y se publica en ghcr.io. El despliegue real, con sus nombres y URL, está en [despliegue.md](despliegue.md). Los comandos de abajo sirven para una suscripción que sí permita `az acr build`.
+
 ```bash
 az acr build -r <registro> -f stream.Dockerfile -t baja-stream:latest .
 az containerapp create -n baja-stream -g <grupo> --environment <entorno> \
