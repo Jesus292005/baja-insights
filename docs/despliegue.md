@@ -7,7 +7,7 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Grupo de recursos | `rg-baja-insights` | Región `centralus` |
 | Foundry | `diegomanzo-2526-resource`, proyecto `diegomanzo-2526` | Modelo `gpt-4.1-mini-baja-insights` |
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
-| Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-c81b433`, una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
+| Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-7048698` (motor del PR #11 y las 168 órdenes de `m001` del PR #12), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
 | Servicio del chat | `baja-chat` | `POST /api/ask`. Por ahora corre la imagen de ejemplo. Escala de 0 a 1 réplica, 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`

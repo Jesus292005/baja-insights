@@ -218,5 +218,6 @@ Los tres eligieron que el motor mande un código. Ya está hecho en esta rama (s
 2. Merge. El job `test` de la CI pasa; el job `agents` falla en los tests de la tabla de arriba hasta que Diego los actualice.
 3. Diego actualiza sus tests y regenera las órdenes, idealmente el mismo día del merge.
    - **No actualizar `baja-stream` en Azure antes de eso.** El servicio está fijo en la imagen `sha-c81b433` (ver `docs/despliegue.md`). El merge publica una imagen nueva en GHCR, pero no la despliega. Si se despliega antes de regenerar las órdenes, el partido nuevo sale con los gráficos del partido viejo. El orden es: merge, órdenes regeneradas en `main`, y después `az containerapp update` con el `sha` de ese commit.
+   - **Hecho el 24 de octubre:** `baja-stream` corre `sha-7048698`, el merge del PR #12 con las órdenes regeneradas.
 4. Luismar agrega los campos nuevos a los tipos y los textos por idioma.
 5. Datos congelados: nadie cambia `m001` hasta después de grabar el video.
