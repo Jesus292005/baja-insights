@@ -55,6 +55,7 @@ button, input, select { font: inherit; color: inherit; }
 .pill-live::before { animation: pulse 1.6s var(--bi-ease-in-out) infinite; }
 .pill-reconnecting::before { background: transparent; border: 2px solid var(--bi-text); border-top-color: transparent; animation: spin 1s linear infinite; }
 .pill-offline { border-color: var(--bi-error); color: var(--bi-error); }
+.pill-ended::before { background: var(--bi-text); border-radius: 0; }
 .pill-offline::before { background: var(--bi-error); border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 
 @keyframes pulse { 50% { opacity: 0.35; } }
@@ -202,6 +203,8 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .bubble-limited { border-left-color: var(--bi-text-muted); }
 .bubble-flag { display: block; font-family: var(--bi-font-data); font-size: var(--bi-text-2xs); letter-spacing: var(--bi-tracking-label); text-transform: uppercase; color: var(--bi-text-muted); margin-bottom: var(--bi-space-2); }
 .bubble-wait { color: var(--bi-text-muted); font-style: italic; }
+.bubble-action { display: block; margin-top: var(--bi-space-3); font-size: var(--bi-text-xs); color: var(--bi-accent); }
+.bubble-action:disabled { color: var(--bi-text-muted); text-decoration: none; opacity: 1; }
 .chat-state { font-size: var(--bi-text-sm); padding: var(--bi-space-3) var(--bi-space-4); background: var(--bi-surface-raised); }
 .chat-error { border-left: 3px solid var(--bi-error); }
 .chat-suggestions { display: flex; flex-wrap: wrap; gap: var(--bi-space-3); }

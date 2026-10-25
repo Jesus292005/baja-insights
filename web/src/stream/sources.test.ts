@@ -169,13 +169,47 @@ describe('WebSocketSource', () => {
     ws.stop();
   });
 
-  it('marks the end of the stream', () => {
+  it('treats stream_ended as the end of the match, not as a lost connection', () => {
+    const store = createMatchStore();
+    const ws = make();
+    ws.start(store);
+    const s = FakeSocket.all[0];
+    s.open();
+    s.message({ kind: 'clock', match_id: 'm001', t_s: 5520, period: 2, phase: 'full_time' });
+    s.message({ kind: 'error', code: 'stream_ended', detail: 'the match is over' });
+    expect(store.getSnapshot().connection).toEqual({ status: 'ended', code: 'stream_ended' });
+    // the heartbeat goes on, and a quiet socket does not trigger a reconnect
+    s.message({ kind: 'clock', match_id: 'm001', t_s: 5520, period: 2, phase: 'full_time' });
+    now = 10_000;
+    ws.tick();
+    expect(store.getSnapshot().connection.status).toBe('ended');
+    expect(FakeSocket.all).toHaveLength(1);
+    ws.stop();
+  });
+
+  it('subscribes again after server_error', () => {
     const store = createMatchStore();
     const ws = make();
     ws.start(store);
     FakeSocket.all[0].open();
-    FakeSocket.all[0].message({ kind: 'error', code: 'stream_ended' });
-    expect(store.getSnapshot().connection).toEqual({ status: 'offline', code: 'stream_ended' });
+    FakeSocket.all[0].message({ kind: 'clock', match_id: 'm001', t_s: 300, period: 1, phase: 'live' });
+    FakeSocket.all[0].message({ kind: 'error', code: 'server_error', detail: 'the stream failed, subscribe again' });
+    expect(store.getSnapshot().connection.status).toBe('reconnecting');
+    vi.advanceTimersByTime(1000);
+    FakeSocket.all[1].open();
+    expect(JSON.parse(FakeSocket.all[1].sent[0]).from_t_s).toBe(300);
+    ws.stop();
+  });
+
+  it('stays offline when the match does not exist', () => {
+    const store = createMatchStore();
+    const ws = make();
+    ws.start(store);
+    FakeSocket.all[0].open();
+    FakeSocket.all[0].message({ kind: 'error', code: 'match_not_found', detail: 'unknown match_id' });
+    vi.advanceTimersByTime(30_000);
+    expect(store.getSnapshot().connection).toEqual({ status: 'offline', code: 'match_not_found' });
+    expect(FakeSocket.all).toHaveLength(1);
     ws.stop();
   });
 });

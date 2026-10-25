@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import type { Language, Mode } from '../contracts/overlay';
+import type { Language, Mode, OverlayOrder } from '../contracts/overlay';
 import { demoMatch } from '../data/match';
 import { forViewer } from '../logic/derive';
 import { isBusy, nextStart, planStage, stageAt } from '../logic/plan';
@@ -27,7 +27,7 @@ export function useMatchRuntime(config: AppConfig, mode: Mode, lang: Language) {
             startAt: config.startAt,
           })
         : null;
-    const source: MatchSource = replay ?? new WebSocketSource({ url: config.wsUrl!, matchId: demoMatch.matchId });
+    const source: MatchSource = replay ?? new WebSocketSource({ url: config.streamUrl!, matchId: demoMatch.matchId });
     return { store, source, replay };
   });
 
@@ -61,5 +61,7 @@ export function useMatchRuntime(config: AppConfig, mode: Mode, lang: Language) {
     replay: runtime.replay,
     replayState,
     retry: () => runtime.source.retry(),
+    /** Adds orders made in this browser, such as a chat answer put on screen. Same dedup as the stream. */
+    inject: (orders: OverlayOrder[]) => runtime.store.orders(orders),
   };
 }

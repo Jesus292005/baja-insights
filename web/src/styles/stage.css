@@ -184,6 +184,9 @@
 .g-podium-rank { font-family: var(--bi-font-display); font-stretch: 68%; font-weight: 900; font-size: 64px; line-height: 1; }
 .g-podium-1 .g-podium-rank { color: var(--bi-accent); font-size: 84px; }
 .g-question { font-size: 26px; color: var(--bi-text-muted); font-style: italic; }
+/* Chat answers are longer than the agents' captions: smaller text so they fit the side panel. */
+.g-chat_answer .g-title { font-size: 38px; }
+.g-chat_answer .g-text { font-size: 24px; line-height: 1.28; }
 
 /* =========================================================================
    Player card (web and canvas)

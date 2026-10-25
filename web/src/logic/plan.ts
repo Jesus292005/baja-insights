@@ -7,13 +7,14 @@ import type { OverlayOrder, Slot } from '../contracts/overlay';
  * - One order per slot. The next one waits in a queue, in show_at_s order.
  * - full_screen hides and pauses every other slot. center hides and pauses side_panel and
  *   lower_third, which overlap it. A paused order keeps its remaining time.
- * - An order that waited more than MAX_WAIT_S is dropped, except goals, match keys and the top 3.
+ * - An order that waited more than MAX_WAIT_S is dropped, except goals, match keys, the top 3 and
+ *   chat answers (someone asked for those to be on screen).
  *   Duel-bar frames (source_insight null) are dropped as soon as they would start late.
  */
 
 export const SLOTS: Slot[] = ['full_screen', 'center', 'top_right', 'side_panel', 'lower_third', 'bottom_bar'];
 const BLOCKED_BY_CENTER: Slot[] = ['side_panel', 'lower_third'];
-const NEVER_DROP = new Set(['goal_analysis', 'match_keys', 'top3']);
+const NEVER_DROP = new Set(['goal_analysis', 'match_keys', 'top3', 'chat_answer']);
 export const MAX_WAIT_S = 20;
 
 export interface Showing {

@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePersisted } from '../app/usePersisted';
 import { useMatchRuntime } from '../app/useMatchRuntime';
-import type { AppConfig } from '../app/config';
+import { hrefWithSource, type AppConfig } from '../app/config';
 import { AskTheMatch } from '../components/rail/AskTheMatch';
 import { CardPanel, DuelPanel, MomentsPanel, MvpRacePanel } from '../components/rail/panels';
 import {
-  ConnectionBanner, ConnectionPill, LanguageToggle, MatchBug, ModeToggle, ReplayControls, ThemeToggle,
+  ConnectionBanner, ConnectionPill, LanguageToggle, MatchBug, ModeToggle, ReplayControls, SourceToggle, ThemeToggle,
 } from '../components/shell/shell';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode, OverlayOrder } from '../contracts/overlay';
 import { demoMatch } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
+import { mvpAt } from '../logic/derive';
 import type { Showing } from '../logic/plan';
 
 const prefersDark = () => {
@@ -62,7 +63,8 @@ export function WebApp({ config }: { config: AppConfig }) {
 
   const { snap, orders, t, showing, loading, stale, replay, replayState } = rt;
   const s = strings[lang];
-  const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : ''}`;
+  const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
+  const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
 
   return (
     <PrefsProvider mode={mode} lang={lang}>
@@ -76,6 +78,13 @@ export function WebApp({ config }: { config: AppConfig }) {
         <MatchBug state={snap.state} clockUpdate={snap.clock} variant="web" />
         <ConnectionPill info={snap.connection} />
         <div className="topbar-controls">
+          <SourceToggle
+            value={config.source}
+            liveAvailable={config.streamUrl !== null}
+            onChange={(v) => {
+              if (v !== config.source) window.location.assign(hrefWithSource(v));
+            }}
+          />
           <ModeToggle value={mode} onChange={setMode} />
           <LanguageToggle value={lang} onChange={setLang} />
           <ThemeToggle value={theme} onChange={setTheme} />
@@ -103,7 +112,13 @@ export function WebApp({ config }: { config: AppConfig }) {
           <MvpRacePanel orders={orders} t={t} stale={stale} loading={loading} />
           <DuelPanel orders={orders} t={t} stale={stale} loading={loading} />
           <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
-          <AskTheMatch matchId={demoMatch.matchId} t={t} connection={snap.connection.status} />
+          <AskTheMatch
+            matchId={demoMatch.matchId}
+            t={t}
+            connection={snap.connection.status}
+            leader={leader}
+            onShowOrder={(order) => rt.inject([order])}
+          />
         </aside>
       </main>
       <footer className="footer">

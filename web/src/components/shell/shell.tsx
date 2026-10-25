@@ -1,3 +1,4 @@
+import type { SourceKind } from '../../app/config';
 import type { Language, Mode } from '../../contracts/overlay';
 import { roster } from '../../data/match';
 import { usePrefs } from '../../i18n/prefs';
@@ -39,7 +40,8 @@ export function ConnectionPill({ info }: { info: ConnectionInfo }) {
     connecting: s.status.connecting,
     live: s.status.live,
     reconnecting: s.status.reconnecting.split('.')[0],
-    offline: info.code === 'stream_ended' ? s.status.ended : s.status.offline,
+    offline: s.status.offline,
+    ended: s.status.ended,
     replay: s.status.replay,
   }[info.status];
   return <span className={`pill pill-${info.status}`}>{label}</span>;
@@ -60,11 +62,9 @@ export function ConnectionBanner({ info, lastDataS, onRetry }: { info: Connectio
   return (
     <div className="banner banner-error" role="alert">
       <span>
-        <b>{info.code === 'stream_ended' ? s.status.ended : s.status.offline}</b> {lastDataS !== null && t(s.status.offlineBody, { clock: at })}
+        <b>{s.status.offline}</b> {lastDataS !== null && t(s.status.offlineBody, { clock: at })}
       </span>
-      {info.code !== 'stream_ended' && (
-        <button type="button" className="btn" onClick={onRetry}>{s.status.retry}</button>
-      )}
+      <button type="button" className="btn" onClick={onRetry}>{s.status.retry}</button>
     </div>
   );
 }
@@ -80,6 +80,23 @@ function Segmented<T extends string>({ label, value, options, onChange }: { labe
         </button>
       ))}
     </div>
+  );
+}
+
+/** Replay or live. Switching reloads the page with ?source=, because each source owns its own clock. */
+export function SourceToggle({ value, liveAvailable, onChange }: { value: SourceKind; liveAvailable: boolean; onChange: (v: SourceKind) => void }) {
+  const { s } = usePrefs();
+  if (!liveAvailable) return null;
+  return (
+    <Segmented
+      label={s.source.label}
+      value={value}
+      onChange={onChange}
+      options={[
+        { value: 'replay', label: s.source.replay, hint: s.source.replayHint },
+        { value: 'live', label: s.source.live, hint: s.source.liveHint },
+      ]}
+    />
   );
 }
 

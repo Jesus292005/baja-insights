@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { OverlayOrder, Slot } from '../../contracts/overlay';
 import { broadcastSlots } from '../../design/tokens';
 import { usePrefs } from '../../i18n/prefs';
+import { isFrame } from '../../logic/derive';
 import { SLOTS, type Showing } from '../../logic/plan';
 import { Graphic } from './graphics';
 
@@ -46,7 +47,7 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
     if (!enabled) return;
     for (const slot of SLOTS) {
       const o = showing[slot]?.order;
-      if (!o || seen.current.has(o.overlay_id) || o.source_insight === null) continue;
+      if (!o || seen.current.has(o.overlay_id) || isFrame(o)) continue;
       seen.current.add(o.overlay_id);
       pending.current = [o.title, o.text].filter(Boolean).join('. ');
     }
