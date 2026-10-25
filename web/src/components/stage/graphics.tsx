@@ -164,19 +164,18 @@ function CardUpgrade({ order, elapsed }: GraphicProps<CardUpgradeOrder>) {
   const player = roster.player(c.player);
   return (
     <Panel order={order} elapsed={elapsed} team={player?.team} className="g-card-upgrade">
-      <div className="g-upgrade">
-        <div className="g-upgrade-attr">
-          <abbr title={attributeLabel[lang][c.attribute]}>{attributeShort[lang][c.attribute]}</abbr>
-          <span className="g-upgrade-to">{c.to}</span>
-          <span className="g-upgrade-from">{c.from} → <span className="g-up">+{c.delta}</span></span>
-        </div>
-        <div className="g-upgrade-who">
-          <b>{c.player}</b>
-          <span>{positionLabel[lang][c.position].long}</span>
-          {c.overall_to !== undefined && <span>{s.card.overall} {c.overall_to}</span>}
-          {mode === 'analyst' && cardReasonLabel(c, lang) && <span className="g-reason">{cardReasonLabel(c, lang)}</span>}
-        </div>
+      {/* Grid: the attribute block on the left, title, player line and texts on the right. */}
+      <div className="g-upgrade-attr">
+        <abbr title={attributeLabel[lang][c.attribute]}>{attributeShort[lang][c.attribute]}</abbr>
+        <span className="g-upgrade-to">{c.to}</span>
+        <span className="g-upgrade-from">{c.from} → <span className="g-up">+{c.delta}</span></span>
       </div>
+      <p className="g-upgrade-who">
+        <b>{c.player}</b>
+        <span>{positionLabel[lang][c.position].long}</span>
+        {c.overall_to !== undefined && <span>{s.card.overall} {c.overall_to}</span>}
+      </p>
+      {mode === 'analyst' && cardReasonLabel(c, lang) && <p className="g-reason">{cardReasonLabel(c, lang)}</p>}
     </Panel>
   );
 }
