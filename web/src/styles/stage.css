@@ -145,14 +145,18 @@
 
 /* ---------- Goal chain ---------- */
 
-.g-goal_analysis { padding: 32px 36px 28px; gap: 18px; }
+.g-goal_analysis { padding: 30px 36px 24px; gap: 14px; }
+/* The scoreline sits on the title row, so the chain gets the height. */
+.g-goal_analysis .g-title { padding-right: 230px; }
+.g-goal_analysis .g-scoreline { position: absolute; top: 76px; right: 36px; }
+.g-goal_analysis .g-text { font-size: 26px; }
 .g-scoreline { display: flex; align-items: center; gap: 12px; font-family: var(--bi-font-display); font-stretch: 70%; font-weight: 900; font-size: 48px; line-height: 1; }
 .g-scoreline .chip { font-size: 20px; }
 .g-chain { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; position: relative; }
 .g-chain::before { content: ''; position: absolute; left: 32px; right: calc(100% / var(--n) - 32px); top: 31px; height: 3px; background: var(--bi-line-strong); }
 .g-chain li { display: flex; flex-direction: column; gap: 8px; min-width: 0; animation: g-in var(--bi-dur-slow) var(--bi-ease-out) both; }
 .g-chain b { font-size: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.g-chain small { font-size: 22px; color: var(--bi-text-muted); line-height: 1.25; }
+.g-chain small { font-size: 22px; color: var(--bi-text-muted); line-height: 1.2; }
 .g-node { position: relative; z-index: 1; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; font-size: 26px; background: var(--bi-surface-raised); border: 3px solid var(--bi-line-strong); }
 .g-chain li.is-scorer .g-node { background: var(--bi-text); color: var(--bi-bg); border-color: var(--bi-text); }
 .g-chain li.is-invisible .g-node { background: var(--bi-surface); border: 3px dashed var(--bi-accent); color: var(--bi-accent); }

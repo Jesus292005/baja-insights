@@ -67,7 +67,7 @@ export const broadcastSlots = {
   side_panel: { x: 1344, y: 318, w: 480, h: 520 },
   lower_third: { x: 96, y: 700, w: 1100, h: 160 },
   bottom_bar: { x: 96, y: 876, w: 1728, h: 150 },
-  center: { x: 480, y: 270, w: 960, h: 540 },
+  center: { x: 400, y: 160, w: 1120, h: 700 },
   full_screen: { x: 0, y: 0, w: 1920, h: 1080 },
 } as const;
 
