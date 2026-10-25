@@ -45,6 +45,24 @@ describe('planStage', () => {
     expect(at(plan, 17, 'side_panel')).toBeUndefined();
   });
 
+  it('side_panel waits while top_right is on, since they share the right column', () => {
+    const mvp = order('top_right', 10, 3, { type: 'mvp_update', data: { rank: 1, mvp_score: 1 } });
+    const side = order('side_panel', 11, 2);
+    const plan = planStage([mvp, side]);
+    expect(at(plan, 11, 'side_panel')).toBeUndefined();
+    expect(at(plan, 13, 'side_panel')).toBe(side.overlay_id);
+    expect(at(plan, 14, 'side_panel')).toBe(side.overlay_id);
+    expect(at(plan, 15, 'side_panel')).toBeUndefined();
+  });
+
+  it('center pauses top_right too, like the agents scheduler', () => {
+    const mvp = order('top_right', 10, 4, { type: 'mvp_update', data: { rank: 1, mvp_score: 1 } });
+    const goal = order('center', 11, 2, { type: 'goal_analysis', data: { chain: ['A'], credit: [1] } });
+    const plan = planStage([mvp, goal]);
+    expect(at(plan, 11, 'top_right')).toBeUndefined();
+    expect(plan.frames[13].top_right?.elapsed).toBe(1);
+  });
+
   it('full_screen hides every other slot', () => {
     const bar = order('top_right', 0, 30, { type: 'mvp_update', data: { rank: 1, mvp_score: 1 } });
     const top = order('full_screen', 5, 5, { type: 'top3', data: { cards: [] } });

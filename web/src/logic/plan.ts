@@ -5,15 +5,18 @@ import type { OverlayOrder, Slot } from '../contracts/overlay';
  *
  * Rules (same spirit as the agents' Scheduler in agents/baja_agents/overlays.py):
  * - One order per slot. The next one waits in a queue, in show_at_s order.
- * - full_screen hides and pauses every other slot. center hides and pauses side_panel and
- *   lower_third, which overlap it. A paused order keeps its remaining time.
+ * - full_screen hides and pauses every other slot. center hides and pauses top_right, side_panel
+ *   and lower_third, which overlap it (the agents block every slot during center too).
+ * - top_right and side_panel share the right column, so side_panel waits while top_right is on.
+ *   The agents never schedule them together; this only matters for a chat answer put on screen.
+ * - A paused order keeps its remaining time.
  * - An order that waited more than MAX_WAIT_S is dropped, except goals, match keys, the top 3 and
  *   chat answers (someone asked for those to be on screen).
  *   Duel-bar frames (source_insight null) are dropped as soon as they would start late.
  */
 
 export const SLOTS: Slot[] = ['full_screen', 'center', 'top_right', 'side_panel', 'lower_third', 'bottom_bar'];
-const BLOCKED_BY_CENTER: Slot[] = ['side_panel', 'lower_third'];
+const BLOCKED_BY_CENTER: Slot[] = ['top_right', 'side_panel', 'lower_third'];
 const NEVER_DROP = new Set(['goal_analysis', 'match_keys', 'top3', 'chat_answer']);
 export const MAX_WAIT_S = 20;
 
@@ -56,7 +59,8 @@ export function planStage(orders: readonly OverlayOrder[]): StagePlan {
 
     const blocked = (slot: Slot) =>
       (slot !== 'full_screen' && current.full_screen !== undefined) ||
-      (BLOCKED_BY_CENTER.includes(slot) && current.center !== undefined);
+      (BLOCKED_BY_CENTER.includes(slot) && current.center !== undefined) ||
+      (slot === 'side_panel' && current.top_right !== undefined);
 
     let started = false;
     for (const slot of SLOTS) {
