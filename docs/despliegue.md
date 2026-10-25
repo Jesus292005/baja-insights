@@ -8,13 +8,13 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Foundry | `diegomanzo-2526-resource`, proyecto `diegomanzo-2526` | Modelo `gpt-4.1-mini-baja-insights` |
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
 | Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-7048698` (motor del PR #11 y las 168 órdenes de `m001` del PR #12), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
-| Servicio del chat | `baja-chat` | `POST /api/ask`, imagen `ghcr.io/jesus292005/baja-chat:sha-10e8fe9` (PR #14). Escala de 0 a 1 réplica, 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
+| Servicio del chat | `baja-chat` | `POST /api/ask`, imagen `ghcr.io/jesus292005/baja-chat:sha-4d8e5c4` (PR #15). Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`
 
 **URL del chat:** `https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/api/ask`
 
-Probado en Azure: `/healthz` responde `ok`, una petición inválida recibe 400, y las preguntas reales responden con la identidad administrada (sin claves), cumpliendo `chat.schema.json`. La primera pregunta después de arrancar tarda unos 13 s, las siguientes unos 5 s, y una repetida sale de la caché en milisegundos.
+Probado en Azure: `/healthz` responde `ok`, una petición inválida recibe 400, y las preguntas reales responden con la identidad administrada (sin claves), cumpliendo `chat.schema.json`. Una pregunta nueva tarda de 3 a 9 s, y una repetida sale de la caché en milisegundos.
 
 Probado: `/healthz` responde `ok`, el WebSocket abre y, al suscribirse a `m001`, llegan `state` y un `clock` por segundo. Todos los mensajes validan con `stream.schema.json`.
 
@@ -89,7 +89,7 @@ az containerapp delete -n baja-chat -g rg-baja-insights --yes
 **Ya está listo:**
 - El container app existe en `baja-env`, con perfil `Consumption`.
 - Tiene una identidad administrada del sistema con el rol **Foundry User** sobre `diegomanzo-2526-resource`. Los agentes la usan con `DefaultAzureCredential` y no necesitan claves.
-- Escala a cero: no cobra mientras nadie pregunta. La primera pregunta después de un rato tarda unos segundos más, mientras arranca.
+- Una réplica fija, para que nadie espere el arranque del contenedor (unos 13 s) durante la grabación del video y mientras los jueces prueban.
 
 **El servicio** (Pregúntale al partido, ver `agents/README.md`):
 - Código en `agents/baja_agents/ask.py` y `server.py`.
@@ -112,7 +112,7 @@ az containerapp update -n baja-chat -g rg-baja-insights --image ghcr.io/jesus292
 curl https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/healthz
 ```
 
-**Escala a cero o réplica fija.** Con `min-replicas 0` la primera pregunta después de un rato espera a que arranque el contenedor (Python, Agent Framework y la carga de los partidos). Para la grabación del video y mientras los jueces prueban, conviene `--min-replicas 1`, que cuesta centavos por día. La caché de respuestas vive en `/tmp` y se pierde al reiniciar.
+**Réplica fija.** Corre con `--min-replicas 1 --max-replicas 1` desde el 24 de octubre. Con `min-replicas 0` no cobraría mientras nadie pregunta, pero la primera pregunta después de un rato esperaría unos 13 s a que arranque el contenedor (Python, Agent Framework y la carga de los partidos). Una réplica fija cuesta centavos por día. Después del 10 de noviembre se puede volver a escala a cero o borrar. La caché de respuestas vive en `/tmp` y se pierde al reiniciar.
 
 Para comprobar el rol:
 
