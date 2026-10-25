@@ -1,4 +1,5 @@
-"""HTTP service for Ask the match: ``GET /healthz`` and ``POST /api/ask`` (contracts/chat.schema.json).
+"""HTTP service for Ask the match: ``GET /healthz``, ``POST /api/ask`` (contracts/chat.schema.json)
+and ``POST /mcp``, the engine's query functions as an MCP server (``mcp_server.py``).
 
     python -m baja_agents serve --port 8080
 
@@ -12,13 +13,15 @@ import logging
 
 from aiohttp import web
 
+from . import mcp_server
 from .ask import AskTheMatch
 from .config import CONTRACTS
 
 log = logging.getLogger(__name__)
 
-CORS = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400"}
+CORS = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, GET, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, Mcp-Session-Id, MCP-Protocol-Version, Last-Event-ID",
+        "Access-Control-Max-Age": "86400"}
 
 
 def request_validator():
@@ -30,6 +33,7 @@ def request_validator():
 
 def make_app(chat: AskTheMatch) -> web.Application:
     validator = request_validator()
+    tools = mcp_server.MatchTools(chat.matches)
 
     def reply(body: dict, status: int = 200) -> web.Response:
         return web.json_response(body, status=status, headers=CORS, dumps=lambda o: json.dumps(o, ensure_ascii=False))
@@ -54,8 +58,20 @@ def make_app(chat: AskTheMatch) -> web.Application:
             return reply({"error": "rate_limited", "detail": "too many questions this minute, try again shortly"}, 429)
         return reply(await chat.ask(body))
 
+    async def mcp(request: web.Request) -> web.Response:
+        status, body = mcp_server.handle_body(tools, await request.read())
+        if body is None:
+            return web.Response(status=status, headers=CORS)
+        return reply(body, status)
+
+    async def mcp_no_stream(_: web.Request) -> web.Response:
+        # Stateless server: no server-initiated stream (GET) and no session to close (DELETE).
+        return web.Response(status=405, headers={**CORS, "Allow": "POST, OPTIONS"})
+
     app = web.Application(client_max_size=64 * 1024)
-    app.add_routes([web.get("/healthz", healthz), web.post("/api/ask", ask), web.options("/api/ask", preflight)])
+    app.add_routes([web.get("/healthz", healthz), web.post("/api/ask", ask), web.options("/api/ask", preflight),
+                    web.post("/mcp", mcp), web.get("/mcp", mcp_no_stream), web.delete("/mcp", mcp_no_stream),
+                    web.options("/mcp", preflight)])
     return app
 
 

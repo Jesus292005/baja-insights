@@ -114,6 +114,14 @@ curl https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/he
 
 **Réplica fija.** Corre con `--min-replicas 1 --max-replicas 1` desde el 24 de octubre. Con `min-replicas 0` no cobraría mientras nadie pregunta, pero la primera pregunta después de un rato esperaría unos 13 s a que arranque el contenedor (Python, Agent Framework y la carga de los partidos). Una réplica fija cuesta centavos por día. Después del 10 de noviembre se puede volver a escala a cero o borrar. La caché de respuestas vive en `/tmp` y se pierde al reiniciar.
 
+**Servidor MCP.** El mismo servicio expone las seis funciones del motor como servidor MCP en `POST /mcp`. Se probó con el cliente MCP de Agent Framework. Los detalles están en `agents/README.md`, en la sección «MCP server»:
+
+```text
+https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/mcp
+```
+
+No usa el modelo, así que no gasta tokens ni cuenta para el límite de preguntas del chat.
+
 Para comprobar el rol:
 
 ```bash
