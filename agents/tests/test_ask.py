@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from baja_agents.ask import PREDICTION, AskAnswer, AskTheMatch, ToolSession, load_matches
+from baja_agents.ask import load_tool_definitions as load_definitions
 from baja_agents.llm import LLMRunner
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -77,6 +78,16 @@ def test_only_goals_already_scored_can_be_looked_up():
     assert future["error"] == "goal_not_found" and future["known_goals"] == [first]
 
 
+def test_the_model_sees_team_names_not_home_and_away():
+    pytest.importorskip("agent_framework")
+    session = ToolSession(M001, at_s=1800)
+    get_state = next(t for t in session.as_agent_tools(load_definitions()) if t.name == "get_match_state")
+    seen = json.loads(get_state.func(at="30:00"))
+    assert seen["possession_pct"] == {"Bahía FC": 44, "Real Cardón": 56}
+    assert seen["scoreline"] == "Bahía FC 0-1 Real Cardón"
+    assert session.results[-1]["possession_pct"] == {"home": 44, "away": 56}  # the checks keep the raw result
+
+
 def test_prediction_questions_are_detected():
     for q in ("¿Quién va a ganar?", "¿Cómo va a terminar?", "Who will win?", "What are Bahía's chances to win?"):
         assert PREDICTION.search(q), q
@@ -107,6 +118,19 @@ def test_the_retry_can_fix_it():
     chat = FakeChat([([("get_match_state", {})], answer("Bahía lleva 99 tiros.")),
                      ([], answer("Real Cardón gana por la mínima."))])
     assert asyncio.run(chat.ask(request()))["status"] == "answered"
+
+
+def test_a_scoreline_written_backwards_is_fixed_or_rejected():
+    # 60:00: Real Cardón leads 0-1 (home-away). "1-0" is how a Cardón fan would say it, and it is wrong here.
+    chat = FakeChat([([("get_match_state", {})], answer("Real Cardón gana 1-0.")),
+                     ([], answer("Real Cardón gana 0-1."))])
+    out = asyncio.run(chat.ask(request(at="60:00")))
+    assert "scoreline 1-0" in chat.prompts[1]["fix"][0]
+    assert out["status"] == "answered" and out["answer"] == "Real Cardón gana 0-1."
+    # The scoreline at the moment of a goal is fine too
+    session = ToolSession(M001, at_s=4200)
+    session.call("get_goal_chain", {"goal_event_id": GOALS[0]["event_id"]})
+    assert {"0-1", "1-1"} <= session.scorelines()
 
 
 def test_answering_without_functions_is_rejected():

@@ -28,15 +28,16 @@ from baja_insights.contract import fmt_clock, parse_clock
 from baja_insights.engine.tools import MatchQuery
 
 from . import config
-from .checks import EVENT_ID_KEYS, figures, numbers
+from .checks import EVENT_ID_KEYS, figures, numbers, wrong_scorelines
 from .llm import LLMRunner
+from .narrator import name_sides
 
 log = logging.getLogger(__name__)
 
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-4"
+VERSION = "ask-6"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
 PREDICTION = re.compile(
@@ -58,6 +59,8 @@ Rules
 - `mode` fan: warm and simple, at most 3 figures besides the scoreline; say the rest in words. `mode` analyst: precise, with the key figures.
 - Write in `language` (es or en). At most 3 sentences for fans and 4 for analysts.
 - Refer to players by surname. Do not use gendered pronouns for players.
+- Function results key per-team values by team name and give scorelines as text with the home team first,
+  "Bahía FC 0-1 Real Cardón". A number belongs only to the team it is keyed by. Write scorelines in that order: 0-1.
 - `favorite_team` is the fan's team: you may speak to them about it, but the facts stay neutral.
 - Use `history` for follow-ups such as "and Cota?".
 
@@ -166,6 +169,23 @@ class ToolSession:
         base = numbers(json.dumps([_without_ids(self.results), extra], ensure_ascii=False))
         return base | {float(round(n * 100)) for n in base if 0 < n <= 1}
 
+    def scorelines(self) -> set[str]:
+        """Scorelines an answer may write, home-away: the current one and any a function returned."""
+        found = [self.query.get_match_state(fmt_clock(self.at_s))["scoreline"]]
+
+        def walk(value):
+            if isinstance(value, dict):
+                for k, v in value.items():
+                    if k in ("scoreline", "final_scoreline") and isinstance(v, dict):
+                        found.append(v)
+                    else:
+                        walk(v)
+            elif isinstance(value, list):
+                for v in value:
+                    walk(v)
+        walk(self.results)
+        return {f"{s['home']}-{s['away']}" for s in found if "home" in s and "away" in s}
+
     def tools_used(self) -> list[str]:
         return list(dict.fromkeys(self.calls))
 
@@ -177,7 +197,9 @@ class ToolSession:
 
         def make(name: str):
             def run(**arguments) -> str:
-                return json.dumps(self.call(name, arguments), ensure_ascii=False)
+                # The model sees team names instead of home/away and scorelines as text, as the graphics
+                # agents do; the checks keep using the raw result.
+                return json.dumps(name_sides(self.call(name, arguments), self.query.roster), ensure_ascii=False)
             run.__name__ = name
             return run
 
@@ -251,6 +273,7 @@ class AskTheMatch:
         invented = sorted(numbers(result.answer) - allowed)
         if invented:
             found.append(f"numbers not in any function result: {invented}")
+        found.extend(wrong_scorelines(result.answer, session.scorelines()))
         if not result.answer.strip():
             found.append("empty answer")
         return found
