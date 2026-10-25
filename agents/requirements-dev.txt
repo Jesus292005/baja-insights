@@ -1,3 +1,5 @@
 # Test-only: the official MCP SDK, so CI can check the /mcp server with a real MCP client.
 # Windows Application Control may block its pywin32 DLL locally; the test then skips.
 mcp==2.2.0
+# Agent Framework's MCP client imports it on connect (its "all" extra pins >=9.1.4,<9.2.0).
+tenacity==9.1.4
