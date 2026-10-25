@@ -49,7 +49,8 @@ describe('ReplaySource', () => {
 
   it('in skip mode stops at the next graphic and then runs in real time', () => {
     const store = createMatchStore();
-    const r = make({ speed: 60, skip: true });
+    // Only orders after 200 s, so the planned start at 100 s is the first stop.
+    const r = make({ speed: 60, skip: true, orders: demoMatch.overlays.filter((o) => o.show_at_s >= 200) });
     const first = 100;
     r.setPacing({ busy: (t) => t >= first && t < first + 5, nextStart: (t) => (t < first ? first : null) });
     r.start(store);

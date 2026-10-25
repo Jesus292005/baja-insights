@@ -28,11 +28,28 @@ describe('duelAt', () => {
 });
 
 describe('mvpAt', () => {
-  it('lists moves newest first and has no ranking before the top 3 (v1 orders)', () => {
+  it('lists moves newest first', () => {
     const view = mvpAt(fanEs, 50 * 60);
     expect(view.moves.length).toBeGreaterThan(0);
     expect(view.moves[0].show_at_s).toBeGreaterThanOrEqual(view.moves[view.moves.length - 1].show_at_s);
+  });
+
+  it('has no ranking before the top 3 when the orders are v1 (no data.ranking)', () => {
+    const v1 = fanEs.map((o) =>
+      o.type === 'mvp_update' ? ({ ...o, data: { rank: o.data.rank, previous_rank: o.data.previous_rank, mvp_score: o.data.mvp_score } } as OverlayOrder) : o,
+    );
+    const view = mvpAt(v1, 50 * 60);
+    expect(view.moves.length).toBeGreaterThan(0);
     expect(view.ranking).toBeNull();
+  });
+
+  it('takes the ranking of the latest mvp_update in the demo match (v1.1)', () => {
+    const t = 50 * 60;
+    const latest = fanEs.filter((o) => o.type === 'mvp_update' && o.show_at_s <= t).pop()!;
+    const view = mvpAt(fanEs, t);
+    expect(view.ranking).toEqual((latest.data as { ranking: unknown }).ranking);
+    expect(view.rankingAsOfS).toBe(latest.show_at_s);
+    expect(view.rankingIsFinal).toBe(false);
   });
 
   it('uses data.ranking when an order carries it', () => {
@@ -59,14 +76,21 @@ describe('cardAt', () => {
     expect(card.changes).toEqual([]);
   });
 
-  it('applies the last `to` of each change once and drops the overall it was not sent', () => {
+  it('applies the last `to` of each change once and keeps the overall the engine sent', () => {
     const name = playersWithChanges(fanEs, 5520)[0];
     const orders = fanEs.filter((o) => o.card?.player === name);
     const last = orders[orders.length - 1];
     const card = cardAt(roster, fanEs, name, 5520)!;
     expect(card.attributes[last.card!.attribute]).toBe(last.card!.to);
     expect(new Set(card.changes.map((c) => `${c.atS}:${c.attribute}`)).size).toBe(card.changes.length);
-    expect(card.overall).toBeNull();
+    expect(card.overall).toBe(last.card!.overall_to);
+  });
+
+  it('drops the overall when a v1 order changed the card without overall_to', () => {
+    const o = fanEs.find((x) => x.card)!;
+    const { overall_from: _f, overall_to: _t, ...v1card } = o.card!;
+    const v1 = { ...o, card: v1card } as OverlayOrder;
+    expect(cardAt(roster, [v1], o.card!.player, o.show_at_s)!.overall).toBeNull();
   });
 
   it('keeps the overall the engine sends', () => {
