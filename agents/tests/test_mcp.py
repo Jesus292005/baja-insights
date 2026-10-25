@@ -116,6 +116,23 @@ def test_mcp_route_next_to_the_chat():
 
 
 # ---------------------------------------------------------- real client
+def as_json(result):
+    """A tool result from Agent Framework's MCP client (a string or a list of Content) as JSON."""
+    if isinstance(result, str):
+        return json.loads(result)
+    texts = [c.text for c in result if getattr(c, "text", None)]
+    assert texts, result
+    return json.loads(texts[0])
+
+
+def test_reading_a_client_result():
+    pytest.importorskip("agent_framework")
+    from agent_framework import Content
+
+    assert as_json([Content.from_text('{"a": 1}')]) == {"a": 1}
+    assert as_json('{"a": 1}') == {"a": 1}
+
+
 def test_a_real_mcp_client_can_use_it():
     """Agent Framework's MCP client, on the official MCP SDK. Required in CI (REQUIRE_MCP_CLIENT=1)."""
     if os.environ.get("REQUIRE_MCP_CLIENT"):
@@ -132,10 +149,10 @@ def test_a_real_mcp_client_can_use_it():
             async with MCPStreamableHTTPTool(name="baja", url=str(server.make_url("/mcp")), load_prompts=False) as tool:
                 names = {f.name for f in tool.functions}
                 assert {"get_match_state", "get_mvp_ranking", "get_goal_chain", "list_matches"} <= names
-                ranking = await tool.call_tool("get_mvp_ranking", at="35:00", top=3, match_id="m001")
-                assert "J. Torres" in str(ranking)
-                future = await tool.call_tool("get_goal_chain", goal_event_id=GOALS[1], as_of="35:00")
-                assert "goal_not_found" in str(future)
+                ranking = as_json(await tool.call_tool("get_mvp_ranking", at="35:00", top=3, match_id="m001"))
+                assert ranking["at"] == "35:00" and ranking["ranking"][0]["player"] == "J. Torres"
+                future = as_json(await tool.call_tool("get_goal_chain", goal_event_id=GOALS[1], as_of="35:00"))
+                assert future["error"] == "goal_not_found" and future["known_goals"] == [GOALS[0]]
         finally:
             await server.close()
 
