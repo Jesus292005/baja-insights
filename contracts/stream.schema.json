@@ -17,7 +17,7 @@
       "properties": {"home": {"type": "integer", "minimum": 0}, "away": {"type": "integer", "minimum": 0}}
     },
     "subscribe": {
-      "description": "UI to server, on connect and on every reconnect. from_t_s is the last match second the UI already has; the server answers with a 'state' and replays the orders with show_at_s >= from_t_s.",
+      "description": "UI to server, on connect and on every reconnect. from_t_s is the last match second the UI already has; the server answers with a 'state' and replays every order still on screen at from_t_s or after it (show_at_s + duration_s > from_t_s), so a graphic that was showing when the connection dropped comes back.",
       "type": "object", "required": ["kind", "match_id", "from_t_s"], "additionalProperties": false,
       "properties": {
         "kind": {"const": "subscribe"},

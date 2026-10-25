@@ -137,7 +137,7 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
 
 ### Ajustes al contrato que conviene hacer
 
-- [ ] La descripción de `subscribe` en `stream.schema.json` dice «reenvía las órdenes con `show_at_s ≥ from_t_s`», pero el servidor reenvía también las que estaban en pantalla. Habría que actualizar el texto.
+- [x] La descripción de `subscribe` en `stream.schema.json` decía «reenvía las órdenes con `show_at_s ≥ from_t_s`», pero el servidor reenvía también las que estaban en pantalla. **Resuelto en `motor/mocks-v1.1`:** el texto ahora dice `show_at_s + duration_s > from_t_s`.
 - [ ] En `web/src/contracts/overlay.ts`, los campos siguen marcados `@proposed v1.1` aunque el contrato ya está aprobado.
 
 ### Para pintar
@@ -149,7 +149,7 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
 
 ## 5. Lo que falta: entre los tres
 
-- [ ] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y pasar `invisible_assist` del mock (o037 a o040) de texto a objeto.
+- [x] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y pasar `invisible_assist` del mock (o037 a o040) de texto a objeto. **Resuelto en `motor/mocks-v1.1`** (ver `docs/aviso-mocks-v1.1.md`).
   - Las cifras del mock están escritas a mano y no coinciden con lo que da el motor sobre los 50 eventos del mock, así que el ranking de ejemplo hay que escribirlo también a mano.
   - Para que cuadre con el resto del mock, puede salir del ranking de las 35:00 de `chat_tools_sample.json`.
 - [x] Camino para `chain_detail.action`: campos del evento en cada eslabón (propuesta del integrante 2), a cargo del integrante 1.

@@ -47,7 +47,7 @@ UI ◀──clock {t_s, period, phase, speed}── servidor         una vez por
 UI ◀──error {code, detail}── servidor
 ```
 
-- **Reconexión.** Si pasan 3 segundos sin `clock`, la UI muestra «Reconectando» y conserva el último dato con su minuto. Al volver, manda `subscribe` con el último `t_s` que tenía y el servidor responde con `state` y reenvía las órdenes con `show_at_s ≥ from_t_s`.
+- **Reconexión.** Si pasan 3 segundos sin `clock`, la UI muestra «Reconectando» y conserva el último dato con su minuto. Al volver, manda `subscribe` con el último `t_s` que tenía y el servidor responde con `state` y reenvía las órdenes que siguen en pantalla en ese momento o después (`show_at_s + duration_s > from_t_s`).
 - **Marcador.** Sale de los eventos `goal`, `half_time` y `match_end`, que ya traen `scoreline`. La UI no lo deduce de las órdenes de gol.
 - El campo `order` de un mensaje `overlay` se valida aparte con `overlay.schema.json`. Así `stream.schema.json` no depende de resolver referencias externas.
 
@@ -102,7 +102,7 @@ Todo en `agents/baja_agents/overlays.py`, que ya copia del insight lo que no es 
 
 ### Los tres, ahora que está aprobada
 
-- [ ] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y cambiar `invisible_assist` del mock al objeto.
+- [x] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y cambiar `invisible_assist` del mock al objeto. Hecho en la rama `motor/mocks-v1.1` (ver `docs/aviso-mocks-v1.1.md`).
 - [x] Subir `contract_version` a `"1.1"` en `mocks/teams.json` y `mocks/chat_tools_sample.json`.
 - [x] Agregar `data/m001/overlays.json` a los casos de `tests/test_contracts.py`, que hoy no lo valida.
 

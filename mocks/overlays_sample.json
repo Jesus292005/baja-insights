@@ -33,6 +33,11 @@
     "type": "duel_bar",
     "title": "Mena vs Verdugo",
     "text": "Verdugo le gana la primera a Mena y casi llega el gol.",
+    "evidence": [
+      212,
+      213,
+      214
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -53,6 +58,11 @@
     "type": "duel_bar",
     "title": "Duelo de banda",
     "text": "Verdugo +0.60 sobre su rol, Mena -0.40. 1 duelo ganado y 1 ocasión creada por la izquierda de Cardón.",
+    "evidence": [
+      212,
+      213,
+      214
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -73,6 +83,11 @@
     "type": "duel_bar",
     "title": "Mena vs Verdugo",
     "text": "Verdugo wins round one and nearly sets up a goal.",
+    "evidence": [
+      212,
+      213,
+      214
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -93,6 +108,11 @@
     "type": "duel_bar",
     "title": "Flank duel",
     "text": "Verdugo +0.60 above role, Mena -0.40. 1 duel won and 1 chance created down Cardón's left.",
+    "evidence": [
+      212,
+      213,
+      214
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -113,6 +133,14 @@
     "type": "goal_analysis",
     "title": "Gol de Leyva",
     "text": "Todo empezó con Rosas, que encontró a Montaño saltándose a medio equipo.",
+    "evidence": [
+      388,
+      389,
+      390,
+      391,
+      392,
+      393
+    ],
     "data": {
       "chain": [
         "V. Meza",
@@ -125,6 +153,45 @@
         0.3,
         0.25,
         0.25
+      ],
+      "chain_detail": [
+        {
+          "event_id": 388,
+          "player": "V. Meza",
+          "action": "recuperación",
+          "credit": 0.2,
+          "t_s": 1042,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 390,
+          "player": "K. Rosas",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.3,
+          "t_s": 1051,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 391,
+          "player": "L. Montaño",
+          "action": "centro",
+          "credit": 0.25,
+          "t_s": 1058,
+          "type": "pass",
+          "lines_broken": 1,
+          "cross": true
+        },
+        {
+          "event_id": 392,
+          "player": "S. Leyva",
+          "action": "remate",
+          "credit": 0.25,
+          "t_s": 1060,
+          "type": "shot",
+          "lines_broken": 0
+        }
       ]
     }
   },
@@ -142,6 +209,14 @@
     "type": "goal_analysis",
     "title": "Cadena del gol 0-1",
     "text": "Meza recupera, Rosas rompe 2 líneas bajo presión, centro de Montaño y remate de Leyva. xG 0.38 en 18 s.",
+    "evidence": [
+      388,
+      389,
+      390,
+      391,
+      392,
+      393
+    ],
     "data": {
       "chain": [
         "V. Meza",
@@ -154,6 +229,45 @@
         0.3,
         0.25,
         0.25
+      ],
+      "chain_detail": [
+        {
+          "event_id": 388,
+          "player": "V. Meza",
+          "action": "recuperación",
+          "credit": 0.2,
+          "t_s": 1042,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 390,
+          "player": "K. Rosas",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.3,
+          "t_s": 1051,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 391,
+          "player": "L. Montaño",
+          "action": "centro",
+          "credit": 0.25,
+          "t_s": 1058,
+          "type": "pass",
+          "lines_broken": 1,
+          "cross": true
+        },
+        {
+          "event_id": 392,
+          "player": "S. Leyva",
+          "action": "remate",
+          "credit": 0.25,
+          "t_s": 1060,
+          "type": "shot",
+          "lines_broken": 0
+        }
       ]
     }
   },
@@ -171,6 +285,14 @@
     "type": "goal_analysis",
     "title": "Leyva scores",
     "text": "It started with Rosas, who found Montaño by skipping half the team.",
+    "evidence": [
+      388,
+      389,
+      390,
+      391,
+      392,
+      393
+    ],
     "data": {
       "chain": [
         "V. Meza",
@@ -183,6 +305,45 @@
         0.3,
         0.25,
         0.25
+      ],
+      "chain_detail": [
+        {
+          "event_id": 388,
+          "player": "V. Meza",
+          "action": "recuperación",
+          "credit": 0.2,
+          "t_s": 1042,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 390,
+          "player": "K. Rosas",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.3,
+          "t_s": 1051,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 391,
+          "player": "L. Montaño",
+          "action": "centro",
+          "credit": 0.25,
+          "t_s": 1058,
+          "type": "pass",
+          "lines_broken": 1,
+          "cross": true
+        },
+        {
+          "event_id": 392,
+          "player": "S. Leyva",
+          "action": "remate",
+          "credit": 0.25,
+          "t_s": 1060,
+          "type": "shot",
+          "lines_broken": 0
+        }
       ]
     }
   },
@@ -200,6 +361,14 @@
     "type": "goal_analysis",
     "title": "Goal chain 0-1",
     "text": "Meza recovers, Rosas breaks 2 lines under pressure, Montaño crosses, Leyva finishes. xG 0.38 in 18 s.",
+    "evidence": [
+      388,
+      389,
+      390,
+      391,
+      392,
+      393
+    ],
     "data": {
       "chain": [
         "V. Meza",
@@ -212,6 +381,45 @@
         0.3,
         0.25,
         0.25
+      ],
+      "chain_detail": [
+        {
+          "event_id": 388,
+          "player": "V. Meza",
+          "action": "recuperación",
+          "credit": 0.2,
+          "t_s": 1042,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 390,
+          "player": "K. Rosas",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.3,
+          "t_s": 1051,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 391,
+          "player": "L. Montaño",
+          "action": "centro",
+          "credit": 0.25,
+          "t_s": 1058,
+          "type": "pass",
+          "lines_broken": 1,
+          "cross": true
+        },
+        {
+          "event_id": 392,
+          "player": "S. Leyva",
+          "action": "remate",
+          "credit": 0.25,
+          "t_s": 1060,
+          "type": "shot",
+          "lines_broken": 0
+        }
       ]
     }
   },
@@ -249,6 +457,7 @@
     "type": "team_phase",
     "title": "Cardón manda",
     "text": "Real Cardón tiene la pelota y no la suelta.",
+    "evidence": [],
     "data": {
       "label": "control",
       "possession_pct": 64
@@ -268,6 +477,7 @@
     "type": "team_phase",
     "title": "Fase de control",
     "text": "Cardón 64% de posesión entre el 12 y el 22. Pases completados 88% contra 71%.",
+    "evidence": [],
     "data": {
       "label": "control",
       "possession_pct": 64
@@ -287,6 +497,7 @@
     "type": "team_phase",
     "title": "Cardón in charge",
     "text": "Real Cardón have the ball and aren't giving it back.",
+    "evidence": [],
     "data": {
       "label": "control",
       "possession_pct": 64
@@ -306,6 +517,7 @@
     "type": "team_phase",
     "title": "Control phase",
     "text": "Cardón 64% possession from 12 to 22. Pass accuracy 88% vs 71%.",
+    "evidence": [],
     "data": {
       "label": "control",
       "possession_pct": 64
@@ -345,6 +557,11 @@
     "type": "mvp_update",
     "title": "Torres, número 1",
     "text": "Torres sube al primer lugar tras su tercera recuperación.",
+    "evidence": [
+      531,
+      642,
+      739
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -352,12 +569,57 @@
       "attribute": "defensa",
       "from": 58,
       "to": 60,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      }
     },
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "mvp_score": 6.2
+      "mvp_score": 6.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.1
+        },
+        {
+          "rank": 4,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 4.8
+        },
+        {
+          "rank": 5,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 4.3
+        }
+      ]
     }
   },
   {
@@ -374,6 +636,11 @@
     "type": "mvp_update",
     "title": "MVP en vivo · 1.º J. Torres",
     "text": "3 recuperaciones en campo rival en 10 min. Lo esperado para un extremo a esta altura es 0.9. Puntaje 6.2.",
+    "evidence": [
+      531,
+      642,
+      739
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -381,12 +648,57 @@
       "attribute": "defensa",
       "from": 58,
       "to": 60,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      }
     },
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "mvp_score": 6.2
+      "mvp_score": 6.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.1
+        },
+        {
+          "rank": 4,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 4.8
+        },
+        {
+          "rank": 5,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 4.3
+        }
+      ]
     }
   },
   {
@@ -403,6 +715,11 @@
     "type": "mvp_update",
     "title": "Torres takes the top spot",
     "text": "Torres climbs to first after his third ball recovery.",
+    "evidence": [
+      531,
+      642,
+      739
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -410,12 +727,57 @@
       "attribute": "defensa",
       "from": 58,
       "to": 60,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      }
     },
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "mvp_score": 6.2
+      "mvp_score": 6.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.1
+        },
+        {
+          "rank": 4,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 4.8
+        },
+        {
+          "rank": 5,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 4.3
+        }
+      ]
     }
   },
   {
@@ -432,6 +794,11 @@
     "type": "mvp_update",
     "title": "Live MVP · 1st J. Torres",
     "text": "3 recoveries in the opponent's half in 10 min vs 0.9 expected for a winger. Score 6.2.",
+    "evidence": [
+      531,
+      642,
+      739
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -439,12 +806,57 @@
       "attribute": "defensa",
       "from": 58,
       "to": 60,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      }
     },
     "data": {
       "rank": 1,
       "previous_rank": 3,
-      "mvp_score": 6.2
+      "mvp_score": 6.2,
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 6.2
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.9
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.1
+        },
+        {
+          "rank": 4,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 4.8
+        },
+        {
+          "rank": 5,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 4.3
+        }
+      ]
     }
   },
   {
@@ -461,6 +873,10 @@
     "type": "card_upgrade",
     "title": "+2 Visión",
     "text": "Salgado se saca de encima a dos líneas con un solo pase.",
+    "evidence": [
+      751,
+      752
+    ],
     "card": {
       "player": "R. Salgado",
       "team": "Bahía FC",
@@ -468,7 +884,15 @@
       "attribute": "vision",
       "from": 74,
       "to": 76,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      }
     }
   },
   {
@@ -485,6 +909,10 @@
     "type": "card_upgrade",
     "title": "+2 Visión · R. Salgado",
     "text": "Pase de 27.9 m bajo presión que rompió 2 líneas. Dificultad 0.88. Terminó en remate de Ramírez.",
+    "evidence": [
+      751,
+      752
+    ],
     "card": {
       "player": "R. Salgado",
       "team": "Bahía FC",
@@ -492,7 +920,15 @@
       "attribute": "vision",
       "from": 74,
       "to": 76,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      }
     }
   },
   {
@@ -509,6 +945,10 @@
     "type": "card_upgrade",
     "title": "+2 Vision",
     "text": "Salgado slices through two lines with one pass.",
+    "evidence": [
+      751,
+      752
+    ],
     "card": {
       "player": "R. Salgado",
       "team": "Bahía FC",
@@ -516,7 +956,15 @@
       "attribute": "vision",
       "from": 74,
       "to": 76,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      }
     }
   },
   {
@@ -533,6 +981,10 @@
     "type": "card_upgrade",
     "title": "+2 Vision · R. Salgado",
     "text": "27.9 m pass under pressure breaking 2 lines. Difficulty 0.88. Led to a Ramírez shot.",
+    "evidence": [
+      751,
+      752
+    ],
     "card": {
       "player": "R. Salgado",
       "team": "Bahía FC",
@@ -540,7 +992,43 @@
       "attribute": "vision",
       "from": 74,
       "to": 76,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      }
+    }
+  },
+  {
+    "overlay_id": "o054",
+    "match_id": "m001",
+    "source_insight": null,
+    "period": 1,
+    "show_at": "35:00",
+    "show_at_s": 2100,
+    "duration_s": 17,
+    "slot": "side_panel",
+    "mode": "fan",
+    "language": "es",
+    "type": "chat_answer",
+    "title": "¿Por qué Torres va primero?",
+    "text": "Porque está robando balones donde más duele. Lleva 3 recuperaciones en campo rival en diez minutos, cuando un extremo normalmente tendría menos de una a estas alturas. La última terminó en el pase de Salgado y el remate de Ramírez.",
+    "data": {
+      "question": "¿Por qué Torres va primero?",
+      "status": "answered",
+      "tools": [
+        "get_mvp_ranking",
+        "get_player_summary"
+      ],
+      "evidence": [
+        739,
+        642,
+        531
+      ]
     }
   },
   {
@@ -557,6 +1045,12 @@
     "type": "standout_milestone",
     "title": "El que no se ve",
     "text": "Cota está en todas. Recupera, gana duelos y arranca las jugadas de su equipo.",
+    "evidence": [
+      842,
+      870,
+      901,
+      902
+    ],
     "card": {
       "player": "F. Cota",
       "team": "Bahía FC",
@@ -564,7 +1058,12 @@
       "attribute": "defensa",
       "from": 78,
       "to": 80,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "partido defensivo por encima de lo esperado para su rol",
+      "reason_code": "standout_defensive",
+      "reason_params": {}
     },
     "data": {
       "recoveries": 6,
@@ -587,6 +1086,12 @@
     "type": "standout_milestone",
     "title": "Partidazo de F. Cota",
     "text": "6 recuperaciones, 5 de 6 duelos ganados, 3 pases progresivos. +55% sobre lo esperado para un MCD. 2.º en el MVP.",
+    "evidence": [
+      842,
+      870,
+      901,
+      902
+    ],
     "card": {
       "player": "F. Cota",
       "team": "Bahía FC",
@@ -594,7 +1099,12 @@
       "attribute": "defensa",
       "from": 78,
       "to": 80,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "partido defensivo por encima de lo esperado para su rol",
+      "reason_code": "standout_defensive",
+      "reason_params": {}
     },
     "data": {
       "recoveries": 6,
@@ -617,6 +1127,12 @@
     "type": "standout_milestone",
     "title": "The unsung hero",
     "text": "Cota is everywhere. Winning the ball, winning duels and starting attacks.",
+    "evidence": [
+      842,
+      870,
+      901,
+      902
+    ],
     "card": {
       "player": "F. Cota",
       "team": "Bahía FC",
@@ -624,7 +1140,12 @@
       "attribute": "defensa",
       "from": 78,
       "to": 80,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "partido defensivo por encima de lo esperado para su rol",
+      "reason_code": "standout_defensive",
+      "reason_params": {}
     },
     "data": {
       "recoveries": 6,
@@ -647,6 +1168,12 @@
     "type": "standout_milestone",
     "title": "Big game from F. Cota",
     "text": "6 recoveries, 5 of 6 duels won, 3 progressive passes. +55% above a holding midfielder's baseline. 2nd in MVP race.",
+    "evidence": [
+      842,
+      870,
+      901,
+      902
+    ],
     "card": {
       "player": "F. Cota",
       "team": "Bahía FC",
@@ -654,7 +1181,12 @@
       "attribute": "defensa",
       "from": 78,
       "to": 80,
-      "delta": 2
+      "delta": 2,
+      "overall_from": 68,
+      "overall_to": 68,
+      "reason": "partido defensivo por encima de lo esperado para su rol",
+      "reason_code": "standout_defensive",
+      "reason_params": {}
     },
     "data": {
       "recoveries": 6,
@@ -677,6 +1209,11 @@
     "type": "duel_bar",
     "title": "Mena le da la vuelta",
     "text": "Mena ya le ganó dos duelos seguidos a Verdugo.",
+    "evidence": [
+      598,
+      968,
+      969
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -697,6 +1234,11 @@
     "type": "duel_bar",
     "title": "Duelo de banda",
     "text": "Se invierte el duelo. Mena +0.30 sobre su rol y 2 duelos ganados contra 1.",
+    "evidence": [
+      598,
+      968,
+      969
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -717,6 +1259,11 @@
     "type": "duel_bar",
     "title": "Mena turns it around",
     "text": "Mena has now beaten Verdugo twice in a row.",
+    "evidence": [
+      598,
+      968,
+      969
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -737,6 +1284,11 @@
     "type": "duel_bar",
     "title": "Flank duel",
     "text": "Duel flipped. Mena +0.30 above role, 2 duels won vs 1.",
+    "evidence": [
+      598,
+      968,
+      969
+    ],
     "data": {
       "player_a": "D. Mena",
       "player_b": "D. Verdugo",
@@ -757,6 +1309,11 @@
     "type": "match_keys",
     "title": "Claves para el segundo tiempo",
     "text": "Bahía necesita robar arriba y llegar con más gente. Cardón quiere seguir con la pelota y frenar a Mena.",
+    "evidence": [
+      393,
+      739,
+      968
+    ],
     "data": {
       "xg": {
         "home": 0.36,
@@ -782,6 +1339,11 @@
     "type": "match_keys",
     "title": "Claves · medio tiempo 0-1",
     "text": "Bahía 6 recuperaciones en mitad rival, solo 1 tiro a puerta. Cardón 58% de posesión y 88% de pases. xG 0.36 contra 0.59.",
+    "evidence": [
+      393,
+      739,
+      968
+    ],
     "data": {
       "xg": {
         "home": 0.36,
@@ -807,6 +1369,11 @@
     "type": "match_keys",
     "title": "Keys for the second half",
     "text": "Bahía need to win it high and get more bodies in the box. Cardón want to keep the ball and stop Mena.",
+    "evidence": [
+      393,
+      739,
+      968
+    ],
     "data": {
       "xg": {
         "home": 0.36,
@@ -832,6 +1399,11 @@
     "type": "match_keys",
     "title": "Keys · half time 0-1",
     "text": "Bahía 6 recoveries in the opponent's half but only 1 shot on target. Cardón 58% possession, 88% passing. xG 0.36 vs 0.59.",
+    "evidence": [
+      393,
+      739,
+      968
+    ],
     "data": {
       "xg": {
         "home": 0.36,
@@ -877,6 +1449,10 @@
     "type": "team_phase",
     "title": "Bahía aprieta",
     "text": "Bahía adelantó sus líneas y ahora le roba la pelota a Cardón en su propia cancha.",
+    "evidence": [
+      1262,
+      1275
+    ],
     "data": {
       "label": "pressure_shift",
       "def_action_height_m": 58.4
@@ -896,6 +1472,10 @@
     "type": "team_phase",
     "title": "Cambio de presión",
     "text": "5 recuperaciones en mitad rival entre el 48 y el 58, contra 1.2 por tramo en el primer tiempo. Altura media de sus acciones defensivas de 47.9 a 58.4 m.",
+    "evidence": [
+      1262,
+      1275
+    ],
     "data": {
       "label": "pressure_shift",
       "def_action_height_m": 58.4
@@ -915,6 +1495,10 @@
     "type": "team_phase",
     "title": "Bahía turn up the heat",
     "text": "Bahía pushed up and are now winning the ball in Cardón's half.",
+    "evidence": [
+      1262,
+      1275
+    ],
     "data": {
       "label": "pressure_shift",
       "def_action_height_m": 58.4
@@ -934,6 +1518,10 @@
     "type": "team_phase",
     "title": "Pressure shift",
     "text": "5 recoveries in the opponent's half from 48 to 58 vs 1.2 per window in the first half. Average defensive action height 47.9 to 58.4 m.",
+    "evidence": [
+      1262,
+      1275
+    ],
     "data": {
       "label": "pressure_shift",
       "def_action_height_m": 58.4
@@ -953,6 +1541,16 @@
     "type": "goal_analysis",
     "title": "La asistencia invisible",
     "text": "El gol es de Ramírez, pero nació en la carrera de Torres, que se llevó al central y abrió el espacio.",
+    "evidence": [
+      1340,
+      1341,
+      1349,
+      1352,
+      1353,
+      1355,
+      1356,
+      1357
+    ],
     "data": {
       "chain": [
         "F. Cota",
@@ -966,7 +1564,50 @@
         0.35,
         0.22
       ],
-      "invisible_assist": "J. Torres"
+      "chain_detail": [
+        {
+          "event_id": 1340,
+          "player": "F. Cota",
+          "action": "recuperación",
+          "credit": 0.18,
+          "t_s": 3690,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1353,
+          "player": "J. Torres",
+          "action": "desmarque y arrastre de marca",
+          "credit": 0.25,
+          "t_s": 3778,
+          "type": "off_ball_run",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1355,
+          "player": "R. Salgado",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.35,
+          "t_s": 3786,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 1356,
+          "player": "M. Ramírez",
+          "action": "remate",
+          "credit": 0.22,
+          "t_s": 3789,
+          "type": "shot",
+          "lines_broken": 0
+        }
+      ],
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
     }
   },
   {
@@ -983,6 +1624,16 @@
     "type": "goal_analysis",
     "title": "Cadena del gol 1-1",
     "text": "Cota recupera, Torres arrastra a Cárdenas y abre 9.5 m, Salgado rompe 2 líneas y Ramírez define. xG 0.41. Crédito de Torres 25% sin tocar el balón.",
+    "evidence": [
+      1340,
+      1341,
+      1349,
+      1352,
+      1353,
+      1355,
+      1356,
+      1357
+    ],
     "data": {
       "chain": [
         "F. Cota",
@@ -996,7 +1647,50 @@
         0.35,
         0.22
       ],
-      "invisible_assist": "J. Torres"
+      "chain_detail": [
+        {
+          "event_id": 1340,
+          "player": "F. Cota",
+          "action": "recuperación",
+          "credit": 0.18,
+          "t_s": 3690,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1353,
+          "player": "J. Torres",
+          "action": "desmarque y arrastre de marca",
+          "credit": 0.25,
+          "t_s": 3778,
+          "type": "off_ball_run",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1355,
+          "player": "R. Salgado",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.35,
+          "t_s": 3786,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 1356,
+          "player": "M. Ramírez",
+          "action": "remate",
+          "credit": 0.22,
+          "t_s": 3789,
+          "type": "shot",
+          "lines_broken": 0
+        }
+      ],
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
     }
   },
   {
@@ -1013,6 +1707,16 @@
     "type": "goal_analysis",
     "title": "The invisible assist",
     "text": "Ramírez scored it, but Torres made it, dragging the center back away to open the space.",
+    "evidence": [
+      1340,
+      1341,
+      1349,
+      1352,
+      1353,
+      1355,
+      1356,
+      1357
+    ],
     "data": {
       "chain": [
         "F. Cota",
@@ -1026,7 +1730,50 @@
         0.35,
         0.22
       ],
-      "invisible_assist": "J. Torres"
+      "chain_detail": [
+        {
+          "event_id": 1340,
+          "player": "F. Cota",
+          "action": "recuperación",
+          "credit": 0.18,
+          "t_s": 3690,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1353,
+          "player": "J. Torres",
+          "action": "desmarque y arrastre de marca",
+          "credit": 0.25,
+          "t_s": 3778,
+          "type": "off_ball_run",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1355,
+          "player": "R. Salgado",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.35,
+          "t_s": 3786,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 1356,
+          "player": "M. Ramírez",
+          "action": "remate",
+          "credit": 0.22,
+          "t_s": 3789,
+          "type": "shot",
+          "lines_broken": 0
+        }
+      ],
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
     }
   },
   {
@@ -1043,6 +1790,16 @@
     "type": "goal_analysis",
     "title": "Goal chain 1-1",
     "text": "Cota recovers, Torres drags Cárdenas to open 9.5 m, Salgado breaks 2 lines, Ramírez finishes. xG 0.41. Torres 25% credit without touching the ball.",
+    "evidence": [
+      1340,
+      1341,
+      1349,
+      1352,
+      1353,
+      1355,
+      1356,
+      1357
+    ],
     "data": {
       "chain": [
         "F. Cota",
@@ -1056,7 +1813,50 @@
         0.35,
         0.22
       ],
-      "invisible_assist": "J. Torres"
+      "chain_detail": [
+        {
+          "event_id": 1340,
+          "player": "F. Cota",
+          "action": "recuperación",
+          "credit": 0.18,
+          "t_s": 3690,
+          "type": "recovery",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1353,
+          "player": "J. Torres",
+          "action": "desmarque y arrastre de marca",
+          "credit": 0.25,
+          "t_s": 3778,
+          "type": "off_ball_run",
+          "lines_broken": 0
+        },
+        {
+          "event_id": 1355,
+          "player": "R. Salgado",
+          "action": "pase que rompió 2 líneas",
+          "credit": 0.35,
+          "t_s": 3786,
+          "type": "pass",
+          "lines_broken": 2
+        },
+        {
+          "event_id": 1356,
+          "player": "M. Ramírez",
+          "action": "remate",
+          "credit": 0.22,
+          "t_s": 3789,
+          "type": "shot",
+          "lines_broken": 0
+        }
+      ],
+      "invisible_assist": {
+        "player": "J. Torres",
+        "dragged_defender": "G. Cárdenas",
+        "space_opened_m": 9.5,
+        "touched_ball": false
+      }
     }
   },
   {
@@ -1073,6 +1873,10 @@
     "type": "card_upgrade",
     "title": "+3 Sin balón",
     "text": "Torres no tocó la pelota y aun así hizo el gol posible.",
+    "evidence": [
+      1353,
+      1357
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -1080,7 +1884,15 @@
       "attribute": "sin_balon",
       "from": 68,
       "to": 71,
-      "delta": 3
+      "delta": 3,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "arrastró al central y abrió el espacio del gol",
+      "reason_code": "run_opened_goal",
+      "reason_params": {
+        "dragged_defender": "G. Cárdenas",
+        "dragged_position": "DFC"
+      }
     }
   },
   {
@@ -1097,6 +1909,10 @@
     "type": "card_upgrade",
     "title": "+3 Sin balón · J. Torres",
     "text": "Desmarque que arrastró a G. Cárdenas y abrió 9.5 m para el remate.",
+    "evidence": [
+      1353,
+      1357
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -1104,7 +1920,15 @@
       "attribute": "sin_balon",
       "from": 68,
       "to": 71,
-      "delta": 3
+      "delta": 3,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "arrastró al central y abrió el espacio del gol",
+      "reason_code": "run_opened_goal",
+      "reason_params": {
+        "dragged_defender": "G. Cárdenas",
+        "dragged_position": "DFC"
+      }
     }
   },
   {
@@ -1121,6 +1945,10 @@
     "type": "card_upgrade",
     "title": "+3 Off-ball",
     "text": "Torres never touched the ball and still made the goal happen.",
+    "evidence": [
+      1353,
+      1357
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -1128,7 +1956,15 @@
       "attribute": "sin_balon",
       "from": 68,
       "to": 71,
-      "delta": 3
+      "delta": 3,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "arrastró al central y abrió el espacio del gol",
+      "reason_code": "run_opened_goal",
+      "reason_params": {
+        "dragged_defender": "G. Cárdenas",
+        "dragged_position": "DFC"
+      }
     }
   },
   {
@@ -1145,6 +1981,10 @@
     "type": "card_upgrade",
     "title": "+3 Off-ball · J. Torres",
     "text": "Run that dragged G. Cárdenas and opened 9.5 m for the shot.",
+    "evidence": [
+      1353,
+      1357
+    ],
     "card": {
       "player": "J. Torres",
       "team": "Bahía FC",
@@ -1152,7 +1992,15 @@
       "attribute": "sin_balon",
       "from": 68,
       "to": 71,
-      "delta": 3
+      "delta": 3,
+      "overall_from": 70,
+      "overall_to": 70,
+      "reason": "arrastró al central y abrió el espacio del gol",
+      "reason_code": "run_opened_goal",
+      "reason_params": {
+        "dragged_defender": "G. Cárdenas",
+        "dragged_position": "DFC"
+      }
     }
   },
   {
@@ -1189,6 +2037,16 @@
     "type": "top3",
     "title": "¿Quién ganó realmente el partido?",
     "text": "Quedó 1-1, pero Torres y Cota fueron los que cambiaron la historia. Rosas fue lo mejor de Cardón.",
+    "evidence": [
+      390,
+      739,
+      842,
+      901,
+      1340,
+      1353,
+      1575,
+      1660
+    ],
     "data": {
       "cards": [
         {
@@ -1223,6 +2081,16 @@
     "type": "top3",
     "title": "Top 3 del partido",
     "text": "1. Torres 8.9, 5 recuperaciones en campo rival y el desmarque del gol. 2. Cota 8.1, 9 recuperaciones, 2 más de lo esperado para su rol. 3. Rosas 7.0, 4 pases que rompieron líneas.",
+    "evidence": [
+      390,
+      739,
+      842,
+      901,
+      1340,
+      1353,
+      1575,
+      1660
+    ],
     "data": {
       "cards": [
         {
@@ -1257,6 +2125,16 @@
     "type": "top3",
     "title": "Who really won the match?",
     "text": "It ended 1-1, but Torres and Cota changed the story. Rosas was Cardón's best.",
+    "evidence": [
+      390,
+      739,
+      842,
+      901,
+      1340,
+      1353,
+      1575,
+      1660
+    ],
     "data": {
       "cards": [
         {
@@ -1291,6 +2169,16 @@
     "type": "top3",
     "title": "Match top 3",
     "text": "1. Torres 8.9, 5 recoveries in the opponent's half and the run behind the goal. 2. Cota 8.1, 9 recoveries, 2 above his role baseline. 3. Rosas 7.0, 4 line-breaking passes.",
+    "evidence": [
+      390,
+      739,
+      842,
+      901,
+      1340,
+      1353,
+      1575,
+      1660
+    ],
     "data": {
       "cards": [
         {

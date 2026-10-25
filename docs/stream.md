@@ -30,7 +30,7 @@ Todos llevan `kind`. Su forma vive solo en `stream/messages.py`.
 - **Al suscribirse** el servidor manda, en este orden: `state` del minuto actual, las órdenes que le faltan a la UI y un `clock`.
 - **Después** manda cada orden justo cuando el reloj llega a su `show_at_s`, aunque `speed` sea alta. Manda un `state` en cada `goal`, `half_time` y `match_end`, y un `clock` por cada segundo real, que sirve de latido.
 - **Marcador.** Sale solo de los eventos. Nunca se deduce de las órdenes.
-- **Reconexión.** Se reenvían las órdenes ya vencidas que la UI no terminó de ver: `show_at_s + duration_s > from_t_s`. El esquema describe `show_at_s ≥ from_t_s`; esto manda lo mismo más los gráficos que estaban en pantalla cuando se cortó la conexión, como un `goal_analysis` de 12 s o el `top3` de 20 s, que de otro modo se perderían. Si `from_t_s` falta o es `null`, solo llega lo que está en pantalla.
+- **Reconexión.** Se reenvían las órdenes ya vencidas que la UI no terminó de ver: `show_at_s + duration_s > from_t_s`, tal como lo describe `stream.schema.json`. Así vuelven también los gráficos que estaban en pantalla cuando se cortó la conexión, como un `goal_analysis` de 12 s o el `top3` de 20 s, que de otro modo se perderían. Si `from_t_s` falta o es `null`, solo llega lo que está en pantalla.
 - Se mandan las cuatro variantes de cada orden. La UI filtra por `mode` y `language`.
 
 Para revisar una sesión grabada (un mensaje por línea):
