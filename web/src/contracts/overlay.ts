@@ -74,13 +74,17 @@ export interface GoalAnalysisData {
 export const invisibleAssistPlayer = (v: GoalAnalysisData['invisible_assist']) =>
   v == null ? null : typeof v === 'string' ? v : v.player;
 
+/**
+ * Las métricas llegan como número (mock) o por equipo (salida real de los agentes).
+ * La orden no dice a qué equipo se refiere un número suelto, así que la UI no lo atribuye.
+ */
 export interface TeamPhaseData {
   label: 'control' | 'pressure_shift';
-  possession_pct?: number;
-  pass_accuracy_pct?: number;
-  passes_per_min?: number;
+  possession_pct?: number | HomeAway;
+  pass_accuracy_pct?: number | HomeAway;
+  passes_per_min?: number | HomeAway;
   /** Altura media de las acciones defensivas, en metros desde su portería. */
-  def_action_height_m?: number;
+  def_action_height_m?: number | HomeAway;
 }
 
 export interface StandoutMilestoneData {
