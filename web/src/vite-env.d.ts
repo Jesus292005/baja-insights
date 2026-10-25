@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** WebSocket of the stream service (contracts/stream.schema.json). Unset: replay the demo match. */
+  /** WebSocket of the stream service (contracts/stream.schema.json). Unset: the deployed one. Empty: no Live option. */
   readonly VITE_STREAM_URL?: string;
-  /** POST endpoint of the Ask-the-match agent (contracts/chat.schema.json). Unset: chat shows it is not connected. */
+  /** POST /api/ask of the chat service (contracts/chat.schema.json). Unset: the deployed one. Empty: chat shows it is not connected. */
   readonly VITE_ASK_URL?: string;
 }
 

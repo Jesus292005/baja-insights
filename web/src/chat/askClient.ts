@@ -5,11 +5,12 @@ import type { ChatAnswerOrder, ChatRequest, ChatResponse, Language, Mode } from 
  *   POST /api/ask           question → answer, contracts/chat.schema.json
  *   POST /api/chat-overlay  answer → chat_answer graphics order, no model call
  *
- * The base URL comes from VITE_ASK_URL (the /api/ask endpoint). Without it the chat says it is
- * not connected instead of making anything up.
+ * The /api/ask URL comes from ../app/endpoints (deployed service, or VITE_ASK_URL). Without it
+ * the chat says it is not connected instead of making anything up.
  */
+import { askUrl } from '../app/endpoints';
 
-export const askUrl: string | null = import.meta.env.VITE_ASK_URL || null;
+export { askUrl };
 
 /** Why a call gave no usable answer. Each one has its own message in the UI. */
 export type ChatFailure = 'not_configured' | 'rate_limited' | 'timeout' | 'unavailable' | 'failed';

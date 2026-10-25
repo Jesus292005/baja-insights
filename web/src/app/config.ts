@@ -1,4 +1,5 @@
 import type { Language, Mode } from '../contracts/overlay';
+import { streamUrl as defaultStreamUrl } from './endpoints';
 import { parseClockParam } from './parse';
 
 /**
@@ -8,7 +9,7 @@ import { parseClockParam } from './parse';
  *   /broadcast              1920×1080 overlay on a transparent page (OBS browser source, vMix…)
  *
  *   ?mode=fan|analyst  ?lang=es|en
- *   ?source=replay|live  ?ws=wss://…   (default: replay; live uses ?ws or VITE_STREAM_URL)
+ *   ?source=replay|live  ?ws=wss://…   (default: replay; live uses ?ws or the deployed stream)
  *   ?speed=60  ?skip=0|1  ?autoplay=0|1  ?t=10:50   (replay only)
  *   ?bug=1                            (broadcast only: draw the score bug)
  *
@@ -33,7 +34,7 @@ export interface AppConfig {
 
 export function readConfig(loc: Pick<Location, 'pathname' | 'search'> = window.location): AppConfig {
   const q = new URLSearchParams(loc.search);
-  const streamUrl = q.get('ws') || (import.meta.env.VITE_STREAM_URL as string | undefined) || null;
+  const streamUrl = q.get('ws') || defaultStreamUrl;
   const wantsLive = q.get('source') === 'live' || q.get('source') === 'ws';
   const mode = q.get('mode');
   const lang = q.get('lang');

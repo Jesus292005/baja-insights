@@ -41,9 +41,9 @@ Ejemplo de fuente para OBS: `/broadcast?mode=fan&lang=es&bug=1`. En `/broadcast`
 
 ## Variables de entorno
 
-`web/.env` trae las URLs públicas de los servicios desplegados (`docs/despliegue.md`). Para usar un stream o un chat local, ponlas en `web/.env.local`, que no se sube.
+Las URLs públicas de los servicios desplegados (`docs/despliegue.md`) están en `src/app/endpoints.ts`, porque el repo ignora todos los `.env`. Para usar un stream o un chat local, sobrescríbelas en `web/.env.local`.
 
-| Variable | Qué es | Si falta |
+| Variable | Qué es | Si está vacía |
 | --- | --- | --- |
 | `VITE_STREAM_URL` | WebSocket del stream (`/ws`) | No aparece la opción En vivo |
 | `VITE_ASK_URL` | `POST /api/ask` del chat; `/api/chat-overlay` se toma del mismo servidor | El chat dice que todavía no está conectado al agente |
