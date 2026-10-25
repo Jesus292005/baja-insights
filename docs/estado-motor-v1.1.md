@@ -110,8 +110,9 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
   - Las respuestas cumplen `chat.schema.json`.
   - El código recorta cada momento al de la pregunta (nada del futuro), rechaza cifras que no salgan de las funciones y revisa el marcador local-visitante.
   - Detalles en `agents/README.md` («Ask the Match») y `docs/despliegue.md`.
-- [ ] Orden `chat_answer` con `data` cuando el productor la ponga en pantalla.
-  - Opcional: solo hace falta si el productor quiere mostrar una respuesta del chat como gráfico. La respuesta de `/api/ask` ya trae `question`, `status`, `tools` y `evidence`, que son los campos de `chat_answer_data`.
+- [x] Orden `chat_answer` con `data` cuando el productor la ponga en pantalla.
+  - **Resuelto:** `POST /api/chat-overlay` en el servicio del chat. Recibe una respuesta de `/api/ask` con el modo y el idioma, y devuelve una orden `chat_answer` que cumple `overlay.schema.json`, sin llamar al modelo. Detalles en `agents/README.md`.
+  - La interfaz dibuja la orden ella misma, porque el stream reproduce archivos y no acepta órdenes nuevas en vivo.
 
 ### Detectado en la revisión
 

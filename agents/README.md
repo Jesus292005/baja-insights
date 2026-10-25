@@ -157,6 +157,21 @@ venv/Scripts/python.exe -m baja_agents ask "¿Por qué Torres va primero?" --at 
 
 The image is `chat.Dockerfile`, built by `.github/workflows/chat-image.yml` into `ghcr.io/jesus292005/baja-chat`, and deployed as `baja-chat` (see `docs/despliegue.md`). Offline tests are in `tests/test_ask.py`: a fake agent calls the real engine functions.
 
+### Putting an answer on screen (`chat_answer`)
+
+When the producer wants a fan's question and its answer on screen, the UI sends the `/api/ask` response to `POST /api/chat-overlay` and gets back a `chat_answer` graphics order that matches `overlay.schema.json`:
+
+```json
+{"answer": {"match_id": "m001", "question": "...", "at_s": 1800, "status": "answered", "answer": "...", "tools": ["get_match_state"]},
+ "mode": "fan", "language": "es", "show_at_s": 1802, "slot": "side_panel"}
+```
+
+- `show_at_s` and `slot` are optional. They default to the answer's moment and `side_panel`.
+- The order is built in code (`overlays.chat_answer_order`), with no model call. The title is the question, the text is the answer, and `data` (`question`, `status`, `tools`, `evidence`) is copied from it. `source_insight` is `null`, and the duration depends on the length (8 to 20 s).
+- The `overlay_id` is stable (`chat-<hash>`), so the same answer is never shown twice.
+- An answer with `status: "error"` has no text and gets 422. An invalid body gets 400.
+- The stream replays files and does not take new orders live, so the UI draws this order itself.
+
 ## MCP server
 
 The same six engine functions are also an **MCP server** (Model Context Protocol), at `POST /mcp` on the chat service (`baja_agents/mcp_server.py`). Any MCP client can query the match with them: Agent Framework's `MCPStreamableHTTPTool`, a Foundry agent, Claude, VS Code, or the MCP Inspector.
