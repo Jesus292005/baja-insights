@@ -19,6 +19,11 @@ describe('readConfig', () => {
     });
     expect(readConfig(loc('?mode=x&lang=fr'))).toMatchObject({ view: 'web', mode: null, lang: null });
   });
+
+  it('reads the cinema view at /cine and /cinema', () => {
+    expect(readConfig(loc('?mode=fan', '/cine')).view).toBe('cinema');
+    expect(readConfig(loc('', '/cinema/')).view).toBe('cinema');
+  });
 });
 
 describe('hrefWithSource', () => {

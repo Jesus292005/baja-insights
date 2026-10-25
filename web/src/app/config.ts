@@ -7,6 +7,7 @@ import { parseClockParam } from './parse';
  *
  *   /                       web app
  *   /broadcast              1920×1080 overlay on a transparent page (OBS browser source, vMix…)
+ *   /cine                   1920×1080 stage with pitch and score bug, keyboard only, for recording
  *
  *   ?mode=fan|analyst  ?lang=es|en
  *   ?source=replay|live  ?ws=wss://…   (default: replay; live uses ?ws or the deployed stream)
@@ -19,7 +20,7 @@ import { parseClockParam } from './parse';
 export type SourceKind = 'replay' | 'live';
 
 export interface AppConfig {
-  view: 'web' | 'broadcast';
+  view: 'web' | 'broadcast' | 'cinema';
   mode: Mode | null;
   lang: Language | null;
   source: SourceKind;
@@ -40,7 +41,7 @@ export function readConfig(loc: Pick<Location, 'pathname' | 'search'> = window.l
   const lang = q.get('lang');
   const speed = Number(q.get('speed'));
   return {
-    view: /\/broadcast\/?$/.test(loc.pathname) ? 'broadcast' : 'web',
+    view: /\/broadcast\/?$/.test(loc.pathname) ? 'broadcast' : /\/(cine|cinema)\/?$/.test(loc.pathname) ? 'cinema' : 'web',
     mode: mode === 'fan' || mode === 'analyst' ? mode : null,
     lang: lang === 'es' || lang === 'en' ? lang : null,
     source: wantsLive && streamUrl ? 'live' : 'replay',

@@ -64,6 +64,7 @@ export function WebApp({ config }: { config: AppConfig }) {
   const { snap, orders, t, showing, loading, stale, replay, replayState } = rt;
   const s = strings[lang];
   const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
+  const cinemaHref = `/cine?mode=${mode}&lang=${lang}${config.source === 'replay' ? `&t=${Math.floor(t)}&autoplay=0` : '&source=live'}`;
   const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
 
   return (
@@ -88,6 +89,7 @@ export function WebApp({ config }: { config: AppConfig }) {
           <ModeToggle value={mode} onChange={setMode} />
           <LanguageToggle value={lang} onChange={setLang} />
           <ThemeToggle value={theme} onChange={setTheme} />
+          <a className="btn btn-ghost" href={cinemaHref} target="_blank" rel="noreferrer">{s.cinema.link}</a>
           <a className="btn btn-ghost" href={broadcastHref} target="_blank" rel="noreferrer">{s.app.broadcastLink}</a>
         </div>
       </header>

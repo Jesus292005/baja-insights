@@ -8,6 +8,7 @@
     "Referrer-Policy": "strict-origin-when-cross-origin"
   },
   "routes": [
-    { "route": "/broadcast", "rewrite": "/index.html", "headers": { "Cache-Control": "no-store" } }
+    { "route": "/broadcast", "rewrite": "/index.html", "headers": { "Cache-Control": "no-store" } },
+    { "route": "/cine", "rewrite": "/index.html" }
   ]
 }
