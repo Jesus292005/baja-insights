@@ -71,19 +71,33 @@ const teamOf = (player: string | undefined) => roster.player(player)?.team;
 
 function MvpUpdate({ order, elapsed }: GraphicProps<MvpUpdateOrder>) {
   const { s, lang, mode } = usePrefs();
-  const { rank, previous_rank, mvp_score } = order.data;
+  const { rank, previous_rank, mvp_score, ranking } = order.data;
   const card = order.card;
+  // The order has no player name; its new rank points to a row of the ranking it carries (v1.1).
+  const mover = ranking?.find((r) => r.rank === rank)?.player ?? card?.player;
   return (
-    <Panel order={order} elapsed={elapsed} team={teamOf(card?.player)}>
+    <Panel order={order} elapsed={elapsed} team={teamOf(mover)}>
       <div className="g-rank">
         <span className="g-rank-big">{ordinal(rank, lang)}</span>
+        {mode === 'fan' && mover && <span className="g-rank-who">{surname(mover)}</span>}
         {previous_rank !== undefined && previous_rank > rank && (
           <span className="g-up">▲ {t(s.mvp.rankUp, { from: ordinal(previous_rank, lang), to: ordinal(rank, lang) })}</span>
         )}
         {mode === 'analyst' && (
-          <span className="g-score">{s.mvp.score} <b>{asSent(mvp_score, lang)}</b></span>
+          <span className="g-score">{s.mvp.score} <b>{asSent(mvp_score, lang, 1)}</b></span>
         )}
       </div>
+      {mode === 'analyst' && ranking?.length ? (
+        <ol className="g-ranking" aria-label={s.mvp.title}>
+          {ranking.slice(0, 5).map((r) => (
+            <li key={r.player} className={r.player === mover ? 'is-mover' : ''}>
+              <span className="g-ranking-pos">{r.rank}</span>
+              <span className="g-ranking-who">{r.player} <TeamChip team={teamOf(r.player)} /></span>
+              <span className="g-ranking-score">{asSent(r.mvp_score, lang, 1)}</span>
+            </li>
+          ))}
+        </ol>
+      ) : null}
       {card && (
         <p className="g-card-change">
           <abbr title={attributeLabel[lang][card.attribute]}>{attributeShort[lang][card.attribute]}</abbr> {card.from} → <b>{card.to}</b>{' '}
@@ -141,7 +155,7 @@ function Standout({ order, elapsed, orders }: GraphicProps<StandoutMilestoneOrde
             overallFrom={card.overallFrom}
             changed={new Set(card.changes.map((c) => c.attribute))}
             highlight={order.card?.attribute}
-            size="sm"
+            size={mode === 'fan' ? 'md' : 'sm'}
           />
         )}
         {mode === 'analyst' && rows.length > 0 && (
