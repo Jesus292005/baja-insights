@@ -71,7 +71,9 @@ def test_tool_call_returns_the_engine_result_as_text_and_structured():
 def test_as_of_never_returns_the_future():
     assert tool_result("get_mvp_ranking", at="80:00", as_of="35:00")["structuredContent"]["at"] == "35:00"
     future = tool_result("get_goal_chain", goal_event_id=GOALS[1], as_of="35:00")
-    assert future["isError"] and future["structuredContent"]["known_goals"] == [GOALS[0]]
+    assert future["structuredContent"]["error"] == "goal_not_found"
+    assert future["structuredContent"]["known_goals"] == [GOALS[0]]
+    assert future["isError"] is False  # an answer ("not scored yet"), not a failure
     # without as_of the whole match is there, for post-match analysis
     assert "chain" in tool_result("get_goal_chain", goal_event_id=GOALS[1])["structuredContent"]
 
@@ -80,7 +82,9 @@ def test_list_matches_and_unknown_match():
     matches = tool_result("list_matches")["structuredContent"]["matches"]
     assert {m["match_id"] for m in matches} == set(MATCHES)
     assert tool_result("get_match_state", at="10:00", match_id="zzz")["structuredContent"]["error"] == "match_not_found"
-    assert tool_result("get_match_state", at="10:00", as_of="99:99")["structuredContent"]["error"] == "bad_arguments"
+    bad = tool_result("get_match_state", at="10:00", as_of="99:99")
+    assert bad["structuredContent"]["error"] == "bad_arguments" and bad["isError"] is True
+    assert tool_result("get_match_state", at="10:00", match_id="zzz")["isError"] is False
 
 
 def test_protocol_errors():
@@ -153,6 +157,9 @@ def test_a_real_mcp_client_can_use_it():
                 assert ranking["at"] == "35:00" and ranking["ranking"][0]["player"] == "J. Torres"
                 future = as_json(await tool.call_tool("get_goal_chain", goal_event_id=GOALS[1], as_of="35:00"))
                 assert future["error"] == "goal_not_found" and future["known_goals"] == [GOALS[0]]
+                # a malformed call is the only tool error, which Agent Framework raises
+                with pytest.raises(Exception, match="bad_arguments"):
+                    await tool.call_tool("get_match_state", at="10:00", as_of="99:99")
         finally:
             await server.close()
 

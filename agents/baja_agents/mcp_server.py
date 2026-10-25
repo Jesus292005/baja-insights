@@ -35,6 +35,7 @@ INSTRUCTIONS = (
 )
 
 PARSE_ERROR, INVALID_REQUEST, METHOD_NOT_FOUND, INVALID_PARAMS = -32700, -32600, -32601, -32602
+CALLER_ERRORS = ("bad_arguments", "unknown_tool")  # the engine's errors that mean "fix your call"
 EMPTY_LISTS = {"prompts/list": "prompts", "resources/list": "resources", "resources/templates/list": "resourceTemplates"}
 
 
@@ -85,6 +86,12 @@ class MatchTools:
         return ToolSession(query, at_s).call(name, args)
 
 
+def is_tool_error(result: dict) -> bool:
+    """Only a malformed call is a tool error. "Not found" or "not tracked" are answers, as in the chat:
+    they reach the client as data, so an agent can say it, instead of as a failure (``isError``)."""
+    return result.get("error") in CALLER_ERRORS
+
+
 def _error(request_id, code: int, message: str) -> dict:
     return {"jsonrpc": "2.0", "id": request_id, "error": {"code": code, "message": message}}
 
@@ -120,7 +127,7 @@ def handle(tools: MatchTools, message) -> dict | None:
             return _error(request_id, INVALID_PARAMS, "arguments must be an object")
         result = tools.call(name, arguments)
         return _result(request_id, {"content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False)}],
-                                    "structuredContent": result, "isError": "error" in result})
+                                    "structuredContent": result, "isError": is_tool_error(result)})
     return _error(request_id, METHOD_NOT_FOUND, f"method not found: {method}")
 
 

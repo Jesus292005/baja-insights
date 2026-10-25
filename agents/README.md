@@ -163,6 +163,7 @@ The same six engine functions are also an **MCP server** (Model Context Protocol
 
 - **Tools:** the six functions with the descriptions of `mocks/chat_tools_sample.json`, plus `list_matches`.
 - **Arguments:** every tool takes `match_id` (default `m001`) and an optional `as_of` (`MM:SS`). With `as_of`, the server answers as if the match were live at that moment: every moment is clipped to it and only goals already scored can be looked up, with the same code as Ask the Match. Without it, the whole match is available.
+- **Errors:** "not found" and "not tracked" (`goal_not_found`, `player_not_found`, `match_not_found`, `not_tracked`) are answers, so they come back as data with `isError: false`, as in the chat. Only a malformed call (`bad_arguments`) is a tool error (`isError: true`), which clients such as Agent Framework raise.
 - **Transport:** Streamable HTTP, stateless, answering every request with `application/json`. It supports `initialize`, `tools/list`, `tools/call` and `ping`, and returns empty lists for prompts and resources.
 - **No SDK on the server.** On Windows, Application Control can block the `pywin32` DLL that the MCP SDK imports. The client test (`tests/test_mcp.py`) uses Agent Framework's MCP client on the official SDK. It skips locally when the SDK can't load, and CI requires it (`REQUIRE_MCP_CLIENT=1`, with `agents/requirements-dev.txt`).
 
