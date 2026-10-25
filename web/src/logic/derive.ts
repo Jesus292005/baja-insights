@@ -133,6 +133,9 @@ export function playersWithChanges(orders: readonly OverlayOrder[], t: number): 
 
 /* ---------- Moments ---------- */
 
-/** Notices already shown (frames excluded), newest first. */
+/** Duel-bar animation frames: no text, only move the bar. */
+export const isFrame = (o: OverlayOrder) => o.type === 'duel_bar' && o.source_insight === null;
+
+/** Orders already shown, newest first. Duel frames are left out; chat answers (no insight) stay in. */
 export const momentsAt = (orders: readonly OverlayOrder[], t: number, limit = 40) =>
-  orders.filter((o) => o.source_insight !== null && due(o, t)).reverse().slice(0, limit);
+  orders.filter((o) => !isFrame(o) && due(o, t)).reverse().slice(0, limit);

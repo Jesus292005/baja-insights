@@ -14,7 +14,7 @@ npm test           # tests de la lógica (planificador, selectores, fuentes)
 npm run build      # typecheck + build en web/dist
 ```
 
-Sin servidor, la app repite el partido de demo `data/m001` (órdenes de los agentes y marcador desde los eventos).
+Por defecto la app repite el partido de demo `data/m001` (órdenes de los agentes y marcador desde los eventos). El selector **Repetición / En vivo** de la barra superior cambia al stream desplegado en Azure.
 
 ## Dos vistas, un build
 
@@ -29,8 +29,8 @@ Parámetros de URL:
 | --- | --- | --- |
 | `mode` | `fan`, `analyst` | En la app web gana sobre la preferencia guardada |
 | `lang` | `es`, `en` | Igual que `mode` |
-| `source` | `replay`, `ws` | Por defecto `replay`, o `ws` si existe `VITE_STREAM_URL` |
-| `ws` | `wss://…` | URL del stream en vivo |
+| `source` | `replay`, `live` | Por defecto `replay`. `live` necesita `VITE_STREAM_URL` o `?ws=` |
+| `ws` | `wss://…` | URL del stream, en lugar de `VITE_STREAM_URL` |
 | `t` | `63:09`, `63` o segundos | Momento inicial de la repetición |
 | `speed` | `1` a `120` | Velocidad de la repetición, 60 por defecto |
 | `skip` | `0`, `1` | `1`: acelera solo cuando no hay gráfico en pantalla |
@@ -41,10 +41,16 @@ Ejemplo de fuente para OBS: `/broadcast?mode=fan&lang=es&bug=1`. En `/broadcast`
 
 ## Variables de entorno
 
-| Variable | Qué hace si falta |
-| --- | --- |
-| `VITE_STREAM_URL` | Se usa la repetición |
-| `VITE_ASK_URL` | El chat dice que todavía no está conectado al agente |
+`web/.env` trae las URLs públicas de los servicios desplegados (`docs/despliegue.md`). Para usar un stream o un chat local, ponlas en `web/.env.local`, que no se sube.
+
+| Variable | Qué es | Si falta |
+| --- | --- | --- |
+| `VITE_STREAM_URL` | WebSocket del stream (`/ws`) | No aparece la opción En vivo |
+| `VITE_ASK_URL` | `POST /api/ask` del chat; `/api/chat-overlay` se toma del mismo servidor | El chat dice que todavía no está conectado al agente |
+
+**En vivo.** El stream tiene un solo reloj, compartido por todos, que arranca con el primer espectador y avanza a tiempo real. Antes de una demo hay que reiniciarlo (ver `docs/despliegue.md`). Cuando el partido termina llega `stream_ended` y la app muestra «Partido terminado», no una desconexión.
+
+**Chat en pantalla.** Cada respuesta tiene el botón «Mostrar en pantalla», que la convierte en una orden `chat_answer` con `/api/chat-overlay` y la dibuja en el panel lateral. Solo aparece en ese navegador, porque el stream reproduce archivos y no acepta órdenes nuevas.
 
 ## Cómo está hecha
 
@@ -72,6 +78,5 @@ src/
 
 ## Pendiente del lado de los datos
 
-- `mvp_update` no trae el nombre del jugador. Hasta que los agentes copien `data.ranking` (v1.1), la carrera muestra cada movimiento con el título del agente y no un ranking.
 - `team_phase` no dice a qué equipo pertenece un número suelto, así que la UI lo muestra sin atribuirlo.
-- Los demás campos de v1.1 (`evidence`, `overall_to`, `chain_detail`) se muestran en cuanto lleguen; mientras tanto la carta dice «Media sin dato».
+- Las órdenes de `m001` ya traen los campos v1.1. Con órdenes v1 la carrera muestra los movimientos sin ranking y la carta dice «Media sin dato».

@@ -176,7 +176,8 @@ export type StreamServerMessage =
 
 export const HEARTBEAT_TIMEOUT_MS = 3000;
 
-export type ConnectionStatus = 'connecting' | 'live' | 'reconnecting' | 'offline' | 'replay';
+/** `ended`: the server sent `stream_ended`. The match is over, the heartbeat goes on: not a failure. */
+export type ConnectionStatus = 'connecting' | 'live' | 'reconnecting' | 'offline' | 'ended' | 'replay';
 
 /* ---------- Pregúntale al partido: POST /api/ask (contracts/chat.schema.json, v1.1) ---------- */
 

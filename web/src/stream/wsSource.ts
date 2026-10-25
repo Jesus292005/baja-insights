@@ -151,7 +151,7 @@ export class WebSocketSource implements MatchSource {
         this.attempt = 0;
         if (!this.live) {
           this.live = true;
-          sink.connection({ status: 'live' });
+          sink.connection({ status: this.ended ? 'ended' : 'live' });
         }
         sink.clock({ t: msg.t_s, period: msg.period, phase: msg.phase });
         break;
@@ -164,12 +164,20 @@ export class WebSocketSource implements MatchSource {
         break;
       case 'error':
         if (msg.code === 'stream_ended') {
+          // The match is over and the heartbeat goes on: keep the socket and the final state.
           this.ended = true;
+          sink.connection({ status: 'ended', code: msg.code });
+        } else if (msg.code === 'match_not_found') {
+          // Retrying will not help: stay offline until retry().
+          this.ended = true;
+          this.live = false;
+          this.dropSocket();
           sink.connection({ status: 'offline', code: msg.code });
         } else {
-          sink.connection({ status: 'offline', code: msg.code });
-          this.ended = true;
+          // server_error: "the stream failed, subscribe again".
+          this.live = false;
           this.dropSocket();
+          this.scheduleReconnect();
         }
         break;
     }
@@ -180,6 +188,8 @@ export class WebSocketSource implements MatchSource {
     const sink = this.sink;
     if (!sink || !this.live) return;
     const sinceBeat = this.now() - this.lastBeatAt;
+    // After stream_ended the clock stays at the end; a silent socket is no reason to alarm anyone.
+    if (this.ended) return;
     if (sinceBeat > HEARTBEAT_TIMEOUT_MS) {
       this.live = false;
       this.dropSocket();

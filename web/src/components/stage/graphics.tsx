@@ -346,7 +346,8 @@ function ChatAnswer({ order, elapsed }: GraphicProps<ChatAnswerOrder>) {
   const { s } = usePrefs();
   return (
     <Panel order={order} elapsed={elapsed}>
-      {order.data && <p className="g-question">“{order.data.question}”</p>}
+      {/* The agents use the question as the title; quote it only when the title says something else. */}
+      {order.data && order.data.question !== order.title && <p className="g-question">“{order.data.question}”</p>}
       {order.data?.tools.length ? (
         <div className="evidence">
           <span className="evidence-label">{s.chat.answeredWith}</span>

@@ -108,6 +108,11 @@ describe('momentsAt', () => {
   it('excludes duel frames and future orders', () => {
     const t = 30 * 60;
     const m = momentsAt(fanEs, t);
-    expect(m.every((o) => o.source_insight !== null && o.show_at_s <= t)).toBe(true);
+    expect(m.every((o) => !(o.type === 'duel_bar' && o.source_insight === null) && o.show_at_s <= t)).toBe(true);
+  });
+
+  it('keeps chat answers, which have no source insight', () => {
+    const chat = { ...fanEs[0], overlay_id: 'chat-abc', source_insight: null, type: 'chat_answer', show_at_s: 100 } as OverlayOrder;
+    expect(momentsAt([chat], 200).map((o) => o.overlay_id)).toEqual(['chat-abc']);
   });
 });
