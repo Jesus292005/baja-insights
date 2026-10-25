@@ -54,6 +54,11 @@ export interface MvpView {
   rankingIsFinal: boolean;
   /** Rank changes, newest first. */
   moves: MvpUpdateOrder[];
+  /**
+   * Who made the latest move, read from the ranking that came with it: the order has no player
+   * name, but its new rank points to a row of that ranking. null without a v1.1 ranking.
+   */
+  mover: { player: string; from: number | null; to: number } | null;
 }
 
 export function mvpAt(orders: readonly OverlayOrder[], t: number, maxMoves = 5): MvpView {
@@ -76,7 +81,13 @@ export function mvpAt(orders: readonly OverlayOrder[], t: number, maxMoves = 5):
       rankingIsFinal = true;
     }
   }
-  return { ranking, rankingAsOfS, rankingIsFinal, moves: moves.reverse().slice(0, maxMoves) };
+  const latest = moves[moves.length - 1];
+  let mover: MvpView['mover'] = null;
+  if (latest?.data.ranking?.length && !rankingIsFinal && rankingAsOfS === latest.show_at_s) {
+    const row = latest.data.ranking.find((r) => r.rank === latest.data.rank);
+    if (row) mover = { player: row.player, from: latest.data.previous_rank ?? null, to: latest.data.rank };
+  }
+  return { ranking, rankingAsOfS, rankingIsFinal, moves: moves.reverse().slice(0, maxMoves), mover };
 }
 
 /* ---------- Cards ---------- */

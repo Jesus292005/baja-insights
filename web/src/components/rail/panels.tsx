@@ -42,6 +42,7 @@ function Skeleton({ rows = 3 }: { rows?: number }) {
 export function MvpRacePanel({ orders, t: now, stale, loading }: PanelProps) {
   const { s, lang, mode } = usePrefs();
   const view = useMemo(() => mvpAt(orders, now), [orders, now]);
+  const { mover } = view;
   const size = mode === 'analyst' ? 5 : 3;
   const title = view.rankingIsFinal ? s.mvp.finalTop : s.mvp.title;
   return (
@@ -53,15 +54,22 @@ export function MvpRacePanel({ orders, t: now, stale, loading }: PanelProps) {
           {view.ranking.slice(0, size).map((r) => {
             const p = roster.player(r.player);
             return (
-              <li key={r.player} className={r.rank === 1 ? 'is-lead' : ''}>
+              <li key={r.player} className={`${r.rank === 1 ? 'is-lead' : ''}${mover?.player === r.player ? ' is-mover' : ''}`}>
                 <span className="race-pos">{r.rank}</span>
                 <span className="race-who">
                   <b>{r.player}</b>
                   <span>
                     <TeamChip team={p?.team} /> {p ? positionLabel[lang][p.position].short : ''}
+                    {mover?.player === r.player && (
+                      <span className="race-move">
+                        {' '}▲ {mover.from !== null && mover.from > mover.to
+                          ? t(s.mvp.rankUp, { from: ordinal(mover.from, lang), to: ordinal(mover.to, lang) })
+                          : t(s.mvp.newEntry, { to: ordinal(mover.to, lang) })}
+                      </span>
+                    )}
                   </span>
                 </span>
-                {mode === 'analyst' && <span className="race-score">{asSent(r.mvp_score, lang)}</span>}
+                {mode === 'analyst' && <span className="race-score">{asSent(r.mvp_score, lang, 1)}</span>}
               </li>
             );
           })}

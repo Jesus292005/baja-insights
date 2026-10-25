@@ -61,6 +61,26 @@ describe('mvpAt', () => {
     expect(view.rankingIsFinal).toBe(false);
   });
 
+  it('finds who made the latest move in the ranking that came with it', () => {
+    const t = 50 * 60;
+    const latest = fanEs.filter((o) => o.type === 'mvp_update' && o.show_at_s <= t).pop()!;
+    const data = latest.data as { rank: number; previous_rank?: number; ranking: { rank: number; player: string }[] };
+    const view = mvpAt(fanEs, t);
+    expect(view.mover).toEqual({
+      player: data.ranking.find((r) => r.rank === data.rank)!.player,
+      from: data.previous_rank ?? null,
+      to: data.rank,
+    });
+  });
+
+  it('has no mover without a ranking or after the final top 3', () => {
+    const v1 = fanEs.map((o) =>
+      o.type === 'mvp_update' ? ({ ...o, data: { rank: o.data.rank, mvp_score: o.data.mvp_score } } as OverlayOrder) : o,
+    );
+    expect(mvpAt(v1, 50 * 60).mover).toBeNull();
+    expect(mvpAt(fanEs, 5520).mover).toBeNull();
+  });
+
   it('uses the final top 3 as the final ranking', () => {
     const view = mvpAt(fanEs, 5520);
     expect(view.rankingIsFinal).toBe(true);
