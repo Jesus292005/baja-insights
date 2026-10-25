@@ -102,6 +102,8 @@ export interface CardView {
   attributes: Record<CardAttribute, number>;
   /** Engine's overall. null when there are changes but the order did not carry overall_to. */
   overall: number | null;
+  /** Overall before the latest change, only when that change moved it (overall_from ≠ overall_to). */
+  overallFrom: number | null;
   changes: CardChange[];
 }
 
@@ -127,7 +129,12 @@ export function cardAt(roster: Roster, orders: readonly OverlayOrder[], name: st
       overall_from: c.overall_from, overall_to: c.overall_to, title: o.title,
     });
   }
-  return { player, attributes, overall, changes };
+  const last = changes[changes.length - 1];
+  const overallFrom =
+    last && last.overall_from !== undefined && last.overall_to !== undefined && last.overall_from !== last.overall_to
+      ? last.overall_from
+      : null;
+  return { player, attributes, overall, overallFrom, changes };
 }
 
 /** Players whose card changed up to t, most recent first. */

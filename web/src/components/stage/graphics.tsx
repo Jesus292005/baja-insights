@@ -138,6 +138,7 @@ function Standout({ order, elapsed, orders }: GraphicProps<StandoutMilestoneOrde
             player={card.player}
             attributes={card.attributes}
             overall={card.overall}
+            overallFrom={card.overallFrom}
             changed={new Set(card.changes.map((c) => c.attribute))}
             highlight={order.card?.attribute}
             size="sm"
@@ -173,7 +174,16 @@ function CardUpgrade({ order, elapsed }: GraphicProps<CardUpgradeOrder>) {
       <p className="g-upgrade-who">
         <b>{c.player}</b>
         <span>{positionLabel[lang][c.position].long}</span>
-        {c.overall_to !== undefined && <span>{s.card.overall} {c.overall_to}</span>}
+        {c.overall_to !== undefined && (
+          <span>
+            {s.card.overall}{' '}
+            {c.overall_from !== undefined && c.overall_from !== c.overall_to ? (
+              <>{c.overall_from} → <b className="g-up">{c.overall_to}</b></>
+            ) : (
+              c.overall_to
+            )}
+          </span>
+        )}
       </p>
       {mode === 'analyst' && cardReasonLabel(c, lang) && <p className="g-reason">{cardReasonLabel(c, lang)}</p>}
     </Panel>
@@ -324,6 +334,7 @@ function Top3({ order, elapsed, orders }: GraphicProps<Top3Order>) {
                     player={card.player}
                     attributes={card.attributes}
                     overall={card.overall}
+                    overallFrom={card.overallFrom}
                     changed={new Set(card.changes.map((x) => x.attribute))}
                     size={c.rank === 1 ? 'lg' : 'md'}
                     footer={`${s.mvp.score} ${asSent(c.mvp_score, lang)}`}

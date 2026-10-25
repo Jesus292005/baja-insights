@@ -86,6 +86,15 @@ describe('cardAt', () => {
     expect(card.overall).toBe(last.card!.overall_to);
   });
 
+  it('gives the previous overall only when the latest change moved it', () => {
+    const cards = fanEs.filter((o) => o.card?.overall_from !== undefined && o.card.overall_to !== undefined);
+    const moved = cards.find((o) => o.card!.overall_from !== o.card!.overall_to)!;
+    const same = cards.find((o) => o.card!.overall_from === o.card!.overall_to)!;
+    expect(cardAt(roster, [moved], moved.card!.player, moved.show_at_s)!.overallFrom).toBe(moved.card!.overall_from);
+    expect(cardAt(roster, [same], same.card!.player, same.show_at_s)!.overallFrom).toBeNull();
+    expect(cardAt(roster, fanEs, 'J. Torres', 0)!.overallFrom).toBeNull();
+  });
+
   it('drops the overall when a v1 order changed the card without overall_to', () => {
     const o = fanEs.find((x) => x.card)!;
     const { overall_from: _f, overall_to: _t, ...v1card } = o.card!;

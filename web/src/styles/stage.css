@@ -215,6 +215,7 @@
 .pcard-top { display: flex; justify-content: space-between; align-items: flex-end; padding: 10px 12px 2px; }
 .pcard-ovr { font-family: var(--bi-font-display); font-stretch: 68%; font-weight: 900; font-size: 3.4em; line-height: 0.85; }
 .pcard-ovr-none { color: var(--bi-text-muted); }
+.pcard-ovr.is-up { color: var(--bi-up); }
 .pcard-pos { display: flex; flex-direction: column; align-items: flex-end; font-family: var(--bi-font-data); font-size: 0.9em; }
 .pcard-pos small { font-size: 0.82em; color: var(--bi-text-muted); }
 .pcard-name { padding: 2px 12px 8px; font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; font-size: 1.4em; border-bottom: 1px solid var(--bi-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

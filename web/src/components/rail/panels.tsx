@@ -149,6 +149,7 @@ export function CardPanel({ orders, t: now, stale, loading }: PanelProps) {
             player={card.player}
             attributes={card.attributes}
             overall={card.overall}
+            overallFrom={card.overallFrom}
             changed={new Set(card.changes.map((c) => c.attribute))}
             highlight={card.changes[card.changes.length - 1]?.attribute}
             size="md"
@@ -163,6 +164,11 @@ export function CardPanel({ orders, t: now, stale, loading }: PanelProps) {
                       <abbr title={attributeLabel[lang][c.attribute]}>{attributeShort[lang][c.attribute]}</abbr> {c.from} → {c.to}
                     </b>{' '}
                     <span className="up">+{c.delta}</span> · <span className="mono">{clock(c.atS)}</span>
+                    {c.overall_from !== undefined && c.overall_to !== undefined && c.overall_from !== c.overall_to && (
+                      <span className="card-overall">
+                        {s.card.overall} {c.overall_from} → <b className="up">{c.overall_to}</b>
+                      </span>
+                    )}
                     {mode === 'analyst' && (cardReasonLabel(c, lang) ?? c.title) && (
                       <span className="card-reason">{cardReasonLabel(c, lang) ?? c.title}</span>
                     )}

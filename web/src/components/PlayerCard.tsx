@@ -2,13 +2,15 @@ import type { CardAttribute } from '../contracts/overlay';
 import { CARD_ATTRIBUTES, type PlayerRef } from '../data/roster';
 import { cardTier } from '../design/tokens';
 import { usePrefs } from '../i18n/prefs';
-import { attributeLabel, attributeShort, positionLabel } from '../i18n/strings';
+import { attributeLabel, attributeShort, positionLabel, t } from '../i18n/strings';
 
 export interface PlayerCardProps {
   player: PlayerRef;
   attributes: Record<CardAttribute, number>;
   /** Engine overall; null shows "Overall not available" instead of computing one. */
   overall: number | null;
+  /** Overall before the latest change, when the engine says it moved. Shows ▲ and the old value. */
+  overallFrom?: number | null;
   /** Attributes that went up during the match. */
   changed?: ReadonlySet<CardAttribute>;
   /** Attribute that just went up, animated once. */
@@ -18,7 +20,7 @@ export interface PlayerCardProps {
   footer?: string;
 }
 
-export function PlayerCard({ player, attributes, overall, changed, highlight, size, footer }: PlayerCardProps) {
+export function PlayerCard({ player, attributes, overall, overallFrom, changed, highlight, size, footer }: PlayerCardProps) {
   const { s, lang } = usePrefs();
   // The tier is a presentation threshold on the overall the engine (or teams.json) sent.
   const tier = cardTier(overall ?? player.overall);
@@ -34,13 +36,15 @@ export function PlayerCard({ player, attributes, overall, changed, highlight, si
       </div>
       <div className="pcard-top">
         {overall !== null ? (
-          <span className="pcard-ovr">{overall}</span>
+          <span className={`pcard-ovr${overallFrom != null ? ' is-up' : ''}`}>{overall}</span>
         ) : (
           <span className="pcard-ovr pcard-ovr-none" title={s.card.overallPending}>—</span>
         )}
         <span className="pcard-pos">
           <abbr title={pos.long}>{pos.short}</abbr>
-          <small>{overall !== null ? s.card.overall : s.card.overallPending}</small>
+          <small>
+            {overall === null ? s.card.overallPending : overallFrom != null ? `▲ ${t(s.card.overallUp, { from: overallFrom })}` : s.card.overall}
+          </small>
         </span>
       </div>
       <div className="pcard-name">{player.name}</div>

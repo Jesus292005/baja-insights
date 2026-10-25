@@ -180,6 +180,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .card-changes h3 { font-size: var(--bi-text-md); font-weight: var(--bi-weight-bold); }
 .card-changes li { display: flex; flex-wrap: wrap; gap: 0 var(--bi-space-2); align-items: baseline; padding-bottom: var(--bi-space-3); border-bottom: var(--bi-border-width) solid var(--bi-line); }
 .card-reason { flex-basis: 100%; font-size: var(--bi-text-xs); color: var(--bi-text-muted); }
+.card-overall { flex-basis: 100%; font-size: var(--bi-text-xs); }
 
 .moments { display: flex; flex-direction: column; gap: var(--bi-space-4); }
 .moments h2 { font-size: var(--bi-text-xl); font-weight: var(--bi-weight-bold); }
