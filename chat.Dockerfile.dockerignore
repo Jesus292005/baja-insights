@@ -1,0 +1,16 @@
+# Used instead of .dockerignore when building chat.Dockerfile (BuildKit), because the chat image needs agents/.
+.git
+.github
+**/__pycache__
+**/*.pyc
+.venv
+venv
+agents/venv
+agents/tests
+agents/scratch
+agents/.cache
+web
+tests
+docs
+**/.env
+**/.cache

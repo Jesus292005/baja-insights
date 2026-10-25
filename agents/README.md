@@ -129,16 +129,33 @@ for event in events:
         curator.send(insight)
 ```
 
-## Tools for Ask the Match
+## Ask the Match
 
-```python
-from baja_insights.engine.tools import MatchQuery
+`POST /api/ask`, shaped like `contracts/chat.schema.json`. The code is in `baja_agents/ask.py` (the agent) and `baja_agents/server.py` (the HTTP service).
 
-query = MatchQuery.from_files("data/m001/events.jsonl")
-query.dispatch("get_mvp_ranking", {"at": "35:00", "top": 3})
+The agent answers only through the six engine functions of `MatchQuery` (`get_match_state`, `get_mvp_ranking`, `get_player_summary`, `get_duel`, `get_team_phase` and `get_goal_chain`). They are registered with the definitions in `mocks/chat_tools_sample.json`, so the agent and the contract describe the same functions.
+
+**What code enforces, not the prompt:**
+- **No future.** Every moment the agent asks for is clipped to the moment of the question, and `get_goal_chain` only finds goals already scored, so a live chat never reveals what comes next.
+- **No invented numbers.** Every number in the answer must appear in a function result; ids don't count. If one doesn't, the agent gets one retry with the problem listed, and if it still fails the answer is `status: "error"` and the UI shows its fallback.
+- **No predictions.** "Who will win?" is detected in code and always answered with `no_prediction`. The agent still says what each team needs, with data, as in the examples.
+- **Style.** A fan answer shows at most 3 figures besides the scoreline. Breaking this is worth a retry, but an accurate answer is kept even if the retry still breaks it.
+- `not_tracked` (for example distance run) and `not_found` (a player who isn't in the match) come from what the functions return.
+
+**Service:**
+- `GET /healthz` and `POST /api/ask`, with open CORS for the UI.
+- Requests are validated against the contract: an invalid one gets 400, and an unknown `match_id` gets 404.
+- Every `data/<match>/events.jsonl` is loaded at startup (`m001` and `f002`).
+- At most `CHAT_PER_MINUTE` questions per minute reach the model (20 by default). Beyond that the answer is 429.
+- Answers are cached by match, question, moment, mode, language, favorite team and history (`CHAT_CACHE_DIR`), so the questions from the video or the judges cost nothing the second time.
+- A first answer takes about 4 to 7 seconds; a cached one, a few milliseconds.
+
+```bash
+venv/Scripts/python.exe -m baja_agents serve --port 8080
+venv/Scripts/python.exe -m baja_agents ask "¿Por qué Torres va primero?" --at 35:00
 ```
 
-The definitions of the six functions, ready to register as tools, are in `mocks/chat_tools_sample.json` under `tools`. The conversations in `example_conversations` work as test cases.
+The image is `chat.Dockerfile`, built by `.github/workflows/chat-image.yml` into `ghcr.io/jesus292005/baja-chat`, and deployed as `baja-chat` (see `docs/despliegue.md`). Offline tests are in `tests/test_ask.py`: a fake agent calls the real engine functions.
 
 ## Rules
 
