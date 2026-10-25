@@ -1,5 +1,5 @@
 import type {
-  CardAttribute, DuelBarOrder, Language, Mode, MvpUpdateOrder, OverlayOrder, RankingEntry, Top3Order,
+  CardAttribute, DuelBarOrder, OverlayCard, Language, Mode, MvpUpdateOrder, OverlayOrder, RankingEntry, Top3Order,
 } from '../contracts/overlay';
 import { appliesTo } from '../contracts/overlay';
 import type { PlayerRef, Roster } from '../data/roster';
@@ -87,7 +87,12 @@ export interface CardChange {
   to: number;
   delta: number;
   atS: number;
+  /** Engine reason as sent (Spanish text, code and params). Written per language with cardReasonLabel. */
   reason?: string;
+  reason_code?: OverlayCard['reason_code'];
+  reason_params?: OverlayCard['reason_params'];
+  overall_from?: number;
+  overall_to?: number;
   /** Title of the order that carried the change, as context for the analyst view. */
   title: string | null;
 }
@@ -116,7 +121,11 @@ export function cardAt(roster: Roster, orders: readonly OverlayOrder[], name: st
     seen.add(key);
     attributes[c.attribute] = c.to;
     overall = c.overall_to ?? null;
-    changes.push({ attribute: c.attribute, from: c.from, to: c.to, delta: c.delta, atS: o.show_at_s, reason: c.reason, title: o.title });
+    changes.push({
+      attribute: c.attribute, from: c.from, to: c.to, delta: c.delta, atS: o.show_at_s,
+      reason: c.reason, reason_code: c.reason_code, reason_params: c.reason_params,
+      overall_from: c.overall_from, overall_to: c.overall_to, title: o.title,
+    });
   }
   return { player, attributes, overall, changes };
 }

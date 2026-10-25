@@ -10,7 +10,7 @@ import { usePrefs } from '../../i18n/prefs';
 import {
   asSent, attributeLabel, attributeShort, clock, ordinal, pct, positionLabel, signedPct, surname, t,
 } from '../../i18n/strings';
-import { chainActionLabel } from '../../i18n/labels';
+import { cardReasonLabel, chainActionLabel } from '../../i18n/labels';
 import { cardAt } from '../../logic/derive';
 import { Evidence, TeamChip } from '../common';
 import { DuelMeter } from '../DuelMeter';
@@ -174,7 +174,7 @@ function CardUpgrade({ order, elapsed }: GraphicProps<CardUpgradeOrder>) {
           <b>{c.player}</b>
           <span>{positionLabel[lang][c.position].long}</span>
           {c.overall_to !== undefined && <span>{s.card.overall} {c.overall_to}</span>}
-          {mode === 'analyst' && c.reason && <span className="g-reason">{c.reason}</span>}
+          {mode === 'analyst' && cardReasonLabel(c, lang) && <span className="g-reason">{cardReasonLabel(c, lang)}</span>}
         </div>
       </div>
     </Panel>

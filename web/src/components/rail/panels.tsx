@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import type { OverlayOrder } from '../../contracts/overlay';
 import { roster } from '../../data/match';
 import { usePrefs } from '../../i18n/prefs';
+import { cardReasonLabel } from '../../i18n/labels';
 import { asSent, attributeLabel, attributeShort, clock, ordinal, positionLabel, signed, t } from '../../i18n/strings';
 import { cardAt, duelAt, momentsAt, mvpAt, playersWithChanges } from '../../logic/derive';
 import { AsOf, EmptyState, TeamChip } from '../common';
@@ -162,7 +163,9 @@ export function CardPanel({ orders, t: now, stale, loading }: PanelProps) {
                       <abbr title={attributeLabel[lang][c.attribute]}>{attributeShort[lang][c.attribute]}</abbr> {c.from} → {c.to}
                     </b>{' '}
                     <span className="up">+{c.delta}</span> · <span className="mono">{clock(c.atS)}</span>
-                    {mode === 'analyst' && (c.reason || c.title) && <span className="card-reason">{c.reason ?? c.title}</span>}
+                    {mode === 'analyst' && (cardReasonLabel(c, lang) ?? c.title) && (
+                      <span className="card-reason">{cardReasonLabel(c, lang) ?? c.title}</span>
+                    )}
                   </li>
                 ))}
               </ul>
