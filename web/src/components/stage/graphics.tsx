@@ -10,6 +10,7 @@ import { usePrefs } from '../../i18n/prefs';
 import {
   asSent, attributeLabel, attributeShort, clock, ordinal, pct, positionLabel, signedPct, surname, t,
 } from '../../i18n/strings';
+import { chainActionLabel } from '../../i18n/labels';
 import { cardAt } from '../../logic/derive';
 import { Evidence, TeamChip } from '../common';
 import { DuelMeter } from '../DuelMeter';
@@ -204,7 +205,7 @@ function GoalChain({ order, elapsed }: GraphicProps<GoalAnalysisOrder>) {
             <li key={`${name}-${i}`} className={`${isInvisible ? 'is-invisible' : ''}${isScorer ? ' is-scorer' : ''}`} style={{ animationDelay: `${i * 150}ms` }}>
               <span className="g-node" aria-hidden="true">{surname(name).slice(0, 2).toUpperCase()}</span>
               <b>{name}</b>
-              {mode === 'analyst' && detail?.[i] && <small>{detail[i].action} · {clock(detail[i].t_s)}</small>}
+              {mode === 'analyst' && detail?.[i] && <small>{chainActionLabel(detail[i], lang)} · {clock(detail[i].t_s)}</small>}
               {mode === 'analyst' && d.credit[i] !== undefined && (
                 <span className="g-credit">
                   <span className="g-credit-bar" style={{ width: `${d.credit[i] * 100}%` }} />
