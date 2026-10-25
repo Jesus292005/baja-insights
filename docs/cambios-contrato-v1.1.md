@@ -87,10 +87,13 @@ UI ◀──error {code, detail}── servidor
 
 Todo en `agents/baja_agents/overlays.py`, que ya copia del insight lo que no es texto:
 
-- [ ] `data_for`: copiar `facts["ranking"]` en `mvp_update` y `facts["chain"]` como `chain_detail` en `goal_analysis`.
-- [ ] `card_for`: copiar `overall_from`, `overall_to` y `reason` del `card_change`.
-- [ ] `build`: copiar `insight["evidence"]` en cada orden.
-- [ ] Endpoint `POST /api/ask` con `chat.schema.json`, y la orden `chat_answer` con `data` cuando aplique.
+- [x] `data_for`: copiar `facts["ranking"]` en `mvp_update` y `facts["chain"]` como `chain_detail` en `goal_analysis`. Hecho en el PR #4.
+- [x] `card_for`: copiar `overall_from`, `overall_to` y `reason` del `card_change`. Hecho en el PR #4; desde el PR #12 también copia `reason_code` y `reason_params`.
+- [x] `build`: copiar `insight["evidence"]` en cada orden. Hecho en el PR #4.
+- [x] Endpoint `POST /api/ask` con `chat.schema.json`, y la orden `chat_answer` con `data` cuando aplique.
+  - **`/api/ask`:** PR #14 y #15, desplegado como `baja-chat`.
+  - **`chat_answer`:** `POST /api/chat-overlay`, que convierte una respuesta del chat en una orden `chat_answer` válida, sin llamar al modelo.
+  - Detalles en `agents/README.md`.
 
 ### Integrante 3, interfaz
 
