@@ -46,16 +46,18 @@ COUNTERPRESS_WINDOW_S = 5
 ROLE_STATS = ("duels_won", "recoveries", "progressive_passes", "key_passes")
 ROLE_TERM_CLIP = (-1.0, 2.0)               # each stat term before averaging
 ROLE_EXPECTED_FLOOR = 1.0                  # denominator floor, avoids blowups early in the match
-MVP_ROLE_WEIGHT = 1.2                      # vs_role * minutes/90 * weight is added to raw points
-MVP_SCALE = 5.0                            # mvp = 10 * (1 - exp(-adj / scale))
+MVP_ROLE_WEIGHT = 5.0                      # vs_role * minutes/90 * weight is added to raw points
+MVP_SCALE = 7.0                            # mvp = 10 * (1 - exp(-adj / scale))
 
 # --- Detectors ---------------------------------------------------------------
 MVP_MIN_T_S = 10 * 60                      # no ranking overlays in the first 10 minutes
 MVP_ANNOUNCE_TOP = 3                       # only climbs into the top 3 are announced
+MVP_RANKING_TOP = 5                        # rows of facts.ranking in mvp_rank_change (contract v1.1)
 MVP_PLAYER_COOLDOWN_S = 600
 MVP_GLOBAL_COOLDOWN_S = 180
 
-DUEL_PAIR_COOLDOWN_S = 180                 # unless the bar flips sign
+DUEL_PAIR_COOLDOWN_S = 300                 # unless the bar flips sign
+DUEL_FLIP_MIN_BAR = 0.10                   # a flip counts only when the new bar is at least this far from 0
 
 MILESTONE_MIN_MINUTES = 20
 MILESTONE_MIN_VS_ROLE = 0.5
@@ -66,9 +68,13 @@ CARD_VISION_MIN_DIFFICULTY = 0.80
 CARD_VISION_MIN_LINES = 2
 CARD_DEFENSE_RECOVERIES = 3                # recoveries in the opponent half ...
 CARD_DEFENSE_WINDOW_S = 10 * 60            # ... within this window
-CARD_SHOT_SPEED_KMH = 110
+CARD_SHOT_SPEED_KMH = 105
 CARD_DUEL_STREAK = 4
 CARD_OFF_BALL_MIN_SPACE_M = 8.0
+CARD_OFF_BALL_SHOT_MIN_SPACE_M = 5.0      # run that dragged a defender, possession ends in a shot: Sin balón +1
+CARD_PACE_KMH = 30.0                       # off-ball run at this speed or more: Ritmo +1
+CARD_DRIBBLE_COUNT = 2                     # duels won on the ball ...
+CARD_DRIBBLE_WINDOW_S = 10 * 60            # ... within this window: Regate +1
 CARD_ATTRIBUTE_COOLDOWN_S = 10 * 60
 CARD_MAX_GAIN_PER_ATTRIBUTE = 6
 CARD_MAX_VALUE = 99

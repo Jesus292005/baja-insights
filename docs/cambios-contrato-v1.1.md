@@ -47,7 +47,7 @@ UI ◀──clock {t_s, period, phase, speed}── servidor         una vez por
 UI ◀──error {code, detail}── servidor
 ```
 
-- **Reconexión.** Si pasan 3 segundos sin `clock`, la UI muestra «Reconectando» y conserva el último dato con su minuto. Al volver, manda `subscribe` con el último `t_s` que tenía y el servidor responde con `state` y reenvía las órdenes con `show_at_s ≥ from_t_s`.
+- **Reconexión.** Si pasan 3 segundos sin `clock`, la UI muestra «Reconectando» y conserva el último dato con su minuto. Al volver, manda `subscribe` con el último `t_s` que tenía y el servidor responde con `state` y reenvía las órdenes que siguen en pantalla en ese momento o después (`show_at_s + duration_s > from_t_s`).
 - **Marcador.** Sale de los eventos `goal`, `half_time` y `match_end`, que ya traen `scoreline`. La UI no lo deduce de las órdenes de gol.
 - El campo `order` de un mensaje `overlay` se valida aparte con `overlay.schema.json`. Así `stream.schema.json` no depende de resolver referencias externas.
 
@@ -79,18 +79,21 @@ UI ◀──error {code, detail}── servidor
 
 ### Integrante 1, motor
 
-- [ ] Agregar `ranking` (top 5) a los `facts` de `mvp_rank_change` en `src/baja_insights/engine/core.py`. Puede salir de la misma lógica que `get_mvp_ranking` en `tools.py`.
-- [ ] Servicio de stream en Container Apps con los mensajes de `stream.schema.json`.
-- [ ] Opcional: que `python -m baja_insights validate` reconozca archivos de `stream` y `chat`. Hoy solo detecta eventos, insights y órdenes.
+- [x] Agregar `ranking` (top 5) a los `facts` de `mvp_rank_change` en `src/baja_insights/engine/core.py`. Puede salir de la misma lógica que `get_mvp_ranking` en `tools.py`.
+- [x] Servicio de stream en Container Apps con los mensajes de `stream.schema.json`. Ver `docs/stream.md`.
+- [x] Opcional: que `python -m baja_insights validate` reconozca archivos de `stream` y `chat`. Hoy solo detecta eventos, insights y órdenes.
 
 ### Integrante 2, agentes
 
 Todo en `agents/baja_agents/overlays.py`, que ya copia del insight lo que no es texto:
 
-- [ ] `data_for`: copiar `facts["ranking"]` en `mvp_update` y `facts["chain"]` como `chain_detail` en `goal_analysis`.
-- [ ] `card_for`: copiar `overall_from`, `overall_to` y `reason` del `card_change`.
-- [ ] `build`: copiar `insight["evidence"]` en cada orden.
-- [ ] Endpoint `POST /api/ask` con `chat.schema.json`, y la orden `chat_answer` con `data` cuando aplique.
+- [x] `data_for`: copiar `facts["ranking"]` en `mvp_update` y `facts["chain"]` como `chain_detail` en `goal_analysis`. Hecho en el PR #4.
+- [x] `card_for`: copiar `overall_from`, `overall_to` y `reason` del `card_change`. Hecho en el PR #4; desde el PR #12 también copia `reason_code` y `reason_params`.
+- [x] `build`: copiar `insight["evidence"]` en cada orden. Hecho en el PR #4.
+- [x] Endpoint `POST /api/ask` con `chat.schema.json`, y la orden `chat_answer` con `data` cuando aplique.
+  - **`/api/ask`:** PR #14 y #15, desplegado como `baja-chat`.
+  - **`chat_answer`:** `POST /api/chat-overlay`, que convierte una respuesta del chat en una orden `chat_answer` válida, sin llamar al modelo.
+  - Detalles en `agents/README.md`.
 
 ### Integrante 3, interfaz
 
@@ -99,9 +102,9 @@ Todo en `agents/baja_agents/overlays.py`, que ya copia del insight lo que no es 
 
 ### Los tres, ahora que está aprobada
 
-- [ ] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y cambiar `invisible_assist` del mock al objeto.
-- [ ] Subir `contract_version` a `"1.1"` en `mocks/teams.json` y `mocks/chat_tools_sample.json`.
-- [ ] Agregar `data/m001/overlays.json` a los casos de `tests/test_contracts.py`, que hoy no lo valida.
+- [x] Actualizar `mocks/overlays_sample.json` e `insights_sample.json` con un ejemplo de cada campo nuevo, y cambiar `invisible_assist` del mock al objeto. Hecho en la rama `motor/mocks-v1.1` (ver `docs/aviso-mocks-v1.1.md`).
+- [x] Subir `contract_version` a `"1.1"` en `mocks/teams.json` y `mocks/chat_tools_sample.json`.
+- [x] Agregar `data/m001/overlays.json` a los casos de `tests/test_contracts.py`, que hoy no lo valida.
 
 ---
 

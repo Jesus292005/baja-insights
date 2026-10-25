@@ -6,6 +6,8 @@ copied from the insight here, so the numbers on screen are the engine's.
 
 from __future__ import annotations
 
+import hashlib
+
 from baja_insights.contract import fmt_clock
 from baja_insights.roster import Roster
 
@@ -40,13 +42,19 @@ def card_for(insight: dict, roster: Roster) -> dict | None:
     if player is None:
         return None
     return {"player": player.name, "team": player.team, "position": facts.get("position", player.position),
-            "attribute": change["attribute"], "from": change["from"], "to": change["to"], "delta": change["delta"]}
+            "attribute": change["attribute"], "from": change["from"], "to": change["to"], "delta": change["delta"],
+            "overall_from": change["overall_from"], "overall_to": change["overall_to"], "reason": change["reason"],
+            # v1.1, only when the engine sends them: a null reason_code would break the schema's enum
+            **{k: change[k] for k in ("reason_code", "reason_params") if k in change}}
 
 
 def data_for(insight: dict) -> dict | None:
     facts, kind = insight["facts"], insight["type"]
     if kind == "mvp_rank_change":
-        return {"rank": facts["to_rank"], "previous_rank": facts["from_rank"], "mvp_score": facts["mvp_score"]}
+        data = {"rank": facts["to_rank"], "previous_rank": facts["from_rank"], "mvp_score": facts["mvp_score"]}
+        if facts.get("ranking"):  # v1.1, once the engine emits it
+            data["ranking"] = [dict(item) for item in facts["ranking"]]
+        return data
     if kind == "duel_state":
         return {"player_a": facts["player_a"], "player_b": facts["player_b"], "bar": facts["bar"]}
     if kind == "standout_milestone":
@@ -54,6 +62,7 @@ def data_for(insight: dict) -> dict | None:
     if kind == "goal_chain":
         data = {"chain": [link["player"] for link in facts["chain"]],
                 "credit": [link["credit"] for link in facts["chain"]],
+                "chain_detail": [dict(link) for link in facts["chain"]],
                 "scoreline": facts["scoreline"], "xg": facts["xg"]}
         if facts.get("invisible_assist"):
             data["invisible_assist"] = facts["invisible_assist"]
@@ -119,6 +128,7 @@ def build(insight: dict, texts: dict[str, dict], show_at_s: int, roster: Roster)
             "type": overlay_type,
             "title": texts[key]["title"],
             "text": texts[key]["text"],
+            "evidence": list(insight["evidence"]),
         }
         if card:
             overlay["card"] = card
@@ -180,6 +190,46 @@ def duel_frames(overlays: list[dict], get_duel, match_id: str, every_s: int = FR
             "data": {"player_a": pair[0], "player_b": pair[1], "bar": facts["bar"]},
         })
     return frames
+
+
+CHAT_SLOT = "side_panel"
+CHAT_MIN_S, CHAT_MAX_S = 8, 20
+CHAT_TITLE_CHARS = 80
+
+
+def chat_answer_order(answer: dict, mode: str, language: str, show_at_s: int | None = None,
+                      slot: str = CHAT_SLOT) -> dict:
+    """A chat answer (a ``POST /api/ask`` response) as a ``chat_answer`` graphics order, for the producer.
+
+    Deterministic: nothing is asked again, every field comes from the answer. Raises ValueError for an
+    answer with ``status: error``, which has no text and is not a status a chat_answer order can carry.
+    """
+    if answer.get("status") == "error" or not answer.get("answer"):
+        raise ValueError("an answer with status error has no text to show")
+    at = min(answer["at_s"] if show_at_s is None else show_at_s, MAX_SHOW_AT_S)
+    question = answer["question"].strip()
+    title = question if len(question) <= CHAT_TITLE_CHARS else question[:CHAT_TITLE_CHARS - 1].rstrip() + "…"
+    seconds = max(CHAT_MIN_S, min(CHAT_MAX_S, 4 + len(answer["answer"].split()) // 3))
+    data = {k: answer[k] for k in ("question", "status", "tools") if k in answer}
+    if answer.get("evidence"):
+        data["evidence"] = list(answer["evidence"])
+    key = f"{answer['match_id']}|{answer['at_s']}|{question}|{mode}|{language}|{answer['answer']}"
+    return {
+        "overlay_id": f"chat-{hashlib.sha256(key.encode('utf-8')).hexdigest()[:10]}",
+        "match_id": answer["match_id"],
+        "source_insight": None,
+        "period": 1 if at < 2700 else 2,
+        "show_at": fmt_clock(at),
+        "show_at_s": at,
+        "duration_s": seconds,
+        "slot": slot,
+        "mode": mode,
+        "language": language,
+        "type": "chat_answer",
+        "title": title,
+        "text": answer["answer"],
+        "data": data,
+    }
 
 
 def number(overlays: list[dict]) -> list[dict]:

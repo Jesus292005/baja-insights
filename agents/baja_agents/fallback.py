@@ -23,6 +23,15 @@ STATS = {  # (plural es, plural en, singular es, singular en)
     "line_breaking_passes": ("pases que rompen líneas", "line-breaking passes", "pase que rompe líneas", "line-breaking pass"),
     "progressive_passes": ("pases progresivos", "progressive passes", "pase progresivo", "progressive pass"),
 }
+POSITIONS_EN = {
+    "POR": "goalkeeper", "LD": "right-back", "LI": "left-back", "DFC": "centre-back", "MCD": "defensive midfielder",
+    "MC": "midfielder", "ED": "right winger", "EI": "left winger", "DC": "striker",
+}
+# Words, not digits, where the engine's Spanish uses words too ("tercera", "dos"): a fan text shows one figure.
+ORDINALS_EN = {1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth", 6: "sixth", 7: "seventh",
+               8: "eighth", 9: "ninth", 10: "tenth", 11: "eleventh", 12: "twelfth"}
+NUMBERS_EN = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight",
+              9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}
 KEYS_EN = {
     "win_ball_high": "win the ball high", "more_bodies_in_box": "get more players into the box",
     "keep_possession": "keep the ball", "create_danger": "create more danger",
@@ -39,6 +48,54 @@ def stat_phrase(stats: dict, key: str, lang: int) -> str:
 
 def stat_list(stats: dict, lang: int, top: int = 3) -> str:
     return ", ".join([stat_phrase(stats, k, lang) for k in STATS if stats.get(k)][:top])
+
+
+def chain_label_en(link: dict) -> str | None:
+    """English for a goal chain link, from the event type (the same rules as the engine's Spanish ``action``).
+
+    None for links from before contract v1.1, which only bring the Spanish ``action``.
+    """
+    kind = link.get("type")
+    if kind == "pass":
+        lines = link.get("lines_broken") or 0
+        if link.get("cross"):
+            return "cross"
+        if lines:
+            return f"pass that broke {lines} line{'s' if lines > 1 else ''}"
+        return "pass"
+    return {"recovery": "recovery", "tackle": "tackle won", "shot": "shot",
+            "off_ball_run": "off-ball run that dragged a marker"}.get(kind, kind)
+
+
+def card_reason_en(change: dict) -> str | None:
+    """English for a card change's reason, from ``reason_code`` and ``reason_params``. None if it has no code."""
+    code, p = change.get("reason_code"), change.get("reason_params") or {}
+    if code == "line_breaking_pass":
+        lines = p["lines"]
+        text = f"pass that broke {lines} line{'s' if lines != 1 else ''}"
+        return text + " under pressure" if p.get("under_pressure") else text
+    if code == "opp_half_recoveries":
+        nth = ORDINALS_EN.get(p["count"], f"{p['count']}th")
+        return f"{nth} recovery in the opposition half in under {p['window_min']} minutes"
+    if code == "shot_speed":
+        return f"shot at {p['speed_kmh']} km/h"
+    if code == "duel_streak":
+        return f"{p['count']} duels won in a row"
+    if code == "run_speed":
+        return f"run at {p['speed_kmh']} km/h"
+    if code == "dribbles":
+        return f"{NUMBERS_EN.get(p['count'], p['count'])} dribbles won in under {p['window_min']} minutes"
+    if code == "run_ended_in_shot":
+        return f"dragged {p['dragged_defender']} and the move ended in a shot"
+    if code == "run_opened_goal":
+        who = POSITIONS_EN.get(p.get("dragged_position"))
+        return f"dragged the {who} and opened the space for the goal" if who else \
+            f"dragged {p['dragged_defender']} and opened the space for the goal"
+    if code == "standout_defensive":
+        return "defensive game above what the role expects"
+    if code == "standout_creative":
+        return "creative game above what the role expects"
+    return None
 
 
 def readable_stats(stats: dict) -> dict[str, list[str]]:
@@ -110,26 +167,44 @@ def _standout(f: dict) -> dict:
 def _card(f: dict) -> dict:
     p, d = surname(f["player"]), f["delta"]
     es, en = ATTRIBUTES[f["attribute"]]
+    reason_en = card_reason_en(f)
     return {
         "fan_es": (f"+{d} {es}", f"{p}: {f['reason']}."),
         "analyst_es": (f"+{d} {es}", f"{es} de {f['from']} a {f['to']}: {f['reason']}. Media {f['overall_from']} a {f['overall_to']}."),
-        "fan_en": (f"+{d} {en}", f"{p} earns +{d} {en}."),
-        "analyst_en": (f"+{d} {en}", f"{en} from {f['from']} to {f['to']}. Overall {f['overall_from']} to {f['overall_to']}."),
+        "fan_en": (f"+{d} {en}", f"{p}: {reason_en}." if reason_en else f"{p} earns +{d} {en}."),
+        "analyst_en": (f"+{d} {en}", f"{en} from {f['from']} to {f['to']}" + (f": {reason_en}" if reason_en else "")
+                       + f". Overall {f['overall_from']} to {f['overall_to']}."),
     }
 
 
+def _short_enough(text: str, fallback: str, limit: int = 30) -> str:
+    return text if len(text.split()) <= limit else fallback
+
+
 def _goal(f: dict) -> dict:
-    scorer, first = surname(f["scorer"]), surname(f["chain"][0]["player"])
+    links = f["chain"]
+    scorer, first = surname(f["scorer"]), surname(links[0]["player"])
     score = f"{f['scoreline']['home']}-{f['scoreline']['away']}"
-    chain = ", ".join(surname(link["player"]) for link in f["chain"])
+    names = ", ".join(surname(link["player"]) for link in links)
+    labels_en = [chain_label_en(link) for link in links]
+    chain_es = ", ".join(f"{surname(link['player'])} ({link['action']})" for link in links)
+    chain_en = ", ".join(f"{surname(link['player'])} ({label})" if label else surname(link["player"])
+                         for link, label in zip(links, labels_en))
+    article = "una" if links[0].get("type") in ("recovery", "tackle") else "un"  # recuperación, entrada / pase, remate...
+    start_es = f"La jugada nace con {article} {links[0]['action']} de {first}" if links[0].get("type") \
+        else f"La jugada nace en {first}"
+    start_en = f"It starts with {first}'s {labels_en[0]}" if labels_en[0] else f"It starts with {first}"
     inv = f.get("invisible_assist")
     extra_es = f" {surname(inv['player'])} abrió el espacio sin tocar el balón." if inv else ""
     extra_en = f" {surname(inv['player'])} opened the space without touching the ball." if inv else ""
+    tail_es, tail_en = f". xG {f['xg']} en {f['duration_s']} s.", f". xG {f['xg']} in {f['duration_s']} s."
     return {
-        "fan_es": (f"Gol de {scorer}", f"La jugada nace en {first} y la termina {scorer}. {score}.{extra_es}"),
-        "analyst_es": (f"Cadena del gol {score}", f"{chain}. xG {f['xg']} en {f['duration_s']} s."),
-        "fan_en": (f"{scorer} scores", f"It starts with {first} and {scorer} finishes it. {score}.{extra_en}"),
-        "analyst_en": (f"Goal chain {score}", f"{chain}. xG {f['xg']} in {f['duration_s']} s."),
+        "fan_es": (f"Gol de {scorer}", _short_enough(f"{start_es} y la termina {scorer}. {score}.{extra_es}",
+                                                    f"La jugada nace en {first} y la termina {scorer}. {score}.{extra_es}")),
+        "analyst_es": (f"Cadena del gol {score}", _short_enough(chain_es + tail_es, names + tail_es)),
+        "fan_en": (f"{scorer} scores", _short_enough(f"{start_en} and {scorer} finishes it. {score}.{extra_en}",
+                                                     f"It starts with {first} and {scorer} finishes it. {score}.{extra_en}")),
+        "analyst_en": (f"Goal chain {score}", _short_enough(chain_en + tail_en, names + tail_en)),
     }
 
 

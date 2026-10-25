@@ -1,16 +1,19 @@
 """Command line entry point.
 
-    python -m baja_insights generate --seed 23 --script m001 --out data/m001/events.jsonl
+    python -m baja_insights generate --seed 44 --script m001 --out data/m001/events.jsonl
     python -m baja_insights analyze  --events data/m001/events.jsonl --out data/m001/insights.json
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60
     python -m baja_insights ask      --events data/m001/events.jsonl get_mvp_ranking '{"at": "35:00", "top": 3}'
     python -m baja_insights validate data/m001/events.jsonl data/m001/insights.json
+    python -m baja_insights serve    --data data --port 8080 --speed 1
+    python -m baja_insights realism  --seeds 30
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -18,7 +21,7 @@ from pathlib import Path
 from .contract import event_t_s
 from .engine import InsightEngine
 from .engine.tools import MatchQuery
-from .generator import generate_match
+from .generator import DEMO_SEED, generate_match
 from .roster import Roster
 
 CONTRACTS = Path(__file__).resolve().parents[2] / "contracts"
@@ -87,6 +90,30 @@ def cmd_ask(args) -> int:
     return 0
 
 
+def read_items(path: str | Path) -> list[dict]:
+    """A JSON list, a single JSON object or JSONL."""
+    text = Path(path).read_text(encoding="utf-8")
+    if text.lstrip().startswith("{"):
+        try:
+            return [json.loads(text)]
+        except ValueError:
+            pass  # JSONL
+    return read_events(path)
+
+
+def contract_kind(item: dict) -> str:
+    """Which contract a JSON object belongs to, from its first keys."""
+    if "insight_id" in item:
+        return "insight"
+    if "overlay_id" in item:
+        return "overlay"
+    if "kind" in item:
+        return "stream"
+    if "question" in item:
+        return "chat"
+    return "event"
+
+
 def cmd_validate(args) -> int:
     try:
         from jsonschema import Draft202012Validator
@@ -94,19 +121,48 @@ def cmd_validate(args) -> int:
         print("pip install jsonschema", file=sys.stderr)
         return 2
     schemas = {name: Draft202012Validator(json.loads((CONTRACTS / f"{name}.schema.json").read_text(encoding="utf-8")))
-               for name in ("event", "insight", "overlay")}
+               for name in ("event", "insight", "overlay", "stream", "chat")}
     failed = 0
     for path in args.files:
-        items = read_events(path)
+        items = read_items(path)
         first = items[0] if items else {}
-        kind = "insight" if "insight_id" in first else "overlay" if "overlay_id" in first else "event"
-        errors = [(i, e.message) for i, item in enumerate(items) for e in schemas[kind].iter_errors(item)]
+        kind = contract_kind(first)
+
+        def problems(item):
+            yield from schemas[kind].iter_errors(item)
+            if kind == "stream" and item.get("kind") == "overlay" and isinstance(item.get("order"), dict):
+                yield from schemas["overlay"].iter_errors(item["order"])  # the order is validated apart
+
+        errors = [(i, e.message) for i, item in enumerate(items) for e in problems(item)]
         failed += bool(errors)
         status = "OK" if not errors else f"{len(errors)} errors"
-        print(f"{path}: {len(items)} {kind}s, {status}")
+        label = {"stream": "stream messages", "chat": "chat messages"}.get(kind, f"{kind}s")
+        print(f"{path}: {len(items)} {label}, {status}")
         for i, message in errors[:10]:
             print(f"  item {i}: {message}")
     return 1 if failed else 0
+
+
+def cmd_realism(args) -> int:
+    from .realism import format_report, measure, out_of_range
+
+    report = measure(Roster.load(args.teams), range(1, args.seeds + 1))
+    print(format_report(report))
+    return 1 if out_of_range(report) else 0
+
+
+def cmd_serve(args) -> int:
+    import asyncio
+    import logging
+
+    from .stream import serve
+
+    logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
+    try:
+        asyncio.run(serve(args.data, args.host, args.port, args.speed, args.start_at, args.half_time_pause))
+    except KeyboardInterrupt:
+        pass
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -116,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     g = sub.add_parser("generate", help="generate a synthetic match")
-    g.add_argument("--seed", type=int, default=23)
+    g.add_argument("--seed", type=int, default=DEMO_SEED)
     g.add_argument("--script", default="m001", help="script name or path, or 'free' for an unscripted match")
     g.add_argument("--match-id", default=None)
     g.add_argument("--out", required=True)
@@ -141,6 +197,22 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("validate", help="validate JSON/JSONL files against the contracts")
     v.add_argument("files", nargs="+")
     v.set_defaults(func=cmd_validate)
+
+    r = sub.add_parser("realism", help="compare free matches against Premier League reference ranges")
+    r.add_argument("--seeds", type=int, default=30, help="number of free matches to measure")
+    r.set_defaults(func=cmd_realism)
+
+    w = sub.add_parser("serve", help="WebSocket stream for the UI: clock, scoreline and graphics orders")
+    w.add_argument("--data", default=str(Path(__file__).resolve().parents[2] / "data"),
+                   help="folder with one <match>/events.jsonl (+ overlays.json) per match")
+    w.add_argument("--host", default="0.0.0.0")
+    w.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8080")))
+    w.add_argument("--speed", type=float, default=float(os.environ.get("STREAM_SPEED", "1")),
+                   help="match seconds per real second")
+    w.add_argument("--start-at", type=int, default=0, help="match second where the clock starts")
+    w.add_argument("--half-time-pause", type=float, default=float(os.environ.get("STREAM_HALF_TIME_PAUSE", "0")),
+                   help="real seconds the clock stops at 45:00, in phase half_time")
+    w.set_defaults(func=cmd_serve)
 
     args = parser.parse_args(argv)
     return args.func(args)

@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 
 from baja_insights.contract import fmt_clock
 
+from .checks import UI_ONLY_FACTS
 from .models import CuratorDecision
 
 MUST_SHOW = ("goal_chain", "match_keys", "top3")
@@ -111,7 +112,7 @@ class Curator:
                 "budget": MAX_PER_BLOCK,
                 "candidates": [{"insight_id": i["insight_id"], "type": i["type"], "clock": fmt_clock(i["t_s"]),
                                 "priority": i["priority"], "players": i["players"], "team": i["team"],
-                                "facts": i["facts"]} for i in candidates],
+                                "facts": {k: v for k, v in i["facts"].items() if k not in UI_ONLY_FACTS}} for i in candidates],
                 "recently_shown": [{"clock": fmt_clock(h["t_s"]), "type": h["insight_type"], "players": h["players"],
                                     "title": h["title"]} for h in history[-8:]],
             }

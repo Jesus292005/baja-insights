@@ -1,0 +1,44 @@
+name: Stream image
+
+# Builds stream.Dockerfile and publishes it to GitHub Container Registry.
+# Azure for Students subscriptions don't allow ACR Tasks, so the image is built here.
+# Pull requests only build it, to catch a broken Dockerfile before the merge.
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "data/**", "stream.Dockerfile", ".dockerignore", ".github/workflows/stream-image.yml"]
+  pull_request:
+    paths: ["src/**", "data/**", "stream.Dockerfile", ".dockerignore", ".github/workflows/stream-image.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/baja-stream
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=short
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: stream.Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

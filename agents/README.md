@@ -75,6 +75,42 @@ venv/Scripts/python.exe -m pytest tests -q
 
 For live use, `Crew.process_block(label, insights)` in `baja_agents/pipeline.py` processes one block and returns its orders.
 
+## Credentials and deployment
+
+The agents authenticate with `DefaultAzureCredential` (`baja_agents/config.py`). There are no API keys:
+
+- **On a laptop** it uses `az login`. Your account needs the **Foundry User** role on the Foundry resource (or its resource group).
+- **In Azure Container Apps** it uses the container's managed identity. With a user-assigned identity, also set `AZURE_CLIENT_ID` to its client id.
+
+Environment variables, the same as in `agents/.env`:
+
+| Variable | Value |
+| --- | --- |
+| `FOUNDRY_PROJECT_ENDPOINT` | `https://<resource>.services.ai.azure.com/api/projects/<project>` |
+| `FOUNDRY_MODEL` | Model deployment name, e.g. `gpt-4.1-mini-baja-insights` |
+| `FOUNDRY_VERIFIER_MODEL` | Optional, a deployment for the verifier only |
+| `AZURE_CLIENT_ID` | Only with a user-assigned managed identity |
+
+**The container must live in the same subscription and tenant as the Foundry resource.** A managed identity cannot get tokens for a Foundry resource in another tenant, and each Azure for Students account usually has its own tenant. The Foundry resource is `diegomanzo-2526-resource` in `rg-baja-insights`.
+
+One-time setup, by the owner of that subscription:
+
+```bash
+az provider register --namespace Microsoft.App
+az provider register --namespace Microsoft.OperationalInsights
+```
+
+After creating the container app with a system-assigned identity, give it access to Foundry:
+
+```bash
+PRINCIPAL=$(az containerapp identity show -g rg-baja-insights -n <app> --query principalId -o tsv)
+FOUNDRY=$(az cognitiveservices account show -g rg-baja-insights -n diegomanzo-2526-resource --query id -o tsv)
+az role assignment create --assignee-object-id "$PRINCIPAL" --assignee-principal-type ServicePrincipal \
+  --role "Foundry User" --scope "$FOUNDRY"
+```
+
+In Git Bash on Windows, run `export MSYS_NO_PATHCONV=1` first, or it rewrites the `/subscriptions/...` scope. The role can take a few minutes to apply; until then the agents get a 401 or 403 and fall back to templates.
+
 ## Reading insights live from the engine
 
 ```bash
@@ -93,16 +129,66 @@ for event in events:
         curator.send(insight)
 ```
 
-## Tools for Ask the Match
+## Ask the Match
 
-```python
-from baja_insights.engine.tools import MatchQuery
+`POST /api/ask`, shaped like `contracts/chat.schema.json`. The code is in `baja_agents/ask.py` (the agent) and `baja_agents/server.py` (the HTTP service).
 
-query = MatchQuery.from_files("data/m001/events.jsonl")
-query.dispatch("get_mvp_ranking", {"at": "35:00", "top": 3})
+The agent answers only through the six engine functions of `MatchQuery` (`get_match_state`, `get_mvp_ranking`, `get_player_summary`, `get_duel`, `get_team_phase` and `get_goal_chain`). They are registered with the definitions in `mocks/chat_tools_sample.json`, so the agent and the contract describe the same functions.
+
+**What code enforces, not the prompt:**
+- **No future.** Every moment the agent asks for is clipped to the moment of the question, and `get_goal_chain` only finds goals already scored, so a live chat never reveals what comes next.
+- **No invented numbers.** Every number in the answer must appear in a function result; ids don't count. If one doesn't, the agent gets one retry with the problem listed, and if it still fails the answer is `status: "error"` and the UI shows its fallback.
+- **No predictions.** "Who will win?" is detected in code and always answered with `no_prediction`. The agent still says what each team needs, with data, as in the examples.
+- **Style.** A fan answer shows at most 3 figures besides the scoreline. Breaking this is worth a retry, but an accurate answer is kept even if the retry still breaks it.
+- `not_tracked` (for example distance run) and `not_found` (a player who isn't in the match) come from what the functions return.
+
+**Service:**
+- `GET /healthz` and `POST /api/ask`, with open CORS for the UI.
+- Requests are validated against the contract: an invalid one gets 400, and an unknown `match_id` gets 404.
+- Every `data/<match>/events.jsonl` is loaded at startup (`m001` and `f002`).
+- At most `CHAT_PER_MINUTE` questions per minute reach the model (20 by default). Beyond that the answer is 429.
+- Answers are cached by match, question, moment, mode, language, favorite team and history (`CHAT_CACHE_DIR`), so the questions from the video or the judges cost nothing the second time.
+- A first answer takes about 4 to 7 seconds; a cached one, a few milliseconds.
+
+```bash
+venv/Scripts/python.exe -m baja_agents serve --port 8080
+venv/Scripts/python.exe -m baja_agents ask "¿Por qué Torres va primero?" --at 35:00
 ```
 
-The definitions of the six functions, ready to register as tools, are in `mocks/chat_tools_sample.json` under `tools`. The conversations in `example_conversations` work as test cases.
+The image is `chat.Dockerfile`, built by `.github/workflows/chat-image.yml` into `ghcr.io/jesus292005/baja-chat`, and deployed as `baja-chat` (see `docs/despliegue.md`). Offline tests are in `tests/test_ask.py`: a fake agent calls the real engine functions.
+
+### Putting an answer on screen (`chat_answer`)
+
+When the producer wants a fan's question and its answer on screen, the UI sends the `/api/ask` response to `POST /api/chat-overlay` and gets back a `chat_answer` graphics order that matches `overlay.schema.json`:
+
+```json
+{"answer": {"match_id": "m001", "question": "...", "at_s": 1800, "status": "answered", "answer": "...", "tools": ["get_match_state"]},
+ "mode": "fan", "language": "es", "show_at_s": 1802, "slot": "side_panel"}
+```
+
+- `show_at_s` and `slot` are optional. They default to the answer's moment and `side_panel`.
+- The order is built in code (`overlays.chat_answer_order`), with no model call. The title is the question, the text is the answer, and `data` (`question`, `status`, `tools`, `evidence`) is copied from it. `source_insight` is `null`, and the duration depends on the length (8 to 20 s).
+- The `overlay_id` is stable (`chat-<hash>`), so the same answer is never shown twice.
+- An answer with `status: "error"` has no text and gets 422. An invalid body gets 400.
+- The stream replays files and does not take new orders live, so the UI draws this order itself.
+
+## MCP server
+
+The same six engine functions are also an **MCP server** (Model Context Protocol), at `POST /mcp` on the chat service (`baja_agents/mcp_server.py`). Any MCP client can query the match with them: Agent Framework's `MCPStreamableHTTPTool`, a Foundry agent, Claude, VS Code, or the MCP Inspector.
+
+- **Tools:** the six functions with the descriptions of `mocks/chat_tools_sample.json`, plus `list_matches`.
+- **Arguments:** every tool takes `match_id` (default `m001`) and an optional `as_of` (`MM:SS`). With `as_of`, the server answers as if the match were live at that moment: every moment is clipped to it and only goals already scored can be looked up, with the same code as Ask the Match. Without it, the whole match is available.
+- **Errors:** "not found" and "not tracked" (`goal_not_found`, `player_not_found`, `match_not_found`, `not_tracked`) are answers, so they come back as data with `isError: false`, as in the chat. Only a malformed call (`bad_arguments`) is a tool error (`isError: true`), which clients such as Agent Framework raise.
+- **Transport:** Streamable HTTP, stateless, answering every request with `application/json`. It supports `initialize`, `tools/list`, `tools/call` and `ping`, and returns empty lists for prompts and resources.
+- **No SDK on the server.** On Windows, Application Control can block the `pywin32` DLL that the MCP SDK imports. The client test (`tests/test_mcp.py`) uses Agent Framework's MCP client on the official SDK. It skips locally when the SDK can't load, and CI requires it (`REQUIRE_MCP_CLIENT=1`, with `agents/requirements-dev.txt`).
+
+```python
+from agent_framework import MCPStreamableHTTPTool
+
+async with MCPStreamableHTTPTool(name="baja", url="https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/mcp") as tool:
+    agent = Agent(client=client, name="analyst", tools=tool)
+    print(await agent.run("Who led the MVP race at 35:00 in m001, and why?"))
+```
 
 ## Rules
 

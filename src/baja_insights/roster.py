@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -58,20 +59,38 @@ class Roster:
         return [p for p in self.team_players(team, starters_only) if p.position == position]
 
     def find(self, name: str) -> Player | None:
-        """Exact name, or a unique case-insensitive match on surname ('torres' -> 'J. Torres')."""
+        """Exact name, or a unique match on full name or surname, ignoring case and accents
+        ('torres' -> 'J. Torres', 'ramirez' -> 'M. Ramírez'). None if nothing or more than one matches."""
+        if not isinstance(name, str):
+            return None
         if name in self.players:
             return self.players[name]
-        needle = name.strip().lower()
+        needle = normalize(name)
+        if not needle:
+            return None
         hits = [p for p in self.players.values()
-                if p.name.lower() == needle or p.name.lower().split(". ")[-1] == needle]
+                if normalize(p.name) == needle or normalize(p.name).split(". ")[-1] == needle]
         return hits[0] if len(hits) == 1 else None
 
     def find_team(self, name: str) -> str | None:
-        needle = name.strip().lower()
+        """Full or short name ignoring case and accents ('bahia fc', 'cardon'), or a part of the name
+        of at least 3 letters that fits a single team. None otherwise, never a guess."""
+        if not isinstance(name, str):
+            return None
+        needle = normalize(name)
+        if not needle:
+            return None
         for team, meta in self.team_meta.items():
-            if needle in (team.lower(), str(meta.get("short", "")).lower()) or needle in team.lower():
+            if needle in (normalize(team), normalize(str(meta.get("short", "")))):
                 return team
-        return None
+        hits = [team for team in self.team_meta if len(needle) >= 3 and needle in normalize(team)]
+        return hits[0] if len(hits) == 1 else None
+
+
+def normalize(text: str) -> str:
+    """'  Bahía FC ' -> 'bahia fc': lower case, no accents, single spaces."""
+    plain = "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c))
+    return " ".join(plain.lower().split())
 
 
 def overall(card: dict) -> int:

@@ -44,16 +44,39 @@ def verifier_model_name() -> str:
     return os.environ.get("FOUNDRY_VERIFIER_MODEL") or model_name()
 
 
+def make_credential():
+    """``az login`` on a laptop, the managed identity in Azure Container Apps.
+
+    DefaultAzureCredential tries, in order: environment variables, workload identity,
+    managed identity (``AZURE_CLIENT_ID`` picks a user-assigned one) and then the Azure CLI.
+    The shared token cache is skipped so a cached account never wins over ``az login``.
+    """
+    from azure.identity import DefaultAzureCredential
+
+    return DefaultAzureCredential(exclude_shared_token_cache_credential=True,
+                                  exclude_interactive_browser_credential=True)
+
+
+_credential = None
+
+
+def credential():
+    """One credential per process, so its tokens are cached and reused by every client."""
+    global _credential
+    if _credential is None:
+        _credential = make_credential()
+    return _credential
+
+
 def make_client(model: str | None = None):
     """FoundryChatClient from FOUNDRY_PROJECT_ENDPOINT and FOUNDRY_MODEL (or ``model``) in agents/.env."""
     load_env()
     from agent_framework.foundry import FoundryChatClient
-    from azure.identity import AzureCliCredential
 
     return FoundryChatClient(
         project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
         model=model or os.environ["FOUNDRY_MODEL"],
-        credential=AzureCliCredential(),
+        credential=credential(),
     )
 
 

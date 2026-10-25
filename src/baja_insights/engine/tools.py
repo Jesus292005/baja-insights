@@ -14,7 +14,7 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
-from ..contract import event_t_s, fmt_clock, parse_clock, period_of
+from ..contract import MATCH_LENGTH_S, event_t_s, fmt_clock, parse_clock, period_of
 from ..roster import Roster, overall
 from .core import InsightEngine
 from .state import NOT_TRACKED
@@ -49,7 +49,7 @@ class MatchQuery:
         return engine
 
     def _at(self, at) -> tuple[int, InsightEngine]:
-        at_s = parse_clock(at)
+        at_s = min(parse_clock(at), MATCH_LENGTH_S)  # after the final whistle the answer is the final state
         engine = self.engine_at(at_s)
         engine.state.t = max(engine.state.t, min(at_s, 5400))
         return at_s, engine
@@ -76,11 +76,7 @@ class MatchQuery:
     def get_mvp_ranking(self, at, top: int = 5) -> dict:
         at_s, engine = self._at(at)
         st = engine.state
-        rows = []
-        for rank, (name, score) in enumerate(st.ranking()[: max(1, int(top))], start=1):
-            ps = st.players[name]
-            rows.append({"rank": rank, "player": name, "team": ps.team, "position": ps.position, "mvp_score": score})
-        return {"at": fmt_clock(at_s), "at_s": at_s, "ranking": rows}
+        return {"at": fmt_clock(at_s), "at_s": at_s, "ranking": st.ranking_rows(top)}
 
     def get_player_summary(self, player: str, at) -> dict:
         found = self.roster.find(player)
@@ -97,8 +93,9 @@ class MatchQuery:
             "minutes_played": round(ps.minutes(at_s), 1), "mvp_rank": st.rank_of(ps.name), "mvp_score": st.mvp(ps),
             "vs_role": st.vs_role(ps), "stats": dict(ps.stats), "expected_for_role": st.expected(ps),
             "card": card,
-            "card_changes": [{k: c[k] for k in ("attribute", "from", "to", "delta", "reason", "overall_from",
-                                                "overall_to", "event_id", "t_s")} for c in ps.card_changes],
+            "card_changes": [{k: c[k] for k in ("attribute", "from", "to", "delta", "reason", "reason_code",
+                                                "reason_params", "overall_from", "overall_to", "event_id", "t_s")}
+                             for c in ps.card_changes],
             "key_events": key_events, "not_tracked": list(NOT_TRACKED),
         }
 

@@ -11,6 +11,12 @@ MAX_TEXT_WORDS = 30
 MAX_TEXT_WORDS_LONG = 40  # top3 and match_keys
 LONG_TYPES = ("top3", "match_keys")
 MAX_FAN_FIGURES = 1
+
+# Facts copied to the overlay for the UI that the agents don't need (other players' MVP scores).
+# They stay out of the prompts, which keeps the cache valid, and out of the numbers a text may use.
+UI_ONLY_FACTS = ("ranking",)
+# Ids are numbers no text should show: "i03", event 190, evidence [24, 175].
+EVENT_ID_KEYS = ("event_id", "trigger_event_id", "led_to_event_id", "key_events")
 SCORELINE = re.compile(r"(?<![:\d])(?<!\d\.)(\d+)\s*-\s*(\d+)(?![:\d%])(?!\.\d)")  # 1-1, not 01:00-11:00 or 0.44-0.88
 
 # "<number> <stat>" must carry the value of that stat (or of its family, e.g. recoveries in the opposition half)
@@ -28,9 +34,25 @@ def numbers(text: str) -> set[float]:
     return {float(n.replace(",", ".")) for n in NUMBER.findall(text or "")}
 
 
+def _without_ids(value):
+    if isinstance(value, dict):
+        return {k: _without_ids(v) for k, v in value.items() if k not in UI_ONLY_FACTS and k not in EVENT_ID_KEYS}
+    if isinstance(value, list):
+        return [_without_ids(v) for v in value]
+    return value
+
+
+def content(insight: dict) -> dict:
+    """The insight without what never belongs in a text: UI-only facts, its id, its evidence and event ids.
+
+    Only the top-level ``evidence`` is a list of event ids. Inside match_keys, ``evidence`` is worded data.
+    """
+    return _without_ids({k: v for k, v in insight.items() if k not in ("insight_id", "evidence")})
+
+
 def allowed_numbers(insight: dict, extra: dict | None = None) -> set[float]:
-    """Every number in the insight (and in ``extra``, e.g. the scoreline), plus ratios written as percentages."""
-    base = numbers(json.dumps([insight, extra or {}], ensure_ascii=False))
+    """Every number of the insight's content (and of ``extra``, e.g. the scoreline), plus ratios as percentages."""
+    base = numbers(json.dumps([content(insight), extra or {}], ensure_ascii=False))
     percents = {float(round(n * 100)) for n in base if 0 < n <= 1}
     return base | percents
 

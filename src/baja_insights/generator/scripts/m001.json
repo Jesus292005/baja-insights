@@ -19,7 +19,7 @@
       "to": "45:00",
       "pass_acc": 0.7,
       "tempo": 0.9,
-      "press": 0.14,
+      "press": 0.1,
       "directness": 0.55
     },
     {
@@ -28,7 +28,7 @@
       "to": "90:00",
       "pass_acc": 0.76,
       "tempo": 1.05,
-      "press": 0.55,
+      "press": 0.7,
       "directness": 0.65
     },
     {
@@ -46,9 +46,9 @@
       "player": "J. Torres",
       "from": "22:00",
       "to": "90:00",
-      "press": 1.9,
-      "recover": 1.7,
-      "duel_win": 1.4
+      "press": 2.17,
+      "recover": 1.91,
+      "duel_win": 1.52
     },
     {
       "player": "F. Cota",
@@ -63,7 +63,7 @@
       "player": "K. Rosas",
       "from": "00:00",
       "to": "90:00",
-      "receive": 1.8,
+      "receive": 1.4,
       "pass_lines": 2.0
     },
     {

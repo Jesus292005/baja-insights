@@ -75,13 +75,26 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 | `duel_state` | `player_a` (local), `player_b`, `bar` (de −1 a 1), `a_vs_role`, `b_vs_role`, `duels_won_a`, `duels_won_b`, `direct_duels`, `chances_created_a`, `chances_created_b`, `flipped` |
 | `standout_milestone` | `player`, `position`, `profile` (`defensive` o `creative`), `stats`, `expected_for_role`, `vs_role`, `mvp_rank`, y `card_change` opcional |
 | `card_upgrade` | `player`, `attribute`, `from`, `to`, `delta`, `reason`, `overall_from`, `overall_to`, más extras según la regla, como `pass_difficulty`, `led_to` o `space_opened_m` |
-| `goal_chain` | `scoreline`, `scorer`, `assist`, `xg`, `duration_s`, `chain` (con `event_id`, `player`, `action`, `credit` y `t_s`, ordenada por tiempo y con créditos que suman 1), `invisible_assist` |
+| `goal_chain` | `scoreline`, `scorer`, `assist`, `xg`, `duration_s`, `chain` (con `event_id`, `player`, `action`, `credit` y `t_s`, ordenada por tiempo y con créditos que suman 1, y opcionales `type`, `lines_broken` y `cross`), `invisible_assist` |
 | `team_phase` | `label` (`control` o `pressure_shift`), `window`, y métricas según la etiqueta |
 | `match_keys` | `scoreline`, `xg`, `possession_pct`, `keys` (por equipo, con `code`, `key` y `evidence`), `no_prediction: true` |
 | `top3` | `final_scoreline`, `top3` (con `rank`, `player`, `team`, `position`, `mvp_score`, `why` y `key_events`) |
 | `match_summary` | `final_scoreline`, `xg`, `possession_pct`, `goals`, `phases`, `story`, `who_really_won`, `who_really_won_basis` |
 
-`card_change` tiene la forma `{attribute, from, to, delta, reason, overall_from, overall_to}`.
+`card_change` tiene la forma `{attribute, from, to, delta, reason, overall_from, overall_to}`, más los opcionales de v1.1 `reason_code` y `reason_params`. `reason` es el texto en español; el código y sus parámetros dicen lo mismo como datos, para escribirlo en cualquier idioma:
+
+| `reason_code` | `reason_params` | Texto en español del motor |
+| --- | --- | --- |
+| `line_breaking_pass` | `lines`, `under_pressure` | pase que rompió {lines} líneas, y «bajo presión» si aplica |
+| `opp_half_recoveries` | `count`, `window_min` | {count en ordinal} recuperación en campo rival en menos de {window_min} minutos |
+| `shot_speed` | `speed_kmh` | remate a {speed_kmh} km/h |
+| `duel_streak` | `count` | {count} duelos ganados seguidos |
+| `run_speed` | `speed_kmh` | desmarque a {speed_kmh} km/h |
+| `dribbles` | `count`, `window_min` | {count en palabras} regates ganados en menos de {window_min} minutos |
+| `run_ended_in_shot` | `dragged_defender` | arrastró a {dragged_defender} y la jugada terminó en remate |
+| `run_opened_goal` | `dragged_defender`, `dragged_position` | arrastró al central (si `dragged_position` es DFC) o a {dragged_defender} y abrió el espacio del gol |
+| `standout_defensive` | ninguno | partido defensivo por encima de lo esperado para su rol |
+| `standout_creative` | ninguno | partido creativo por encima de lo esperado para su rol |
 
 Ejemplos completos en `../mocks/insights_sample.json`, y un partido real en `../data/m001/insights.json`.
 
@@ -94,9 +107,10 @@ Campos: `overlay_id`, `match_id`, `source_insight` (null para los fotogramas de 
 | Dónde | Campo |
 | --- | --- |
 | Toda orden salvo los fotogramas | `evidence`, los `event_id` del insight |
-| `card` | `overall_from`, `overall_to` y `reason` |
+| `card` | `overall_from`, `overall_to`, `reason`, y `reason_code` y `reason_params` para escribir el motivo en cada idioma |
 | `mvp_update` | `data.ranking` |
 | `goal_analysis` | `data.chain_detail` con los eslabones completos, e `invisible_assist` como objeto (el texto queda obsoleto) |
+| Eslabones de `chain` y `chain_detail` | `type` (el tipo del evento), `lines_broken` y `cross` (solo en centros), para armar la acción en cada idioma. `action` sigue en español |
 | `chat_answer` | `data` obligatorio: `question`, `status`, `tools` y `evidence` opcional |
 
 - **slot:** `top_right`, `lower_third`, `side_panel`, `bottom_bar`, `center` o `full_screen`.
