@@ -89,18 +89,28 @@ az containerapp delete -n baja-chat -g rg-baja-insights --yes
 - Tiene una identidad administrada del sistema con el rol **Foundry User** sobre `diegomanzo-2526-resource`. Los agentes la usan con `DefaultAzureCredential` y no necesitan claves.
 - Escala a cero: no cobra mientras nadie pregunta. La primera pregunta después de un rato tarda unos segundos más, mientras arranca.
 
-**Falta, con el agente Pregúntale al partido:**
-1. El servidor HTTP con `GET /healthz` y `POST /api/ask` (`contracts/chat.schema.json`).
-2. Un Dockerfile y su workflow para publicar `ghcr.io/jesus292005/baja-chat`, igual que el stream.
-3. Las variables de entorno `FOUNDRY_PROJECT_ENDPOINT` y `FOUNDRY_MODEL`.
-4. Cambiar la imagen y el puerto:
+**El servicio** (Pregúntale al partido, ver `agents/README.md`):
+- Código en `agents/baja_agents/ask.py` y `server.py`.
+- Imagen `chat.Dockerfile`, con sus exclusiones propias en `chat.Dockerfile.dockerignore`, porque el `.dockerignore` del repo deja fuera `agents/`.
+- El workflow `.github/workflows/chat-image.yml` publica `ghcr.io/jesus292005/baja-chat` en cada push a `main` que toque los agentes, el motor, los datos, los mocks o los contratos.
+
+**Para desplegarlo, después del merge que publique la primera imagen:**
+
+1. Si el paquete `baja-chat` queda privado, el dueño del repo lo hace público, igual que con `baja-stream`.
+2. Cambiar el puerto antes que la imagen, para que la revisión nueva nazca con las sondas en el 8080:
 
 ```bash
-az containerapp update -n baja-chat -g rg-baja-insights --image ghcr.io/jesus292005/baja-chat:sha-<commit corto>   --set-env-vars FOUNDRY_PROJECT_ENDPOINT=<endpoint del proyecto> FOUNDRY_MODEL=gpt-4.1-mini-baja-insights
-az containerapp ingress update -n baja-chat -g rg-baja-insights --target-port <puerto>
+az containerapp ingress update -n baja-chat -g rg-baja-insights --target-port 8080
+az containerapp update -n baja-chat -g rg-baja-insights --image ghcr.io/jesus292005/baja-chat:sha-<commit corto> --set-env-vars FOUNDRY_PROJECT_ENDPOINT=https://diegomanzo-2526-resource.services.ai.azure.com/api/projects/diegomanzo-2526 FOUNDRY_MODEL=gpt-4.1-mini-baja-insights CHAT_PER_MINUTE=20
 ```
 
-Si se cambia el puerto después de la imagen, hay que forzar una revisión nueva, por ejemplo cambiando una variable de entorno, para que las sondas de salud tomen el puerto nuevo.
+3. Probar:
+
+```bash
+curl https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/healthz
+```
+
+**Escala a cero o réplica fija.** Con `min-replicas 0` la primera pregunta después de un rato espera a que arranque el contenedor (Python, Agent Framework y la carga de los partidos). Para la grabación del video y mientras los jueces prueban, conviene `--min-replicas 1`, que cuesta centavos por día. La caché de respuestas vive en `/tmp` y se pierde al reiniciar.
 
 Para comprobar el rol:
 
