@@ -1,0 +1,3 @@
+# Test-only: the official MCP SDK, so CI can check the /mcp server with a real MCP client.
+# Windows Application Control may block its pywin32 DLL locally; the test then skips.
+mcp==2.2.0
