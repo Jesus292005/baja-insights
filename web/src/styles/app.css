@@ -163,6 +163,8 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .race li:last-child { border-bottom: 0; }
 .race-pos { font-family: var(--bi-font-display); font-stretch: 70%; font-weight: var(--bi-weight-black); font-size: var(--bi-text-2xl); text-align: center; line-height: 1; }
 .race li.is-lead .race-pos { color: var(--bi-accent); }
+.race li.is-mover { box-shadow: inset 3px 0 0 var(--bi-up); padding-left: var(--bi-space-3); }
+.race .race-move { color: var(--bi-up); font-weight: var(--bi-weight-medium); }
 .race-who { display: flex; flex-direction: column; min-width: 0; }
 .race-who b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .race-who > span { font-size: var(--bi-text-xs); color: var(--bi-text-muted); }
@@ -180,6 +182,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .card-changes h3 { font-size: var(--bi-text-md); font-weight: var(--bi-weight-bold); }
 .card-changes li { display: flex; flex-wrap: wrap; gap: 0 var(--bi-space-2); align-items: baseline; padding-bottom: var(--bi-space-3); border-bottom: var(--bi-border-width) solid var(--bi-line); }
 .card-reason { flex-basis: 100%; font-size: var(--bi-text-xs); color: var(--bi-text-muted); }
+.card-overall { flex-basis: 100%; font-size: var(--bi-text-xs); }
 
 .moments { display: flex; flex-direction: column; gap: var(--bi-space-4); }
 .moments h2 { font-size: var(--bi-text-xl); font-weight: var(--bi-weight-bold); }

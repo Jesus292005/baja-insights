@@ -1,10 +1,10 @@
 /**
- * Tipos de las órdenes de gráfico, espejo de contracts/overlay.schema.json (contrato v1).
+ * Tipos de las órdenes de gráfico, espejo de contracts/overlay.schema.json (contrato v1.1),
+ * más los mensajes de contracts/stream.schema.json y contracts/chat.schema.json.
  * Las formas de `data` salen de mocks/overlays_sample.json y data/m001/overlays.json.
  *
- * Los campos marcados con `@proposed v1.1` están en el contrato v1.1 aprobado (docs/cambios-contrato-v1.1.md),
- * pero el motor y los agentes todavía no los producen.
- * La UI debe funcionar sin ellos (estado vacío honesto).
+ * Los campos marcados `v1.1` son opcionales en el esquema: las órdenes v1 no los traen y la UI
+ * debe funcionar sin ellos (estado vacío honesto).
  */
 
 export type Mode = 'fan' | 'analyst';
@@ -28,13 +28,21 @@ export interface OverlayCard {
   from: number;
   to: number;
   delta: number;
-  /** @proposed v1.1 — hoy solo existe en el insight. Sin él, la UI no muestra la media. */
+  /** v1.1 — media del motor antes del cambio. Sin ella, la UI no muestra la media. */
   overall_from?: number;
-  /** @proposed v1.1 */
+  /** v1.1 */
   overall_to?: number;
-  /** @proposed v1.1 — motivo del motor, para modo analista. */
+  /** v1.1 — motivo del motor en español. Respaldo cuando falta `reason_code`. */
   reason?: string;
+  /** v1.1 — qué dice el motivo, para escribirlo en cada idioma (contracts/README.md). */
+  reason_code?: ReasonCode;
+  /** v1.1 — números y nombres del motivo, según el código. */
+  reason_params?: Record<string, number | string | boolean | null>;
 }
+
+export type ReasonCode =
+  | 'line_breaking_pass' | 'opp_half_recoveries' | 'shot_speed' | 'duel_streak' | 'run_speed'
+  | 'dribbles' | 'run_ended_in_shot' | 'run_opened_goal' | 'standout_defensive' | 'standout_creative';
 
 export interface RankingEntry { rank: number; player: string; team: string; position: Position; mvp_score: number }
 
@@ -42,7 +50,7 @@ export interface MvpUpdateData {
   rank: number;
   previous_rank?: number;
   mvp_score: number;
-  /** @proposed v1.1 — foto del top 5 en ese instante (misma forma que get_mvp_ranking). Necesaria para la carrera. */
+  /** v1.1 — foto del top 5 en ese instante (misma forma que get_mvp_ranking). Necesaria para la carrera. */
   ranking?: RankingEntry[];
 }
 
@@ -54,7 +62,22 @@ export interface DuelBarData {
   bar: number;
 }
 
-export interface ChainLink { event_id: number; player: string; action: string; credit: number; t_s: number }
+export type ChainLinkType = 'pass' | 'shot' | 'tackle' | 'recovery' | 'duel' | 'pressure' | 'foul' | 'off_ball_run';
+
+export interface ChainLink {
+  event_id: number;
+  player: string;
+  /** Etiqueta en español del motor. Respaldo cuando falta `type`. */
+  action: string;
+  credit: number;
+  t_s: number;
+  /** v1.1 — tipo del evento, para escribir la acción en cada idioma. */
+  type?: ChainLinkType;
+  /** v1.1 — líneas rotas por el pase, 0 si no aplica. */
+  lines_broken?: number;
+  /** v1.1 — solo en pases que son centros. */
+  cross?: boolean;
+}
 export interface InvisibleAssistDetail { player: string; dragged_defender: string | null; space_opened_m: number | null; touched_ball: boolean }
 
 export interface GoalAnalysisData {
@@ -66,7 +89,7 @@ export interface GoalAnalysisData {
   invisible_assist?: InvisibleAssistDetail | string | null;
   scoreline?: Scoreline;
   xg?: number;
-  /** @proposed v1.1 — eslabones completos (acción, tiempo, evidencia) para modo analista. */
+  /** v1.1 — eslabones completos (acción, tiempo, evidencia) para modo analista. */
   chain_detail?: ChainLink[];
 }
 
@@ -109,7 +132,7 @@ export interface Top3Data { cards: Top3Card[]; final_scoreline?: Scoreline }
 export type ChatTool =
   | 'get_match_state' | 'get_mvp_ranking' | 'get_player_summary' | 'get_duel' | 'get_team_phase' | 'get_goal_chain';
 
-/** @proposed v1.1 — `data` obligatorio de chat_answer. */
+/** v1.1 — `data` obligatorio de chat_answer. */
 export interface ChatAnswerData {
   question: string;
   status: 'answered' | 'not_tracked' | 'not_found' | 'no_prediction';
@@ -135,7 +158,7 @@ interface OverlayBase<T extends OverlayType, D> {
   text: string | null;
   card?: OverlayCard | null;
   data?: D | null;
-  /** @proposed v1.1 — event_id que respaldan la orden (hoy solo están en el insight). */
+  /** v1.1 — event_id que respaldan la orden. Los fotogramas de la barra de duelo no lo traen. */
   evidence?: number[];
 }
 
@@ -163,7 +186,7 @@ export const isDuelFrame = (o: OverlayOrder): o is DuelBarOrder => o.type === 'd
 /* ---------- Stream ---------- */
 
 /**
- * @proposed v1.1 — contracts/stream.schema.json. `clock` es el latido (uno por segundo);
+ * v1.1 — contracts/stream.schema.json. `clock` es el latido (uno por segundo);
  * 3 s sin él = reconectando. Al reconectar, la UI manda `subscribe` con su último t_s.
  */
 export type StreamClientMessage = { kind: 'subscribe'; match_id: string; from_t_s: number };

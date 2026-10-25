@@ -61,6 +61,26 @@ describe('mvpAt', () => {
     expect(view.rankingIsFinal).toBe(false);
   });
 
+  it('finds who made the latest move in the ranking that came with it', () => {
+    const t = 50 * 60;
+    const latest = fanEs.filter((o) => o.type === 'mvp_update' && o.show_at_s <= t).pop()!;
+    const data = latest.data as { rank: number; previous_rank?: number; ranking: { rank: number; player: string }[] };
+    const view = mvpAt(fanEs, t);
+    expect(view.mover).toEqual({
+      player: data.ranking.find((r) => r.rank === data.rank)!.player,
+      from: data.previous_rank ?? null,
+      to: data.rank,
+    });
+  });
+
+  it('has no mover without a ranking or after the final top 3', () => {
+    const v1 = fanEs.map((o) =>
+      o.type === 'mvp_update' ? ({ ...o, data: { rank: o.data.rank, mvp_score: o.data.mvp_score } } as OverlayOrder) : o,
+    );
+    expect(mvpAt(v1, 50 * 60).mover).toBeNull();
+    expect(mvpAt(fanEs, 5520).mover).toBeNull();
+  });
+
   it('uses the final top 3 as the final ranking', () => {
     const view = mvpAt(fanEs, 5520);
     expect(view.rankingIsFinal).toBe(true);
@@ -84,6 +104,15 @@ describe('cardAt', () => {
     expect(card.attributes[last.card!.attribute]).toBe(last.card!.to);
     expect(new Set(card.changes.map((c) => `${c.atS}:${c.attribute}`)).size).toBe(card.changes.length);
     expect(card.overall).toBe(last.card!.overall_to);
+  });
+
+  it('gives the previous overall only when the latest change moved it', () => {
+    const cards = fanEs.filter((o) => o.card?.overall_from !== undefined && o.card.overall_to !== undefined);
+    const moved = cards.find((o) => o.card!.overall_from !== o.card!.overall_to)!;
+    const same = cards.find((o) => o.card!.overall_from === o.card!.overall_to)!;
+    expect(cardAt(roster, [moved], moved.card!.player, moved.show_at_s)!.overallFrom).toBe(moved.card!.overall_from);
+    expect(cardAt(roster, [same], same.card!.player, same.show_at_s)!.overallFrom).toBeNull();
+    expect(cardAt(roster, fanEs, 'J. Torres', 0)!.overallFrom).toBeNull();
   });
 
   it('drops the overall when a v1 order changed the card without overall_to', () => {

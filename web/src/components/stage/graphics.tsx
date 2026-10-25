@@ -10,6 +10,7 @@ import { usePrefs } from '../../i18n/prefs';
 import {
   asSent, attributeLabel, attributeShort, clock, ordinal, pct, positionLabel, signedPct, surname, t,
 } from '../../i18n/strings';
+import { cardReasonLabel, chainActionLabel } from '../../i18n/labels';
 import { cardAt } from '../../logic/derive';
 import { Evidence, TeamChip } from '../common';
 import { DuelMeter } from '../DuelMeter';
@@ -137,6 +138,7 @@ function Standout({ order, elapsed, orders }: GraphicProps<StandoutMilestoneOrde
             player={card.player}
             attributes={card.attributes}
             overall={card.overall}
+            overallFrom={card.overallFrom}
             changed={new Set(card.changes.map((c) => c.attribute))}
             highlight={order.card?.attribute}
             size="sm"
@@ -163,19 +165,27 @@ function CardUpgrade({ order, elapsed }: GraphicProps<CardUpgradeOrder>) {
   const player = roster.player(c.player);
   return (
     <Panel order={order} elapsed={elapsed} team={player?.team} className="g-card-upgrade">
-      <div className="g-upgrade">
-        <div className="g-upgrade-attr">
-          <abbr title={attributeLabel[lang][c.attribute]}>{attributeShort[lang][c.attribute]}</abbr>
-          <span className="g-upgrade-to">{c.to}</span>
-          <span className="g-upgrade-from">{c.from} → <span className="g-up">+{c.delta}</span></span>
-        </div>
-        <div className="g-upgrade-who">
-          <b>{c.player}</b>
-          <span>{positionLabel[lang][c.position].long}</span>
-          {c.overall_to !== undefined && <span>{s.card.overall} {c.overall_to}</span>}
-          {mode === 'analyst' && c.reason && <span className="g-reason">{c.reason}</span>}
-        </div>
+      {/* Grid: the attribute block on the left, title, player line and texts on the right. */}
+      <div className="g-upgrade-attr">
+        <abbr title={attributeLabel[lang][c.attribute]}>{attributeShort[lang][c.attribute]}</abbr>
+        <span className="g-upgrade-to">{c.to}</span>
+        <span className="g-upgrade-from">{c.from} → <span className="g-up">+{c.delta}</span></span>
       </div>
+      <p className="g-upgrade-who">
+        <b>{c.player}</b>
+        <span>{positionLabel[lang][c.position].long}</span>
+        {c.overall_to !== undefined && (
+          <span>
+            {s.card.overall}{' '}
+            {c.overall_from !== undefined && c.overall_from !== c.overall_to ? (
+              <>{c.overall_from} → <b className="g-up">{c.overall_to}</b></>
+            ) : (
+              c.overall_to
+            )}
+          </span>
+        )}
+      </p>
+      {mode === 'analyst' && cardReasonLabel(c, lang) && <p className="g-reason">{cardReasonLabel(c, lang)}</p>}
     </Panel>
   );
 }
@@ -204,7 +214,7 @@ function GoalChain({ order, elapsed }: GraphicProps<GoalAnalysisOrder>) {
             <li key={`${name}-${i}`} className={`${isInvisible ? 'is-invisible' : ''}${isScorer ? ' is-scorer' : ''}`} style={{ animationDelay: `${i * 150}ms` }}>
               <span className="g-node" aria-hidden="true">{surname(name).slice(0, 2).toUpperCase()}</span>
               <b>{name}</b>
-              {mode === 'analyst' && detail?.[i] && <small>{detail[i].action} · {clock(detail[i].t_s)}</small>}
+              {mode === 'analyst' && detail?.[i] && <small>{chainActionLabel(detail[i], lang)} · {clock(detail[i].t_s)}</small>}
               {mode === 'analyst' && d.credit[i] !== undefined && (
                 <span className="g-credit">
                   <span className="g-credit-bar" style={{ width: `${d.credit[i] * 100}%` }} />
@@ -324,6 +334,7 @@ function Top3({ order, elapsed, orders }: GraphicProps<Top3Order>) {
                     player={card.player}
                     attributes={card.attributes}
                     overall={card.overall}
+                    overallFrom={card.overallFrom}
                     changed={new Set(card.changes.map((x) => x.attribute))}
                     size={c.rank === 1 ? 'lg' : 'md'}
                     footer={`${s.mvp.score} ${asSent(c.mvp_score, lang)}`}

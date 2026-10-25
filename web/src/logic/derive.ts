@@ -1,5 +1,5 @@
 import type {
-  CardAttribute, DuelBarOrder, Language, Mode, MvpUpdateOrder, OverlayOrder, RankingEntry, Top3Order,
+  CardAttribute, DuelBarOrder, OverlayCard, Language, Mode, MvpUpdateOrder, OverlayOrder, RankingEntry, Top3Order,
 } from '../contracts/overlay';
 import { appliesTo } from '../contracts/overlay';
 import type { PlayerRef, Roster } from '../data/roster';
@@ -54,6 +54,11 @@ export interface MvpView {
   rankingIsFinal: boolean;
   /** Rank changes, newest first. */
   moves: MvpUpdateOrder[];
+  /**
+   * Who made the latest move, read from the ranking that came with it: the order has no player
+   * name, but its new rank points to a row of that ranking. null without a v1.1 ranking.
+   */
+  mover: { player: string; from: number | null; to: number } | null;
 }
 
 export function mvpAt(orders: readonly OverlayOrder[], t: number, maxMoves = 5): MvpView {
@@ -76,7 +81,13 @@ export function mvpAt(orders: readonly OverlayOrder[], t: number, maxMoves = 5):
       rankingIsFinal = true;
     }
   }
-  return { ranking, rankingAsOfS, rankingIsFinal, moves: moves.reverse().slice(0, maxMoves) };
+  const latest = moves[moves.length - 1];
+  let mover: MvpView['mover'] = null;
+  if (latest?.data.ranking?.length && !rankingIsFinal && rankingAsOfS === latest.show_at_s) {
+    const row = latest.data.ranking.find((r) => r.rank === latest.data.rank);
+    if (row) mover = { player: row.player, from: latest.data.previous_rank ?? null, to: latest.data.rank };
+  }
+  return { ranking, rankingAsOfS, rankingIsFinal, moves: moves.reverse().slice(0, maxMoves), mover };
 }
 
 /* ---------- Cards ---------- */
@@ -87,7 +98,12 @@ export interface CardChange {
   to: number;
   delta: number;
   atS: number;
+  /** Engine reason as sent (Spanish text, code and params). Written per language with cardReasonLabel. */
   reason?: string;
+  reason_code?: OverlayCard['reason_code'];
+  reason_params?: OverlayCard['reason_params'];
+  overall_from?: number;
+  overall_to?: number;
   /** Title of the order that carried the change, as context for the analyst view. */
   title: string | null;
 }
@@ -97,6 +113,8 @@ export interface CardView {
   attributes: Record<CardAttribute, number>;
   /** Engine's overall. null when there are changes but the order did not carry overall_to. */
   overall: number | null;
+  /** Overall before the latest change, only when that change moved it (overall_from ≠ overall_to). */
+  overallFrom: number | null;
   changes: CardChange[];
 }
 
@@ -116,9 +134,18 @@ export function cardAt(roster: Roster, orders: readonly OverlayOrder[], name: st
     seen.add(key);
     attributes[c.attribute] = c.to;
     overall = c.overall_to ?? null;
-    changes.push({ attribute: c.attribute, from: c.from, to: c.to, delta: c.delta, atS: o.show_at_s, reason: c.reason, title: o.title });
+    changes.push({
+      attribute: c.attribute, from: c.from, to: c.to, delta: c.delta, atS: o.show_at_s,
+      reason: c.reason, reason_code: c.reason_code, reason_params: c.reason_params,
+      overall_from: c.overall_from, overall_to: c.overall_to, title: o.title,
+    });
   }
-  return { player, attributes, overall, changes };
+  const last = changes[changes.length - 1];
+  const overallFrom =
+    last && last.overall_from !== undefined && last.overall_to !== undefined && last.overall_from !== last.overall_to
+      ? last.overall_from
+      : null;
+  return { player, attributes, overall, overallFrom, changes };
 }
 
 /** Players whose card changed up to t, most recent first. */
