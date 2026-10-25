@@ -226,7 +226,8 @@
 .pcard-attrs li.is-up { color: var(--bi-up); font-weight: 700; }
 .pcard-attrs li.is-up b::after { content: ' ▲'; font-size: 0.7em; }
 .pcard-attrs li.is-highlight { animation: level-up 1s var(--bi-ease-out) 1; }
-@keyframes level-up { 0% { background: var(--bi-cortez-700); } 100% { background: transparent; } }
+/* An outline, not a fill: the text keeps its contrast while it flashes. */
+@keyframes level-up { 0% { box-shadow: 0 0 0 2px var(--bi-cortez-400); } 100% { box-shadow: 0 0 0 2px transparent; } }
 
 .stage-canvas .pcard-sm { width: 210px; font-size: 18px; }
 .stage-canvas .pcard-md { width: 300px; font-size: 22px; }

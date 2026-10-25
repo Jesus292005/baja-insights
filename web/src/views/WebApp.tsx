@@ -96,6 +96,9 @@ export function WebApp({ config }: { config: AppConfig }) {
       <ConnectionBanner info={snap.connection} lastDataS={snap.lastDataS} onRetry={rt.retry} />
 
       <main id="match" className="layout" tabIndex={-1}>
+        <h1 className="sr-only">
+          {demoMatch.teams.match.home} – {demoMatch.teams.match.away} · {s.app.name}
+        </h1>
         <div className="main-col">
           <Stage showing={showing} orders={orders} variant="web" override={override} />
           {replay && replayState && (
