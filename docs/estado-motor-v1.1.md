@@ -103,8 +103,15 @@ Estos dos problemas los provocó el ranking que agregó el motor, pero se arregl
 
 ### Pendiente del contrato v1.1
 
-- [ ] Endpoint `POST /api/ask` con `chat.schema.json`. La pregunta de los kilómetros de Torres debe responder `not_tracked`, y «¿Quién va a ganar?» debe responder `no_prediction`.
+- [x] Endpoint `POST /api/ask` con `chat.schema.json`. La pregunta de los kilómetros de Torres debe responder `not_tracked`, y «¿Quién va a ganar?» debe responder `no_prediction`.
+  - **Resuelto en los PR #14 y #15, desplegado el 24 de octubre:** `https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/api/ask` (imagen `sha-4d8e5c4`).
+  - Código en `agents/baja_agents/ask.py` y `server.py`, con las seis funciones del motor y las definiciones de `mocks/chat_tools_sample.json`.
+  - Probado con las seis conversaciones de ejemplo: los kilómetros de Torres responden `not_tracked` y «¿Quién va a ganar?» responde `no_prediction`, con las claves de cada equipo.
+  - Las respuestas cumplen `chat.schema.json`.
+  - El código recorta cada momento al de la pregunta (nada del futuro), rechaza cifras que no salgan de las funciones y revisa el marcador local-visitante.
+  - Detalles en `agents/README.md` («Ask the Match») y `docs/despliegue.md`.
 - [ ] Orden `chat_answer` con `data` cuando el productor la ponga en pantalla.
+  - Opcional: solo hace falta si el productor quiere mostrar una respuesta del chat como gráfico. La respuesta de `/api/ask` ya trae `question`, `status`, `tools` y `evidence`, que son los campos de `chat_answer_data`.
 
 ### Detectado en la revisión
 
