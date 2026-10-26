@@ -38,7 +38,8 @@ function useFrame(active: boolean) {
 
 export function WebApp({ config }: { config: AppConfig }) {
   const [mode, setMode] = usePersisted<Mode>('bi.mode', 'fan', ['fan', 'analyst'], config.mode);
-  const [lang, setLang] = usePersisted<Language>('bi.lang', 'es', ['es', 'en'], config.lang);
+  // English by default. The key changed with that default, so a language stored before starts in English once.
+  const [lang, setLang] = usePersisted<Language>('bi.lang.v2', 'en', ['es', 'en'], config.lang);
   const [theme, setTheme] = usePersisted<'light' | 'dark'>('bi.theme', prefersDark() ? 'dark' : 'light', ['light', 'dark']);
   const rt = useMatchRuntime(config, mode, lang);
   const [pinned, setPinned] = useState<{ order: OverlayOrder; startedAt: number } | null>(null);
