@@ -9,6 +9,7 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
 | Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-7048698` (motor del PR #11 y las 168 órdenes de `m001` del PR #12), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
 | Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-623edcc` (PR #19). Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
+| Interfaz web | `baja-web` | Azure Static Web Apps, plan Free (sin costo), `centralus`. Sin repo ligado: se publica con el token de despliegue desde GitHub Actions |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`
 
@@ -65,6 +66,35 @@ Cada `update` crea una revisión nueva y reinicia el servicio, así que el reloj
 az containerapp revision restart -n baja-stream -g rg-baja-insights --revision $(az containerapp show -n baja-stream -g rg-baja-insights --query properties.latestRevisionName -o tsv)
 ```
 
+## La interfaz (Static Web Apps)
+
+`baja-web` se creó el 25 de octubre, en plan Free y sin repositorio ligado. URL:
+
+```text
+https://ambitious-smoke-08207d610.6.azurestaticapps.net
+```
+
+Mientras no haya un despliegue, muestra la página de espera de Azure.
+
+La interfaz se publica con el workflow `.github/workflows/web-deploy.yml`:
+- En cada push a `main` que toque `web/`, `data/`, `mocks/` o `contracts/` (o a mano, desde Actions → "Web deploy" → "Run workflow"), corre `npm ci`, `npm test` y `npm run build` en `web/`. Después sube `web/dist` con la acción `Azure/static-web-apps-deploy@v1`.
+- El build lo hace el workflow y no la acción, para correr las mismas pruebas que en local. Lee `../data` y `../mocks`, por eso necesita el repo completo.
+- En los PR solo prueba y construye, sin publicar.
+- Mientras no exista el secreto del token, el paso de publicar se salta con un aviso en lugar de fallar.
+
+**Token de despliegue.** Es un secreto: no va en el repo, en un PR ni en un chat.
+
+1. El dueño de la suscripción lo obtiene. En Git Bash, primero `export MSYS_NO_PATHCONV=1`:
+
+```bash
+az staticwebapp secrets list -n baja-web -g rg-baja-insights --query properties.apiKey -o tsv
+```
+
+2. El dueño del repo (`Jesus292005`) lo guarda como secreto de GitHub Actions `AZURE_STATIC_WEB_APPS_API_TOKEN`, en Settings → Secrets and variables → Actions.
+3. Con el secreto guardado, se lanza el workflow a mano (Actions → "Web deploy" → "Run workflow") o se espera al siguiente push a `main`. La interfaz queda en la URL de arriba.
+
+Si el token se filtra, se cambia por otro con `az staticwebapp secrets reset-api-key -n baja-web -g rg-baja-insights`, y luego se actualiza el secreto.
+
 ## Costo
 
 - **Container app:** una réplica siempre encendida de 0.25 vCPU y 0.5 GiB. Son centavos por día, en buena parte cubiertos por la cuota gratuita mensual de Container Apps.
@@ -76,6 +106,7 @@ Para apagarlo después del 10 de noviembre:
 ```bash
 az containerapp delete -n baja-stream -g rg-baja-insights --yes
 az containerapp delete -n baja-chat -g rg-baja-insights --yes
+az staticwebapp delete -n baja-web -g rg-baja-insights --yes
 ```
 
 ## El chat
