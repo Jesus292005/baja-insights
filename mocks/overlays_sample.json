@@ -162,7 +162,12 @@
           "credit": 0.2,
           "t_s": 1042,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            58,
+            40
+          ],
+          "end": null
         },
         {
           "event_id": 390,
@@ -171,7 +176,15 @@
           "credit": 0.3,
           "t_s": 1051,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            50,
+            45
+          ],
+          "end": [
+            28,
+            58
+          ]
         },
         {
           "event_id": 391,
@@ -181,6 +194,14 @@
           "t_s": 1058,
           "type": "pass",
           "lines_broken": 1,
+          "start": [
+            28,
+            58
+          ],
+          "end": [
+            8,
+            36
+          ],
           "cross": true
         },
         {
@@ -190,7 +211,15 @@
           "credit": 0.25,
           "t_s": 1060,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            8,
+            36
+          ],
+          "end": [
+            0,
+            35
+          ]
         }
       ]
     }
@@ -238,7 +267,12 @@
           "credit": 0.2,
           "t_s": 1042,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            58,
+            40
+          ],
+          "end": null
         },
         {
           "event_id": 390,
@@ -247,7 +281,15 @@
           "credit": 0.3,
           "t_s": 1051,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            50,
+            45
+          ],
+          "end": [
+            28,
+            58
+          ]
         },
         {
           "event_id": 391,
@@ -257,6 +299,14 @@
           "t_s": 1058,
           "type": "pass",
           "lines_broken": 1,
+          "start": [
+            28,
+            58
+          ],
+          "end": [
+            8,
+            36
+          ],
           "cross": true
         },
         {
@@ -266,7 +316,15 @@
           "credit": 0.25,
           "t_s": 1060,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            8,
+            36
+          ],
+          "end": [
+            0,
+            35
+          ]
         }
       ]
     }
@@ -314,7 +372,12 @@
           "credit": 0.2,
           "t_s": 1042,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            58,
+            40
+          ],
+          "end": null
         },
         {
           "event_id": 390,
@@ -323,7 +386,15 @@
           "credit": 0.3,
           "t_s": 1051,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            50,
+            45
+          ],
+          "end": [
+            28,
+            58
+          ]
         },
         {
           "event_id": 391,
@@ -333,6 +404,14 @@
           "t_s": 1058,
           "type": "pass",
           "lines_broken": 1,
+          "start": [
+            28,
+            58
+          ],
+          "end": [
+            8,
+            36
+          ],
           "cross": true
         },
         {
@@ -342,7 +421,15 @@
           "credit": 0.25,
           "t_s": 1060,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            8,
+            36
+          ],
+          "end": [
+            0,
+            35
+          ]
         }
       ]
     }
@@ -390,7 +477,12 @@
           "credit": 0.2,
           "t_s": 1042,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            58,
+            40
+          ],
+          "end": null
         },
         {
           "event_id": 390,
@@ -399,7 +491,15 @@
           "credit": 0.3,
           "t_s": 1051,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            50,
+            45
+          ],
+          "end": [
+            28,
+            58
+          ]
         },
         {
           "event_id": 391,
@@ -409,6 +509,14 @@
           "t_s": 1058,
           "type": "pass",
           "lines_broken": 1,
+          "start": [
+            28,
+            58
+          ],
+          "end": [
+            8,
+            36
+          ],
           "cross": true
         },
         {
@@ -418,7 +526,15 @@
           "credit": 0.25,
           "t_s": 1060,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            8,
+            36
+          ],
+          "end": [
+            0,
+            35
+          ]
         }
       ]
     }
@@ -1572,7 +1688,12 @@
           "credit": 0.18,
           "t_s": 3690,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            48,
+            30
+          ],
+          "end": null
         },
         {
           "event_id": 1353,
@@ -1581,7 +1702,24 @@
           "credit": 0.25,
           "t_s": 3778,
           "type": "off_ball_run",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            78,
+            10
+          ],
+          "end": [
+            92,
+            26
+          ],
+          "dragged_defender": "G. Cárdenas",
+          "dragged_defender_start": [
+            90,
+            37
+          ],
+          "dragged_defender_end": [
+            92,
+            27.7
+          ]
         },
         {
           "event_id": 1355,
@@ -1590,7 +1728,15 @@
           "credit": 0.35,
           "t_s": 3786,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            70,
+            38
+          ],
+          "end": [
+            93,
+            42
+          ]
         },
         {
           "event_id": 1356,
@@ -1599,7 +1745,15 @@
           "credit": 0.22,
           "t_s": 3789,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            93,
+            42
+          ],
+          "end": [
+            105,
+            35
+          ]
         }
       ],
       "invisible_assist": {
@@ -1655,7 +1809,12 @@
           "credit": 0.18,
           "t_s": 3690,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            48,
+            30
+          ],
+          "end": null
         },
         {
           "event_id": 1353,
@@ -1664,7 +1823,24 @@
           "credit": 0.25,
           "t_s": 3778,
           "type": "off_ball_run",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            78,
+            10
+          ],
+          "end": [
+            92,
+            26
+          ],
+          "dragged_defender": "G. Cárdenas",
+          "dragged_defender_start": [
+            90,
+            37
+          ],
+          "dragged_defender_end": [
+            92,
+            27.7
+          ]
         },
         {
           "event_id": 1355,
@@ -1673,7 +1849,15 @@
           "credit": 0.35,
           "t_s": 3786,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            70,
+            38
+          ],
+          "end": [
+            93,
+            42
+          ]
         },
         {
           "event_id": 1356,
@@ -1682,7 +1866,15 @@
           "credit": 0.22,
           "t_s": 3789,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            93,
+            42
+          ],
+          "end": [
+            105,
+            35
+          ]
         }
       ],
       "invisible_assist": {
@@ -1738,7 +1930,12 @@
           "credit": 0.18,
           "t_s": 3690,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            48,
+            30
+          ],
+          "end": null
         },
         {
           "event_id": 1353,
@@ -1747,7 +1944,24 @@
           "credit": 0.25,
           "t_s": 3778,
           "type": "off_ball_run",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            78,
+            10
+          ],
+          "end": [
+            92,
+            26
+          ],
+          "dragged_defender": "G. Cárdenas",
+          "dragged_defender_start": [
+            90,
+            37
+          ],
+          "dragged_defender_end": [
+            92,
+            27.7
+          ]
         },
         {
           "event_id": 1355,
@@ -1756,7 +1970,15 @@
           "credit": 0.35,
           "t_s": 3786,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            70,
+            38
+          ],
+          "end": [
+            93,
+            42
+          ]
         },
         {
           "event_id": 1356,
@@ -1765,7 +1987,15 @@
           "credit": 0.22,
           "t_s": 3789,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            93,
+            42
+          ],
+          "end": [
+            105,
+            35
+          ]
         }
       ],
       "invisible_assist": {
@@ -1821,7 +2051,12 @@
           "credit": 0.18,
           "t_s": 3690,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            48,
+            30
+          ],
+          "end": null
         },
         {
           "event_id": 1353,
@@ -1830,7 +2065,24 @@
           "credit": 0.25,
           "t_s": 3778,
           "type": "off_ball_run",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            78,
+            10
+          ],
+          "end": [
+            92,
+            26
+          ],
+          "dragged_defender": "G. Cárdenas",
+          "dragged_defender_start": [
+            90,
+            37
+          ],
+          "dragged_defender_end": [
+            92,
+            27.7
+          ]
         },
         {
           "event_id": 1355,
@@ -1839,7 +2091,15 @@
           "credit": 0.35,
           "t_s": 3786,
           "type": "pass",
-          "lines_broken": 2
+          "lines_broken": 2,
+          "start": [
+            70,
+            38
+          ],
+          "end": [
+            93,
+            42
+          ]
         },
         {
           "event_id": 1356,
@@ -1848,7 +2108,15 @@
           "credit": 0.22,
           "t_s": 3789,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            93,
+            42
+          ],
+          "end": [
+            105,
+            35
+          ]
         }
       ],
       "invisible_assist": {

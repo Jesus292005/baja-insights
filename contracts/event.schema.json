@@ -34,6 +34,8 @@
     "scoreline": {"$ref": "#/$defs/scoreline"},
     "dragged_defender": {"type": ["string", "null"]},
     "space_opened_m": {"type": ["number", "null"], "minimum": 0},
+    "dragged_defender_start": {"description": "Optional, added to v1.1. Only on scripted off_ball_run events: where the dragged defender was when the run started.", "$ref": "#/$defs/point_or_null"},
+    "dragged_defender_end": {"description": "Optional, added to v1.1. Only on scripted off_ball_run events: where the run left him.", "$ref": "#/$defs/point_or_null"},
     "fouled": {"type": "string"},
     "player_in": {"type": "string"},
     "player_out": {"type": "string"},

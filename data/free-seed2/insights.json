@@ -161,7 +161,12 @@
           "credit": 0.44,
           "t_s": 451,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            104.5,
+            34.6
+          ],
+          "end": null
         },
         {
           "event_id": 118,
@@ -170,7 +175,15 @@
           "credit": 0.56,
           "t_s": 452,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            104.5,
+            34.6
+          ],
+          "end": [
+            105.0,
+            35.2
+          ]
         }
       ],
       "invisible_assist": null
@@ -536,7 +549,12 @@
           "credit": 0.44,
           "t_s": 1416,
           "type": "recovery",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            11.9,
+            32.0
+          ],
+          "end": null
         },
         {
           "event_id": 330,
@@ -545,7 +563,15 @@
           "credit": 0.56,
           "t_s": 1418,
           "type": "shot",
-          "lines_broken": 0
+          "lines_broken": 0,
+          "start": [
+            11.9,
+            32.0
+          ],
+          "end": [
+            0,
+            37.0
+          ]
         }
       ],
       "invisible_assist": null

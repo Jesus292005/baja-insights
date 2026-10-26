@@ -344,7 +344,12 @@
                 "credit": 0.2,
                 "t_s": 1042,
                 "type": "recovery",
-                "lines_broken": 0
+                "lines_broken": 0,
+                "start": [
+                  58,
+                  40
+                ],
+                "end": null
               },
               {
                 "event_id": 390,
@@ -353,7 +358,15 @@
                 "credit": 0.3,
                 "t_s": 1051,
                 "type": "pass",
-                "lines_broken": 2
+                "lines_broken": 2,
+                "start": [
+                  50,
+                  45
+                ],
+                "end": [
+                  28,
+                  58
+                ]
               },
               {
                 "event_id": 391,
@@ -363,6 +376,14 @@
                 "t_s": 1058,
                 "type": "pass",
                 "lines_broken": 1,
+                "start": [
+                  28,
+                  58
+                ],
+                "end": [
+                  8,
+                  36
+                ],
                 "cross": true
               },
               {
@@ -372,7 +393,15 @@
                 "credit": 0.25,
                 "t_s": 1060,
                 "type": "shot",
-                "lines_broken": 0
+                "lines_broken": 0,
+                "start": [
+                  8,
+                  36
+                ],
+                "end": [
+                  0,
+                  35
+                ]
               }
             ],
             "invisible_assist": null
