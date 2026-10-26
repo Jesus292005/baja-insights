@@ -1010,7 +1010,15 @@
     "lines_broken": 0,
     "possession_id": 318,
     "dragged_defender": "G. Cárdenas",
-    "space_opened_m": 9.5
+    "space_opened_m": 9.5,
+    "dragged_defender_start": [
+      90,
+      37
+    ],
+    "dragged_defender_end": [
+      92,
+      27.7
+    ]
   },
   {
     "match_id": "m001",

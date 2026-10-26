@@ -32,6 +32,19 @@ class MockStoryTest(unittest.TestCase):
             self.assertEqual(actual["scoreline"], expected["scoreline"])
             self.assertEqual(actual["assist"], expected["assist"])
 
+    def test_chain_links_carry_the_event_coordinates(self):
+        events = {e["event_id"]: e for e in load(MOCKS / "events_sample.json")}
+        for insight in self.by_type("goal_chain"):
+            for link in insight["facts"]["chain"]:
+                event = events[link["event_id"]]
+                self.assertEqual(link["start"], event["start"])
+                self.assertEqual(link["end"], event["end"])
+                if link["type"] == "off_ball_run":
+                    for key in ("dragged_defender", "dragged_defender_start", "dragged_defender_end"):
+                        self.assertEqual(link[key], event[key], key)
+                else:
+                    self.assertNotIn("dragged_defender", link)
+
     def test_torres_takes_first_place_with_defense_card(self):
         hits = [i for i in self.by_type("mvp_rank_change") if i["t_s"] == 2020]
         self.assertEqual(len(hits), 1)

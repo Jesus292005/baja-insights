@@ -30,15 +30,34 @@ CARD_CHANGE_KEYS = ("attribute", "from", "to", "delta", "reason", "reason_code",
 COUNT_WORDS = {2: "dos", 3: "tres", 4: "cuatro", 5: "cinco", 6: "seis", 7: "siete", 8: "ocho"}
 
 
+# Pitch coordinates of the dragged defender, only on scripted off-ball runs
+DEFENDER_POINT_KEYS = ("dragged_defender_start", "dragged_defender_end")
+
+
 def chain_link(event: dict, credit: float) -> dict:
     """One link of a goal chain. ``action`` is the Spanish label; ``type``, ``lines_broken`` and ``cross``
-    (only on crosses) come from the event, so each language can build its own label (contract v1.1)."""
+    (only on crosses) come from the event, so each language can build its own label (contract v1.1).
+
+    ``start`` and ``end`` are the event's pitch coordinates, so the interface can draw the play.
+    Off-ball runs also carry the dragged defender, with his coordinates when the event has them.
+    Both are optional fields added to contract v1.1."""
     link = {"event_id": event["event_id"], "player": event["player"], "action": chain_action_label(event),
             "credit": credit, "t_s": event["t_s"], "type": event["type"],
-            "lines_broken": int(event.get("lines_broken") or 0)}
+            "lines_broken": int(event.get("lines_broken") or 0),
+            "start": point(event.get("start")), "end": point(event.get("end"))}
     if event.get("cross"):
         link["cross"] = True
+    if event["type"] == "off_ball_run" and event.get("dragged_defender"):
+        link["dragged_defender"] = event["dragged_defender"]
+        for key in DEFENDER_POINT_KEYS:
+            if event.get(key) is not None:
+                link[key] = point(event[key])
     return link
+
+
+def point(value) -> list[float] | None:
+    """A copy of an ``[x, y]`` point in metres, or None."""
+    return None if value is None else [value[0], value[1]]
 
 
 class InsightEngine:

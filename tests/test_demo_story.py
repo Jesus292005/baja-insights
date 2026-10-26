@@ -39,6 +39,21 @@ class DemoStoryTest(unittest.TestCase):
                          [(l["player"], l["action"], l["credit"]) for l in expected["chain"]])
         self.assertEqual(chain["invisible_assist"]["player"], "J. Torres")
 
+    def test_equalizer_chain_can_be_drawn(self):
+        """Every link carries the event's coordinates, and the off-ball run also the dragged centre-back,
+        moved by the space the run opened. This is what the pitch of the goal analysis draws."""
+        chain = self.of("goal_chain")[1]["facts"]["chain"]
+        by_id = {e["event_id"]: e for e in self.events}
+        for link in chain:
+            event = by_id[link["event_id"]]
+            self.assertEqual((link["start"], link["end"]), (event["start"], event["end"]), link["player"])
+        run = next(l for l in chain if l["type"] == "off_ball_run")
+        self.assertEqual(run["dragged_defender"], "G. Cárdenas")
+        dx = run["dragged_defender_end"][0] - run["dragged_defender_start"][0]
+        dy = run["dragged_defender_end"][1] - run["dragged_defender_start"][1]
+        space = self.mock["i11"]["facts"]["invisible_assist"]["space_opened_m"]
+        self.assertAlmostEqual((dx * dx + dy * dy) ** 0.5, space, delta=0.05)
+
     def test_torres_leads_at_35_and_wins_the_mvp(self):
         self.assertEqual(self.first_at_35, "J. Torres")  # "¿Por qué Torres va primero?" at 35:00
         # the MVP race on screen (ranking of the last update before 35:00) also has him first

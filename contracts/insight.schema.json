@@ -56,6 +56,14 @@
                                                     "who_really_won", "who_really_won_basis"]}}}}
   ],
   "$defs": {
+    "point_or_null": {
+      "description": "Pitch coordinates [x, y] in metres, origin at the bottom-left corner, as in event.schema.json.",
+      "oneOf": [
+        {"type": "null"},
+        {"type": "array", "prefixItems": [{"type": "number", "minimum": 0, "maximum": 105}, {"type": "number", "minimum": 0, "maximum": 68}],
+         "minItems": 2, "maxItems": 2}
+      ]
+    },
     "chain_link": {
       "type": "object", "required": ["event_id", "player", "action", "credit", "t_s"],
       "properties": {
@@ -65,7 +73,12 @@
         "type": {"description": "v1.1, optional. The event type of the link, as in event.schema.json.",
                  "enum": ["pass", "shot", "tackle", "recovery", "duel", "pressure", "foul", "off_ball_run"]},
         "lines_broken": {"description": "v1.1, optional. Copied from the event.", "type": "integer", "minimum": 0, "maximum": 4},
-        "cross": {"description": "v1.1, optional. Only on passes that are crosses.", "type": "boolean"}
+        "cross": {"description": "v1.1, optional. Only on passes that are crosses.", "type": "boolean"},
+        "start": {"description": "Optional, added to v1.1. Where the event happened, copied from the event, to draw the play.", "$ref": "#/$defs/point_or_null"},
+        "end": {"description": "Optional, added to v1.1. Where the pass, shot or run ended, copied from the event. Null on recoveries.", "$ref": "#/$defs/point_or_null"},
+        "dragged_defender": {"description": "Optional, added to v1.1. Only on off_ball_run links: the defender the run dragged.", "type": "string"},
+        "dragged_defender_start": {"description": "Optional, added to v1.1. Only on scripted off_ball_run links: where the dragged defender was.", "$ref": "#/$defs/point_or_null"},
+        "dragged_defender_end": {"description": "Optional, added to v1.1. Only on scripted off_ball_run links: where the run left him.", "$ref": "#/$defs/point_or_null"}
       }
     },
     "ranking": {
