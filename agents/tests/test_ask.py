@@ -88,6 +88,30 @@ def test_the_model_sees_team_names_not_home_and_away():
     assert session.results[-1]["possession_pct"] == {"home": 44, "away": 56}  # the checks keep the raw result
 
 
+def test_flank_duels_are_the_full_backs_against_the_opposing_wingers():
+    from baja_agents.ask import flank_duels
+    start = flank_duels(M001, 0)
+    pairs = {(d["player_a"], d["player_b"]) for d in start}
+    assert pairs == {("D. Mena", "D. Verdugo"), ("P. Lugo", "L. Montaño"), ("J. Torres", "B. Haro"),
+                     ("A. Olvera", "N. Ruelas")}
+    assert all(d["duels"] == 0 for d in start)
+    at_30 = flank_duels(M001, 1800)
+    assert [d["duels"] for d in at_30] == sorted((d["duels"] for d in at_30), reverse=True)
+    assert all(d["won_a"] + d["won_b"] == d["duels"] for d in at_30)
+    assert at_30[0]["duels"] > 0
+
+
+def test_the_agent_gets_the_flank_duels_and_may_quote_them():
+    from baja_agents.ask import flank_duels
+    duels = flank_duels(M001, 1800)
+    top = duels[0]  # Torres vs Haro at 30:00
+    text = f"Torres va ganando la banda: {top['won_a']} de {top['duels']} duelos."
+    chat = FakeChat([([("get_duel", {"player_a": "Torres", "player_b": "Haro"})], answer(text))])
+    out = asyncio.run(chat.ask(request("Who's winning the flank duel?", at="30:00")))
+    assert chat.prompts[0]["flank_duels"] == duels and top["player_a"] == "J. Torres"
+    assert out["status"] == "answered" and out["answer"] == text
+
+
 def test_prediction_questions_are_detected():
     for q in ("¿Quién va a ganar?", "¿Cómo va a terminar?", "Who will win?", "What are Bahía's chances to win?"):
         assert PREDICTION.search(q), q

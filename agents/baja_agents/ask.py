@@ -25,6 +25,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from baja_insights.contract import fmt_clock, parse_clock
+from baja_insights.engine.core import FLANK_MATCHUPS
 from baja_insights.engine.tools import MatchQuery
 
 from . import config
@@ -37,7 +38,7 @@ log = logging.getLogger(__name__)
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-6"
+VERSION = "ask-7"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
 PREDICTION = re.compile(
@@ -57,7 +58,8 @@ Rules
 - The current moment is `at`. Nothing after it exists yet: never ask about later moments and never talk about them.
 - To explain a goal, call get_match_state first to get its goal_event_id, then get_goal_chain.
 - `mode` fan: warm and simple, at most 3 figures besides the scoreline; say the rest in words. `mode` analyst: precise, with the key figures.
-- Write in `language` (es or en). At most 3 sentences for fans and 4 for analysts.
+- Write in `language` (es or en), even when the question is written in another language: the fan chose it in
+  the app. At most 3 sentences for fans and 4 for analysts.
 - Refer to players by surname. Do not use gendered pronouns for players.
 - Function results key per-team values by team name and give scorelines as text with the home team first,
   "Bahía FC 0-1 Real Cardón". A number belongs only to the team it is keyed by. Write scorelines in that order: 0-1.
@@ -72,7 +74,10 @@ Which functions to call
 - Why a team is winning or losing, who is better, or who will win: get_match_state, and get_team_phase for EACH
   team over the same window. A number belongs only to the team whose result contains it. Explain a goal with
   get_goal_chain when it helps.
-- A duel between two players: get_duel (player_a is the home player).
+- A duel between two players: get_duel (player_a is the home player). If the fan names no players ("the flank
+  duel", "el duelo de banda", "who is winning on the wing"), take them from `flank_duels`, the full-back against
+  the opposing winger, most contested first: answer about the first, and mention the second if it is close.
+  Never invent a player name for get_duel.
 - A goal: get_match_state for its goal_event_id, then get_goal_chain.
 
 Status
@@ -91,6 +96,32 @@ Status
 class AskAnswer(BaseModel):
     status: Literal["answered", "not_tracked", "not_found", "no_prediction"]
     answer: str = Field(description="The answer, in the requested language and mode")
+
+
+OPPOSITE_FLANK = {"LD": "EI", "LI": "ED", "ED": "LI", "EI": "LD"}  # a full-back faces the winger on that side
+
+
+def flank_duels(query: MatchQuery, at_s: int, top: int = 4) -> list[dict]:
+    """The flank duels up to ``at_s`` (full-back against the opposing winger), most contested first.
+
+    get_duel needs two names, and a fan asking about "the flank duel" gives none. These are the
+    engine's own pairs: every starter flank matchup, plus any other flank pair (a substitute) that
+    already had a duel.
+    """
+    st = query.engine_at(at_s).state
+    home, away = query.roster.home, query.roster.away
+    pairs: dict[tuple[str, str], list] = {}
+    for p in query.roster.team_players(home, starters_only=True):
+        if p.position in OPPOSITE_FLANK:
+            for q in query.roster.by_position(away, OPPOSITE_FLANK[p.position]):
+                pairs[(p.name, q.name)] = []
+    for (a, b), history in st.duel_pairs.items():
+        if (st.players[a].position, st.players[b].position) in FLANK_MATCHUPS:
+            pairs[(a, b)] = history
+    out = [{"player_a": a, "player_b": b, "duels": len(h),
+            "won_a": sum(1 for _, w, _ in h if w == a), "won_b": sum(1 for _, w, _ in h if w == b)}
+           for (a, b), h in pairs.items()]
+    return sorted(out, key=lambda d: (-d["duels"], d["player_a"]))[:top]
 
 
 def load_tool_definitions(path: Path = TOOLS_FILE) -> list[dict]:
@@ -130,6 +161,7 @@ class ToolSession:
     at_s: int
     calls: list[str] = field(default_factory=list)
     results: list[dict] = field(default_factory=list)
+    context: list = field(default_factory=list)  # engine data given to the agent up front (flank_duels)
 
     def _clip(self, value):
         try:
@@ -166,7 +198,7 @@ class ToolSession:
         self.results.append(result)
 
     def allowed_numbers(self, extra: list) -> set[float]:
-        base = numbers(json.dumps([_without_ids(self.results), extra], ensure_ascii=False))
+        base = numbers(json.dumps([_without_ids(self.results), self.context, extra], ensure_ascii=False))
         return base | {float(round(n * 100)) for n in base if 0 < n <= 1}
 
     def scorelines(self) -> set[str]:
@@ -316,7 +348,7 @@ class AskTheMatch:
         payload = {"question": request["question"], "at": fmt_clock(at_s), "mode": request["mode"],
                    "language": request["language"], "favorite_team": request.get("favorite_team"),
                    "history": request.get("history") or [], "home_team": home, "away_team": away,
-                   "prediction_question": prediction}
+                   "prediction_question": prediction, "flank_duels": flank_duels(query, at_s)}
         try:
             out = await asyncio.wait_for(self._answer(query, request, at_s, payload, prediction), self.timeout_s)
         except asyncio.TimeoutError:
@@ -331,7 +363,7 @@ class AskTheMatch:
         return out
 
     async def _answer(self, query: MatchQuery, request: dict, at_s: int, payload: dict, prediction: bool) -> dict:
-        session = ToolSession(query, at_s)
+        session = ToolSession(query, at_s, context=[payload["flank_duels"]])
         result = await self.runner.run(self._agent(session), self.name, VERSION, payload, AskAnswer, cache=False)
         if result is None:
             return self.response(request, at_s, "error", None, session.tools_used(), error="agent_failed")

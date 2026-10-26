@@ -141,6 +141,8 @@ The agent answers only through the six engine functions of `MatchQuery` (`get_ma
 - **No predictions.** "Who will win?" is detected in code and always answered with `no_prediction`. The agent still says what each team needs, with data, as in the examples.
 - **Style.** A fan answer shows at most 3 figures besides the scoreline. Breaking this is worth a retry, but an accurate answer is kept even if the retry still breaks it.
 - `not_tracked` (for example distance run) and `not_found` (a player who isn't in the match) come from what the functions return.
+- **Flank duels without names.** `get_duel` needs two players, and "who's winning the flank duel?" names none. With every question, code computes the flank duels up to that moment (each full-back against the opposing winger, plus any substitute pair that already had a duel), most contested first, and gives them to the agent as `flank_duels`. The agent takes the names from there and asks `get_duel` for the figures.
+- **Language.** The answer is always in the request's `language`, the one the fan chose in the app, even when the question is typed in another language.
 
 **Service:**
 - `GET /healthz` and `POST /api/ask`, with open CORS for the UI.
