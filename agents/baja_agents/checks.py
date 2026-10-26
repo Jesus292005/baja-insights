@@ -12,9 +12,11 @@ MAX_TEXT_WORDS_LONG = 40  # top3 and match_keys
 LONG_TYPES = ("top3", "match_keys")
 MAX_FAN_FIGURES = 1
 
-# Facts copied to the overlay for the UI that the agents don't need (other players' MVP scores).
-# They stay out of the prompts, which keeps the cache valid, and out of the numbers a text may use.
-UI_ONLY_FACTS = ("ranking",)
+# Facts copied to the overlay for the UI that the agents don't need: other players' MVP scores and the
+# pitch coordinates of the goal chain. They are dropped at any depth, so they stay out of the prompts,
+# which keeps the cache valid, and out of the numbers a text may use ("92" is not allowed because it
+# happens to be a coordinate).
+UI_ONLY_FACTS = ("ranking", "start", "end", "dragged_defender_start", "dragged_defender_end")
 # Ids are numbers no text should show: "i03", event 190, evidence [24, 175].
 EVENT_ID_KEYS = ("event_id", "trigger_event_id", "led_to_event_id", "key_events")
 SCORELINE = re.compile(r"(?<![:\d])(?<!\d\.)(\d+)\s*-\s*(\d+)(?![:\d%])(?!\.\d)")  # 1-1, not 01:00-11:00 or 0.44-0.88
@@ -39,6 +41,21 @@ def _without_ids(value):
         return {k: _without_ids(v) for k, v in value.items() if k not in UI_ONLY_FACTS and k not in EVENT_ID_KEYS}
     if isinstance(value, list):
         return [_without_ids(v) for v in value]
+    return value
+
+
+# Inside a goal chain link, the dragged defender is for drawing the run too. The agents already get it
+# from invisible_assist, and keeping it out leaves their prompts as they were before the coordinates.
+CHAIN_LINK_UI_ONLY = ("dragged_defender",)
+
+
+def without_ui_only(value, in_chain: bool = False):
+    """``value`` without the UI-only facts, at any depth (the coordinates live inside the goal chain)."""
+    if isinstance(value, dict):
+        drop = UI_ONLY_FACTS + (CHAIN_LINK_UI_ONLY if in_chain else ())
+        return {k: without_ui_only(v, k == "chain") for k, v in value.items() if k not in drop}
+    if isinstance(value, list):
+        return [without_ui_only(v, in_chain) for v in value]
     return value
 
 

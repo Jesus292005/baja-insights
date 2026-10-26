@@ -140,6 +140,16 @@ def test_a_lineup_question_needs_no_function_but_others_do():
     assert asyncio.run(chat.ask(request("¿Cómo va el partido?")))["status"] == "error"
 
 
+def test_the_chat_model_gets_no_pitch_coordinates():
+    pytest.importorskip("agent_framework")
+    session = ToolSession(M001, at_s=4200)
+    chain_tool = next(t for t in session.as_agent_tools(load_definitions()) if t.name == "get_goal_chain")
+    seen = json.loads(chain_tool.func(goal_event_id=GOALS[1]["event_id"]))
+    assert all("start" not in link and "end" not in link for link in seen["chain"])
+    assert session.results[-1]["chain"][1]["end"] == [92, 26]  # the raw result keeps them
+    assert 92.0 not in session.allowed_numbers([])
+
+
 def test_prediction_questions_are_detected():
     for q in ("¿Quién va a ganar?", "¿Cómo va a terminar?", "Who will win?", "What are Bahía's chances to win?"):
         assert PREDICTION.search(q), q

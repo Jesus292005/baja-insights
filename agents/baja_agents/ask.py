@@ -29,7 +29,7 @@ from baja_insights.engine.core import FLANK_MATCHUPS
 from baja_insights.engine.tools import MatchQuery
 
 from . import config
-from .checks import EVENT_ID_KEYS, figures, numbers, wrong_scorelines
+from .checks import EVENT_ID_KEYS, UI_ONLY_FACTS, figures, numbers, wrong_scorelines, without_ui_only
 from .llm import LLMRunner
 from .narrator import name_sides
 
@@ -191,7 +191,8 @@ def event_ids(value) -> list[int]:
 
 def _without_ids(value):
     if isinstance(value, dict):
-        return {k: _without_ids(v) for k, v in value.items() if k not in EVENT_ID_KEYS and k != "known_goals"}
+        return {k: _without_ids(v) for k, v in value.items()
+                if k not in EVENT_ID_KEYS and k not in UI_ONLY_FACTS and k != "known_goals"}
     if isinstance(value, list):
         return [_without_ids(v) for v in value]
     return value
@@ -275,7 +276,8 @@ class ToolSession:
             def run(**arguments) -> str:
                 # The model sees team names instead of home/away and scorelines as text, as the graphics
                 # agents do; the checks keep using the raw result.
-                return json.dumps(name_sides(self.call(name, arguments), self.query.roster), ensure_ascii=False)
+                result = without_ui_only(self.call(name, arguments))  # no pitch coordinates for the model
+                return json.dumps(name_sides(result, self.query.roster), ensure_ascii=False)
             run.__name__ = name
             return run
 

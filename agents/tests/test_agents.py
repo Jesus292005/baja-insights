@@ -143,6 +143,29 @@ def test_curator_does_not_see_the_ranking():
     assert all("ranking" not in c["facts"] for c in agent.prompts[0]["candidates"])
 
 
+def test_chain_coordinates_reach_the_overlay_but_not_the_agents():
+    from baja_agents.checks import without_ui_only
+    from baja_agents.narrator import slim
+    from baja_agents.overlays import build
+    goal = by_id(M001, "i44")  # the 1-1: Torres' run from [78, 10] to [92, 26]
+    torres = next(link for link in goal["facts"]["chain"] if link["player"] == "J. Torres")
+    assert torres["end"] == [92, 26] and torres["dragged_defender_end"]
+    # a number that only exists as a coordinate is invented in a text
+    assert check_variant(goal, "Torres", "Torres corrió hasta el metro 92.")
+    # the overlay keeps the coordinates for the UI
+    texts = {k: {"title": "t", "text": "x"} for k in ("fan_es", "analyst_es", "fan_en", "analyst_en")}
+    detail = build(goal, texts, goal["t_s"] + 2, ROSTER)[0]["data"]["chain_detail"]
+    assert next(link for link in detail if link["player"] == "J. Torres")["end"] == [92, 26]
+    # the agents never see them, so their prompts (and the cache) are the same as before the engine change
+    view = json.dumps(slim(goal, ROSTER))
+    assert '"start"' not in view and '"end"' not in view and "dragged_defender_start" not in view
+    assert slim(goal, ROSTER) == slim({**goal, "facts": without_ui_only(goal["facts"])}, ROSTER)
+    # the dragged defender: out of the chain links (it is for drawing), still in invisible_assist (for the story)
+    assert all("dragged_defender" not in link for link in slim(goal, ROSTER)["facts"]["chain"])
+    assert slim(goal, ROSTER)["facts"]["invisible_assist"]["dragged_defender"] == "G. Cárdenas"
+    assert next(link for link in detail if link["player"] == "J. Torres")["dragged_defender"] == "G. Cárdenas"
+
+
 def test_scoreline_from_context_is_allowed():
     from baja_agents.checks import allowed_numbers
     insight = by_id(M001, "i25")
