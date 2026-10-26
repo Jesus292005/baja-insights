@@ -8,8 +8,8 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Foundry | `diegomanzo-2526-resource`, proyecto `diegomanzo-2526` | Modelo `gpt-4.1-mini-baja-insights` |
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
 | Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-7048698` (motor del PR #11 y las 168 órdenes de `m001` del PR #12), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
-| Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-623edcc` (PR #19). Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
-| Interfaz web | `baja-web` | Azure Static Web Apps, plan Free (sin costo), `centralus`. Sin repo ligado: se publica con el token de despliegue desde GitHub Actions |
+| Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-18e38ee` (PR #27). Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
+| Interfaz web | `baja-web` | Azure Static Web Apps, plan Free (sin costo), `centralus`. Sin repo ligado: se publica con el token de despliegue desde GitHub Actions (`web-deploy.yml`). En vivo desde el merge `cf3e5bd` |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`
 
@@ -74,7 +74,7 @@ az containerapp revision restart -n baja-stream -g rg-baja-insights --revision $
 https://ambitious-smoke-08207d610.6.azurestaticapps.net
 ```
 
-Mientras no haya un despliegue, muestra la página de espera de Azure.
+Está en vivo desde el 25 de octubre: el secreto `AZURE_STATIC_WEB_APPS_API_TOKEN` quedó configurado y el workflow publicó con el merge `cf3e5bd`.
 
 La interfaz se publica con el workflow `.github/workflows/web-deploy.yml`:
 - En cada push a `main` que toque `web/`, `data/`, `mocks/` o `contracts/` (o a mano, desde Actions → "Web deploy" → "Run workflow"), corre `npm ci`, `npm test` y `npm run build` en `web/`. Después sube `web/dist` con la acción `Azure/static-web-apps-deploy@v1`.
