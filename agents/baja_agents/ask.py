@@ -38,9 +38,16 @@ log = logging.getLogger(__name__)
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-7"
+VERSION = "ask-8"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
+# Questions about who plays. `lineups` answers them in full, so they need no function call.
+LINEUP = re.compile(
+    r"(alineaci|once (titular|inicial)|titulares|suplentes|banca|banquillo|cambios?\b|sustituc|qui[eé]n(es)? juega"
+    r"|lineups?|line-up|starting (eleven|xi)|starters|bench|substitut|subs\b|who (is|are) playing)",
+    re.IGNORECASE,
+)
+
 PREDICTION = re.compile(
     r"(qui[eé]n (va a ganar|ganar[aá])|va(n)? a (ganar|perder|empatar)|c[oó]mo (va a )?(terminar|acabar)[aá]?"
     r"|resultado final|pron[oó]stic|predic|probabilidad|apuesta"
@@ -79,6 +86,9 @@ Which functions to call
   the opposing winger, most contested first: answer about the first, and mention the second if it is close.
   Never invent a player name for get_duel.
 - A goal: get_match_state for its goal_event_id, then get_goal_chain.
+- Lineups, who is playing, the bench or the substitutions: answer from `lineups`, with no function needed.
+  `on_pitch` is each team's eleven at `at`, `bench` who has not played, `substitutions` the changes so far. List
+  exactly those names and positions, team by team; never take players from anywhere else.
 
 Status
 - answered: you answered from the functions.
@@ -122,6 +132,40 @@ def flank_duels(query: MatchQuery, at_s: int, top: int = 4) -> list[dict]:
             "won_a": sum(1 for _, w, _ in h if w == a), "won_b": sum(1 for _, w, _ in h if w == b)}
            for (a, b), h in pairs.items()]
     return sorted(out, key=lambda d: (-d["duels"], d["player_a"]))[:top]
+
+
+POSITION_ORDER = ("POR", "LD", "DFC", "LI", "MCD", "MC", "ED", "EI", "DC")
+
+
+def lineups(query: MatchQuery, at_s: int) -> dict:
+    """Who is on the pitch for each team at ``at_s``, with positions, the bench and the substitutions so far.
+
+    No chat function returns lineups, and a guess from the ``known_players`` of a ``player_not_found``
+    (one flat list of the whole roster) mixes teams and substitutes. This comes from the roster and the
+    match's substitution events, so it is the same every time and follows the changes.
+    """
+    roster = query.roster
+    on_pitch = {team: [p.name for p in roster.team_players(team, starters_only=True)] for team in (roster.home, roster.away)}
+    subs = {team: [] for team in on_pitch}
+    for e in query.events:
+        if e["type"] != "substitution" or e["t_s"] > at_s or e.get("team") not in on_pitch:
+            continue
+        team, player_in, player_out = e["team"], e.get("player_in"), e.get("player_out")
+        if player_out in on_pitch[team]:
+            on_pitch[team][on_pitch[team].index(player_out)] = player_in
+        subs[team].append({"clock": fmt_clock(e["t_s"]), "out": player_out, "in": player_in})
+
+    def entry(name: str) -> dict:
+        p = roster.players[name]
+        return {"player": p.name, "number": p.number, "position": p.position}
+
+    out = {}
+    for team, names in on_pitch.items():
+        playing = sorted((entry(n) for n in names), key=lambda x: (POSITION_ORDER.index(x["position"]), x["number"]))
+        used = set(names) | {s["out"] for s in subs[team]}
+        bench = [entry(p.name) for p in roster.team_players(team) if p.name not in used]
+        out[team] = {"on_pitch": playing, "bench": bench, "substitutions": subs[team]}
+    return out
 
 
 def load_tool_definitions(path: Path = TOOLS_FILE) -> list[dict]:
@@ -298,7 +342,7 @@ class AskTheMatch:
     def problems(self, session: ToolSession, request: dict, at_s: int, result: AskAnswer) -> list[str]:
         """Accuracy problems: an answer that still has one after the retry is never shown."""
         found = []
-        if not session.calls:
+        if not session.calls and not LINEUP.search(request["question"]):  # `lineups` answers who plays in full
             found.append("you answered without calling any function")
         allowed = session.allowed_numbers([request["question"], fmt_clock(at_s), at_s // 60,
                                            [h["text"] for h in request.get("history") or []]])
@@ -348,7 +392,8 @@ class AskTheMatch:
         payload = {"question": request["question"], "at": fmt_clock(at_s), "mode": request["mode"],
                    "language": request["language"], "favorite_team": request.get("favorite_team"),
                    "history": request.get("history") or [], "home_team": home, "away_team": away,
-                   "prediction_question": prediction, "flank_duels": flank_duels(query, at_s)}
+                   "prediction_question": prediction, "flank_duels": flank_duels(query, at_s),
+                   "lineups": lineups(query, at_s)}
         try:
             out = await asyncio.wait_for(self._answer(query, request, at_s, payload, prediction), self.timeout_s)
         except asyncio.TimeoutError:
@@ -363,7 +408,7 @@ class AskTheMatch:
         return out
 
     async def _answer(self, query: MatchQuery, request: dict, at_s: int, payload: dict, prediction: bool) -> dict:
-        session = ToolSession(query, at_s, context=[payload["flank_duels"]])
+        session = ToolSession(query, at_s, context=[payload["flank_duels"], payload["lineups"]])
         result = await self.runner.run(self._agent(session), self.name, VERSION, payload, AskAnswer, cache=False)
         if result is None:
             return self.response(request, at_s, "error", None, session.tools_used(), error="agent_failed")
