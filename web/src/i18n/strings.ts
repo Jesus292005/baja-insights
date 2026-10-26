@@ -19,6 +19,23 @@ const es = {
     themeLight: 'Claro',
     themeDark: 'Oscuro',
   },
+  cinema: {
+    link: 'Modo cine',
+    badgeFan: 'Modo aficionado',
+    badgeAnalyst: 'Modo analista',
+    hint: 'H: atajos',
+    helpTitle: 'Atajos del modo cine',
+    keys: [
+      ['Espacio', 'Reproducir o pausar'],
+      ['M', 'Cambiar aficionado / analista'],
+      ['L', 'Cambiar español / inglés'],
+      ['N / P', 'Siguiente / anterior momento'],
+      ['← / →', 'Retroceder / avanzar 10 s (Mayús: 60 s)'],
+      ['B', 'Mostrar u ocultar el modo en pantalla'],
+      ['F', 'Pantalla completa'],
+      ['H', 'Mostrar u ocultar esta ayuda'],
+    ],
+  },
   source: {
     label: 'Fuente',
     replay: 'Repetición',
@@ -181,7 +198,15 @@ const es = {
   units: { minute: 'min', second: 's', meters: 'm', pct: '%' },
 } as const;
 
-type Shape<T> = { [K in keyof T]: T[K] extends string ? string : T[K] extends readonly string[] ? readonly string[] : Shape<T[K]> };
+type Shape<T> = {
+  [K in keyof T]: T[K] extends string
+    ? string
+    : T[K] extends readonly string[]
+      ? readonly string[]
+      : T[K] extends readonly (readonly string[])[]
+        ? readonly (readonly [string, string])[]
+        : Shape<T[K]>;
+};
 
 const en: Shape<typeof es> = {
   app: {
@@ -194,6 +219,23 @@ const en: Shape<typeof es> = {
     theme: 'Theme',
     themeLight: 'Light',
     themeDark: 'Dark',
+  },
+  cinema: {
+    link: 'Cinema mode',
+    badgeFan: 'Fan mode',
+    badgeAnalyst: 'Analyst mode',
+    hint: 'H: shortcuts',
+    helpTitle: 'Cinema mode shortcuts',
+    keys: [
+      ['Space', 'Play or pause'],
+      ['M', 'Switch fan / analyst'],
+      ['L', 'Switch Spanish / English'],
+      ['N / P', 'Next / previous moment'],
+      ['← / →', 'Back / forward 10 s (Shift: 60 s)'],
+      ['B', 'Show or hide the mode on screen'],
+      ['F', 'Full screen'],
+      ['H', 'Show or hide this help'],
+    ],
   },
   source: {
     label: 'Source',

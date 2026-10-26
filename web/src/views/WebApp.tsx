@@ -64,6 +64,7 @@ export function WebApp({ config }: { config: AppConfig }) {
   const { snap, orders, t, showing, loading, stale, replay, replayState } = rt;
   const s = strings[lang];
   const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
+  const cinemaHref = `/cine?mode=${mode}&lang=${lang}${config.source === 'replay' ? `&t=${Math.floor(t)}&autoplay=0` : '&source=live'}`;
   const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
 
   return (
@@ -88,12 +89,16 @@ export function WebApp({ config }: { config: AppConfig }) {
           <ModeToggle value={mode} onChange={setMode} />
           <LanguageToggle value={lang} onChange={setLang} />
           <ThemeToggle value={theme} onChange={setTheme} />
+          <a className="btn btn-ghost" href={cinemaHref} target="_blank" rel="noreferrer">{s.cinema.link}</a>
           <a className="btn btn-ghost" href={broadcastHref} target="_blank" rel="noreferrer">{s.app.broadcastLink}</a>
         </div>
       </header>
       <ConnectionBanner info={snap.connection} lastDataS={snap.lastDataS} onRetry={rt.retry} />
 
       <main id="match" className="layout" tabIndex={-1}>
+        <h1 className="sr-only">
+          {demoMatch.teams.match.home} – {demoMatch.teams.match.away} · {s.app.name}
+        </h1>
         <div className="main-col">
           <Stage showing={showing} orders={orders} variant="web" override={override} />
           {replay && replayState && (

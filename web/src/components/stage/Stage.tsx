@@ -14,6 +14,10 @@ export interface StageProps {
   override?: Showing | null;
   /** Broadcast only: a slot-sized placeholder for the score bug. */
   bug?: React.ReactNode;
+  /** Draws the pitch behind the graphics. Default: only in the web app. */
+  backdrop?: boolean;
+  /** Extra layers on the canvas, in canvas pixels (cinema badge and help). */
+  children?: React.ReactNode;
 }
 
 const { width: W, height: H } = broadcastSlots.canvas;
@@ -61,8 +65,8 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
   return message;
 }
 
-export function Stage({ showing, orders, variant, override, bug }: StageProps) {
-  const { s } = usePrefs();
+export function Stage({ showing, orders, variant, override, bug, backdrop, children }: StageProps) {
+  const { s, mode } = usePrefs();
   const { ref, scale } = useFitScale(variant === 'web' ? 'width' : 'contain');
   const merged: Partial<Record<Slot, Showing>> = { ...showing };
   if (override) merged[override.order.slot] = override;
@@ -72,6 +76,7 @@ export function Stage({ showing, orders, variant, override, bug }: StageProps) {
     <div ref={ref} className={`stage stage-${variant}`}>
       <div
         className="stage-canvas"
+        data-mode={mode}
         style={{
           width: W,
           height: H,
@@ -79,7 +84,7 @@ export function Stage({ showing, orders, variant, override, bug }: StageProps) {
           visibility: scale ? 'visible' : 'hidden',
         }}
       >
-        {variant === 'web' && <PitchBackdrop label={s.app.videoPlaceholder} />}
+        {(backdrop ?? variant === 'web') && <PitchBackdrop label={s.app.videoPlaceholder} />}
         {bug}
         {SLOTS.map((slot) => {
           const item = merged[slot];
@@ -94,6 +99,7 @@ export function Stage({ showing, orders, variant, override, bug }: StageProps) {
             </div>
           );
         })}
+        {children}
       </div>
       {variant === 'web' && (
         <div className="sr-only" aria-live="polite" aria-atomic="true">

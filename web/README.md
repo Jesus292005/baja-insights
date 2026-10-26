@@ -22,6 +22,7 @@ Por defecto la app repite el partido de demo `data/m001` (órdenes de los agente
 | --- | --- |
 | `/` | App web: escenario 16:9, carrera MVP, duelo, carta del jugador, chat y momentos |
 | `/broadcast` | Solo el overlay, 1920×1080 con fondo transparente, para OBS, vMix o cualquier fuente de navegador |
+| `/cine` | Modo cine para grabar: el lienzo 1920×1080 sobre negro, con el campo y el marcador, sin controles |
 
 Parámetros de URL:
 
@@ -38,6 +39,20 @@ Parámetros de URL:
 | `bug` | `1` | Solo `/broadcast`: dibuja el marcador |
 
 Ejemplo de fuente para OBS: `/broadcast?mode=fan&lang=es&bug=1`. En `/broadcast`, la barra espaciadora pausa la repetición.
+
+**Modo cine (`/cine`).** Se maneja solo con el teclado, para poder cambiar de modo e idioma frente a la cámara:
+
+| Tecla | Qué hace |
+| --- | --- |
+| Espacio | Reproducir o pausar |
+| M / L | Cambiar aficionado/analista y español/inglés |
+| N / P | Ir al siguiente o al anterior momento, 2 s antes de que entre el gráfico |
+| ← / → | Retroceder o avanzar 10 s (con Mayús, 60 s) |
+| B | Mostrar u ocultar la etiqueta del modo |
+| F | Pantalla completa |
+| H | Mostrar u ocultar la ayuda |
+
+Para grabar a 1920×1080: abre `/cine?t=10:30&autoplay=0`, pulsa F y graba la pantalla completa.
 
 ## Variables de entorno
 
