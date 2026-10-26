@@ -7,8 +7,8 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Grupo de recursos | `rg-baja-insights` | Región `centralus` |
 | Foundry | `diegomanzo-2526-resource`, proyecto `diegomanzo-2526` | Modelo `gpt-4.1-mini-baja-insights` |
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
-| Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-7048698` (motor del PR #11 y las 168 órdenes de `m001` del PR #12), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
-| Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-615745a` (PR #29). Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
+| Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-1cef039` (las 168 órdenes de `m001`, con las coordenadas de la cadena del gol de los PR #32 y #33), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
+| Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-1cef039` (PR #33). Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
 | Interfaz web | `baja-web` | Azure Static Web Apps, plan Free (sin costo), `centralus`. Sin repo ligado: se publica con el token de despliegue desde GitHub Actions (`web-deploy.yml`). En vivo desde el merge `cf3e5bd` |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`
