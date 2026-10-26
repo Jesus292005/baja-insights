@@ -15,14 +15,6 @@ import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
 import type { Showing } from '../logic/plan';
 
-const prefersDark = () => {
-  try {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  } catch {
-    return true;
-  }
-};
-
 /** Re-renders every frame while `active`, for the replayed moment's tide line. */
 function useFrame(active: boolean) {
   const [, setTick] = useState(0);
@@ -38,8 +30,10 @@ function useFrame(active: boolean) {
 
 export function WebApp({ config }: { config: AppConfig }) {
   const [mode, setMode] = usePersisted<Mode>('bi.mode', 'fan', ['fan', 'analyst'], config.mode);
-  const [lang, setLang] = usePersisted<Language>('bi.lang', 'es', ['es', 'en'], config.lang);
-  const [theme, setTheme] = usePersisted<'light' | 'dark'>('bi.theme', prefersDark() ? 'dark' : 'light', ['light', 'dark']);
+  // English by default. The key changed with that default, so a language stored before starts in English once.
+  const [lang, setLang] = usePersisted<Language>('bi.lang.v2', 'en', ['es', 'en'], config.lang);
+  // Dark by default, whatever the system theme. New key for the same reason as the language.
+  const [theme, setTheme] = usePersisted<'light' | 'dark'>('bi.theme.v2', 'dark', ['light', 'dark']);
   const rt = useMatchRuntime(config, mode, lang);
   const [pinned, setPinned] = useState<{ order: OverlayOrder; startedAt: number } | null>(null);
   useFrame(pinned !== null);
@@ -99,6 +93,11 @@ export function WebApp({ config }: { config: AppConfig }) {
         <h1 className="sr-only">
           {demoMatch.teams.match.home} – {demoMatch.teams.match.away} · {s.app.name}
         </h1>
+        <aside className="rail rail-left" aria-label={s.app.matchPanels}>
+          <MvpRacePanel orders={orders} t={t} stale={stale} loading={loading} />
+          <DuelPanel orders={orders} t={t} stale={stale} loading={loading} />
+          <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
+        </aside>
         <div className="main-col">
           <Stage showing={showing} orders={orders} variant="web" override={override} />
           {replay && replayState && (
@@ -113,10 +112,7 @@ export function WebApp({ config }: { config: AppConfig }) {
           )}
           <MomentsPanel orders={orders} t={t} stale={stale} loading={loading} onSelect={(o) => setPinned({ order: o, startedAt: performance.now() })} />
         </div>
-        <aside className="rail" aria-label={s.mvp.title}>
-          <MvpRacePanel orders={orders} t={t} stale={stale} loading={loading} />
-          <DuelPanel orders={orders} t={t} stale={stale} loading={loading} />
-          <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
+        <aside className="rail rail-right" aria-label={s.chat.title}>
           <AskTheMatch
             matchId={demoMatch.matchId}
             t={t}

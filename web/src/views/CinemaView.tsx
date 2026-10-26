@@ -20,7 +20,7 @@ const LEAD_S = 2;
 
 export function CinemaView({ config }: { config: AppConfig }) {
   const [mode, setMode] = useState<Mode>(config.mode ?? 'fan');
-  const [lang, setLang] = useState<Language>(config.lang ?? 'es');
+  const [lang, setLang] = useState<Language>(config.lang ?? 'en');
   const [badge, setBadge] = useState(true);
   const [help, setHelp] = useState(false);
   const [hint, setHint] = useState(true);

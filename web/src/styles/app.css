@@ -128,20 +128,34 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .banner-warn { background-color: var(--bi-surface-raised); }
 .banner-error { background-color: var(--bi-surface-raised); border-left: 4px solid var(--bi-error); }
 
+/* Three columns: match panels | stage and moments | chat.
+   DOM order is the same, so the tab order follows what the eye reads on wide screens. */
 .layout {
+  --left-width: 320px;
+  --chat-width: 360px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--bi-rail-width);
-  gap: var(--bi-space-7);
-  max-width: var(--bi-content-max);
+  grid-template-columns: var(--left-width) minmax(0, 1fr) var(--chat-width);
+  grid-template-areas: 'left main chat';
+  align-items: start;
+  gap: var(--bi-space-6);
+  max-width: 1720px;
   margin: 0 auto;
   padding: var(--bi-space-7) max(var(--bi-space-5), env(safe-area-inset-right, 0px)) var(--bi-space-9) max(var(--bi-space-5), env(safe-area-inset-left, 0px));
 }
 .layout:focus { outline: none; }
-.main-col { display: flex; flex-direction: column; gap: var(--bi-space-5); min-width: 0; }
+.main-col { grid-area: main; display: flex; flex-direction: column; gap: var(--bi-space-5); min-width: 0; }
 .rail { display: flex; flex-direction: column; gap: var(--bi-space-5); min-width: 0; }
-@media (max-width: 1100px) {
-  .layout { grid-template-columns: minmax(0, 1fr); }
-  .rail { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); align-items: start; }
+.rail-left { grid-area: left; }
+.rail-right { grid-area: chat; position: sticky; top: calc(var(--topbar-h, 72px) + var(--bi-space-5)); }
+/* Medium screens: the stage keeps its width; the match panels go below it, side by side. */
+@media (max-width: 1279px) {
+  .layout { grid-template-columns: minmax(0, 1fr) var(--chat-width); grid-template-areas: 'main chat' 'left left'; }
+  .rail-left { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: start; }
+}
+/* Narrow screens: one column, stage first. */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main' 'left' 'chat'; }
+  .rail-right { position: static; }
 }
 .footer { text-align: center; padding: var(--bi-space-7) var(--bi-space-5) var(--bi-space-9); font-size: var(--bi-text-xs); color: var(--bi-text-muted); }
 

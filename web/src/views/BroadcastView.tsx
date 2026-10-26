@@ -11,7 +11,7 @@ import { PrefsProvider } from '../i18n/prefs';
  */
 export function BroadcastView({ config }: { config: AppConfig }) {
   const mode = config.mode ?? 'fan';
-  const lang = config.lang ?? 'es';
+  const lang = config.lang ?? 'en';
   const rt = useMatchRuntime(config, mode, lang);
 
   useEffect(() => {
