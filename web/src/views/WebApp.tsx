@@ -15,14 +15,6 @@ import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
 import type { Showing } from '../logic/plan';
 
-const prefersDark = () => {
-  try {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  } catch {
-    return true;
-  }
-};
-
 /** Re-renders every frame while `active`, for the replayed moment's tide line. */
 function useFrame(active: boolean) {
   const [, setTick] = useState(0);
@@ -40,7 +32,8 @@ export function WebApp({ config }: { config: AppConfig }) {
   const [mode, setMode] = usePersisted<Mode>('bi.mode', 'fan', ['fan', 'analyst'], config.mode);
   // English by default. The key changed with that default, so a language stored before starts in English once.
   const [lang, setLang] = usePersisted<Language>('bi.lang.v2', 'en', ['es', 'en'], config.lang);
-  const [theme, setTheme] = usePersisted<'light' | 'dark'>('bi.theme', prefersDark() ? 'dark' : 'light', ['light', 'dark']);
+  // Dark by default, whatever the system theme. New key for the same reason as the language.
+  const [theme, setTheme] = usePersisted<'light' | 'dark'>('bi.theme.v2', 'dark', ['light', 'dark']);
   const rt = useMatchRuntime(config, mode, lang);
   const [pinned, setPinned] = useState<{ order: OverlayOrder; startedAt: number } | null>(null);
   useFrame(pinned !== null);
