@@ -106,14 +106,13 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
   border-bottom: var(--bi-border-width) solid var(--bi-line);
 }
 .brand { display: flex; align-items: center; gap: var(--bi-space-3); min-width: 0; }
-.brand-mark { width: 26px; height: 26px; flex: none; background: var(--bi-accent); clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px); }
-.brand-name { font-family: var(--bi-font-display); font-stretch: var(--bi-stretch-condensed); font-weight: var(--bi-weight-black); font-size: var(--bi-text-xl); letter-spacing: 0.01em; }
-.brand-tag { font-size: var(--bi-text-xs); color: var(--bi-text-muted); }
+/* Logo: cream parts take the text colour; the orange is the brand's, darker on light for legibility. */
+.brand-logo { display: block; height: 48px; width: auto; flex: none; color: var(--bi-text); --logo-accent: #f4784a; }
+:root[data-theme='light'] .brand-logo { --logo-accent: var(--bi-sol-700); }
 .topbar-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--bi-space-3); margin-left: auto; }
-.brand-name { white-space: nowrap; }
 @media (max-width: 700px) {
   .topbar { position: static; gap: var(--bi-space-3) var(--bi-space-4); }
-  .brand-tag { display: none; }
+  .brand-logo { height: 38px; }
   .topbar-controls { margin-left: 0; }
 }
 
