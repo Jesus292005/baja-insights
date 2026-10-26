@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="400 520 476 476">
+  <!-- Baja-Insights dot mark (public/brand/baja-insights-icon.svg), cropped to the dots.
+       The cream dots turn dark on light browser tabs so they stay visible. -->
+  <style>
+    .c { fill: #f1ece1; }
+    @media (prefers-color-scheme: light) { .c { fill: #0e1b22; } }
+  </style>
+  <g class="c">
+    <circle cx="539" cy="563" r="26"/>
+    <circle cx="632" cy="563" r="26"/>
+    <circle cx="726" cy="563" r="26" opacity="0.55"/>
+    <circle cx="446" cy="657" r="26"/>
+    <circle cx="819" cy="657" r="26" opacity="0.55"/>
+    <circle cx="446" cy="750" r="26"/>
+    <circle cx="819" cy="750" r="26" opacity="0.38"/>
+    <circle cx="446" cy="843" r="26" opacity="0.55"/>
+    <circle cx="819" cy="843" r="26" opacity="0.22"/>
+    <circle cx="539" cy="937" r="26" opacity="0.55"/>
+    <circle cx="632" cy="937" r="26" opacity="0.38"/>
+    <circle cx="726" cy="937" r="26" opacity="0.22"/>
+  </g>
+  <g fill="#f4784a">
+    <circle cx="632" cy="750" r="26"/>
+    <circle cx="726" cy="843" r="26"/>
+    <circle cx="819" cy="937" r="37"/>
+  </g>
+</svg>
