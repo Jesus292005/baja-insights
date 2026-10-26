@@ -112,6 +112,34 @@ def test_the_agent_gets_the_flank_duels_and_may_quote_them():
     assert out["status"] == "answered" and out["answer"] == text
 
 
+def test_lineups_follow_the_substitutions():
+    from baja_agents.ask import lineups
+    start = lineups(M001, 0)
+    bahia, cardon = start["Bahía FC"], start["Real Cardón"]
+    assert len(bahia["on_pitch"]) == len(cardon["on_pitch"]) == 11
+    on = {x["player"] for x in bahia["on_pitch"]} | {x["player"] for x in cardon["on_pitch"]}
+    assert {"E. Quiroz", "D. Verdugo"} <= on and not {"C. Ibarra", "J. Castro", "R. Amador"} & on  # the bug's mix-up
+    assert [x["player"] for x in bahia["bench"]] == ["C. Ibarra"] and bahia["on_pitch"][0]["position"] == "POR"
+
+    later = lineups(M001, 4500)  # 75:00: Amador on for Montaño at 70:00
+    cardon_on = {x["player"] for x in later["Real Cardón"]["on_pitch"]}
+    assert "R. Amador" in cardon_on and "L. Montaño" not in cardon_on
+    assert later["Real Cardón"]["substitutions"] == [{"clock": "70:00", "out": "L. Montaño", "in": "R. Amador"}]
+    assert "L. Montaño" not in {x["player"] for x in later["Real Cardón"]["bench"]}  # subbed off is not bench
+
+    end = lineups(M001, 5400)
+    assert end["Bahía FC"]["bench"] == [] and len(end["Bahía FC"]["on_pitch"]) == 11
+
+
+def test_a_lineup_question_needs_no_function_but_others_do():
+    chat = FakeChat([([], answer("Bahía FC: L. Arce (POR), D. Mena (LD)..."))])
+    out = asyncio.run(chat.ask(request("¿Me das las alineaciones de los equipos?", at="00:00")))
+    assert out["status"] == "answered" and out["tools"] == []
+    assert chat.prompts[0]["lineups"]["Bahía FC"]["on_pitch"][0]["player"] == "L. Arce"
+    chat = FakeChat([([], answer("Va muy bien.")), ([], answer("Va muy bien."))])
+    assert asyncio.run(chat.ask(request("¿Cómo va el partido?")))["status"] == "error"
+
+
 def test_prediction_questions_are_detected():
     for q in ("¿Quién va a ganar?", "¿Cómo va a terminar?", "Who will win?", "What are Bahía's chances to win?"):
         assert PREDICTION.search(q), q
