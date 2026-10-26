@@ -100,6 +100,11 @@ export function WebApp({ config }: { config: AppConfig }) {
         <h1 className="sr-only">
           {demoMatch.teams.match.home} – {demoMatch.teams.match.away} · {s.app.name}
         </h1>
+        <aside className="rail rail-left" aria-label={s.app.matchPanels}>
+          <MvpRacePanel orders={orders} t={t} stale={stale} loading={loading} />
+          <DuelPanel orders={orders} t={t} stale={stale} loading={loading} />
+          <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
+        </aside>
         <div className="main-col">
           <Stage showing={showing} orders={orders} variant="web" override={override} />
           {replay && replayState && (
@@ -114,10 +119,7 @@ export function WebApp({ config }: { config: AppConfig }) {
           )}
           <MomentsPanel orders={orders} t={t} stale={stale} loading={loading} onSelect={(o) => setPinned({ order: o, startedAt: performance.now() })} />
         </div>
-        <aside className="rail" aria-label={s.mvp.title}>
-          <MvpRacePanel orders={orders} t={t} stale={stale} loading={loading} />
-          <DuelPanel orders={orders} t={t} stale={stale} loading={loading} />
-          <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
+        <aside className="rail rail-right" aria-label={s.chat.title}>
           <AskTheMatch
             matchId={demoMatch.matchId}
             t={t}
