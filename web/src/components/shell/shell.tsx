@@ -156,7 +156,7 @@ export interface ReplayControlsProps {
   onSkip: (skip: boolean) => void;
 }
 
-const SPEEDS = [1, 10, 30, 60];
+const SPEEDS = [1, 2, 10, 30, 60];
 
 export function ReplayControls({ state, onPlay, onPause, onSeek, onSpeed, onSkip }: ReplayControlsProps) {
   const { s } = usePrefs();

@@ -10,8 +10,8 @@ from baja_agents.overlays import CHAT_MAX_S, CHAT_MIN_S, chat_answer_order
 
 ROOT = Path(__file__).resolve().parents[2]
 
-ANSWER = {"match_id": "m001", "question": "¿Por qué Torres va primero?", "at_s": 2100, "status": "answered",
-          "answer": "Torres va primero porque ha recuperado 7 balones en campo rival.",
+ANSWER = {"match_id": "m001", "question": "¿Quién lidera la carrera al MVP?", "at_s": 2100, "status": "answered",
+          "answer": "Leyva va primero porque ha recuperado 7 balones en campo rival.",
           "tools": ["get_player_summary", "get_mvp_ranking"], "evidence": [400, 254]}
 
 

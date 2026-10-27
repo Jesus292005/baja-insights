@@ -214,7 +214,9 @@ const es = {
   players: {
     illustrative: 'Posiciones ilustrativas',
     toggle: 'Jugadores en la cancha',
-    note: 'Ilustrativas: un modelo las ubica a partir de los eventos.',
+    note: 'Ilustrativas: un modelo las ubica a partir de los eventos. Selecciona a un jugador para ver su carta.',
+    cardOf: 'Carta de {player}',
+    close: 'Cerrar la carta del jugador',
   },
   halftime: {
     title: 'Medio tiempo',
@@ -234,7 +236,7 @@ const es = {
     pause: 'Pausar',
     speed: 'Velocidad',
     seek: 'Momento del partido',
-    skip: 'Acelerar solo entre momentos',
+    skip: 'Acelerar entre momentos y en balón parado',
     restart: 'Desde el inicio',
   },
   noData: { short: '—', a11y: 'Sin dato' },
@@ -458,7 +460,9 @@ const en: Shape<typeof es> = {
   players: {
     illustrative: 'Illustrative positions',
     toggle: 'Players on the pitch',
-    note: 'Illustrative: a model places them from the events.',
+    note: 'Illustrative: a model places them from the events. Select a player to see their card.',
+    cardOf: "{player}'s card",
+    close: 'Close the player card',
   },
   halftime: {
     title: 'Half-time',
@@ -478,7 +482,7 @@ const en: Shape<typeof es> = {
     pause: 'Pause',
     speed: 'Speed',
     seek: 'Match moment',
-    skip: 'Speed up only between moments',
+    skip: 'Speed up between moments and at dead balls',
     restart: 'From the start',
   },
   noData: { short: '—', a11y: 'No data' },

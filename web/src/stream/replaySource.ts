@@ -15,6 +15,13 @@ export interface Pacing {
   nextStart(t: number): number | null;
 }
 
+/** Pace of a dead ball in skip mode, at least (match seconds per second). */
+export const DEAD_SPEED = 8;
+/** The fast-forward stops this long before the restart, so the restart is seen. */
+const DEAD_LEAD_S = 1.5;
+/** Shorter stoppages are not worth speeding up. */
+const DEAD_MIN_S = 3;
+
 export interface ReplayState {
   playing: boolean;
   speed: number;
@@ -42,6 +49,8 @@ export class ReplaySource implements MatchSource {
   private sink: SourceSink | null = null;
   private timer: ReturnType<typeof setInterval> | null = null;
   private pacing: Pacing = NO_PACING;
+  /** Dead-ball spells (ball out until the restart), sorted. See setDeadBall. */
+  private dead: { from: number; to: number }[] = [];
   private readonly orders: OverlayOrder[];
   private readonly events: StructuralEvent[];
   private readonly lead: number;
@@ -96,6 +105,23 @@ export class ReplaySource implements MatchSource {
     this.pacing = pacing;
   }
 
+  /**
+   * Dead-ball spells, from the illustrative positions' set_pieces: in skip mode they pass at
+   * DEAD_SPEED at least, unless a graphic is on screen, and slow down just before the restart.
+   */
+  setDeadBall(spells: readonly { from: number; to: number }[]) {
+    this.dead = spells.filter((s) => s.to - s.from >= DEAD_MIN_S).sort((a, b) => a.from - b.from);
+  }
+
+  /** Where the fast-forward of the dead ball around t stops, or null when the ball is live. */
+  private deadUntil(t: number): number | null {
+    for (const s of this.dead) {
+      if (s.from > t) break;
+      if (t < s.to - DEAD_LEAD_S) return s.to - DEAD_LEAD_S;
+    }
+    return null;
+  }
+
   getState = () => this.state;
 
   subscribe = (listener: () => void) => {
@@ -138,7 +164,8 @@ export class ReplaySource implements MatchSource {
     const { playing, speed, skip, end } = this.state;
     if (!playing) return;
 
-    let t = this.state.t;
+    const from = this.state.t;
+    let t = from;
     if (skip && speed > 1) {
       if (this.pacing.busy(t)) {
         t += dt;
@@ -151,6 +178,15 @@ export class ReplaySource implements MatchSource {
       }
     } else {
       t += dt * speed;
+    }
+
+    // Dead ball with nothing on screen: pass it quickly, stopping just before the restart and
+    // never over the start of a graphic.
+    const until = skip && !this.pacing.busy(from) ? this.deadUntil(from) : null;
+    if (until !== null) {
+      const fast = from + dt * Math.max(speed, DEAD_SPEED);
+      const stops = [until, this.pacing.nextStart(from), this.nextOrderAfter(from)].filter((x): x is number => x !== null && x > from);
+      t = Math.max(t, Math.min(fast, ...stops));
     }
 
     if (t >= end) {

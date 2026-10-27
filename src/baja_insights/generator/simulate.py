@@ -13,6 +13,10 @@ How it works
   ball in the first half and Bahía presses high after the 48th minute.
 * With ``script=None`` the same simulator produces a free match whose goals are
   sampled from xG, which shows the generator is general and not a replay.
+* **Carries.** A player who receives runs with the ball before his next action: 2 to 15 m
+  forward with space, less near goal or against a high press, and 0 to 3 m when pressed.
+  His next action starts where the carry ends. An off-ball run usually ends with the pass
+  to the runner, and a dragged defender always carries his coordinates.
 * **Set pieces.** A ball that goes out crosses a line: the pass ends on it with
   ``out_of_play`` and the restart is a pass with ``set_piece``: ``throw_in`` from the
   touchline, ``corner`` from the flag or ``goal_kick`` from the goal area. Kick-offs,
@@ -59,9 +63,9 @@ GEN = {
     "tackle_win": 0.60,           # tackles won, before duel form
     "foul_on_lost_tackle": 0.20,  # a lost tackle is a foul
     "duel": 0.06,                 # 1 v 1 duel per step
-    "shot_min_prog": 83.0,        # metres from own goal where shots start
-    "shot_base": 0.12,            # per-step shot chance at shot_min_prog ...
-    "shot_slope": 0.04,           # ... plus this per metre closer to goal
+    "shot_min_prog": 84.0,        # metres from own goal where shots start
+    "shot_base": 0.05,            # per-step shot chance at shot_min_prog ...
+    "shot_slope": 0.015,           # ... plus this per metre closer to goal
     "cross_shot": 0.35,           # a completed cross ends in a shot
     "foul": 0.022,                # foul suffered per step
     "backpass": 0.20,             # pass back to the goalkeeper from the own third
@@ -72,7 +76,12 @@ GEN = {
     "corner_after_block": 0.35,   # a blocked shot deflected out for a corner
     "corner_after_save": 0.25,    # a save pushed out for a corner
     "corner_success": 0.40,       # a corner reaches a team-mate
+    "carry_max": 15.0,            # metres a player runs with the ball before his next action, with space
+    "carry_pressed_max": 3.0,     # ... and when he is pressed
+    "run_gets_ball": 0.65,        # an off-ball run ends with the pass to the runner
 }
+# Seconds from the ball going dead to each restart
+RESTART_PAUSE_S = {"throw_in": (4, 8), "goal_kick": (8, 14), "corner": (10, 16), "free_kick": (10, 20)}
 # Restarts that are taken as a set piece: the first action is a pass, never a pressure, duel or shot.
 SET_PIECES = ("kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper")
 # How likely each role is to be the one who presses or wins the ball back near the ball.
@@ -183,6 +192,8 @@ class MatchGenerator:
 
         style, opp_style = self._style(team), self._style(opp)
         steps = 0
+        arrival = self.t  # when the ball reached the carrier
+        run_target = None  # (runner, end x, end y) of an off-ball run the next pass is for
         while True:
             if self.t + 3 > limit:
                 return None if r.kind != "continue" or steps else None
@@ -221,6 +232,11 @@ class MatchGenerator:
                 if self.t + 3 > limit:
                     return None
 
+            # --- the carrier runs with the ball before his next action: far with space, little when pressed
+            if not set_piece:
+                x, y = self._carry(team, carrier, x, y, under, opp_style, arrival)
+                prog = self._prog(x, team)
+
             # --- 1 v 1 duel
             if not set_piece and self.rng.random() < GEN["duel"]:
                 defender = self._pick(opp, x, y, weight_key="duel", exclude=("POR",))
@@ -257,14 +273,28 @@ class MatchGenerator:
                         dragged = self._pick(opp, rx, ry, positions=("DFC", "LD", "LI", "MCD"))
                         space = round(self.rng.uniform(3.0, 8.5), 1)
                     end_x = clip(rx + (8 if team == self.home else -8), 1, 104)
-                    self._emit("off_ball_run", team, runner, [rx, ry], [end_x, clip(ry + self.rng.gauss(0, 6), 1, 67)],
-                               speed=round(self.rng.uniform(22, 31), 1), pid=pid, dragged_defender=dragged,
-                               space_opened_m=space if dragged else None)
+                    end_y = clip(ry + self.rng.gauss(0, 6), 1, 67)
+                    speed = round(self.rng.uniform(22, 31), 1)
+                    extra = {}
+                    if dragged:  # the defender goes with the runner, goal side of him
+                        back = 1.0 if team == self.home else -1.0  # towards the goal the defender protects
+                        towards_centre = 1.0 if ry < PITCH_WIDTH / 2 else -1.0
+                        extra = {"dragged_defender_start": [round(clip(rx + back * 4.0, 1, 104), 1),
+                                                            round(clip(ry + towards_centre * 2.0, 1, 67), 1)],
+                                 "dragged_defender_end": [round(clip(end_x + back * 1.5, 1, 104), 1),
+                                                          round(clip(end_y + towards_centre * 1.0, 1, 67), 1)]}
+                    self._emit("off_ball_run", team, runner, [rx, ry], [end_x, end_y], speed=speed, pid=pid,
+                               dragged_defender=dragged, space_opened_m=space if dragged else None, **extra)
+                    if self.rng.random() < GEN["run_gets_ball"]:  # the pass is for him, as he arrives
+                        run_target = (runner, end_x, end_y)
+                        self.t += 0.6 * distance([rx, ry], [end_x, end_y]) / (speed / 3.6)
 
             # --- pass
-            result = self._pass(team, carrier, x, y, under, pid, style, set_piece)
+            result = self._pass(team, carrier, x, y, under, pid, style, set_piece, run_target)
             set_piece = None
+            run_target = None
             steps += 1
+            arrival = self.t + result["travel_s"]
             self.t += self.rng.uniform(2.5, 5.5) / style["tempo"]
             if result["outcome"] == "complete":
                 carrier, x, y = result["receiver"], result["end"][0], result["end"][1]
@@ -281,15 +311,38 @@ class MatchGenerator:
                 if result["back"] or self.rng.random() < 0.50:  # a misplaced pass back goes out of play
                     # out of play only if the restart can be taken before the next scripted moment
                     restart = self._out_of_play(team, ex, ey) if self.t + 16 < limit else None
-                    if restart is not None:
-                        self.t += self.rng.uniform(6, 14)
+                    if restart is not None:  # the pause counts from the moment the ball went out
+                        self.t = arrival + self.rng.uniform(*RESTART_PAUSE_S.get(restart.kind, (6, 14)))
                         return restart
                     return Resume("recovery", opp, ex, ey, self._pick(opp, ex, ey, weight_key="recover"))
                 return Resume("recovery", opp, ex, ey, self._pick(opp, ex, ey, weight_key="recover"))
 
     def _free_kick_pause(self, limit: float) -> None:
-        """The free kick takes 12 to 25 s, but is taken before the next scripted moment, never after it."""
-        self.t = min(self.t + self.rng.uniform(12, 25), max(self.t, limit - 3.5))
+        """The free kick takes 10 to 20 s, but is taken before the next scripted moment, never after it."""
+        self.t = min(self.t + self.rng.uniform(*RESTART_PAUSE_S["free_kick"]), max(self.t, limit - 3.5))
+
+    def _carry(self, team: str, carrier: str, x: float, y: float, under: bool, opp_style: dict,
+               arrival: float) -> tuple[float, float]:
+        """Where the carrier takes the ball before his next action. He runs at 4.5 to 6.5 m/s, using the
+        time he already had since the ball reached him, and the clock moves on if he needs more."""
+        prog = self._prog(x, team)
+        if self.roster.players[carrier].position == "POR":
+            longest = 3.0
+        elif under:
+            longest = GEN["carry_pressed_max"]
+        else:
+            room = 0.45 if prog > 75 else 0.7 if prog > 60 else 1.0
+            longest = GEN["carry_max"] * room * clip(1.15 - opp_style["press"], 0.5, 1.1)
+        metres = self.rng.uniform(0.0 if under else 2.0, longest)
+        angle = self.rng.gauss(0.0, 0.45)
+        if abs(y - PITCH_WIDTH / 2) > 24:  # near the touchline he comes inside
+            angle += -0.4 if (y > PITCH_WIDTH / 2) == (team == self.home) else 0.4
+        new_prog = clip(prog + metres * math.cos(angle), 2.0, 100.0)
+        side = 1.0 if team == self.home else -1.0
+        new_y = clip(y + side * metres * math.sin(angle), 2.0, PITCH_WIDTH - 2.0)
+        need = distance([x, y], [self._to_x(new_prog, team), new_y]) / self.rng.uniform(4.5, 6.5)
+        self.t += max(0.0, need - max(0.0, self.t - arrival))
+        return round(self._to_x(new_prog, team), 1), round(new_y, 1)
 
     def _press_wins(self, team: str, carrier: str, x: float, y: float, pid: int) -> Resume:
         """The rival presses the carrier and wins the ball with a tackle, so a long move never ends in a
@@ -331,11 +384,14 @@ class MatchGenerator:
         gx = PITCH_LENGTH if team == self.home else 0.0
         return Resume("corner", team, gx, 0.0 if y < PITCH_WIDTH / 2 else PITCH_WIDTH)
 
-    def _pass(self, team, carrier, x, y, under, pid, style, set_piece: str | None = None) -> dict:
+    def _pass(self, team, carrier, x, y, under, pid, style, set_piece: str | None = None,
+              run_target: tuple | None = None) -> dict:
         prog = self._prog(x, team)
         lines_form = self._form(carrier, "pass_lines")
         back = GEN["backpass"] + (GEN["backpass_pressure"] if under else 0.0)
-        is_back = (set_piece not in ("throw_in", "corner", "kickoff")
+        if run_target is not None and (run_target[0] == carrier or run_target[0] not in self.active[team]):
+            run_target = None
+        is_back = (set_piece not in ("throw_in", "corner", "kickoff") and run_target is None
                    and prog < GEN["backpass_max_prog"] and self.roster.players[carrier].position != "POR"
                    and self.rng.random() < back)
         if set_piece in ("throw_in", "corner", "kickoff"):
@@ -360,6 +416,10 @@ class MatchGenerator:
         rx, ry = self._zone_xy(receiver)
         ex = clip(0.55 * tx + 0.45 * rx + self.rng.gauss(0, 3), 0.5, 104.5)
         ey = clip(0.55 * target_y + 0.45 * ry + self.rng.gauss(0, 3), 0.5, 67.5)
+        if run_target is not None:  # the pass is for the runner, where his run ends
+            receiver = run_target[0]
+            ex = clip(run_target[1] + self.rng.gauss(0, 1.2), 0.5, 104.5)
+            ey = clip(run_target[2] + self.rng.gauss(0, 1.2), 0.5, 67.5)
         progress = self._prog(ex, team) - prog
         lines = 0
         if progress >= 22:
@@ -382,12 +442,12 @@ class MatchGenerator:
             extra["cross"] = True
         if set_piece:
             extra["set_piece"] = set_piece
+        speed = round(clip(25 + 1.3 * dist + self.rng.gauss(0, 5), 15, 110), 1)
         self._emit("pass", team, carrier, [round(x, 1), round(y, 1)], [round(ex, 1), round(ey, 1)],
-                   outcome="complete" if complete else "incomplete",
-                   speed=round(clip(25 + 1.3 * dist + self.rng.gauss(0, 5), 15, 110), 1),
+                   outcome="complete" if complete else "incomplete", speed=speed,
                    under=under, lines=lines, pid=pid, **extra)
         return {"outcome": "complete" if complete else "incomplete", "receiver": receiver,
-                "end": [ex, ey], "cross": cross, "back": is_back}
+                "end": [ex, ey], "cross": cross, "back": is_back, "travel_s": travel_time(dist, speed)}
 
     def _set_piece_pass(self, team, carrier, x, y, pid, set_piece: str) -> dict:
         """Throw-in, corner or kick-off: a short throw inwards, a cross into the box, a pass back."""
@@ -417,7 +477,8 @@ class MatchGenerator:
                    outcome="complete" if complete else "incomplete", speed=round(speed, 1),
                    under=False, lines=0, pid=pid, **extra)
         return {"outcome": "complete" if complete else "incomplete", "receiver": receiver,
-                "end": [ex, ey], "cross": set_piece == "corner", "back": False}
+                "end": [ex, ey], "cross": set_piece == "corner", "back": False,
+                "travel_s": travel_time(distance([x, y], [ex, ey]), speed)}
 
     def _shot(self, team, shooter, x, y, under, pid, cross) -> Resume:
         opp = self.roster.opponent(team)
@@ -453,7 +514,7 @@ class MatchGenerator:
         if outcome == "saved" and self.rng.random() < GEN["corner_after_save"]:
             self.t += self.rng.uniform(10, 16)
             return self._corner_for(team, end_y)
-        self.t += self.rng.uniform(4, 6) if outcome == "saved" else self.rng.uniform(12, 20)
+        self.t += self.rng.uniform(4, 6) if outcome == "saved" else self.rng.uniform(*RESTART_PAUSE_S["goal_kick"])
         return Resume("keeper" if outcome == "saved" else "goal_kick", opp)
 
     # ================================================================ beats
@@ -672,6 +733,11 @@ class MatchGenerator:
                             "under_pressure": False, "lines_broken": 0, "possession_id": None,
                             "player_out": outs[0], "player_in": sub.name}]})
             self.beats.sort(key=lambda b: b["start"])
+
+
+def travel_time(metres: float, speed_kmh: float) -> float:
+    """Seconds the ball takes to arrive, as the positions model draws it (at most 3 s)."""
+    return min(metres / max(speed_kmh / 3.6, 5.0), 3.0)
 
 
 def load_script(script: dict | str | Path) -> dict:

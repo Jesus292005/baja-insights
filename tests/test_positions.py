@@ -69,7 +69,13 @@ class DemoPositionsTest(unittest.TestCase):
         self.assertLessEqual(len(far), 3, far)
 
     def test_the_ball_is_where_every_action_happened(self):
+        # events carry whole seconds: two actions in the same second at different spots cannot both hold
+        spots = {}
+        for e in self.events:
+            if e.get("start") and e.get("player") and e["type"] not in ("off_ball_run", "goal"):
+                spots.setdefault(e["t_s"], set()).add(tuple(e["start"]))
         far = [e["event_id"] for e in self.events if e.get("start") and e.get("player") and e["type"] != "off_ball_run"
+               and len(spots.get(e["t_s"], ())) == 1
                and math.dist(self.pos["frames"][e["t_s"] * HZ]["b"], e["start"]) > 1.0]
         self.assertLessEqual(len(far), 2, far)
 
@@ -89,15 +95,55 @@ class DemoPositionsTest(unittest.TestCase):
         self.assertEqual(far, 0)
 
     def test_receivers_meet_the_ball(self):
+        """At the instant the ball arrives (between two frames), the receiver is there. He may already be
+        a little past it, because he carries the ball on, so the bar is 3 m for 90% of passes."""
         n, far = 0, 0
         for e in self.events:
             if e["type"] == "pass" and e["outcome"] == "complete" and e.get("receiver"):
                 v = max((e.get("speed_kmh") or 50) / 3.6, 5)
                 arrive = e["t_s"] + min(math.dist(e["start"], e["end"]) / v, 3)
-                p = where(self.pos, e["receiver"], arrive)
+                k = int(math.floor(arrive * HZ))
+                p0, p1 = where(self.pos, e["receiver"], k / HZ), where(self.pos, e["receiver"], (k + 1) / HZ)
+                if p0 is None or p1 is None:
+                    continue
+                w = arrive * HZ - k
+                p = (p0[0] + (p1[0] - p0[0]) * w, p0[1] + (p1[1] - p0[1]) * w)
                 n += 1
-                far += p is not None and math.dist(p, e["end"]) > 2.0
-        self.assertLess(far / n, 0.05)
+                far += math.dist(p, e["end"]) > 3.0
+        self.assertLess(far / n, 0.10)
+
+    def test_the_carrier_is_pressed_and_team_mates_do_not_overlap(self):
+        """The nearest rival closes the player on the ball to a few metres, and team-mates keep the width
+        of a disc on screen (3.6 m) apart outside set pieces."""
+        home = HOME
+        play = [e for e in self.events if e.get("start") and e.get("team") and e["type"] != "goal"]
+        near = []
+        for a, b in zip(play, play[1:]):
+            if a["type"] == "pass" and a["outcome"] == "complete" and b["player"] == a["receiver"] \
+                    and b["type"] in ("pass", "shot"):
+                v = max((a.get("speed_kmh") or 50) / 3.6, 5)
+                arrive = a["t_s"] + min(math.dist(a["start"], a["end"]) / v, 3)
+                for k in range(int(math.ceil(arrive * HZ)) + 1, int(b["t_s"] * HZ)):
+                    f = self.pos["frames"][k]
+                    rivals = f["a"] if a["team"] == home else f["h"]
+                    near.append(min(math.dist(f["b"], p) for p in rivals[1:]))
+        near.sort()
+        self.assertTrue(2.5 <= near[len(near) // 2] <= 5.0, near[len(near) // 2])
+        dead = [(sp["ball_out_from_t_s"], sp["t_s"]) for sp in self.pos["set_pieces"]]
+        runs, close = 0, {}
+        for f in self.pos["frames"]:
+            if any(a <= f["t"] <= b for a, b in dead):
+                close = {}
+                continue
+            for key in ("h", "a"):
+                pts = f[key]
+                for i in range(11):
+                    for j in range(i + 1, 11):
+                        if math.dist(pts[i], pts[j]) < 3.6:
+                            close[(key, i, j)] = close.get((key, i, j), 0) + 1
+                        elif close.pop((key, i, j), 0) >= 4:
+                            runs += 1
+        self.assertLessEqual(runs, 10)
 
     def test_nobody_runs_faster_than_a_sprinter(self):
         fast, total, prev = 0, 0, {}
@@ -113,7 +159,8 @@ class DemoPositionsTest(unittest.TestCase):
         self.assertLess(fast / total, 0.001)
 
     def test_the_equalizer_shows_the_run_and_the_dragged_centre_back(self):
-        run = next(e for e in self.events if e["type"] == "off_ball_run" and e.get("dragged_defender_end"))
+        run = next(e for e in self.events if e["type"] == "off_ball_run" and e["player"] == "J. Torres"
+                   and e.get("dragged_defender") == "G. Cárdenas" and e["minute"] == 62)
         played = next(e for e in self.events if e["t_s"] > run["t_s"] and e["type"] == "pass")
         self.assertLess(math.dist(where(self.pos, "J. Torres", played["t_s"]), run["end"]), 1.5)
         self.assertLess(math.dist(where(self.pos, "G. Cárdenas", played["t_s"]), run["dragged_defender_end"]), 1.5)

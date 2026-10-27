@@ -19,6 +19,16 @@ function load(): Promise<PositionsFile | null> {
   return request;
 }
 
+/**
+ * Hands the dead-ball spells of the set pieces to the replay, which passes them quickly in skip
+ * mode (ReplaySource.setDeadBall).
+ */
+export function useDeadBall(replay: { setDeadBall(spells: { from: number; to: number }[]): void } | null, file: PositionsFile | null) {
+  useEffect(() => {
+    replay?.setDeadBall(file ? file.set_pieces.map((p) => ({ from: p.ball_out_from_t_s, to: p.t_s })) : []);
+  }, [replay, file]);
+}
+
 export function usePositions(enabled = true): PositionsFile | null {
   const [file, setFile] = useState<PositionsFile | null>(null);
   useEffect(() => {

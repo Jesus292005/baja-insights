@@ -28,11 +28,13 @@ export interface StageProps {
   /** Half the pitch shows when no play is drawn (the play brings its own). Default: first. */
   half?: Half;
   /** The 22 players and the ball at second t (needs the backdrop). Frozen: no gliding, for a moment opened from the list. */
-  players?: { file: PositionsFile; t: number; frozen: boolean } | null;
+  players?: { file: PositionsFile; t: number; frozen: boolean; onSelect?: (player: string) => void; selected?: string | null } | null;
   /** Extra layers on the canvas, in canvas pixels (cinema badge and help). */
   children?: React.ReactNode;
   /** Canvas boxes the cards must leave free when they move off the play (the cinema badge). */
   reserved?: readonly Box[];
+  /** Web app: a click on the pitch outside a player (closes the player card). */
+  onPitchClick?: () => void;
 }
 
 const { width: W, height: H } = broadcastSlots.canvas;
@@ -80,7 +82,7 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
   return message;
 }
 
-export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, half, players, children, reserved }: StageProps) {
+export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, half, players, children, reserved, onPitchClick }: StageProps) {
   const { s, mode } = usePrefs();
   const { ref, scale } = useFitScale(variant === 'web' ? 'width' : 'contain');
   const announcement = useAnnouncer(showing, variant === 'web');
@@ -90,7 +92,7 @@ export function Stage({ showing, orders, variant, graphics = true, bug, backdrop
   const boxes = useCardBoxes(showing, drawnHalf, dodge ? play : null, reserved);
 
   return (
-    <div ref={ref} className={`stage stage-${variant}`}>
+    <div ref={ref} className={`stage stage-${variant}`} onClick={onPitchClick}>
       <div
         className="stage-canvas"
         data-mode={mode}
@@ -256,7 +258,7 @@ function PitchBackdrop({
   );
   return (
     <div className="pitch" data-half={half}>
-      <svg viewBox={`${VIEW_BOX.x} ${VIEW_BOX.y} ${VIEW_BOX.w} ${VIEW_BOX.h}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={t(ends, { left: left.name, right: right.name, half })}>
+      <svg viewBox={`${VIEW_BOX.x} ${VIEW_BOX.y} ${VIEW_BOX.w} ${VIEW_BOX.h}`} preserveAspectRatio="xMidYMid meet" role="group" aria-label={t(ends, { left: left.name, right: right.name, half })}>
         <defs>
           <pattern id="mow" x="0" width="105" height="740" patternUnits="userSpaceOnUse">
             <rect width="52.5" height="740" y="-30" fill="var(--pitch-a)" />
@@ -284,7 +286,9 @@ function PitchBackdrop({
           {chip(left, -44, -90)}
           {chip(right, 1094, 90)}
         </g>
-        {players && <PlayersLayer file={players.file} t={players.t} half={half} frozen={players.frozen} />}
+        {players && (
+          <PlayersLayer file={players.file} t={players.t} half={half} frozen={players.frozen} onSelect={players.onSelect} selected={players.selected} />
+        )}
         {play && <PlayLayer key={play.order.overlay_id} play={play} />}
       </svg>
       <span className="pitch-label" aria-hidden="true">{label}</span>

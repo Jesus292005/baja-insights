@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OverlayOrder } from '../contracts/overlay';
 import { demoMatch } from '../data/match';
-import { ReplaySource } from './replaySource';
+import { DEAD_SPEED, ReplaySource } from './replaySource';
 import { createMatchStore } from './store';
 import { MAX_ATTEMPTS, WebSocketSource } from './wsSource';
 
@@ -61,6 +61,45 @@ describe('ReplaySource', () => {
     r.tick();
     expect(r.getState().t).toBeCloseTo(first + 1);
     r.stop();
+  });
+
+  it('passes a dead ball quickly in skip mode and slows down before the restart', () => {
+    const store = createMatchStore();
+    const r = make({ speed: 1, skip: true, startAt: 3000, orders: [] });
+    r.setDeadBall([{ from: 3000, to: 3020 }]);
+    r.start(store);
+    now = 1000;
+    r.tick();
+    expect(r.getState().t).toBeCloseTo(3000 + DEAD_SPEED);
+    now = 3000;
+    r.tick();
+    // Stops 1.5 s before the restart, then runs at the chosen speed.
+    expect(r.getState().t).toBeCloseTo(3018.5);
+    now = 4000;
+    r.tick();
+    expect(r.getState().t).toBeCloseTo(3019.5);
+    r.stop();
+  });
+
+  it('keeps the dead ball at its pace while a graphic is up, or without skip', () => {
+    const store = createMatchStore();
+    const busy = make({ speed: 1, skip: true, startAt: 3000, orders: [] });
+    busy.setDeadBall([{ from: 3000, to: 3020 }]);
+    busy.setPacing({ busy: () => true, nextStart: () => null });
+    busy.start(store);
+    now = 1000;
+    busy.tick();
+    expect(busy.getState().t).toBeCloseTo(3001);
+    busy.stop();
+
+    now = 0;
+    const plain = make({ speed: 2, skip: false, startAt: 3000, orders: [] });
+    plain.setDeadBall([{ from: 3000, to: 3020 }]);
+    plain.start(createMatchStore());
+    now = 1000;
+    plain.tick();
+    expect(plain.getState().t).toBeCloseTo(3002);
+    plain.stop();
   });
 
   it('seeks and pauses at the end', () => {
