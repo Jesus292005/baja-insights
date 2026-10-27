@@ -41,7 +41,7 @@
 
 .pitch { position: absolute; inset: 0; background: #12293a; --pitch-a: #13303a; --pitch-b: #163640; --pitch-line: rgb(243 237 226 / 0.22); background: var(--pitch-a); }
 .pitch svg { width: 100%; height: 100%; display: block; }
-.pitch::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(12 20 24 / 0.55) 100%); }
+.pitch::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(12 20 24 / 0.55) 100%); }
 /* Goals in the colour of the team that defends them, with its name as a chip outside the goal line. */
 .pitch-goal { stroke: rgb(243 237 226 / 0.85); stroke-width: 2; }
 .pitch-goal-name { font-family: var(--bi-font-data); font-size: 22px; font-weight: 700; letter-spacing: 0.1em; fill: #ffffff; }
@@ -387,6 +387,8 @@
    Plays on the full pitch (PlayLayer, in pitch SVG units) and their legend
    ========================================================================= */
 
+/* The play is drawn over the players but lets clicks through to them. */
+.pl { pointer-events: none; }
 .pl-step { fill: none; stroke-width: 7; stroke-linecap: round; }
 .pl-shot { stroke-width: 10; }
 .pl-step:not(.pl-fade) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pl-draw 420ms var(--bi-ease-out) forwards; }
@@ -472,3 +474,43 @@
 .halftime-ends > span { display: inline-flex; align-items: center; gap: 14px; }
 .halftime-ends .chip { font-size: 30px; padding: 2px 12px; }
 .halftime-note { font-size: 32px; color: var(--bi-text-muted); }
+
+/* Illustrative players and ball (PlayersLayer, pitch SVG units): under the play, in the play colours. */
+.pp-disc { stroke-width: 3; }
+.pp-home .pp-disc { fill: var(--bi-play-home); stroke: var(--bi-ink-950); }
+.pp-away .pp-disc { fill: var(--bi-play-away); stroke: rgb(243 237 226 / 0.9); }
+.pp-keeper .pp-disc { stroke-dasharray: 5 3; }
+/* Web app: players are buttons. The hit circle is invisible; the selected one gets an accent ring. */
+.pp-hit { fill: transparent; }
+.pp.is-interactive .pp-player { cursor: pointer; }
+.pp.is-interactive .pp-player:hover .pp-disc { stroke: var(--bi-accent); }
+.pp-player:focus { outline: none; }
+.pp-player:focus-visible .pp-disc, .pp-player.is-selected .pp-disc { stroke: var(--bi-accent); stroke-width: 6; stroke-dasharray: none; }
+.pp-player text { font-family: var(--bi-font-data); font-size: 19px; font-weight: 700; pointer-events: none; }
+.pp-home text { fill: var(--bi-ink-950); }
+.pp-away text { fill: #ffffff; }
+.pp-ball { fill: var(--bi-sand-100); stroke: var(--bi-ink-950); stroke-width: 3; }
+
+/* Web app: the card of a player picked on the pitch, small in its top-right corner (page pixels). */
+.pitch-wrap { position: relative; }
+.stage-corner { position: absolute; top: 8px; right: 8px; z-index: 2; }
+/* On a phone the pitch is too short for it: the card goes under the pitch instead. */
+@media (max-width: 600px) {
+  .stage-corner { position: static; display: flex; justify-content: flex-end; padding: 12px 8px 0 0; }
+}
+.player-corner { position: relative; animation: g-in var(--bi-dur-base) var(--bi-ease-out) both; filter: drop-shadow(0 4px 10px rgb(12 20 24 / 0.5)); }
+.player-corner .pcard-sm { width: 168px; font-size: 12px; }
+/* Compact: tighter rows and the attributes in three columns, same text sizes. */
+.player-corner .pcard-tier { padding: 4px 24px 4px 16px; } /* room for the close button */
+.player-corner .pcard-top { padding: 6px 10px 0; }
+.player-corner .pcard-ovr { font-size: 2.7em; }
+.player-corner .pcard-name { padding: 2px 10px 5px; font-size: 1.25em; overflow: hidden; text-overflow: ellipsis; }
+.player-corner .pcard-attrs { grid-template-columns: repeat(3, 1fr); gap: 2px 8px; padding: 6px 10px 8px; }
+.player-corner .pcard-attrs li { white-space: nowrap; }
+.player-corner-close {
+  position: absolute; top: -10px; right: -10px; z-index: 1;
+  display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--bi-ink-950); background: var(--bi-sand-100); color: var(--bi-ink-950); cursor: pointer;
+}
+.player-corner-close:hover { background: var(--bi-accent); }
+.player-corner-close:focus-visible { outline: 3px solid var(--bi-focus); outline-offset: 2px; }

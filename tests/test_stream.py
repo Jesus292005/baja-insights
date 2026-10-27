@@ -8,7 +8,7 @@ import os
 import struct
 import unittest
 
-from baja_insights.stream import Match, MatchClock, StreamServer, load_matches
+from baja_insights.stream import Match, MatchClock, StreamServer, load_files, load_matches
 from baja_insights.stream import messages as msg
 from baja_insights.stream.ws import OP_CLOSE, OP_PING, OP_PONG, OP_TEXT, accept_key, encode_frame, read_frame
 from helpers import DATA, validator
@@ -202,7 +202,8 @@ class StreamServerTest(unittest.IsolatedAsyncioTestCase):
 
     async def asyncSetUp(self):
         self.match = m001()
-        self.server = StreamServer({"m001": self.match}, speed=self.SPEED, start_at=self.START)
+        self.server = StreamServer({"m001": self.match}, speed=self.SPEED, start_at=self.START,
+                                   files=load_files(DATA))
         self.tcp = await asyncio.start_server(self.server.handle, "127.0.0.1", 0)
         self.port = self.tcp.sockets[0].getsockname()[1]
 
@@ -294,6 +295,19 @@ class StreamServerTest(unittest.IsolatedAsyncioTestCase):
         reply = await asyncio.wait_for(reader.read(), 2)
         writer.close()
         self.assertTrue(reply.startswith(b"HTTP/1.1 200"))
+
+    async def test_positions_file(self):
+        import gzip
+        reader, writer = await asyncio.open_connection("127.0.0.1", self.port)
+        writer.write(b"GET /positions/m001 HTTP/1.1\r\nHost: localhost\r\n\r\n")
+        reply = await asyncio.wait_for(reader.read(), 5)
+        writer.close()
+        head, body = reply.split(b"\r\n\r\n", 1)
+        self.assertTrue(head.startswith(b"HTTP/1.1 200"))
+        self.assertIn(b"Access-Control-Allow-Origin: *", head)
+        self.assertIn(b"Content-Encoding: gzip", head)
+        positions = json.loads(gzip.decompress(body))
+        self.assertEqual((positions["match_id"], positions["illustrative"]), ("m001", True))
 
 
 if __name__ == "__main__":

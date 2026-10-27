@@ -16,6 +16,7 @@ Generador ──eventos──▶ Motor ──insights──▶ Agentes ──ór
 | `overlay.schema.json` | Una orden de gráfico | Agentes, integrante 2 | Interfaz, integrante 3 |
 | `stream.schema.json` | Un mensaje del WebSocket en vivo (v1.1) | Servicio de stream, integrante 1 | Interfaz, integrante 3 |
 | `chat.schema.json` | Petición y respuesta de `POST /api/ask` (v1.1) | Interfaz y agente Pregúntale | Agente Pregúntale e interfaz |
+| `positions.schema.json` | Posiciones ilustrativas de los 22 jugadores y el balón, un archivo por partido (agregado a v1.1) | Modelo de posiciones, integrante 1 | Interfaz, integrante 3 |
 | `../mocks/chat_tools_sample.json` | Definición y ejemplos de las funciones del chat | Motor, integrante 1 | Agente Pregúntale, integrante 2 |
 
 Para validar cualquier archivo, JSON o JSONL:
@@ -40,6 +41,8 @@ Desde JavaScript se pueden usar los mismos esquemas con [Ajv](https://ajv.js.org
 - **Posesión.** `possession_id` es del equipo con el balón. Las acciones defensivas (pressure, tackle, foul) llevan el id del rival. Una `recovery` abre posesión nueva.
 - **Duelos.** Un evento por duelo. `outcome` se lee desde `player`, y `opponent` es obligatorio.
 - **Goles.** Puntúa el `shot` con `outcome: "goal"`. El evento `goal` solo trae `scoreline` y `assist`.
+- **Conducción.** No hay un evento para conducir el balón: el jugador que recibe puede avanzar con él antes de su siguiente acción, así que el `start` de esa acción no tiene que coincidir con el `end` del pase que recibió. La diferencia es lo que condujo.
+- **Balón parado.** Un balón que sale cruza una línea: el pase termina en ella con `out_of_play`, y el rival reanuda con un pase con `set_piece`: `throw_in` desde la banda, `goal_kick` desde el área chica si salió por la línea de fondo que ataca quien lo perdió, o `corner` desde el banderín si salió por su propia línea de fondo. Los saques iniciales, los tiros libres tras falta y el saque del portero tras una atajada también llevan `set_piece`. Nadie presiona ni disputa el balón antes de que se cobre.
 - **Nombres** ficticios. Nada de marcas reales.
 
 ---
@@ -51,7 +54,7 @@ Campos siempre presentes: `match_id`, `event_id`, `period`, `minute`, `second`, 
 | `type` | `outcome` | Campos extra |
 | --- | --- | --- |
 | `match_start` | — | `home`, `away` |
-| `pass` | `complete`, `incomplete` | `receiver`, y `cross` opcional |
+| `pass` | `complete`, `incomplete` | `receiver`, y opcionales `cross`, `set_piece` (`kickoff`, `throw_in`, `corner`, `goal_kick`, `free_kick` o `keeper`, en el pase que reanuda el juego) y `out_of_play` (el pase se fue fuera y `end` es el punto de la línea por donde salió) |
 | `shot` | `goal`, `saved`, `off_target`, `blocked` | `xg` |
 | `goal` | — | `assist`, que puede ser null, y `scoreline` |
 | `recovery` | `won` | — |
@@ -76,7 +79,7 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 | `standout_milestone` | `player`, `position`, `profile` (`defensive` o `creative`), `stats`, `expected_for_role`, `vs_role`, `mvp_rank`, y `card_change` opcional |
 | `card_upgrade` | `player`, `attribute`, `from`, `to`, `delta`, `reason`, `overall_from`, `overall_to`, más extras según la regla, como `pass_difficulty`, `led_to` o `space_opened_m` |
 | `goal_chain` | `scoreline`, `scorer`, `assist`, `xg`, `duration_s`, `chain` (con `event_id`, `player`, `action`, `credit` y `t_s`, ordenada por tiempo y con créditos que suman 1, y opcionales `type`, `lines_broken`, `cross`, `start`, `end` y, en desmarques, `dragged_defender`, `dragged_defender_start` y `dragged_defender_end`), `invisible_assist` |
-| `team_phase` | `label` (`control` o `pressure_shift`), `window`, y métricas según la etiqueta |
+| `team_phase` | `label` (`control`, `pressure_shift` o `possession_spell`), `window`, y métricas según la etiqueta. `possession_spell` (agregado a v1.1) es una sola posesión de 12 pases completados o más: `passes`, `duration_s`, `players_involved` y `ended_in` (`goal`, `shot`, `out`, `foul` o `lost`). Sale cuando la posesión ya terminó, y su `evidence` son los pases |
 | `match_keys` | `scoreline`, `xg`, `possession_pct`, `keys` (por equipo, con `code`, `key` y `evidence`), `no_prediction: true` |
 | `top3` | `final_scoreline`, `top3` (con `rank`, `player`, `team`, `position`, `mvp_score`, `why` y `key_events`) |
 | `match_summary` | `final_scoreline`, `xg`, `possession_pct`, `goals`, `phases`, `story`, `who_really_won`, `who_really_won_basis` |
@@ -95,6 +98,9 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 | `run_opened_goal` | `dragged_defender`, `dragged_position` | arrastró al central (si `dragged_position` es DFC) o a {dragged_defender} y abrió el espacio del gol |
 | `standout_defensive` | ninguno | partido defensivo por encima de lo esperado para su rol |
 | `standout_creative` | ninguno | partido creativo por encima de lo esperado para su rol |
+| `pass_streak` | `count` | {count} pases completados seguidos (cada 20, nunca un portero) |
+| `recovery_to_shot` | `seconds`, `shooter` | recuperación en campo propio que terminó en remate en {seconds} segundos |
+| `big_save` | `xg`, `shooter` | atajada a un remate de xG {xg} (el portero; +2 desde xG 0.30) |
 
 Ejemplos completos en `../mocks/insights_sample.json`, y un partido real en `../data/m001/insights.json`.
 
@@ -135,6 +141,38 @@ Implementadas en `src/baja_insights/engine/tools.py` (`MatchQuery.dispatch(nombr
 | `get_goal_chain(goal_event_id)` | Misma forma que `goal_chain.facts` |
 
 Si un dato no existe, la función responde con `error` (`player_not_found`, `goal_not_found`, etc.) o lo lista en `not_tracked`. El agente nunca debe completar esos huecos por su cuenta.
+
+## Posiciones de los 22 jugadores (agregado a v1.1)
+
+`data/<partido>/positions.json`, con el formato de `positions.schema.json`. Se genera a partir de los eventos:
+
+```bash
+python -m baja_insights positions --events data/m001/events.jsonl --out data/m001/positions.json
+```
+
+El stream lo sirve en `GET /positions/<match_id>`, comprimido y con CORS abierto. Hay una muestra de 60 s del 1-1 en `../mocks/positions_sample.json`.
+
+**Son ilustrativas.** Los eventos solo dicen dónde está el jugador con balón. A los demás los coloca un modelo determinista (`src/baja_insights/positions/model.py`):
+
+- Cada jugador ocupa la zona de su posición, la misma que usa el generador.
+- El bloque sigue al balón, se abre con él y se cierra sin él.
+- La altura de la presión sale de las fases del guion.
+- Cada evento ancla a sus jugadores a sus coordenadas y a su segundo: el que tiene el balón, el receptor de cada pase, el corredor y el defensor arrastrado, el portero en una atajada, y el rival en duelos, presiones, entradas y faltas.
+- En cada balón parado los dos equipos toman la forma del saque: inicial, de banda, corner, saque de meta, tiro libre con barrera y saque del portero.
+
+**Nada más las lee:** ni el motor, ni los insights, ni los agentes, ni el chat. En pantalla deben llevar la etiqueta «Illustrative positions».
+
+| Campo | Qué es |
+| --- | --- |
+| `hz` | 2 cuadros por segundo de partido. La interfaz interpola entre cuadros y elige el cuadro con el `t_s` del reloj |
+| `frames[]` | `t` (segundo), `b` (balón), `h` y `a` (11 puntos `[x, y]` por equipo, en el orden de `teams.<lado>.players`) |
+| `lineup_changes` | Desde `t_s`, `player_in` ocupa el lugar de `player_out` |
+| `set_pieces` | Cada saque: el segundo en que el balón quedó muerto (`ball_out_from_t_s`), el segundo del saque (`t_s`), el tipo, el equipo, quién saca y desde dónde |
+| `periods` | **Cambio de lado.** En el segundo tiempo, todo lo que se dibuja en la cancha (jugadores, balón, cadena del gol, eventos) va en `(105 − x, 68 − y)`. Así el local ataca a la derecha en el primer tiempo y a la izquierda en el segundo |
+
+En un SVG de 1050 × 680, un punto va en `(x · 10, (68 − y) · 10)`, después de aplicar el cambio de lado.
+
+---
 
 ## Stream en vivo (v1.1)
 

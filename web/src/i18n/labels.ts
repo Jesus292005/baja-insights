@@ -102,6 +102,20 @@ function reasonEn(code: NonNullable<OverlayCard['reason_code']>, p: Params): str
       return 'defensive game above what the role expects';
     case 'standout_creative':
       return 'creative game above what the role expects';
+    case 'pass_streak': {
+      const count = num(p, 'count');
+      return count === null ? null : `${count} passes completed in a row`;
+    }
+    case 'recovery_to_shot': {
+      const secs = num(p, 'seconds');
+      return secs === null ? null : `won the ball in his own half and the team shot ${secs} seconds later`;
+    }
+    case 'big_save': {
+      const xg = num(p, 'xg');
+      if (xg === null) return null;
+      const who = str(p, 'shooter');
+      return who ? `save from ${who}'s shot of xG ${xg.toFixed(2)}` : `save from a shot of xG ${xg.toFixed(2)}`;
+    }
   }
 }
 
@@ -149,6 +163,18 @@ function reasonEs(code: NonNullable<OverlayCard['reason_code']>, p: Params): str
       return 'partido defensivo por encima de lo esperado para su rol';
     case 'standout_creative':
       return 'partido creativo por encima de lo esperado para su rol';
+    case 'pass_streak': {
+      const count = num(p, 'count');
+      return count === null ? null : `${count} pases completados seguidos`;
+    }
+    case 'recovery_to_shot': {
+      const secs = num(p, 'seconds');
+      return secs === null ? null : `recuperación en campo propio que terminó en remate en ${secs} segundos`;
+    }
+    case 'big_save': {
+      const xg = num(p, 'xg');
+      return xg === null ? null : `atajada a un remate de xG ${xg.toFixed(2)}`;
+    }
   }
 }
 

@@ -163,6 +163,10 @@ export function playersWithChanges(orders: readonly OverlayOrder[], t: number): 
 /** Duel-bar animation frames: no text, only move the bar. */
 export const isFrame = (o: OverlayOrder) => o.type === 'duel_bar' && o.source_insight === null;
 
-/** Orders already shown, newest first. Duel frames are left out; chat answers (no insight) stay in. */
-export const momentsAt = (orders: readonly OverlayOrder[], t: number, limit = 40) =>
+/**
+ * Orders already shown, newest first. Duel frames are left out; chat answers (no insight) stay in.
+ * The limit is well above a match (m001 has 46 since the realism data), so every moment of the
+ * match stays in the list; the list scrolls.
+ */
+export const momentsAt = (orders: readonly OverlayOrder[], t: number, limit = 150) =>
   orders.filter((o) => !isFrame(o) && due(o, t)).reverse().slice(0, limit);

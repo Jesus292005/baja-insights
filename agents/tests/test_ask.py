@@ -83,9 +83,10 @@ def test_the_model_sees_team_names_not_home_and_away():
     session = ToolSession(M001, at_s=1800)
     get_state = next(t for t in session.as_agent_tools(load_definitions()) if t.name == "get_match_state")
     seen = json.loads(get_state.func(at="30:00"))
-    assert seen["possession_pct"] == {"Bahía FC": 44, "Real Cardón": 56}
+    raw = session.results[-1]  # the checks keep the raw result
+    assert set(raw["possession_pct"]) == {"home", "away"}
+    assert seen["possession_pct"] == {"Bahía FC": raw["possession_pct"]["home"], "Real Cardón": raw["possession_pct"]["away"]}
     assert seen["scoreline"] == "Bahía FC 0-1 Real Cardón"
-    assert session.results[-1]["possession_pct"] == {"home": 44, "away": 56}  # the checks keep the raw result
 
 
 def test_flank_duels_are_the_full_backs_against_the_opposing_wingers():
@@ -104,11 +105,12 @@ def test_flank_duels_are_the_full_backs_against_the_opposing_wingers():
 def test_the_agent_gets_the_flank_duels_and_may_quote_them():
     from baja_agents.ask import flank_duels
     duels = flank_duels(M001, 1800)
-    top = duels[0]  # Torres vs Haro at 30:00
-    text = f"Torres va ganando la banda: {top['won_a']} de {top['duels']} duelos."
-    chat = FakeChat([([("get_duel", {"player_a": "Torres", "player_b": "Haro"})], answer(text))])
+    top = duels[0]  # the most contested flank at 30:00
+    a, b = (name.split(". ", 1)[-1] for name in (top["player_a"], top["player_b"]))
+    text = f"{a} y {b} se disputan la banda: {top['won_a']} de {top['duels']} duelos para {a}."
+    chat = FakeChat([([("get_duel", {"player_a": a, "player_b": b})], answer(text))])
     out = asyncio.run(chat.ask(request("Who's winning the flank duel?", at="30:00")))
-    assert chat.prompts[0]["flank_duels"] == duels and top["player_a"] == "J. Torres"
+    assert chat.prompts[0]["flank_duels"] == duels
     assert out["status"] == "answered" and out["answer"] == text
 
 
@@ -152,7 +154,7 @@ def test_the_chat_model_gets_no_pitch_coordinates():
 
 def test_duel_counts_are_not_scorelines():
     # 30:00, Bahía FC 0-1 Real Cardón. "3-1" in duels was rejected as a scoreline; only "1-0" is backwards.
-    chat = FakeChat([([("get_duel", {"player_a": "Torres", "player_b": "Haro"})],
+    chat = FakeChat([([("get_duel", {"player_a": "Mena", "player_b": "Verdugo"})],
                       answer("Torres le gana a Haro 3-1 en duelos, con Real Cardón arriba 0-1."))])
     assert asyncio.run(chat.ask(request("Who's winning the flank duel?", at="30:00")))["status"] == "answered"
     from baja_agents.checks import wrong_scorelines

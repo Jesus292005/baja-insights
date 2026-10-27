@@ -146,8 +146,22 @@ async def _http_reply(writer: asyncio.StreamWriter, status: str, body: str = "")
         writer.close()
 
 
-async def handshake(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> WebSocket | None:
-    """Upgrade the connection, or answer plain HTTP (health check, 404, 400) and return None."""
+async def _file_reply(writer: asyncio.StreamWriter, content_type: str, gzipped: bytes) -> None:
+    """A static file, already gzipped, that any web page may fetch (CORS)."""
+    writer.write((f"HTTP/1.1 200 OK\r\nContent-Type: {content_type}\r\nContent-Encoding: gzip\r\n"
+                  f"Content-Length: {len(gzipped)}\r\nAccess-Control-Allow-Origin: *\r\n"
+                  "Cache-Control: public, max-age=300\r\nConnection: close\r\n\r\n").encode("ascii") + gzipped)
+    try:
+        await writer.drain()
+    finally:
+        writer.close()
+
+
+async def handshake(reader: asyncio.StreamReader, writer: asyncio.StreamWriter,
+                    files: dict[str, tuple[str, bytes]] | None = None) -> WebSocket | None:
+    """Upgrade the connection, or answer plain HTTP (health check, static ``files``, 404, 400) and return None.
+
+    ``files`` maps a path such as ``/positions/m001`` to its content type and gzipped body."""
     try:
         raw = await reader.readuntil(b"\r\n\r\n")
     except (asyncio.IncompleteReadError, asyncio.LimitOverrunError, ConnectionError):
@@ -173,6 +187,8 @@ async def handshake(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) 
     if not is_upgrade:
         if method == "GET" and path in ("/healthz", "/"):
             await _http_reply(writer, "200 OK", "ok\n")
+        elif method == "GET" and files and path in files:
+            await _file_reply(writer, *files[path])
         else:
             await _http_reply(writer, "404 Not Found")
         return None

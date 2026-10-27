@@ -37,7 +37,7 @@
         "overall_to": {"type": "integer", "maximum": 99, "description": "v1.1"},
         "reason": {"type": "string", "description": "v1.1. The engine's reason, in Spanish with digits, as in the insight."},
         "reason_code": {"description": "v1.1, optional. Copied from the insight's card_change; the UI writes the text in each language.",
-                        "enum": ["line_breaking_pass", "opp_half_recoveries", "shot_speed", "duel_streak", "run_speed", "dribbles", "run_ended_in_shot", "run_opened_goal", "standout_defensive", "standout_creative"]},
+                        "enum": ["line_breaking_pass", "opp_half_recoveries", "shot_speed", "duel_streak", "run_speed", "dribbles", "run_ended_in_shot", "run_opened_goal", "standout_defensive", "standout_creative", "pass_streak", "recovery_to_shot", "big_save"]},
         "reason_params": {"description": "v1.1, optional. Copied from the insight's card_change.", "type": "object"}
       }
     },

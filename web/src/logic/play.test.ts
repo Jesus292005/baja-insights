@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChainLink, GoalAnalysisOrder, OverlayOrder } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
 import { forViewer } from './derive';
-import { buildPlay, defendsLeft, drawnIn, halfOf, hasCoordinates, orientPlay, playAt, toSvg } from './play';
+import { SPELL_PASSES, buildPlay, defendsLeft, drawnIn, halfOf, hasCoordinates, orientPlay, playAt, playOf, playOnScreen, toSvg } from './play';
 
 const fanEn = forViewer(demoMatch.overlays, 'fan', 'en');
 const goals = fanEn.filter((o): o is GoalAnalysisOrder => o.type === 'goal_analysis');
@@ -84,9 +84,10 @@ describe('playAt', () => {
     expect(buildPlay(play.links, false).labels).toHaveLength(1);
   });
 
-  it('skips duel frames, team phases and graphics without cited events', () => {
+  it('skips duel frames, team phases other than a long spell, and graphics without cited events', () => {
     const frame = fanEn.find((o) => o.type === 'duel_bar' && o.source_insight === null)!;
-    const only: OverlayOrder[] = [frame, ...fanEn.filter((o) => o.type === 'team_phase')];
+    const phases = fanEn.filter((o) => o.type === 'team_phase' && o.data?.label !== 'possession_spell');
+    const only: OverlayOrder[] = [frame, ...phases];
     expect(playAt(only, 5520, demoMatch.playEvents, roster)).toBeNull();
   });
 });
@@ -136,5 +137,36 @@ describe('drawnIn', () => {
     const raw = first.links[0].start!;
     expect(orientPlay(later)[0].start).toEqual([105 - raw[0], 68 - raw[1]]);
     expect(drawnIn(null, 2)).toBeNull();
+  });
+});
+
+describe('playOnScreen', () => {
+  it('draws the play of the card on screen, and nothing once it has left', () => {
+    expect(playOnScreen([{ order: equaliser }], demoMatch.playEvents, roster)?.order).toBe(equaliser);
+    expect(playOnScreen([], demoMatch.playEvents, roster)).toBeNull();
+  });
+
+  it('takes the newest card that has a play', () => {
+    const play = playOnScreen([{ order: opener }, { order: equaliser }], demoMatch.playEvents, roster);
+    expect(play?.order).toBe(equaliser);
+  });
+});
+
+describe('long spell', () => {
+  const spell = fanEn.find((o) => o.type === 'team_phase' && o.data?.label === 'possession_spell')!;
+
+  it('draws a long spell as its last passes, joined by the ball', () => {
+    const play = playOf(spell, demoMatch.playEvents, roster)!;
+    expect(play.links).toHaveLength(SPELL_PASSES);
+    expect(play.cited).toBe(spell.evidence!.length);
+    const drawn = buildPlay(play.links, true);
+    expect(drawn.tags).toEqual([]);
+    expect(drawn.steps.every((s) => s.kind === 'pass')).toBe(true);
+  });
+
+  it('leaves the other team phases off the pitch', () => {
+    // Built here: whether m001 has a control phase depends on the seed.
+    const other = { ...spell, overlay_id: 'phase-control', data: { label: 'control' } } as OverlayOrder;
+    expect(playOf(other, demoMatch.playEvents, roster)).toBeNull();
   });
 });

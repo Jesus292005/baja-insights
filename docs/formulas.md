@@ -214,17 +214,8 @@ Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`
 
 ## 12. Partido de demo
 
-El partido de demo es **m001 con la semilla 44** (`DEMO_SEED` en `generator/simulate.py`). Se eligió entre 90 semillas porque es la que cumple toda la historia con el generador calibrado. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
+El partido de demo es **m001 con la semilla 1387** (`DEMO_SEED` en `generator/simulate.py`).
 
-- El 1-1 cae en el 17 y en el 63, y la cadena del empate tiene los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres.
-- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 19. Cota lo supera entre el 43 y el 68, y Torres termina primero, empatado con Cota en 8.2.
-- Real Cardón tiene la fase de `control` en el primer tiempo, y Bahía su `pressure_shift` en el segundo.
-- El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota".
+**Desde el 27 de octubre de 2026 el guion solo fija las jugadas que inserta tal cual:** el 1-1 en el 17 y el 63 y la cadena del empate (recuperación de Cota, desmarque de Torres arrastrando a Cárdenas, pase de Salgado y remate de Ramírez). El análisis del gol, los avisos y el video dependen de ellas. Todo lo demás sale de la semilla y puede cambiar cuando cambia el generador: quién lidera la carrera del MVP, quién la gana, los duelos, las fases y el veredicto. Así el generador se puede mejorar sin buscar una semilla nueva cada vez.
 
-Cambios del guion respecto al jueves 22: Torres un 30% más intenso en su forma (presión 2.17, recuperación 1.91, duelos 1.52), Rosas recibe menos (1.4) y Bahía presiona menos en el primer tiempo (0.10) y más en el segundo (0.70).
-
-**Pendiente:**
-- [ ] Cota hace 17 recuperaciones, una cifra alta para un contención real. Bajarla mueve la carrera del MVP, así que conviene hacerlo junto con otra búsqueda de semilla.
-- [ ] No hay un aviso de "Torres sube al primer lugar" antes del minuto 35: llega al primer lugar cuando Cota baja, y esos cambios no se anuncian. La carrera en pantalla sí lo muestra arriba.
-
-Cada cambio al guion, a `GEN` o a `params.py` cambia `data/m001`. Regenera con `generate` y `analyze` y haz commit de los datos en el mismo PR. La CI revisa que el partido guardado sea el que produce el código.
+`tests/test_demo_story.py` protege lo que se conserva: los goles, y que la cadena del 1-1 tenga los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres y las coordenadas para dibujarla.

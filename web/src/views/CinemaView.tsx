@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AppConfig } from '../app/config';
 import { useMatchRuntime } from '../app/useMatchRuntime';
+import { usePersisted } from '../app/usePersisted';
+import { useDeadBall, usePositions } from '../data/positions';
 import { MatchBug } from '../components/shell/shell';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
@@ -8,7 +10,7 @@ import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { demoMatch, roster } from '../data/match';
 import { forViewer, momentsAt } from '../logic/derive';
-import { drawnIn, halfOf, playAt } from '../logic/play';
+import { drawnIn, halfOf, playOnScreen } from '../logic/play';
 import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
@@ -28,6 +30,8 @@ export function CinemaView({ config }: { config: AppConfig }) {
   const [mode, setMode] = useState<Mode>(config.mode ?? 'fan');
   const [lang, setLang] = useState<Language>(config.lang ?? 'en');
   const [badge, setBadge] = useState(true);
+  // Same choice as the web app: the illustrative players are on unless hidden (J).
+  const [showPlayers, setShowPlayers] = usePersisted<'on' | 'off'>('bi.players.v1', 'on', ['on', 'off']);
   const [help, setHelp] = useState(false);
   const [hint, setHint] = useState(true);
   const [pulse, setPulse] = useState(0);
@@ -90,6 +94,8 @@ export function CinemaView({ config }: { config: AppConfig }) {
         replay.seek(t + step);
       } else if (key === 'b') {
         setBadge((v) => !v);
+      } else if (key === 'j') {
+        setShowPlayers(showPlayers === 'on' ? 'off' : 'on');
       } else if (key === 'h' || (key === 'escape' && help)) {
         setHelp((v) => (key === 'escape' ? false : !v));
         setHint(false);
@@ -101,7 +107,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
       }
       if (handled) e.preventDefault();
     },
-    [rt.replay, momentTimes, help],
+    [rt.replay, momentTimes, help, showPlayers, setShowPlayers],
   );
 
   useEffect(() => {
@@ -110,8 +116,13 @@ export function CinemaView({ config }: { config: AppConfig }) {
   }, [onKey]);
 
   const halfTime = useHalfTime(rt.t, rt.snap.clock?.phase);
+  const positionsFile = usePositions();
+  useDeadBall(rt.replay, positionsFile);
+  const positions = showPlayers === 'on' ? positionsFile : null;
   // Drawn in the clock's half, so the teams swap ends at 45:00.
-  const play = drawnIn(playAt(rt.orders, rt.t, demoMatch.playEvents, roster), halfOf(rt.t));
+  // The play of the card on screen, only while it is up.
+  const onScreen = Object.values(rt.showing).filter((x): x is NonNullable<typeof x> => !!x);
+  const play = drawnIn(playOnScreen(onScreen, demoMatch.playEvents, roster), halfOf(rt.t));
 
   return (
     <PrefsProvider mode={mode} lang={lang}>
@@ -123,6 +134,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
           backdrop
           play={play}
           half={halfOf(rt.t)}
+          players={positions ? { file: positions, t: rt.t, frozen: rt.replayState?.playing === false } : null}
           reserved={badge ? [BADGE_BOX] : []}
           bug={
             <div className="slot-bug">

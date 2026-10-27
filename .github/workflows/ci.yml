@@ -21,7 +21,7 @@ jobs:
         run: python -m baja_insights validate mocks/events_sample.json mocks/insights_sample.json mocks/overlays_sample.json data/m001/events.jsonl data/m001/insights.json
       - name: Generated demo match is up to date
         run: |
-          python -m baja_insights generate --seed 44 --script m001 --out /tmp/events.jsonl
+          python -m baja_insights generate --seed 1387 --script m001 --out /tmp/events.jsonl
           diff -q /tmp/events.jsonl data/m001/events.jsonl
 
   agents:
