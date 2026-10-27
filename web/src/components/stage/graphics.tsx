@@ -12,8 +12,6 @@ import {
 } from '../../i18n/strings';
 import { cardReasonLabel, chainActionLabel } from '../../i18n/labels';
 import { cardAt } from '../../logic/derive';
-import { hasCoordinates } from '../../logic/goalPlay';
-import { GoalPlayBoard } from './GoalPlayBoard';
 import { Evidence, TeamChip } from '../common';
 import { DuelMeter } from '../DuelMeter';
 import { PlayerCard } from '../PlayerCard';
@@ -215,9 +213,8 @@ function GoalChain({ order, elapsed }: GraphicProps<GoalAnalysisOrder>) {
   const detail = d.chain_detail;
   const space = typeof d.invisible_assist === 'object' && d.invisible_assist ? d.invisible_assist.space_opened_m : null;
   const scorer = d.chain[d.chain.length - 1];
-  const board = hasCoordinates(detail);
   const chainList = (
-    <ol className={`g-chain${board ? ' g-chain-list' : ''}`} style={{ '--n': d.chain.length } as CSSProperties}>
+    <ol className="g-chain g-chain-list" style={{ '--n': d.chain.length } as CSSProperties}>
       {d.chain.map((name, i) => {
         const isInvisible = name === invisible;
         const isScorer = i === d.chain.length - 1;
@@ -253,20 +250,13 @@ function GoalChain({ order, elapsed }: GraphicProps<GoalAnalysisOrder>) {
       </div>
     );
   return (
-    <Panel order={order} elapsed={elapsed} team={teamOf(scorer)} className={board ? 'g-goal-board' : ''}>
+    <Panel order={order} elapsed={elapsed} team={teamOf(scorer)}>
       {d.scoreline && (
         <p className="g-scoreline">
           <TeamChip team={roster.home} /> {d.scoreline.home} – {d.scoreline.away} <TeamChip team={roster.away} />
         </p>
       )}
-      {board ? (
-        <div className="g-board">
-          <GoalPlayBoard links={detail} side={teamOf(scorer)?.side ?? 'home'} spaceOpened={space} />
-          {chainList}
-        </div>
-      ) : (
-        chainList
-      )}
+      {chainList}
       {invisibleLine}
       {analystRow}
     </Panel>

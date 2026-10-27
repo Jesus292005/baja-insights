@@ -36,7 +36,7 @@
   color: var(--bi-text);
 }
 
-.pitch { position: absolute; inset: 0; --pitch-a: #13303a; --pitch-b: #163640; --pitch-line: rgb(243 237 226 / 0.22); }
+.pitch { position: absolute; inset: 0; background: #12293a; --pitch-a: #13303a; --pitch-b: #163640; --pitch-line: rgb(243 237 226 / 0.22); background: var(--pitch-a); }
 .pitch svg { width: 100%; height: 100%; display: block; }
 .pitch::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(12 20 24 / 0.55) 100%); }
 .pitch-label { position: absolute; right: 96px; bottom: 30px; z-index: 1; font-family: var(--bi-font-data); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(243 237 226 / 0.55); }
@@ -266,7 +266,7 @@
 .cinema-badge-fan::before { border-radius: 50%; }
 @keyframes badge-in { from { opacity: 0; transform: translate(-50%, -12px); } }
 
-.cinema-hint { position: absolute; left: 96px; bottom: 24px; z-index: var(--bi-z-status); font-family: var(--bi-font-data); font-size: 22px; color: rgb(243 237 226 / 0.7); }
+.cinema-hint { position: absolute; left: 96px; top: 150px; z-index: var(--bi-z-status); font-family: var(--bi-font-data); font-size: 22px; color: rgb(243 237 226 / 0.7); }
 
 .cinema-help {
   position: absolute; left: 50%; top: 50%; z-index: var(--bi-z-toast); transform: translate(-50%, -50%);
@@ -325,45 +325,61 @@
 .stage-canvas[data-mode='analyst'] .g-mvp_update .g-title { font-size: 34px; }
 .stage-canvas[data-mode='analyst'] .g-mvp_update .g-rank-big { font-size: 72px; }
 
+
 /* =========================================================================
-   Goal board: the chain on a pitch (v1.1 coordinates) next to the list of players.
+   Plays on the full pitch (PlayLayer, in pitch SVG units) and their legend
    ========================================================================= */
 
-.g-board { display: grid; grid-template-columns: 640px minmax(0, 1fr); gap: 28px; align-items: start; }
-/* Under the board the invisible assist takes one line: badge, name and hint side by side. */
-.g-goal-board .g-invisible-hint { flex-basis: auto; }
-.g-goal-board .g-row .evidence { flex-wrap: nowrap; overflow: hidden; }
-.g-chain-list small { font-size: 20px; }
-.g-chain-list .g-credit { font-size: 20px; }
-.g-chain.g-chain-list { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.pl-step { fill: none; stroke-width: 7; stroke-linecap: round; }
+.pl-shot { stroke-width: 10; }
+.pl-step:not(.pl-fade) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pl-draw 420ms var(--bi-ease-out) forwards; }
+.pl-run { stroke-dasharray: 22 14; }
+.pl-ball { stroke: var(--bi-text-muted); stroke-width: 5; stroke-dasharray: 2 16; stroke-linecap: round; }
+.pl-marker { stroke: var(--bi-bg); stroke-width: 4; }
+.pl-pressure { fill: none; stroke-width: 6; }
+.pl-defender { fill: none; stroke-width: 5; stroke-dasharray: 10 10; }
+.pl-defender-from { fill: none; stroke-width: 4; }
+.pl-label { font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; font-size: 26px; fill: var(--bi-text); paint-order: stroke; stroke: var(--bi-bg); stroke-width: 7px; stroke-linejoin: round; }
+.pl-label-rival { font-family: var(--bi-font-data); font-weight: 600; font-size: 22px; fill: var(--bi-text-muted); }
+.pl-fade { opacity: 0; animation: pl-fade 360ms var(--bi-ease-out) forwards; }
+@keyframes pl-draw { to { stroke-dashoffset: 0; } }
+@keyframes pl-fade { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .pl-step:not(.pl-fade) { stroke-dashoffset: 0; }
+  .pl-fade { opacity: 1; }
+}
+
+.legend ul { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; margin: 0; padding: 0; list-style: none; }
+.legend li { display: inline-flex; align-items: center; gap: 8px; }
+.legend-teams { gap: 14px; }
+.legend-team { display: inline-flex; align-items: center; gap: 6px; }
+.legend-team i { display: inline-block; width: 22px; height: 6px; }
+/* On the cinema canvas: one line at the foot, below the bottom bar. */
+.legend-canvas { position: absolute; left: 96px; right: 96px; bottom: 14px; z-index: var(--bi-z-slot); font-size: 20px; color: var(--bi-text); }
+.legend-canvas svg { width: 40px; height: 16px; }
+
+/* Goal card: the chain as a vertical list (the play itself is drawn on the pitch). */
+.g-chain.g-chain-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .g-chain.g-chain-list::before { display: none; }
-.g-chain-list li { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; align-items: center; }
+.g-chain-list li { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; align-items: center; }
 .g-chain-list li > :not(.g-node) { grid-column: 2; }
 .g-chain-list .g-node { grid-row: 1 / span 3; width: 52px; height: 52px; font-size: 22px; }
 .g-chain-list b { font-size: 26px; }
-
-.gp { display: block; width: 100%; height: auto; overflow: hidden; }
-.gp-pitch { stroke: rgb(243 237 226 / 0.28); }
-.gp-pitch > rect:first-child { fill: rgb(79 209 193 / 0.05); }
-.gp-step { fill: none; stroke-linecap: round; }
-.gp-step:not(.gp-fade) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: gp-draw 420ms var(--bi-ease-out) forwards; }
-.gp-gap { stroke: var(--bi-text-muted); stroke-linecap: round; }
-.gp-dot { stroke: var(--bi-text); }
-.gp-defender { fill: none; }
-.gp-defender-from { fill: none; }
-.gp-label { font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; fill: var(--bi-text); paint-order: stroke; stroke: var(--bi-bg); stroke-linejoin: round; }
-.gp-label-rival { font-family: var(--bi-font-data); font-weight: 600; fill: var(--bi-text-muted); }
-.gp-fade { opacity: 0; animation: gp-fade 360ms var(--bi-ease-out) forwards; }
-@keyframes gp-draw { to { stroke-dashoffset: 0; } }
-@keyframes gp-fade { to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .gp-step:not(.gp-fade) { stroke-dashoffset: 0; }
-  .gp-fade { opacity: 1; }
-}
-/* Analyst list next to the board: compact, so it is no taller than the board. */
-.g-goal-board { gap: 12px; }
-.g-chain.g-chain-list { gap: 6px; }
-.g-chain-list li { row-gap: 2px; }
-.g-chain-list small { font-size: 19px; line-height: 1.15; }
+.g-chain-list small { font-size: 20px; line-height: 1.15; }
 .g-chain-list .g-credit { font-size: 18px; }
 .g-chain-list .g-credit-bar { height: 8px; }
+
+/* Goal card docked beside the play: compact, the pitch tells the rest. */
+.stage-canvas[data-mode] .g-goal_analysis { padding: 22px 28px 18px; gap: 10px; }
+.stage-canvas[data-mode] .g-goal_analysis .g-title { font-size: 38px; padding-right: 210px; }
+.stage-canvas[data-mode] .g-goal_analysis .g-scoreline { top: 62px; right: 28px; font-size: 40px; }
+.stage-canvas[data-mode='fan'] .g-goal_analysis .g-text { font-size: 25px; }
+.stage-canvas[data-mode='analyst'] .g-goal_analysis .g-text { font-size: 21px; }
+.g-goal_analysis .g-chain-list { gap: 4px; }
+.g-goal_analysis .g-chain-list .g-node { width: 44px; height: 44px; font-size: 19px; }
+.g-goal_analysis .g-chain-list li { grid-template-columns: 48px minmax(0, 1fr); }
+.g-goal_analysis .g-chain-list b { font-size: 23px; }
+.g-goal_analysis .g-invisible { font-size: 22px; }
+.g-goal_analysis .g-invisible-badge { font-size: 19px; }
+.g-goal_analysis .g-invisible-hint { font-size: 20px; }
+.g-goal_analysis .g-row .evidence { font-size: 19px; }

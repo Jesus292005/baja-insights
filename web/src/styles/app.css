@@ -158,6 +158,10 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 .footer { text-align: center; padding: var(--bi-space-7) var(--bi-space-5) var(--bi-space-9); font-size: var(--bi-text-xs); color: var(--bi-text-muted); }
 
+.legend-web { display: flex; flex-direction: column; gap: var(--bi-space-3); padding: var(--bi-space-3) var(--bi-space-4); background: var(--bi-surface); border: var(--bi-border-width) solid var(--bi-line); font-size: var(--bi-text-xs); }
+.legend-caption { color: var(--bi-text-muted); }
+.legend-caption b { color: var(--bi-text); margin-right: var(--bi-space-2); }
+.legend-empty { color: var(--bi-text-muted); }
 .replay { display: flex; flex-wrap: wrap; align-items: center; gap: var(--bi-space-4) var(--bi-space-5); padding: var(--bi-space-3) var(--bi-space-4); background: var(--bi-surface); border: var(--bi-border-width) solid var(--bi-line); }
 .replay-seek { flex: 1 1 260px; display: flex; }
 .replay-seek input { width: 100%; accent-color: var(--bi-accent); min-height: 32px; }

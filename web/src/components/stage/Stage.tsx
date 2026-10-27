@@ -4,6 +4,9 @@ import { broadcastSlots } from '../../design/tokens';
 import { usePrefs } from '../../i18n/prefs';
 import { isFrame } from '../../logic/derive';
 import { SLOTS, type Showing } from '../../logic/plan';
+import type { MatchPlay } from '../../logic/play';
+import { roster } from '../../data/match';
+import { PlayLayer } from './PlayLayer';
 import { Graphic } from './graphics';
 
 export interface StageProps {
@@ -16,6 +19,8 @@ export interface StageProps {
   bug?: React.ReactNode;
   /** Draws the pitch behind the graphics. Default: only in the web app. */
   backdrop?: boolean;
+  /** The play drawn on the pitch (needs the backdrop). */
+  play?: MatchPlay | null;
   /** Extra layers on the canvas, in canvas pixels (cinema badge and help). */
   children?: React.ReactNode;
 }
@@ -65,7 +70,7 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
   return message;
 }
 
-export function Stage({ showing, orders, variant, override, bug, backdrop, children }: StageProps) {
+export function Stage({ showing, orders, variant, override, bug, backdrop, play, children }: StageProps) {
   const { s, mode } = usePrefs();
   const { ref, scale } = useFitScale(variant === 'web' ? 'width' : 'contain');
   const merged: Partial<Record<Slot, Showing>> = { ...showing };
@@ -84,11 +89,11 @@ export function Stage({ showing, orders, variant, override, bug, backdrop, child
           visibility: scale ? 'visible' : 'hidden',
         }}
       >
-        {(backdrop ?? variant === 'web') && <PitchBackdrop label={s.app.videoPlaceholder} />}
+        {(backdrop ?? variant === 'web') && <PitchBackdrop label={s.app.videoPlaceholder} play={play ?? null} />}
         {bug}
         {SLOTS.map((slot) => {
           const item = merged[slot];
-          const box = broadcastSlots[slot];
+          const box = item && slot === 'center' && item.order.type === 'goal_analysis' ? goalDock(item.order) : broadcastSlots[slot];
           return (
             <div
               key={slot}
@@ -110,31 +115,50 @@ export function Stage({ showing, orders, variant, override, bug, backdrop, child
   );
 }
 
-/** Stand-in for the video feed in the web app: a quiet pitch so the graphics have context. */
-function PitchBackdrop({ label }: { label: string }) {
+/**
+ * The goal card docks on the side of the pitch the scoring team defends, so the play stays visible:
+ * Bahía attacks towards x = 105, so its goals dock left; Real Cardón's dock right.
+ */
+function goalDock(order: OverlayOrder) {
+  const scorer = order.type === 'goal_analysis' ? order.data.chain[order.data.chain.length - 1] : undefined;
+  const side = roster.player(scorer)?.team.side ?? 'home';
+  // Below the score bug on the left. The bottom bar is paused during a goal, so the card can reach
+  // y = 1000, just above the cinema legend.
+  return side === 'home' ? { x: 96, y: 140, w: 700, h: 860 } : { x: 1124, y: 54, w: 700, h: 946 };
+}
+
+/**
+ * Stand-in for the video feed: the whole pitch at true scale (105 × 68 m as 1050 × 680, with a margin),
+ * so the plays the engine sends land where they happened. Not drawn in the broadcast overlay, where the
+ * real video goes and its camera does not match these coordinates.
+ */
+function PitchBackdrop({ label, play }: { label: string; play: MatchPlay | null }) {
   return (
-    <div className="pitch" aria-hidden="true">
-      <svg viewBox="0 0 1050 680" preserveAspectRatio="xMidYMid slice">
+    <div className="pitch">
+      <svg viewBox="-30 -30 1110 740" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <defs>
-          <pattern id="mow" width="105" height="680" patternUnits="userSpaceOnUse">
-            <rect width="52.5" height="680" fill="var(--pitch-a)" />
-            <rect x="52.5" width="52.5" height="680" fill="var(--pitch-b)" />
+          <pattern id="mow" x="0" width="105" height="740" patternUnits="userSpaceOnUse">
+            <rect width="52.5" height="740" y="-30" fill="var(--pitch-a)" />
+            <rect x="52.5" y="-30" width="52.5" height="740" fill="var(--pitch-b)" />
           </pattern>
         </defs>
-        <rect width="1050" height="680" fill="url(#mow)" />
+        <rect x="-30" y="-30" width="1110" height="740" fill="url(#mow)" />
         <g fill="none" stroke="var(--pitch-line)" strokeWidth="3">
-          <rect x="20" y="20" width="1010" height="640" />
-          <line x1="525" y1="20" x2="525" y2="660" />
+          <rect x="0" y="0" width="1050" height="680" />
+          <line x1="525" y1="0" x2="525" y2="680" />
           <circle cx="525" cy="340" r="91.5" />
-          <rect x="20" y="138.5" width="165" height="403" />
-          <rect x="865" y="138.5" width="165" height="403" />
-          <rect x="20" y="248.5" width="55" height="183" />
-          <rect x="975" y="248.5" width="55" height="183" />
-          <circle cx="130" cy="340" r="3" fill="var(--pitch-line)" />
-          <circle cx="920" cy="340" r="3" fill="var(--pitch-line)" />
+          <rect x="0" y="138.5" width="165" height="403" />
+          <rect x="885" y="138.5" width="165" height="403" />
+          <rect x="0" y="248.5" width="55" height="183" />
+          <rect x="995" y="248.5" width="55" height="183" />
+          <rect x="-20" y="303.4" width="20" height="73.2" />
+          <rect x="1050" y="303.4" width="20" height="73.2" />
+          <circle cx="110" cy="340" r="3" fill="var(--pitch-line)" />
+          <circle cx="940" cy="340" r="3" fill="var(--pitch-line)" />
         </g>
+        {play && <PlayLayer key={play.order.overlay_id} play={play} />}
       </svg>
-      <span className="pitch-label">{label}</span>
+      <span className="pitch-label" aria-hidden="true">{label}</span>
     </div>
   );
 }
