@@ -214,20 +214,8 @@ Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`
 
 ## 12. Partido de demo
 
-El partido de demo es **m001 con la semilla 1387** (`DEMO_SEED` en `generator/simulate.py`). Fue la 44 y luego la 769. Cambió primero cuando el generador empezó a emitir balones parados reales, y después cuando las posesiones largas dejaron de terminar en robos que nadie provocaba y los balones sueltos empezaron a contar como recuperación. Cada uno de esos cambios altera el relleno entre jugadas.
+El partido de demo es **m001 con la semilla 1387** (`DEMO_SEED` en `generator/simulate.py`).
 
-Antes de cambiar de semilla se intentó conservar la 769 ajustando el guion (`scripts/m001.json`): Torres presiona y recupera más desde el minuto 15, Cota disputa y recupera más, y Cardón es menos directo en el segundo tiempo. Con eso volvían casi todos los puntos, menos uno: la carrera del MVP en pantalla no tenía a Torres arriba antes del 35. Con el guion ajustado, la 1387 es la que mejor cumple toda la historia entre unas 1,600 semillas. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
+**Desde el 27 de octubre de 2026 el guion solo fija las jugadas que inserta tal cual:** el 1-1 en el 17 y el 63 y la cadena del empate (recuperación de Cota, desmarque de Torres arrastrando a Cárdenas, pase de Salgado y remate de Ramírez). El análisis del gol, los avisos y el video dependen de ellas. Todo lo demás sale de la semilla y puede cambiar cuando cambia el generador: quién lidera la carrera del MVP, quién la gana, los duelos, las fases y el veredicto. Así el generador se puede mejorar sin buscar una semilla nueva cada vez.
 
-- El 1-1 cae en el 17 y en el 63, y la cadena del empate tiene los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres.
-- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 33. Termina primero con 8.7, en un final cerrado con Cota (8.5) y Salgado (8.4).
-- Mena pierde el primer tramo del duelo con Verdugo y le da la vuelta desde el minuto 27.
-- Real Cardón tiene la fase de `control` en el primer tiempo, y Bahía su `pressure_shift` en el segundo.
-- El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota".
-
-Cambios del guion respecto al jueves 22: Torres un 30% más intenso en su forma (presión 2.17, recuperación 1.91, duelos 1.52), Rosas recibe menos (1.4) y Bahía presiona menos en el primer tiempo (0.10) y más en el segundo (0.70).
-
-**Pendiente:**
-- [ ] Cota hace 17 recuperaciones, una cifra alta para un contención real. Bajarla mueve la carrera del MVP, así que conviene hacerlo junto con otra búsqueda de semilla.
-- [ ] No hay un aviso de "Torres sube al primer lugar" antes del minuto 35: llega al primer lugar cuando Cota baja, y esos cambios no se anuncian. La carrera en pantalla sí lo muestra arriba.
-
-Cada cambio al guion, a `GEN` o a `params.py` cambia `data/m001`. Regenera con `generate` y `analyze` y haz commit de los datos en el mismo PR. La CI revisa que el partido guardado sea el que produce el código.
+`tests/test_demo_story.py` protege lo que se conserva: los goles, y que la cadena del 1-1 tenga los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres y las coordenadas para dibujarla.
