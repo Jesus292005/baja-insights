@@ -38,6 +38,12 @@ def model_name() -> str:
     return os.environ.get("FOUNDRY_MODEL", "")
 
 
+def reasoning_effort() -> str:
+    """FOUNDRY_REASONING_EFFORT (none, low, medium...) for a reasoning model such as gpt-5.4-mini. Empty: the default."""
+    load_env()
+    return os.environ.get("FOUNDRY_REASONING_EFFORT", "")
+
+
 def verifier_model_name() -> str:
     """Optional stronger deployment for the fact-checker, FOUNDRY_VERIFIER_MODEL. Defaults to FOUNDRY_MODEL."""
     load_env()

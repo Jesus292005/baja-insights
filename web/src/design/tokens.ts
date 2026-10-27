@@ -63,11 +63,12 @@ export const breakpoint = { sm: 600, md: 900, lg: 1200 } as const;
 /** Geometría de los slots del contrato sobre el lienzo de transmisión (px, 1920×1080, dentro de title-safe). */
 export const broadcastSlots = {
   canvas: { width: 1920, height: 1080, safeX: 96, safeY: 54 },
-  top_right: { x: 1344, y: 54, w: 480, h: 240 },
-  side_panel: { x: 1344, y: 318, w: 480, h: 520 },
-  lower_third: { x: 96, y: 760, w: 1100, h: 160 },
-  bottom_bar: { x: 96, y: 954, w: 1728, h: 72 },
-  center: { x: 480, y: 270, w: 960, h: 540 },
+  // top_right and side_panel share the right column and never show together (see logic/plan.ts).
+  top_right: { x: 1344, y: 54, w: 480, h: 806 },
+  side_panel: { x: 1344, y: 54, w: 480, h: 806 },
+  lower_third: { x: 96, y: 540, w: 1100, h: 320 },
+  bottom_bar: { x: 96, y: 876, w: 1728, h: 150 },
+  center: { x: 400, y: 110, w: 1120, h: 800 },
   full_screen: { x: 0, y: 0, w: 1920, h: 1080 },
 } as const;
 

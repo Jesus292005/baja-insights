@@ -7,7 +7,7 @@ import json
 from baja_insights.contract import fmt_clock
 from baja_insights.roster import Roster
 
-from .checks import UI_ONLY_FACTS
+from .checks import without_ui_only
 from .fallback import readable_stats
 from .models import Story
 
@@ -58,7 +58,7 @@ INSTRUCTIONS += DATA_NOTES
 
 def who_is_who(insight: dict, roster: Roster) -> dict:
     """Team and position of every player named anywhere in the insight."""
-    facts = {k: v for k, v in insight["facts"].items() if k not in UI_ONLY_FACTS}
+    facts = without_ui_only(insight["facts"])
     text = json.dumps(facts, ensure_ascii=False) + " ".join(insight["players"])
     return {p.name: {"team": p.team, "position": p.position}
             for p in roster.players.values() if p.name in text}
@@ -66,7 +66,7 @@ def who_is_who(insight: dict, roster: Roster) -> dict:
 
 def slim(insight: dict, roster: Roster | None = None) -> dict:
     """The parts of an insight the agents need, without the evidence list, with the stats already worded."""
-    facts = {k: v for k, v in insight["facts"].items() if k not in UI_ONLY_FACTS}
+    facts = without_ui_only(insight["facts"])
     out = {"insight_id": insight["insight_id"], "type": insight["type"], "clock": fmt_clock(insight["t_s"]),
            "period": insight["period"], "players": insight["players"], "team": insight["team"],
            "facts": facts}

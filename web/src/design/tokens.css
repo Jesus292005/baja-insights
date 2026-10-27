@@ -11,7 +11,8 @@
  * Contraste medido (WCAG 2.1): todo texto ≥ 4.5:1 sobre su superficie; gráficos ≥ 3:1.
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Spline+Sans+Mono:wght@400;500;600&display=swap");
+/* Fuentes: Archivo (wdth 62–125, wght 400–900) y Spline Sans Mono, cargadas con <link> en index.html.
+   Un @import aquí deja de funcionar cuando el bundler junta los CSS. */
 
 :root {
   /* ---------- Primitivos ---------- */
