@@ -54,6 +54,16 @@ export function readConfig(loc: Pick<Location, 'pathname' | 'search'> = window.l
   };
 }
 
+/**
+ * Query that carries a replay over to another view (cinema, broadcast): the same second, speed and
+ * skip, and it keeps playing unless the replay is paused, so opening the view does not stop the match.
+ */
+export function replayQuery(t: number, state: { playing: boolean; speed: number; skip: boolean } | null): string {
+  const q = `&t=${Math.floor(t)}`;
+  if (!state) return q;
+  return `${q}&speed=${state.speed}&skip=${state.skip ? 1 : 0}${state.playing ? '' : '&autoplay=0'}`;
+}
+
 /** Same page with another source, keeping mode, language and the rest of the query. */
 export function hrefWithSource(source: SourceKind, loc: Pick<Location, 'pathname' | 'search'> = window.location): string {
   const q = new URLSearchParams(loc.search);

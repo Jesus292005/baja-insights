@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { usePersisted } from '../app/usePersisted';
 import { useMatchRuntime } from '../app/useMatchRuntime';
-import { hrefWithSource, type AppConfig } from '../app/config';
+import { hrefWithSource, replayQuery, type AppConfig } from '../app/config';
 import { BrandLogo } from '../components/BrandLogo';
 import { AskTheMatch } from '../components/rail/AskTheMatch';
 import { CardPanel, DuelPanel, MomentsPanel, MvpRacePanel } from '../components/rail/panels';
@@ -46,8 +46,10 @@ export function WebApp({ config }: { config: AppConfig }) {
   const openOrder = useMemo(() => orders.find((o) => o.overlay_id === open) ?? null, [orders, open]);
   const openPlay = useMemo(() => (openOrder ? playOf(openOrder, demoMatch.playEvents, roster) : null), [openOrder]);
   const play = openPlay ?? latestPlay;
-  const cinemaHref = `/cine?mode=${mode}&lang=${lang}${config.source === 'replay' ? `&t=${Math.floor(t)}&autoplay=0` : '&source=live'}`;
-  const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
+  // Both views carry the replay over as it is: same second and speed, still playing if it was.
+  const carry = config.source === 'replay' ? replayQuery(t, replayState) : '&source=live';
+  const cinemaHref = `/cine?mode=${mode}&lang=${lang}${carry}`;
+  const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${carry}`;
 
   return (
     <PrefsProvider mode={mode} lang={lang}>
