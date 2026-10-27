@@ -13,6 +13,11 @@ How it works
   ball in the first half and Bahía presses high after the 48th minute.
 * With ``script=None`` the same simulator produces a free match whose goals are
   sampled from xG, which shows the generator is general and not a replay.
+* **Set pieces.** A ball that goes out crosses a line: the pass ends on it with
+  ``out_of_play`` and the restart is a pass with ``set_piece``: ``throw_in`` from the
+  touchline, ``corner`` from the flag or ``goal_kick`` from the goal area. Kick-offs,
+  free kicks after a foul and the keeper's restart after a save are set pieces too.
+  Nobody presses, duels or shoots before a set piece is taken.
 
 The output follows ``contracts/event.schema.json``. The same seed always gives the
 same match.
@@ -35,7 +40,7 @@ from .xg import expected_goals
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 # Seed of the demo match m001: the one that keeps the whole story of the mocks (tests/test_demo_story.py).
-DEMO_SEED = 44
+DEMO_SEED = 769
 SCRIPTS_DIR = Path(__file__).resolve().parent / "scripts"
 
 # Typical zone of each position for a team attacking towards +x:
@@ -63,7 +68,13 @@ GEN = {
     "backpass_pressure": 0.20,    # extra when under pressure
     "backpass_max_prog": 38.0,
     "backpass_success": 0.97,
+    "out_max_dist": 15.0,         # a misplaced pass goes out only when it ends this close to a line
+    "corner_after_block": 0.35,   # a blocked shot deflected out for a corner
+    "corner_after_save": 0.25,    # a save pushed out for a corner
+    "corner_success": 0.40,       # a corner reaches a team-mate
 }
+# Restarts that are taken as a set piece: the first action is a pass, never a pressure, duel or shot.
+SET_PIECES = ("kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper")
 # How likely each role is to be the one who presses or wins the ball back near the ball.
 ROLE_FACTOR = {
     "recover": {"POR": 0.2, "DFC": 1.3, "LD": 1.1, "LI": 1.1, "MCD": 1.6, "MC": 1.0, "ED": 0.55, "EI": 0.55, "DC": 0.3},
@@ -73,7 +84,7 @@ ROLE_FACTOR = {
 
 @dataclass
 class Resume:
-    kind: str                  # kickoff | keeper | recovery | tackle | restart | continue
+    kind: str                  # a set piece of SET_PIECES | recovery | tackle | continue
     team: str
     x: float = PITCH_LENGTH / 2
     y: float = PITCH_WIDTH / 2
@@ -156,8 +167,16 @@ class MatchGenerator:
         elif r.kind == "keeper":
             x, y = self._to_x(6.0, team), PITCH_WIDTH / 2
             carrier = self._pick(team, x, y, positions=("POR",))
+        elif r.kind == "goal_kick":
+            x, y = self._to_x(5.5, team), PITCH_WIDTH / 2 + self.rng.uniform(-7.0, 7.0)
+            carrier = self._pick(team, x, y, positions=("POR",))
+        elif r.kind == "throw_in":
+            carrier = self._pick(team, x, y, positions=("LD", "LI", "ED", "EI", "MC"))
+        elif r.kind == "corner":
+            carrier = self._pick(team, x, y, positions=("ED", "EI", "MC"))
         if carrier is None or carrier not in self.active[team]:
-            carrier = self._pick(team, x, y)
+            carrier = self._pick(team, x, y, exclude=("POR",) if r.kind in ("throw_in", "corner") else ())
+        set_piece = r.kind if r.kind in SET_PIECES else None
         if r.kind == "recovery":
             self._emit("recovery", team, carrier, [x, y], outcome="won", pid=pid)
             self.t += self.rng.uniform(1.0, 2.5)
@@ -172,7 +191,7 @@ class MatchGenerator:
 
             # --- opponent pressure, more likely when the pressing team is high up
             press_prob = opp_style["press"] * (1.25 - prog / PITCH_LENGTH)
-            if self.rng.random() < press_prob:
+            if not set_piece and self.rng.random() < press_prob:
                 presser = self._pick(opp, x, y, weight_key="press")
                 self._emit("pressure", opp, presser, [x, y], pid=pid, target=carrier)
                 under = True
@@ -189,7 +208,8 @@ class MatchGenerator:
                     if self.rng.random() < GEN["foul_on_lost_tackle"]:
                         self._emit("foul", opp, presser, [x, y], pid=pid, fouled=carrier)
                         self.t += self.rng.uniform(12, 25)
-                        under = False
+                        set_piece = "free_kick"
+                        continue
                 else:
                     win = clip(GEN["press_win"] * self._form(presser, "recover") * opp_style["press"] / 0.3,
                                0.02, 0.4)
@@ -202,7 +222,7 @@ class MatchGenerator:
                     return None
 
             # --- 1 v 1 duel
-            if self.rng.random() < GEN["duel"]:
+            if not set_piece and self.rng.random() < GEN["duel"]:
                 defender = self._pick(opp, x, y, weight_key="duel", exclude=("POR",))
                 fa, fd = self._form(carrier, "duel_win"), self._form(defender, "duel_win")
                 attacker_wins = self.rng.random() < fa / (fa + fd)
@@ -214,21 +234,20 @@ class MatchGenerator:
                     return Resume("recovery", opp, x, y, defender)
 
             # --- shot
-            if prog >= GEN["shot_min_prog"] and \
+            if not set_piece and prog >= GEN["shot_min_prog"] and \
                     self.rng.random() < GEN["shot_base"] + GEN["shot_slope"] * (prog - GEN["shot_min_prog"]):
                 return self._shot(team, carrier, x, y, under, pid, cross=False)
 
             # --- foul suffered
-            if self.rng.random() < GEN["foul"]:
+            if not set_piece and self.rng.random() < GEN["foul"]:
                 fouler = self._pick(opp, x, y, exclude=("POR",))
                 self._emit("foul", opp, fouler, [x, y], pid=pid, fouled=carrier)
                 self.t += self.rng.uniform(12, 25)
-                under = False
-                if self.t + 3 > limit:
-                    return None
+                set_piece = "free_kick"
+                continue
 
             # --- off-ball run by a teammate
-            if prog > 62 and self.rng.random() < 0.035:
+            if not set_piece and prog > 62 and self.rng.random() < 0.035:
                 runner = self._pick(team, x, y, positions=("ED", "EI", "DC", "MC"), exclude_names=(carrier,))
                 if runner:
                     rx, ry = self._zone_xy(runner)
@@ -243,7 +262,8 @@ class MatchGenerator:
                                space_opened_m=space if dragged else None)
 
             # --- pass
-            result = self._pass(team, carrier, x, y, under, pid, style)
+            result = self._pass(team, carrier, x, y, under, pid, style, set_piece)
+            set_piece = None
             steps += 1
             self.t += self.rng.uniform(2.5, 5.5) / style["tempo"]
             if result["outcome"] == "complete":
@@ -258,16 +278,51 @@ class MatchGenerator:
             else:
                 ex, ey = result["end"]
                 if result["back"] or self.rng.random() < 0.50:  # a misplaced pass back goes out of play
-                    self.t += self.rng.uniform(6, 14)
-                    return Resume("restart", opp, ex, ey)
+                    restart = self._out_of_play(team, ex, ey)
+                    if restart is not None:
+                        self.t += self.rng.uniform(6, 14)
+                        return restart
+                    return Resume("continue", opp, ex, ey)  # a loose ball the rival collects and plays on
                 return Resume("recovery", opp, ex, ey, self._pick(opp, ex, ey, weight_key="recover"))
 
-    def _pass(self, team, carrier, x, y, under, pid, style) -> dict:
+    def _out_of_play(self, team: str, ex: float, ey: float) -> Resume | None:
+        """The misplaced pass that just went out crosses the nearest line, if it ended close to one.
+
+        Its ``end`` moves onto the line with ``out_of_play``, and the rival restarts: a throw-in from
+        the touchline, a goal kick if the ball went over the goal line it attacks, or a corner if it
+        went over the passer's own goal line. None when the pass ended far from every line."""
+        gaps = {"bottom": ey, "top": PITCH_WIDTH - ey, "left": ex, "right": PITCH_LENGTH - ex}
+        side = min(gaps, key=gaps.get)
+        if gaps[side] > GEN["out_max_dist"]:
+            return None
+        opp = self.roster.opponent(team)
+        last = self.events[-1]
+        if side in ("bottom", "top"):
+            point = [round(clip(ex, 1.0, PITCH_LENGTH - 1.0), 1), 0.0 if side == "bottom" else PITCH_WIDTH]
+            restart = Resume("throw_in", opp, point[0], point[1])
+        else:
+            gx = 0.0 if side == "left" else PITCH_LENGTH
+            point = [gx, round(clip(ey, 0.5, PITCH_WIDTH - 0.5), 1)]
+            passer_defends_it = (gx == 0.0) == (team == self.home)  # the home team defends x = 0
+            restart = self._corner_for(opp, point[1]) if passer_defends_it else Resume("goal_kick", opp)
+        last["end"] = point
+        last["out_of_play"] = True
+        return restart
+
+    def _corner_for(self, team: str, y: float) -> Resume:
+        """Corner for ``team``, taken at the flag of the goal it attacks, on the side the ball went out."""
+        gx = PITCH_LENGTH if team == self.home else 0.0
+        return Resume("corner", team, gx, 0.0 if y < PITCH_WIDTH / 2 else PITCH_WIDTH)
+
+    def _pass(self, team, carrier, x, y, under, pid, style, set_piece: str | None = None) -> dict:
         prog = self._prog(x, team)
         lines_form = self._form(carrier, "pass_lines")
         back = GEN["backpass"] + (GEN["backpass_pressure"] if under else 0.0)
-        is_back = (prog < GEN["backpass_max_prog"] and self.roster.players[carrier].position != "POR"
+        is_back = (set_piece not in ("throw_in", "corner", "kickoff")
+                   and prog < GEN["backpass_max_prog"] and self.roster.players[carrier].position != "POR"
                    and self.rng.random() < back)
+        if set_piece in ("throw_in", "corner", "kickoff"):
+            return self._set_piece_pass(team, carrier, x, y, pid, set_piece)
         if is_back:
             dp = self.rng.uniform(4, 9) - prog  # back to the goalkeeper
             target_y = clip(34 + self.rng.gauss(0, 6), 2, 66)
@@ -278,6 +333,8 @@ class MatchGenerator:
                 dp = self.rng.gauss(-1 + 10 * style["directness"] * lines_form, 10)
                 if prog < 20:
                     dp += 8
+                if set_piece == "goal_kick":
+                    dp += 12
             target_y = clip(y + self.rng.gauss(0, 14), 2, 66)
         target_p = clip(prog + dp, 2, 103)
         tx = self._to_x(target_p, team)
@@ -299,17 +356,51 @@ class MatchGenerator:
         success = clip(style["pass_acc"] + 0.10 - 0.35 * hard, 0.3, 0.98)
         if is_back:  # a pass back to the keeper is almost never lost
             success = GEN["backpass_success"]
+        if set_piece in ("free_kick", "keeper"):  # nobody is allowed to press the taker
+            success = clip(success + 0.08, 0.3, 0.98)
         complete = self.rng.random() < success
         cross = self._prog(ex, team) >= 90 and (y < 18 or y > 50) and (ey > 20 and ey < 48)
         extra = {"receiver": receiver}
         if cross:
             extra["cross"] = True
+        if set_piece:
+            extra["set_piece"] = set_piece
         self._emit("pass", team, carrier, [round(x, 1), round(y, 1)], [round(ex, 1), round(ey, 1)],
                    outcome="complete" if complete else "incomplete",
                    speed=round(clip(25 + 1.3 * dist + self.rng.gauss(0, 5), 15, 110), 1),
                    under=under, lines=lines, pid=pid, **extra)
         return {"outcome": "complete" if complete else "incomplete", "receiver": receiver,
                 "end": [ex, ey], "cross": cross, "back": is_back}
+
+    def _set_piece_pass(self, team, carrier, x, y, pid, set_piece: str) -> dict:
+        """Throw-in, corner or kick-off: a short throw inwards, a cross into the box, a pass back."""
+        prog = self._prog(x, team)
+        if set_piece == "throw_in":
+            inwards = 1.0 if y < PITCH_WIDTH / 2 else -1.0
+            target_p = clip(prog + self.rng.gauss(2, 7), 2, 103)
+            target_y = clip(y + inwards * abs(self.rng.gauss(10, 4)), 2, 66)
+            success, speed = 0.92, self.rng.uniform(25, 40)
+        elif set_piece == "corner":
+            target_p = clip(94 + self.rng.gauss(0, 3), 88, 101)
+            target_y = clip(PITCH_WIDTH / 2 + self.rng.gauss(0, 6), 24, 44)
+            success, speed = GEN["corner_success"], self.rng.uniform(55, 75)
+        else:  # kickoff
+            target_p = clip(prog - abs(self.rng.gauss(10, 4)), 30, 52)
+            target_y = clip(PITCH_WIDTH / 2 + self.rng.gauss(0, 10), 10, 58)
+            success, speed = 0.97, self.rng.uniform(25, 40)
+        tx = self._to_x(target_p, team)
+        receiver = self._pick(team, tx, target_y, weight_key="receive", exclude=("POR",), exclude_names=(carrier,))
+        ex = round(clip(tx + self.rng.gauss(0, 1.5), 0.5, 104.5), 1)
+        ey = round(clip(target_y + self.rng.gauss(0, 1.5), 0.5, 67.5), 1)
+        complete = self.rng.random() < success
+        extra = {"receiver": receiver, "set_piece": set_piece}
+        if set_piece == "corner":
+            extra["cross"] = True
+        self._emit("pass", team, carrier, [round(x, 1), round(y, 1)], [ex, ey],
+                   outcome="complete" if complete else "incomplete", speed=round(speed, 1),
+                   under=False, lines=0, pid=pid, **extra)
+        return {"outcome": "complete" if complete else "incomplete", "receiver": receiver,
+                "end": [ex, ey], "cross": set_piece == "corner", "back": False}
 
     def _shot(self, team, shooter, x, y, under, pid, cross) -> Resume:
         opp = self.roster.opponent(team)
@@ -338,9 +429,15 @@ class MatchGenerator:
             return Resume("kickoff", opp)
         if outcome == "blocked":
             self.t += self.rng.uniform(1, 2)
+            if self.rng.random() < GEN["corner_after_block"]:
+                self.t += self.rng.uniform(10, 16)
+                return self._corner_for(team, y)
             return Resume("recovery", opp, x, y, self._pick(opp, x, y, positions=("DFC", "MCD", "LD", "LI")))
+        if outcome == "saved" and self.rng.random() < GEN["corner_after_save"]:
+            self.t += self.rng.uniform(10, 16)
+            return self._corner_for(team, end_y)
         self.t += self.rng.uniform(4, 6) if outcome == "saved" else self.rng.uniform(12, 20)
-        return Resume("keeper", opp)
+        return Resume("keeper" if outcome == "saved" else "goal_kick", opp)
 
     # ================================================================ beats
     def _load_beats(self) -> list[dict]:
@@ -383,6 +480,8 @@ class MatchGenerator:
                 side = "home" if e["team"] == self.home else "away"
                 self.scoreline[side] += 1
                 e["scoreline"] = dict(self.scoreline)
+            if e["type"] == "pass" and e.get("start") == [PITCH_LENGTH / 2, PITCH_WIDTH / 2] and "set_piece" not in e:
+                e["set_piece"] = "kickoff"  # a scripted pass from the centre spot is a kick-off
             if e["type"] == "substitution":
                 self.active[e["team"]].discard(e["player_out"])
                 self.active[e["team"]].add(e["player_in"])
@@ -408,7 +507,7 @@ class MatchGenerator:
             if e["outcome"] == "blocked":
                 return Resume("recovery", opp, x, y)
             self.t += 4 if e["outcome"] == "saved" else 14
-            return Resume("keeper", opp)
+            return Resume("keeper" if e["outcome"] == "saved" else "goal_kick", opp)
         if kind == "pass":
             ex, ey = e["end"]
             if e["outcome"] == "complete":
@@ -424,7 +523,7 @@ class MatchGenerator:
             self.t += 18
             fouled = e.get("fouled")
             fteam = self.roster.players[fouled].team if fouled in self.roster.players else opp
-            return Resume("continue", fteam, x, y, fouled, e["possession_id"])
+            return Resume("free_kick", fteam, x, y, fouled, e["possession_id"])
         if kind == "pressure":
             return Resume("continue", opp, x, y, e.get("target"), e["possession_id"])
         return Resume("kickoff", opp)
