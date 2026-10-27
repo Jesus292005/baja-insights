@@ -11,7 +11,7 @@ const STRUCTURAL = new Set(['match_start', 'goal', 'half_time', 'second_half_sta
 /**
  * `virtual:match-data` bundles the demo match from the repo so the UI can replay it without a server.
  * BAJA_MATCH picks the folder in data/ (default m001). BAJA_OVERLAYS=mocks uses mocks/overlays_sample.json.
- * Only the structural events are bundled, not the whole 0.5 MB events.jsonl.
+ * Only the structural events and the events the orders cite as evidence are bundled, not the whole events.jsonl.
  */
 function matchData(): Plugin {
   const publicId = 'virtual:match-data';
@@ -29,19 +29,28 @@ function matchData(): Plugin {
       const teamsPath = resolve(REPO, 'mocks', 'teams.json');
       [eventsPath, overlaysPath, teamsPath].forEach((p) => this.addWatchFile(p));
 
-      const events = readFileSync(eventsPath, 'utf8')
+      const allEvents = readFileSync(eventsPath, 'utf8')
         .split(/\r?\n/)
         .filter((line) => line.trim())
-        .map((line) => JSON.parse(line))
+        .map((line) => JSON.parse(line));
+      const events = allEvents
         .filter((e) => STRUCTURAL.has(e.type))
         .map(({ type, t_s, period, scoreline, home, away }) => ({ type, t_s, period, scoreline, home, away }));
       const overlays = JSON.parse(readFileSync(overlaysPath, 'utf8'));
+      // The plays behind each graphic: only the events the orders cite as evidence, with their coordinates.
+      const cited = new Set<number>(overlays.flatMap((o: { evidence?: number[] }) => o.evidence ?? []));
+      const keep = ['event_id', 't_s', 'type', 'team', 'player', 'start', 'end', 'outcome', 'cross', 'lines_broken',
+        'dragged_defender', 'dragged_defender_start', 'dragged_defender_end', 'space_opened_m'];
+      const playEvents = allEvents
+        .filter((e) => cited.has(e.event_id) && Array.isArray(e.start))
+        .map((e) => Object.fromEntries(keep.filter((k) => e[k] !== undefined).map((k) => [k, e[k]])));
       const teams = JSON.parse(readFileSync(teamsPath, 'utf8'));
 
       return [
         `export const matchId = ${JSON.stringify(match)};`,
         `export const events = ${JSON.stringify(events)};`,
         `export const overlays = ${JSON.stringify(overlays)};`,
+        `export const playEvents = ${JSON.stringify(playEvents)};`,
         `export const teams = ${JSON.stringify(teams)};`,
       ].join('\n');
     },
