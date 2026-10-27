@@ -8,28 +8,15 @@ import { CardPanel, DuelPanel, MomentsPanel, MvpRacePanel } from '../components/
 import {
   ConnectionBanner, ConnectionPill, LanguageToggle, MatchBug, ModeToggle, ReplayControls, SourceToggle, ThemeToggle,
 } from '../components/shell/shell';
+import { CardBand } from '../components/stage/CardBand';
 import { Stage } from '../components/stage/Stage';
-import type { Language, Mode, OverlayOrder } from '../contracts/overlay';
+import type { Language, Mode } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
 import { playAt, playOf } from '../logic/play';
 import { PlayLegend } from '../components/stage/PlayLegend';
-import type { Showing } from '../logic/plan';
-
-/** Re-renders every frame while `active`, for the replayed moment's tide line. */
-function useFrame(active: boolean) {
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    if (!active) return;
-    let id = requestAnimationFrame(function loop() {
-      setTick((n) => n + 1);
-      id = requestAnimationFrame(loop);
-    });
-    return () => cancelAnimationFrame(id);
-  }, [active]);
-}
 
 export function WebApp({ config }: { config: AppConfig }) {
   const [mode, setMode] = usePersisted<Mode>('bi.mode', 'fan', ['fan', 'analyst'], config.mode);
@@ -38,8 +25,8 @@ export function WebApp({ config }: { config: AppConfig }) {
   // Dark by default, whatever the system theme. New key for the same reason as the language.
   const [theme, setTheme] = usePersisted<'light' | 'dark'>('bi.theme.v2', 'dark', ['light', 'dark']);
   const rt = useMatchRuntime(config, mode, lang);
-  const [pinned, setPinned] = useState<{ order: OverlayOrder; startedAt: number } | null>(null);
-  useFrame(pinned !== null);
+  // The moment opened in the list, by overlay id. Its play stays on the pitch while it is open.
+  const [open, setOpen] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -47,24 +34,14 @@ export function WebApp({ config }: { config: AppConfig }) {
     document.title = `${strings[lang].app.name} · ${demoMatch.teams.match.home} – ${demoMatch.teams.match.away}`;
   }, [theme, lang]);
 
-  let override: Showing | null = null;
-  if (pinned) {
-    const elapsed = (performance.now() - pinned.startedAt) / 1000;
-    if (elapsed < pinned.order.duration_s) override = { order: pinned.order, elapsed };
-  }
-  useEffect(() => {
-    if (!pinned) return;
-    const id = setTimeout(() => setPinned(null), pinned.order.duration_s * 1000 + 50);
-    return () => clearTimeout(id);
-  }, [pinned]);
-
   const { snap, orders, t, showing, loading, stale, replay, replayState } = rt;
   const s = strings[lang];
   const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
-  // A moment replayed from the list draws its own play; otherwise the latest one stays on the pitch.
+  // An opened moment draws its own play; otherwise the latest one stays on the pitch.
   const latestPlay = useMemo(() => playAt(orders, t, demoMatch.playEvents, roster), [orders, t]);
-  const pinnedPlay = useMemo(() => (pinned ? playOf(pinned.order, demoMatch.playEvents, roster) : null), [pinned]);
-  const play = pinnedPlay ?? latestPlay;
+  const openOrder = useMemo(() => orders.find((o) => o.overlay_id === open) ?? null, [orders, open]);
+  const openPlay = useMemo(() => (openOrder ? playOf(openOrder, demoMatch.playEvents, roster) : null), [openOrder]);
+  const play = openPlay ?? latestPlay;
   const cinemaHref = `/cine?mode=${mode}&lang=${lang}${config.source === 'replay' ? `&t=${Math.floor(t)}&autoplay=0` : '&source=live'}`;
   const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
 
@@ -104,7 +81,8 @@ export function WebApp({ config }: { config: AppConfig }) {
           <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
         </aside>
         <div className="main-col">
-          <Stage showing={showing} orders={orders} variant="web" override={override} play={play} />
+          <CardBand showing={showing} orders={orders} />
+          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} />
           <PlayLegend play={play} variant="web" />
           {replay && replayState && (
             <ReplayControls
@@ -116,7 +94,14 @@ export function WebApp({ config }: { config: AppConfig }) {
               onSkip={(x) => replay.setSkip(x)}
             />
           )}
-          <MomentsPanel orders={orders} t={t} stale={stale} loading={loading} onSelect={(o) => setPinned({ order: o, startedAt: performance.now() })} />
+          <MomentsPanel
+            orders={orders}
+            t={t}
+            stale={stale}
+            loading={loading}
+            open={open}
+            onToggle={(o) => setOpen((id) => (id === o.overlay_id ? null : o.overlay_id))}
+          />
         </div>
         <aside className="rail rail-right" aria-label={s.chat.title}>
           <AskTheMatch

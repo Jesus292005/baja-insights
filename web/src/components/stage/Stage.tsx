@@ -13,8 +13,8 @@ export interface StageProps {
   showing: Partial<Record<Slot, Showing>>;
   orders: readonly OverlayOrder[];
   variant: 'web' | 'broadcast';
-  /** Web only: a moment replayed from the timeline, shown in its own slot. */
-  override?: Showing | null;
+  /** Draws the graphics in their slots. Off in the web app, which shows them in a band above the pitch. */
+  graphics?: boolean;
   /** Broadcast only: a slot-sized placeholder for the score bug. */
   bug?: React.ReactNode;
   /** Draws the pitch behind the graphics. Default: only in the web app. */
@@ -70,12 +70,10 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
   return message;
 }
 
-export function Stage({ showing, orders, variant, override, bug, backdrop, play, children }: StageProps) {
+export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, children }: StageProps) {
   const { s, mode } = usePrefs();
   const { ref, scale } = useFitScale(variant === 'web' ? 'width' : 'contain');
-  const merged: Partial<Record<Slot, Showing>> = { ...showing };
-  if (override) merged[override.order.slot] = override;
-  const announcement = useAnnouncer(merged, variant === 'web');
+  const announcement = useAnnouncer(showing, variant === 'web');
 
   return (
     <div ref={ref} className={`stage stage-${variant}`}>
@@ -91,8 +89,8 @@ export function Stage({ showing, orders, variant, override, bug, backdrop, play,
       >
         {(backdrop ?? variant === 'web') && <PitchBackdrop label={s.app.videoPlaceholder} play={play ?? null} />}
         {bug}
-        {SLOTS.map((slot) => {
-          const item = merged[slot];
+        {graphics && SLOTS.map((slot) => {
+          const item = showing[slot];
           const box = item && slot === 'center' && item.order.type === 'goal_analysis' ? goalDock(item.order) : broadcastSlots[slot];
           return (
             <div
