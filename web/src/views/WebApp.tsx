@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { usePersisted } from '../app/usePersisted';
 import { useMatchRuntime } from '../app/useMatchRuntime';
 import { hrefWithSource, type AppConfig } from '../app/config';
+import { BrandLogo } from '../components/BrandLogo';
 import { AskTheMatch } from '../components/rail/AskTheMatch';
 import { CardPanel, DuelPanel, MomentsPanel, MvpRacePanel } from '../components/rail/panels';
 import {
@@ -66,9 +67,7 @@ export function WebApp({ config }: { config: AppConfig }) {
       <a className="skip-link" href="#match">{s.app.skipToMatch}</a>
       <header className="topbar">
         <div className="brand">
-          <span className="brand-mark" aria-hidden="true" />
-          <span className="brand-name">{s.app.name}</span>
-          <span className="brand-tag">{s.app.tagline}</span>
+          <BrandLogo className="brand-logo" label={s.app.name} />
         </div>
         <MatchBug state={snap.state} clockUpdate={snap.clock} variant="web" />
         <ConnectionPill info={snap.connection} />

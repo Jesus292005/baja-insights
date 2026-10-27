@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1500" width="2400" height="1500">
+  <rect width="2400" height="1500" fill="#0e1b22"/>
+  <!-- dot mark -->
+  <g fill="#f1ece1">
+    <circle cx="539" cy="563" r="26"/>
+    <circle cx="632" cy="563" r="26"/>
+    <circle cx="726" cy="563" r="26" opacity="0.55"/>
+    <circle cx="446" cy="657" r="26"/>
+    <circle cx="819" cy="657" r="26" opacity="0.55"/>
+    <circle cx="446" cy="750" r="26"/>
+    <circle cx="819" cy="750" r="26" opacity="0.38"/>
+    <circle cx="446" cy="843" r="26" opacity="0.55"/>
+    <circle cx="819" cy="843" r="26" opacity="0.22"/>
+    <circle cx="539" cy="937" r="26" opacity="0.55"/>
+    <circle cx="632" cy="937" r="26" opacity="0.38"/>
+    <circle cx="726" cy="937" r="26" opacity="0.22"/>
+  </g>
+  <g fill="#f4784a">
+    <circle cx="632" cy="750" r="26"/>
+    <circle cx="726" cy="843" r="26"/>
+    <circle cx="819" cy="937" r="37"/>
+  </g>
+  <!-- wordmark -->
+  <g font-family="DejaVu Sans Mono" font-size="168">
+    <text x="1033" y="710" fill="#f1ece1" font-weight="700">Baja</text>
+    <text x="1033" y="915" fill="#f4784a">Insights</text>
+  </g>
+  <rect x="1868" y="797" width="76" height="140" fill="#f4784a"/>
+</svg>

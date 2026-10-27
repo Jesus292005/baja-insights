@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="288 405 700 700" width="1400" height="1400">
+  <!-- dot mark -->
+  <g fill="#f1ece1">
+    <circle cx="539" cy="563" r="26"/>
+    <circle cx="632" cy="563" r="26"/>
+    <circle cx="726" cy="563" r="26" opacity="0.55"/>
+    <circle cx="446" cy="657" r="26"/>
+    <circle cx="819" cy="657" r="26" opacity="0.55"/>
+    <circle cx="446" cy="750" r="26"/>
+    <circle cx="819" cy="750" r="26" opacity="0.38"/>
+    <circle cx="446" cy="843" r="26" opacity="0.55"/>
+    <circle cx="819" cy="843" r="26" opacity="0.22"/>
+    <circle cx="539" cy="937" r="26" opacity="0.55"/>
+    <circle cx="632" cy="937" r="26" opacity="0.38"/>
+    <circle cx="726" cy="937" r="26" opacity="0.22"/>
+  </g>
+  <g fill="#f4784a">
+    <circle cx="632" cy="750" r="26"/>
+    <circle cx="726" cy="843" r="26"/>
+    <circle cx="819" cy="937" r="37"/>
+  </g>
+  </svg>
