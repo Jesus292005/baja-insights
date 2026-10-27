@@ -69,3 +69,44 @@ export function buildGoalPlay(links: readonly ChainLink[]): GoalPlay {
   }
   return { steps, gaps, defender, labels };
 }
+
+/**
+ * The part of the pitch the play happens in, as an SVG viewBox [x, y, w, h] with a fixed aspect,
+ * so the board zooms in on the play instead of showing 105 m for a move in one third.
+ * Pads by `margin` metres and stays inside the pitch where it can.
+ */
+export function playViewBox(play: GoalPlay, aspect = 1.5, margin = 5): [number, number, number, number] {
+  const pts: PitchPoint[] = [];
+  for (const st of play.steps) {
+    if (st.kind === 'dot') pts.push(st.at);
+    else pts.push(st.from, st.to);
+  }
+  for (const g of play.gaps) pts.push(g.from, g.to);
+  if (play.defender) pts.push(play.defender.from, play.defender.to);
+  if (!pts.length) return [0, 0, PITCH_W, PITCH_H];
+
+  let x0 = Math.min(...pts.map((p) => p[0])) - margin;
+  let x1 = Math.max(...pts.map((p) => p[0])) + margin;
+  let y0 = Math.min(...pts.map((p) => p[1])) - margin;
+  let y1 = Math.max(...pts.map((p) => p[1])) + margin;
+  // Fix the aspect by growing the short side around the centre.
+  if ((x1 - x0) / (y1 - y0) > aspect) {
+    const h = (x1 - x0) / aspect;
+    const cy = (y0 + y1) / 2;
+    [y0, y1] = [cy - h / 2, cy + h / 2];
+  } else {
+    const w = (y1 - y0) * aspect;
+    const cx = (x0 + x1) / 2;
+    [x0, x1] = [cx - w / 2, cx + w / 2];
+  }
+  // Keep it inside the pitch (plus the goal) when it fits, shifting rather than shrinking.
+  const shift = (lo: number, hi: number, min: number, max: number): [number, number] => {
+    if (hi - lo >= max - min) return [lo, hi];
+    if (lo < min) return [min, min + (hi - lo)];
+    if (hi > max) return [max - (hi - lo), max];
+    return [lo, hi];
+  };
+  [x0, x1] = shift(x0, x1, -2, 107);
+  [y0, y1] = shift(y0, y1, -1, 69);
+  return [x0 * 10, (68 - y1) * 10, (x1 - x0) * 10, (y1 - y0) * 10];
+}

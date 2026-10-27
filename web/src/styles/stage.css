@@ -324,3 +324,46 @@
 .stage-canvas[data-mode='fan'] .g-card-upgrade .g-text { font-size: 26px; }
 .stage-canvas[data-mode='analyst'] .g-mvp_update .g-title { font-size: 34px; }
 .stage-canvas[data-mode='analyst'] .g-mvp_update .g-rank-big { font-size: 72px; }
+
+/* =========================================================================
+   Goal board: the chain on a pitch (v1.1 coordinates) next to the list of players.
+   ========================================================================= */
+
+.g-board { display: grid; grid-template-columns: 640px minmax(0, 1fr); gap: 28px; align-items: start; }
+/* Under the board the invisible assist takes one line: badge, name and hint side by side. */
+.g-goal-board .g-invisible-hint { flex-basis: auto; }
+.g-goal-board .g-row .evidence { flex-wrap: nowrap; overflow: hidden; }
+.g-chain-list small { font-size: 20px; }
+.g-chain-list .g-credit { font-size: 20px; }
+.g-chain.g-chain-list { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.g-chain.g-chain-list::before { display: none; }
+.g-chain-list li { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; align-items: center; }
+.g-chain-list li > :not(.g-node) { grid-column: 2; }
+.g-chain-list .g-node { grid-row: 1 / span 3; width: 52px; height: 52px; font-size: 22px; }
+.g-chain-list b { font-size: 26px; }
+
+.gp { display: block; width: 100%; height: auto; overflow: hidden; }
+.gp-pitch { stroke: rgb(243 237 226 / 0.28); }
+.gp-pitch > rect:first-child { fill: rgb(79 209 193 / 0.05); }
+.gp-step { fill: none; stroke-linecap: round; }
+.gp-step:not(.gp-fade) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: gp-draw 420ms var(--bi-ease-out) forwards; }
+.gp-gap { stroke: var(--bi-text-muted); stroke-linecap: round; }
+.gp-dot { stroke: var(--bi-text); }
+.gp-defender { fill: none; }
+.gp-defender-from { fill: none; }
+.gp-label { font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; fill: var(--bi-text); paint-order: stroke; stroke: var(--bi-bg); stroke-linejoin: round; }
+.gp-label-rival { font-family: var(--bi-font-data); font-weight: 600; fill: var(--bi-text-muted); }
+.gp-fade { opacity: 0; animation: gp-fade 360ms var(--bi-ease-out) forwards; }
+@keyframes gp-draw { to { stroke-dashoffset: 0; } }
+@keyframes gp-fade { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .gp-step:not(.gp-fade) { stroke-dashoffset: 0; }
+  .gp-fade { opacity: 1; }
+}
+/* Analyst list next to the board: compact, so it is no taller than the board. */
+.g-goal-board { gap: 12px; }
+.g-chain.g-chain-list { gap: 6px; }
+.g-chain-list li { row-gap: 2px; }
+.g-chain-list small { font-size: 19px; line-height: 1.15; }
+.g-chain-list .g-credit { font-size: 18px; }
+.g-chain-list .g-credit-bar { height: 8px; }
