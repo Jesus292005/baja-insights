@@ -77,7 +77,19 @@ export interface ChainLink {
   lines_broken?: number;
   /** v1.1 — solo en pases que son centros. */
   cross?: boolean;
+  /** v1.1 — dónde ocurrió la acción, [x, y] en metros (origen abajo a la izquierda, 105 × 68). */
+  start?: PitchPoint | null;
+  /** v1.1 — a dónde fue el pase, el tiro o el desmarque. null en recuperaciones. */
+  end?: PitchPoint | null;
+  /** v1.1 — solo en desmarques: el defensor arrastrado. */
+  dragged_defender?: string | null;
+  /** v1.1 — solo en desmarques guionizados: dónde estaba el defensor y a dónde lo llevó el desmarque. */
+  dragged_defender_start?: PitchPoint | null;
+  dragged_defender_end?: PitchPoint | null;
 }
+
+/** Punto del campo en metros: x de 0 a 105 (Bahía ataca hacia 105), y de 0 a 68 desde abajo. */
+export type PitchPoint = [number, number];
 export interface InvisibleAssistDetail { player: string; dragged_defender: string | null; space_opened_m: number | null; touched_ball: boolean }
 
 export interface GoalAnalysisData {
