@@ -214,11 +214,13 @@ Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`
 
 ## 12. Partido de demo
 
-El partido de demo es **m001 con la semilla 769** (`DEMO_SEED` en `generator/simulate.py`). Antes era la 44. Cambió cuando el generador empezó a emitir balones parados reales (saques de banda, corners, saques de meta, saques iniciales, tiros libres y saque del portero), porque eso cambia el relleno entre jugadas. Se eligió entre unas 1,500 semillas porque es la que mejor conserva la historia. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
+El partido de demo es **m001 con la semilla 1387** (`DEMO_SEED` en `generator/simulate.py`). Fue la 44 y luego la 769. Cambió primero cuando el generador empezó a emitir balones parados reales, y después cuando las posesiones largas dejaron de terminar en robos que nadie provocaba y los balones sueltos empezaron a contar como recuperación. Cada uno de esos cambios altera el relleno entre jugadas.
+
+Antes de cambiar de semilla se intentó conservar la 769 ajustando el guion (`scripts/m001.json`): Torres presiona y recupera más desde el minuto 15, Cota disputa y recupera más, y Cardón es menos directo en el segundo tiempo. Con eso volvían casi todos los puntos, menos uno: la carrera del MVP en pantalla no tenía a Torres arriba antes del 35. Con el guion ajustado, la 1387 es la que mejor cumple toda la historia entre unas 1,600 semillas. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
 
 - El 1-1 cae en el 17 y en el 63, y la cadena del empate tiene los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres.
-- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 31. Termina primero con 8.5, delante de Cota (7.9) y Sandoval (7.8).
-- Mena pierde el primer tramo del duelo con Verdugo y le da la vuelta en el minuto 20.
+- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 33. Termina primero con 8.7, en un final cerrado con Cota (8.5) y Salgado (8.4).
+- Mena pierde el primer tramo del duelo con Verdugo y le da la vuelta desde el minuto 27.
 - Real Cardón tiene la fase de `control` en el primer tiempo, y Bahía su `pressure_shift` en el segundo.
 - El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota".
 

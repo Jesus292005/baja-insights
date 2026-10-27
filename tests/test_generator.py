@@ -111,9 +111,9 @@ class SetPieceTest(unittest.TestCase):
 
     def test_a_foul_is_followed_by_the_free_kick(self):
         """Unless a scripted beat of the demo comes first: those are kept exactly as written."""
-        beats = {(e["t_s"], e["player"], e["type"]) for e in load(MOCKS / "events_sample.json")}
+        beats = {(e["player"], e["type"], tuple(e["start"] or ())) for e in load(MOCKS / "events_sample.json")}
         for a, b in self.pairs():
-            if a["type"] == "foul" and (b["t_s"], b["player"], b["type"]) not in beats:
+            if a["type"] == "foul" and (b["player"], b["type"], tuple(b["start"])) not in beats:
                 with self.subTest(foul=a["event_id"]):
                     self.assertEqual((b.get("set_piece"), b["team"]),
                                      ("free_kick", roster().players[a["fouled"]].team))

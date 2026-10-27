@@ -40,7 +40,7 @@ from .xg import expected_goals
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 # Seed of the demo match m001: the one that keeps the whole story of the mocks (tests/test_demo_story.py).
-DEMO_SEED = 769
+DEMO_SEED = 1387
 SCRIPTS_DIR = Path(__file__).resolve().parent / "scripts"
 
 # Typical zone of each position for a team attacking towards +x:
@@ -68,7 +68,7 @@ GEN = {
     "backpass_pressure": 0.20,    # extra when under pressure
     "backpass_max_prog": 38.0,
     "backpass_success": 0.97,
-    "out_max_dist": 15.0,         # a misplaced pass goes out only when it ends this close to a line
+    "out_max_dist": 28.0,         # a misplaced pass goes out only when it ends this close to a line
     "corner_after_block": 0.35,   # a blocked shot deflected out for a corner
     "corner_after_save": 0.25,    # a save pushed out for a corner
     "corner_success": 0.40,       # a corner reaches a team-mate
@@ -207,7 +207,7 @@ class MatchGenerator:
                         return Resume("tackle", opp, x, y, presser)
                     if self.rng.random() < GEN["foul_on_lost_tackle"]:
                         self._emit("foul", opp, presser, [x, y], pid=pid, fouled=carrier)
-                        self.t += self.rng.uniform(12, 25)
+                        self._free_kick_pause(limit)
                         set_piece = "free_kick"
                         continue
                 else:
@@ -242,7 +242,7 @@ class MatchGenerator:
             if not set_piece and self.rng.random() < GEN["foul"]:
                 fouler = self._pick(opp, x, y, exclude=("POR",))
                 self._emit("foul", opp, fouler, [x, y], pid=pid, fouled=carrier)
-                self.t += self.rng.uniform(12, 25)
+                self._free_kick_pause(limit)
                 set_piece = "free_kick"
                 continue
 
@@ -272,18 +272,35 @@ class MatchGenerator:
                     if self.t + 2 > limit:
                         return None
                     return self._shot(team, carrier, x, y, True, pid, cross=True)
-                if steps > 16:
-                    return self._shot(team, carrier, x, y, under, pid, cross=False) \
-                        if self._prog(x, team) > 70 else Resume("recovery", opp, x, y)
+                if steps > 16:  # a very long move ends: a shot near goal, or the rival's press finally wins it
+                    if self._prog(x, team) > 70:
+                        return self._shot(team, carrier, x, y, under, pid, cross=False)
+                    return self._press_wins(team, carrier, x, y, pid)
             else:
                 ex, ey = result["end"]
                 if result["back"] or self.rng.random() < 0.50:  # a misplaced pass back goes out of play
-                    restart = self._out_of_play(team, ex, ey)
+                    # out of play only if the restart can be taken before the next scripted moment
+                    restart = self._out_of_play(team, ex, ey) if self.t + 16 < limit else None
                     if restart is not None:
                         self.t += self.rng.uniform(6, 14)
                         return restart
-                    return Resume("continue", opp, ex, ey)  # a loose ball the rival collects and plays on
+                    return Resume("recovery", opp, ex, ey, self._pick(opp, ex, ey, weight_key="recover"))
                 return Resume("recovery", opp, ex, ey, self._pick(opp, ex, ey, weight_key="recover"))
+
+    def _free_kick_pause(self, limit: float) -> None:
+        """The free kick takes 12 to 25 s, but is taken before the next scripted moment, never after it."""
+        self.t = min(self.t + self.rng.uniform(12, 25), max(self.t, limit - 3.5))
+
+    def _press_wins(self, team: str, carrier: str, x: float, y: float, pid: int) -> Resume:
+        """The rival presses the carrier and wins the ball with a tackle, so a long move never ends in a
+        turnover nobody caused."""
+        opp = self.roster.opponent(team)
+        presser = self._pick(opp, x, y, weight_key="press") or self._pick(opp, x, y, exclude=("POR",))
+        self._emit("pressure", opp, presser, [x, y], pid=pid, target=carrier)
+        self.t += self.rng.uniform(0.5, 1.5)
+        self._emit("tackle", opp, presser, [x, y], outcome="won", pid=pid, opponent=carrier)
+        self.t += self.rng.uniform(1.0, 2.0)
+        return Resume("tackle", opp, x, y, presser)
 
     def _out_of_play(self, team: str, ex: float, ey: float) -> Resume | None:
         """The misplaced pass that just went out crosses the nearest line, if it ended close to one.
@@ -497,7 +514,8 @@ class MatchGenerator:
         kind = e["type"]
         if kind == "substitution":
             prev = before or Resume("kickoff", self.home)
-            return Resume("continue", prev.team, prev.x, prev.y, prev.player, None)
+            kind = prev.kind if prev.kind in SET_PIECES else "continue"  # a pending set piece is still taken
+            return Resume(kind, prev.team, prev.x, prev.y, prev.player, prev.pid if kind == "free_kick" else None)
         opp = self.roster.opponent(team)
         x, y = (e.get("start") or [PITCH_LENGTH / 2, PITCH_WIDTH / 2])
         if kind == "goal":
