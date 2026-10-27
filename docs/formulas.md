@@ -214,10 +214,11 @@ Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`
 
 ## 12. Partido de demo
 
-El partido de demo es **m001 con la semilla 44** (`DEMO_SEED` en `generator/simulate.py`). Se eligió entre 90 semillas porque es la que cumple toda la historia con el generador calibrado. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
+El partido de demo es **m001 con la semilla 769** (`DEMO_SEED` en `generator/simulate.py`). Antes era la 44. Cambió cuando el generador empezó a emitir balones parados reales (saques de banda, corners, saques de meta, saques iniciales, tiros libres y saque del portero), porque eso cambia el relleno entre jugadas. Se eligió entre unas 1,500 semillas porque es la que mejor conserva la historia. `tests/test_demo_story.py` la protege: si un cambio rompe alguno de estos puntos, el cambio está mal o la historia hay que volver a acordarla con el equipo.
 
 - El 1-1 cae en el 17 y en el 63, y la cadena del empate tiene los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres.
-- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 19. Cota lo supera entre el 43 y el 68, y Torres termina primero, empatado con Cota en 8.2.
+- Torres va primero en el MVP a las 35:00 (la pregunta del chat «¿Por qué Torres va primero?»), y la carrera que se ve en pantalla lo tiene arriba desde el minuto 31. Termina primero con 8.5, delante de Cota (7.9) y Sandoval (7.8).
+- Mena pierde el primer tramo del duelo con Verdugo y le da la vuelta en el minuto 20.
 - Real Cardón tiene la fase de `control` en el primer tiempo, y Bahía su `pressure_shift` en el segundo.
 - El veredicto final es "Bahía FC generó más peligro aunque tuvo menos la pelota".
 

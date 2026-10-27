@@ -2,7 +2,7 @@ import helpers  # noqa: F401  (puts src/ on sys.path)
 import unittest
 
 from baja_insights.generator import DEMO_SEED, generate_match
-from helpers import roster, validator
+from helpers import MOCKS, load, roster, validator
 
 
 class ScriptedMatchTest(unittest.TestCase):
@@ -52,6 +52,71 @@ class FreeMatchTest(unittest.TestCase):
             goals = [e for e in events if e["type"] == "goal"]
             final = events[-1]["scoreline"]
             self.assertEqual(final["home"] + final["away"], len(goals))
+
+
+class SetPieceTest(unittest.TestCase):
+    """A ball that goes out crosses a line and the rival restarts from the right place, untouched."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.matches = [generate_match(roster(), seed=DEMO_SEED, script="m001")] + \
+                      [generate_match(roster(), seed=s, script=None) for s in (1, 2, 3)]
+
+    def pairs(self):
+        for events in self.matches:
+            play = [e for e in events if e.get("start") is not None and e.get("team")]
+            yield from zip(play, play[1:])
+
+    def test_every_kind_appears(self):
+        kinds = {e.get("set_piece") for events in self.matches for e in events}
+        self.assertTrue({"kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper"} <= kinds, kinds)
+
+    def test_set_pieces_are_taken_from_the_right_place(self):
+        home = roster().home
+        for events in self.matches:
+            for e in events:
+                kind = e.get("set_piece")
+                if not kind:
+                    continue
+                x, y = e["start"]
+                prog = x if e["team"] == home else 105 - x
+                with self.subTest(kind=kind, event=e["event_id"]):
+                    self.assertEqual(e["type"], "pass")
+                    if kind == "throw_in":
+                        self.assertIn(y, (0.0, 68.0))
+                    elif kind == "corner":
+                        self.assertEqual((prog, y in (0.0, 68.0)), (105.0, True))
+                    elif kind == "goal_kick":
+                        self.assertEqual(e["position"], "POR")
+                        self.assertLessEqual(prog, 5.5)
+                    elif kind == "kickoff":
+                        self.assertEqual(e["start"], [52.5, 34.0])
+
+    def test_out_of_play_ends_on_a_line_and_the_rival_restarts_there(self):
+        home = roster().home
+        checked = 0
+        for a, b in self.pairs():
+            if not a.get("out_of_play"):
+                continue
+            checked += 1
+            x, y = a["end"]
+            self.assertTrue(x in (0.0, 105.0) or y in (0.0, 68.0), a)
+            self.assertNotEqual(b["team"], a["team"])
+            if y in (0.0, 68.0):
+                self.assertEqual((b["set_piece"], b["start"]), ("throw_in", a["end"]))
+            else:
+                attacked = (x == 105.0) == (a["team"] == home)
+                self.assertEqual(b["set_piece"], "goal_kick" if attacked else "corner")
+        self.assertGreater(checked, 20)
+
+    def test_a_foul_is_followed_by_the_free_kick(self):
+        """Unless a scripted beat of the demo comes first: those are kept exactly as written."""
+        beats = {(e["t_s"], e["player"], e["type"]) for e in load(MOCKS / "events_sample.json")}
+        for a, b in self.pairs():
+            if a["type"] == "foul" and (b["t_s"], b["player"], b["type"]) not in beats:
+                with self.subTest(foul=a["event_id"]):
+                    self.assertEqual((b.get("set_piece"), b["team"]),
+                                     ("free_kick", roster().players[a["fouled"]].team))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 """Command line entry point.
 
-    python -m baja_insights generate --seed 44 --script m001 --out data/m001/events.jsonl
+    python -m baja_insights generate --seed 769 --script m001 --out data/m001/events.jsonl
     python -m baja_insights analyze  --events data/m001/events.jsonl --out data/m001/insights.json
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60
     python -m baja_insights ask      --events data/m001/events.jsonl get_mvp_ranking '{"at": "35:00", "top": 3}'

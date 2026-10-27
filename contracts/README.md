@@ -40,6 +40,7 @@ Desde JavaScript se pueden usar los mismos esquemas con [Ajv](https://ajv.js.org
 - **Posesión.** `possession_id` es del equipo con el balón. Las acciones defensivas (pressure, tackle, foul) llevan el id del rival. Una `recovery` abre posesión nueva.
 - **Duelos.** Un evento por duelo. `outcome` se lee desde `player`, y `opponent` es obligatorio.
 - **Goles.** Puntúa el `shot` con `outcome: "goal"`. El evento `goal` solo trae `scoreline` y `assist`.
+- **Balón parado.** Un balón que sale cruza una línea: el pase termina en ella con `out_of_play`, y el rival reanuda con un pase con `set_piece`: `throw_in` desde la banda, `goal_kick` desde el área chica si salió por la línea de fondo que ataca quien lo perdió, o `corner` desde el banderín si salió por su propia línea de fondo. Los saques iniciales, los tiros libres tras falta y el saque del portero tras una atajada también llevan `set_piece`. Nadie presiona ni disputa el balón antes de que se cobre.
 - **Nombres** ficticios. Nada de marcas reales.
 
 ---
@@ -51,7 +52,7 @@ Campos siempre presentes: `match_id`, `event_id`, `period`, `minute`, `second`, 
 | `type` | `outcome` | Campos extra |
 | --- | --- | --- |
 | `match_start` | — | `home`, `away` |
-| `pass` | `complete`, `incomplete` | `receiver`, y `cross` opcional |
+| `pass` | `complete`, `incomplete` | `receiver`, y opcionales `cross`, `set_piece` (`kickoff`, `throw_in`, `corner`, `goal_kick`, `free_kick` o `keeper`, en el pase que reanuda el juego) y `out_of_play` (el pase se fue fuera y `end` es el punto de la línea por donde salió) |
 | `shot` | `goal`, `saved`, `off_target`, `blocked` | `xg` |
 | `goal` | — | `assist`, que puede ser null, y `scoreline` |
 | `recovery` | `won` | — |
