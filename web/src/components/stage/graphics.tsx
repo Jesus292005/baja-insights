@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { createContext, useContext, type CSSProperties, type ReactNode } from 'react';
 import type {
   CardUpgradeOrder, ChatAnswerOrder, DuelBarOrder, GoalAnalysisOrder, HomeAway, MatchKeysOrder, MvpUpdateOrder,
   OverlayOrder, StandoutMilestoneOrder, TeamPhaseOrder, Top3Order,
@@ -30,13 +30,42 @@ export interface GraphicProps<O extends OverlayOrder = OverlayOrder> {
 
 /* ---------- Frame ---------- */
 
+/**
+ * Where the graphic is drawn. 'band' is the web app (above the pitch and in the moments): a wide card
+ * with the title and text on the left and the data on the right. Top 3 keeps its podium below the title.
+ */
+export type GraphicLayout = 'canvas' | 'band';
+export const GraphicLayoutContext = createContext<GraphicLayout>('canvas');
+
 function Panel({
   order, elapsed, team, children, className = '',
 }: {
   order: OverlayOrder; elapsed: number; team?: TeamRef; children?: ReactNode; className?: string;
 }) {
   const { s } = usePrefs();
+  const layout = useContext(GraphicLayoutContext);
   const text = order.text && <p className="g-text">{order.text}</p>;
+  const title = order.title && <h2 className="g-title">{order.title}</h2>;
+  const kicker = (
+    <header className="g-kicker">
+      <span className="g-dot" aria-hidden="true" />
+      <span>{s.kicker[order.type]}</span>
+      <TeamChip team={team} />
+      <span className="g-kicker-time">{order.show_at}</span>
+    </header>
+  );
+  if (layout === 'band' && order.type !== 'top3') {
+    return (
+      <section className={`g-panel g-band g-${order.type} ${className}`} aria-label={order.title ?? s.kicker[order.type]}>
+        {kicker}
+        <div className="g-band-main">
+          <div className="g-band-lead">{title}{text}</div>
+          {children && <div className="g-band-body">{children}</div>}
+        </div>
+        <Tide duration={order.duration_s} elapsed={elapsed} />
+      </section>
+    );
+  }
   return (
     <section className={`g-panel g-${order.type} ${className}`} aria-label={order.title ?? s.kicker[order.type]}>
       <header className="g-kicker">

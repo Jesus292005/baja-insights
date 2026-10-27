@@ -10,6 +10,7 @@
 .stage-canvas { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-size: 28px; }
 
 .stage-canvas,
+.card-scale,
 .pcard,
 .duel-broadcast {
   /* video palette, redeclared so the light web theme does not leak in */
@@ -46,6 +47,38 @@
 .slot-center { z-index: var(--bi-z-center); justify-content: center; }
 .slot-full_screen { z-index: var(--bi-z-fullscreen); }
 .slot-bug { position: absolute; left: 96px; top: 54px; z-index: var(--bi-z-slot); }
+
+/* ---------- Graphics off the canvas (web band and moments) ---------- */
+
+/* Laid out at a canvas width and scaled down; the outer box is as wide as its place and takes the scaled height. */
+.card-scale { position: relative; width: 100%; min-width: 0; }
+.card-scale-inner { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-size: 28px; }
+.card-scale .g-panel { max-height: none; }
+.card-scale .g-fullscreen { position: static; display: block; background: none; }
+.card-scale .g-top3-panel { width: auto; }
+.card-scale.is-still .g-tide { display: none; }
+
+/* Wide card: kicker across, title and text on the left, the data on the right. Stacked when narrow. */
+.g-panel.g-band { display: flex; flex-direction: column; align-items: stretch; gap: 14px; padding: 22px 30px 20px; }
+.g-band-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px 40px; align-items: start; }
+.card-scale.is-wide .g-band-main { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.g-band-lead { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.g-band-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.g-band .g-title { font-size: 40px; }
+.g-band .g-text { font-size: 26px; }
+/* Goal: the scoreline joins the data column. */
+.g-band.g-goal_analysis .g-title { padding-right: 0; }
+.g-band.g-goal_analysis .g-scoreline { position: static; align-self: flex-start; }
+/* Card upgrade: the attribute block beside the player line. */
+.g-band.g-card-upgrade .g-band-body { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
+.g-band.g-card-upgrade .g-upgrade-attr { padding-right: 28px; }
+.g-band.g-card-upgrade .g-upgrade-who { flex: 1; min-width: 240px; }
+.g-band.g-card-upgrade .g-reason { flex-basis: 100%; }
+/* MVP: the new rank beside the ranking it belongs to. */
+.g-band.g-mvp_update .g-band-body { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 14px 32px; }
+.g-band.g-mvp_update .g-rank { flex-direction: column; align-items: flex-start; gap: 8px; flex: 0 1 auto; max-width: 45%; }
+.g-band.g-mvp_update .g-ranking { flex: 1; min-width: 260px; margin: 0; }
+.g-band.g-mvp_update .g-band-body > :not(.g-rank):not(.g-ranking) { flex-basis: 100%; }
 
 /* ---------- Panel frame ---------- */
 
@@ -383,3 +416,7 @@
 .g-goal_analysis .g-invisible-badge { font-size: 19px; }
 .g-goal_analysis .g-invisible-hint { font-size: 20px; }
 .g-goal_analysis .g-row .evidence { font-size: 19px; }
+
+/* Off the canvas the goal card is a wide band: the chain reads left to right again. */
+.card-scale .g-chain.g-chain-list { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 16px; }
+.card-scale .g-goal_analysis .g-chain-list li { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }

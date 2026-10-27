@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { OverlayOrder } from '../../contracts/overlay';
 import { roster } from '../../data/match';
 import { usePrefs } from '../../i18n/prefs';
@@ -8,6 +8,7 @@ import { cardAt, duelAt, momentsAt, mvpAt, playersWithChanges } from '../../logi
 import { AsOf, EmptyState, TeamChip } from '../common';
 import { DuelMeter } from '../DuelMeter';
 import { PlayerCard } from '../PlayerCard';
+import { ScaledGraphic } from '../stage/CardBand';
 
 interface PanelProps {
   /** The viewer's orders (already filtered by mode and language). */
@@ -197,24 +198,55 @@ export function CardPanel({ orders, t: now, stale, loading }: PanelProps) {
 
 /* ---------- Moments ---------- */
 
-export function MomentsPanel({ orders, t: now, onSelect }: PanelProps & { onSelect: (o: OverlayOrder) => void }) {
+/** The card of an opened moment, at the row's width. */
+function MomentCard({ order, orders, id }: { order: OverlayOrder; orders: readonly OverlayOrder[]; id: string }) {
+  const { s } = usePrefs();
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, []);
+  return (
+    <div ref={ref} id={id} className="moment-card" role="region" aria-label={order.title ?? s.kicker[order.type]}>
+      <ScaledGraphic order={order} elapsed={0} orders={orders} still />
+    </div>
+  );
+}
+
+/** Key moments, newest first. A click opens the moment's card under its row (one at a time). */
+export function MomentsPanel({
+  orders, t: now, open, onToggle,
+}: PanelProps & { open: string | null; onToggle: (o: OverlayOrder) => void }) {
   const { s, lang, mode } = usePrefs();
   const items = useMemo(() => momentsAt(orders, now), [orders, now]);
   return (
     <section className="moments" aria-labelledby="moments-title">
       <h2 id="moments-title">{s.timeline.title}</h2>
       {items.length ? (
-        <ol>
-          {items.map((o) => (
-            <li key={o.overlay_id}>
-              <button type="button" onClick={() => onSelect(o)} aria-label={`${s.timeline.replay}: ${o.title ?? s.kicker[o.type]}, ${o.show_at}`}>
-                <span className="moments-time">{o.show_at}</span>
-                <span className={`moments-kind kind-${o.type}`}>{s.kicker[o.type]}</span>
-                <span className="moments-title">{o.title}</span>
-                {mode === 'analyst' && o.type === 'duel_bar' && <span className="mono">{signed(o.data.bar, lang)}</span>}
-              </button>
-            </li>
-          ))}
+        <ol className="moments-list">
+          {items.map((o) => {
+            const isOpen = o.overlay_id === open;
+            const cardId = `moment-${o.overlay_id}`;
+            return (
+              <li key={o.overlay_id} className={isOpen ? 'is-open' : undefined}>
+                <button
+                  type="button"
+                  onClick={() => onToggle(o)}
+                  aria-expanded={isOpen}
+                  aria-controls={isOpen ? cardId : undefined}
+                  title={isOpen ? s.timeline.close : s.timeline.open}
+                >
+                  <span className="moments-time">{o.show_at}</span>
+                  <span className={`moments-kind kind-${o.type}`}>{s.kicker[o.type]}</span>
+                  <span className="moments-title">{o.title}</span>
+                  {mode === 'analyst' && o.type === 'duel_bar' ? <span className="mono">{signed(o.data.bar, lang)}</span> : <span />}
+                  <svg className="moments-chevron" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                    <path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                </button>
+                {isOpen && <MomentCard order={o} orders={orders} id={cardId} />}
+              </li>
+            );
+          })}
         </ol>
       ) : (
         <EmptyState>{s.timeline.empty}</EmptyState>

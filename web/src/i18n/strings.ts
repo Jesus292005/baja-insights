@@ -197,7 +197,12 @@ const es = {
   timeline: {
     title: 'Momentos',
     empty: 'Los momentos clave aparecen aquí conforme pasan.',
-    replay: 'Ver otra vez',
+    open: 'Ver la tarjeta de este momento',
+    close: 'Ocultar la tarjeta',
+  },
+  band: {
+    label: 'Tarjetas del partido',
+    empty: 'Las tarjetas aparecen aquí cuando pasa algo en el campo.',
   },
   replay: {
     label: 'Repetición del partido',
@@ -412,7 +417,12 @@ const en: Shape<typeof es> = {
   timeline: {
     title: 'Moments',
     empty: 'Key moments show up here as they happen.',
-    replay: 'Show again',
+    open: "Show this moment's card",
+    close: 'Hide the card',
+  },
+  band: {
+    label: 'Match cards',
+    empty: 'Cards show up here when something happens on the pitch.',
   },
   replay: {
     label: 'Match replay',
