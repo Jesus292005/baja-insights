@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AppConfig } from '../app/config';
 import { useMatchRuntime } from '../app/useMatchRuntime';
 import { usePersisted } from '../app/usePersisted';
-import { usePositions } from '../data/positions';
+import { useDeadBall, usePositions } from '../data/positions';
 import { MatchBug } from '../components/shell/shell';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
@@ -116,7 +116,9 @@ export function CinemaView({ config }: { config: AppConfig }) {
   }, [onKey]);
 
   const halfTime = useHalfTime(rt.t, rt.snap.clock?.phase);
-  const positions = usePositions(showPlayers === 'on');
+  const positionsFile = usePositions();
+  useDeadBall(rt.replay, positionsFile);
+  const positions = showPlayers === 'on' ? positionsFile : null;
   // Drawn in the clock's half, so the teams swap ends at 45:00.
   // The play of the card on screen, only while it is up.
   const onScreen = Object.values(rt.showing).filter((x): x is NonNullable<typeof x> => !!x);

@@ -9,7 +9,7 @@ import {
   ConnectionBanner, ConnectionPill, LanguageToggle, MatchBug, ModeToggle, ReplayControls, SourceToggle, ThemeToggle,
 } from '../components/shell/shell';
 import { CardBand } from '../components/stage/CardBand';
-import { hasPositions, usePositions } from '../data/positions';
+import { hasPositions, useDeadBall, usePositions } from '../data/positions';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
@@ -52,7 +52,10 @@ export function WebApp({ config }: { config: AppConfig }) {
   const play = openPlay ?? latestPlay;
   // Illustrative players: at the clock's second, or frozen at the last action of an opened moment.
   const [showPlayers, setShowPlayers] = usePersisted<'on' | 'off'>('bi.players.v1', 'on', ['on', 'off']);
-  const positions = usePositions(showPlayers === 'on');
+  // Loaded even with the players hidden: its set pieces let the replay pass dead balls quickly.
+  const positionsFile = usePositions();
+  useDeadBall(replay, positionsFile);
+  const positions = showPlayers === 'on' ? positionsFile : null;
   const playersT = openPlay ? Math.max(...openPlay.links.map((l) => l.t_s)) : t;
   // Both views carry the replay over as it is: same second and speed, still playing if it was.
   const carry = config.source === 'replay' ? replayQuery(t, replayState) : '&source=live';
