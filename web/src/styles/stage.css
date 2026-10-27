@@ -34,15 +34,17 @@
   --bi-focus: #ffd9a8;
   --bi-team-home: var(--bi-bahia-tint);
   --bi-team-away: var(--bi-cardon-tint);
+  --bi-play-home: var(--bi-bahia-tint);
+  --bi-play-away: var(--bi-cardon-solid);
   color: var(--bi-text);
 }
 
 .pitch { position: absolute; inset: 0; background: #12293a; --pitch-a: #13303a; --pitch-b: #163640; --pitch-line: rgb(243 237 226 / 0.22); background: var(--pitch-a); }
 .pitch svg { width: 100%; height: 100%; display: block; }
 .pitch::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(12 20 24 / 0.55) 100%); }
-/* Goals in the colour of the team that defends them; the names sit outside the goal line. */
-.pitch-goal { opacity: 0.9; }
-.pitch-goal-name { font-family: var(--bi-font-data); font-size: 24px; font-weight: 700; letter-spacing: 0.12em; }
+/* Goals in the colour of the team that defends them, with its name as a chip outside the goal line. */
+.pitch-goal { stroke: rgb(243 237 226 / 0.85); stroke-width: 2; }
+.pitch-goal-name { font-family: var(--bi-font-data); font-size: 22px; font-weight: 700; letter-spacing: 0.1em; fill: #ffffff; }
 .pitch-label { position: absolute; right: 96px; bottom: 30px; z-index: 1; font-family: var(--bi-font-data); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(243 237 226 / 0.55); }
 
 .slot { position: absolute; display: flex; flex-direction: column; justify-content: flex-start; z-index: var(--bi-z-slot); }
@@ -383,6 +385,8 @@
 .pl-label-rival { font-family: var(--bi-font-data); font-weight: 600; font-size: 22px; fill: var(--bi-text-muted); }
 /* Minute of each separate action (labels.ts sizes it as 'tag'). */
 .pl-tag { font-family: var(--bi-font-data); font-stretch: 100%; font-weight: 600; font-size: 20px; fill: var(--bi-accent); }
+/* Cardón's red is dark on the pitch: a thin light outline keeps its plays readable. */
+.pl-away { filter: drop-shadow(0 0 2.5px rgb(243 237 226 / 0.95)) drop-shadow(0 0 1px rgb(243 237 226 / 0.95)); }
 .pl-fade { opacity: 0; animation: pl-fade 360ms var(--bi-ease-out) forwards; }
 @keyframes pl-draw { to { stroke-dashoffset: 0; } }
 @keyframes pl-fade { to { opacity: 1; } }
@@ -433,3 +437,19 @@
 /* Legend swatch: the same ball, with lines thin enough for its size. */
 .legend .pl-ball-body { stroke-width: 1; }
 .legend .pl-ball-seam { stroke-width: 0.8; }
+
+/* Half-time notice over the pitch (canvas pixels): big enough to read on the scaled web stage too. */
+.halftime {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: var(--bi-z-fullscreen);
+  display: flex; flex-direction: column; align-items: center; gap: 18px; width: 1180px; padding: 48px 64px 44px;
+  background: var(--bi-surface-overlay); box-shadow: var(--bi-shadow-panel); clip-path: var(--bi-clip-notch-bc);
+  text-align: center; animation: g-in var(--bi-dur-reveal) var(--bi-ease-out) both;
+}
+.halftime-kicker { font-family: var(--bi-font-data); font-size: 44px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bi-accent); }
+.halftime-score { display: flex; align-items: center; gap: 28px; font-family: var(--bi-font-display); font-stretch: 70%; font-weight: 900; font-size: 140px; line-height: 0.9; }
+.halftime-score .chip { font-size: 40px; padding: 4px 16px; }
+.halftime-swap { font-size: 56px; font-weight: 800; }
+.halftime-ends { display: flex; justify-content: space-between; width: 100%; font-family: var(--bi-font-data); font-size: 40px; font-weight: 600; }
+.halftime-ends > span { display: inline-flex; align-items: center; gap: 14px; }
+.halftime-ends .chip { font-size: 30px; padding: 2px 12px; }
+.halftime-note { font-size: 32px; color: var(--bi-text-muted); }

@@ -27,6 +27,12 @@ export const SECOND_HALF_S = 2700;
 export const halfOf = (t_s: number): Half => (t_s >= SECOND_HALF_S ? 2 : 1);
 /** Engine point to the point drawn in that half. */
 export const inHalf = (p: PitchPoint, half: Half): PitchPoint => (half === 2 ? [105 - p[0], 68 - p[1]] : p);
+/**
+ * The same play drawn in another half. The engine frame is the same in both halves, so turning a
+ * play keeps it right against the goals on screen: used to draw the latest play in the half the
+ * clock is in, so the ends swap right at 45:00 whatever play is on the pitch.
+ */
+export const drawnIn = <P extends { half: Half }>(play: P | null, half: Half): P | null => (play ? { ...play, half } : null);
 /** Side of the pitch (left or right on screen) whose goal a team defends in a half. */
 export const defendsLeft = (side: Side, half: Half) => (side === 'home') === (half === 1);
 /** Pitch metres (origin bottom-left) to the 1050 × 680 SVG (y grows downwards). */

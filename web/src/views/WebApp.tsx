@@ -15,7 +15,8 @@ import { demoMatch, roster } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
-import { halfOf, playAt, playOf } from '../logic/play';
+import { drawnIn, halfOf, playAt, playOf } from '../logic/play';
+import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
 export function WebApp({ config }: { config: AppConfig }) {
@@ -38,7 +39,10 @@ export function WebApp({ config }: { config: AppConfig }) {
   const s = strings[lang];
   const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
   // An opened moment draws its own play; otherwise the latest one stays on the pitch.
-  const latestPlay = useMemo(() => playAt(orders, t, demoMatch.playEvents, roster), [orders, t]);
+  // The latest play follows the clock's half, so the teams swap ends at 45:00; an opened moment keeps its own.
+  const half = halfOf(t);
+  const latestPlay = useMemo(() => drawnIn(playAt(orders, t, demoMatch.playEvents, roster), half), [orders, t, half]);
+  const halfTime = useHalfTime(t, snap.clock?.phase);
   const openOrder = useMemo(() => orders.find((o) => o.overlay_id === open) ?? null, [orders, open]);
   const openPlay = useMemo(() => (openOrder ? playOf(openOrder, demoMatch.playEvents, roster) : null), [openOrder]);
   const play = openPlay ?? latestPlay;
@@ -82,7 +86,9 @@ export function WebApp({ config }: { config: AppConfig }) {
         </aside>
         <div className="main-col">
           <CardBand showing={showing} orders={orders} />
-          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} half={halfOf(t)} />
+          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} half={half}>
+            {halfTime && <HalfTimeNotice scoreline={snap.state?.scoreline ?? null} />}
+          </Stage>
           <PlayLegend play={play} variant="web" />
           {replay && replayState && (
             <ReplayControls

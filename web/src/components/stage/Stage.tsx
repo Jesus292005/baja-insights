@@ -5,7 +5,7 @@ import { usePrefs } from '../../i18n/prefs';
 import { t } from '../../i18n/strings';
 import { isFrame } from '../../logic/derive';
 import { SLOTS, type Showing } from '../../logic/plan';
-import { defendsLeft, halfOf, type Half, type MatchPlay } from '../../logic/play';
+import { defendsLeft, type Half, type MatchPlay } from '../../logic/play';
 import { roster } from '../../data/match';
 import { PlayLayer } from './PlayLayer';
 import { Graphic } from './graphics';
@@ -96,7 +96,7 @@ export function Stage({ showing, orders, variant, graphics = true, bug, backdrop
         {bug}
         {graphics && SLOTS.map((slot) => {
           const item = showing[slot];
-          const box = item && slot === 'center' && item.order.type === 'goal_analysis' ? goalDock(item.order) : broadcastSlots[slot];
+          const box = item && slot === 'center' && item.order.type === 'goal_analysis' ? goalDock(item.order, play?.half ?? half ?? 1) : broadcastSlots[slot];
           return (
             <div
               key={slot}
@@ -122,11 +122,9 @@ export function Stage({ showing, orders, variant, graphics = true, bug, backdrop
  * The goal card docks on the side of the pitch the scoring team defends in that half, so the play,
  * which ends at the other goal, stays visible. Teams swap ends at half time (see logic/play.ts).
  */
-function goalDock(order: OverlayOrder) {
+function goalDock(order: OverlayOrder, half: Half) {
   const scorer = order.type === 'goal_analysis' ? order.data.chain[order.data.chain.length - 1] : undefined;
   const team = roster.player(scorer)?.team.side ?? 'home';
-  const links = order.type === 'goal_analysis' ? order.data.chain_detail : undefined;
-  const half = halfOf(links?.length ? Math.max(...links.map((l) => l.t_s)) : order.show_at_s);
   const dockLeft = defendsLeft(team, half);
   // Below the score bug on the left. The bottom bar is paused during a goal, so the card can reach
   // y = 1000, just above the cinema legend.
@@ -142,7 +140,13 @@ function PitchBackdrop({ label, play, half, ends }: { label: string; play: Match
   // Whose goal is on each end in this half: Bahía defends the left one in the first half.
   const left = defendsLeft('home', half) ? roster.home : roster.away;
   const right = left === roster.home ? roster.away : roster.home;
-  const goalColour = (team: typeof left) => `var(--bi-team-${team.side})`;
+  const goalColour = (team: typeof left) => `var(--bi-play-${team.side})`;
+  const chip = (team: typeof left, cx: number, angle: number) => (
+    <g transform={`rotate(${angle} ${cx} 340)`}>
+      <rect x={cx - 34} y={326} width={68} height={28} fill={`var(--bi-team-${team.side}-solid)`} />
+      <text className="pitch-goal-name" x={cx} y={348} textAnchor="middle">{team.short}</text>
+    </g>
+  );
   return (
     <div className="pitch" data-half={half}>
       <svg viewBox="-70 -30 1190 740" preserveAspectRatio="xMidYMid meet" role="img" aria-label={t(ends, { left: left.name, right: right.name, half })}>
@@ -170,8 +174,8 @@ function PitchBackdrop({ label, play, half, ends }: { label: string; play: Match
         <g className="pitch-goals">
           <rect x="-20" y="303.4" width="20" height="73.2" fill={goalColour(left)} className="pitch-goal" />
           <rect x="1050" y="303.4" width="20" height="73.2" fill={goalColour(right)} className="pitch-goal" />
-          <text className="pitch-goal-name" x="-44" y="340" fill={goalColour(left)} transform="rotate(-90 -44 340)" textAnchor="middle">{left.short}</text>
-          <text className="pitch-goal-name" x="1094" y="340" fill={goalColour(right)} transform="rotate(90 1094 340)" textAnchor="middle">{right.short}</text>
+          {chip(left, -44, -90)}
+          {chip(right, 1094, 90)}
         </g>
         {play && <PlayLayer key={play.order.overlay_id} play={play} />}
       </svg>

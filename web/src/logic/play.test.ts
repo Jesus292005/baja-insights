@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChainLink, GoalAnalysisOrder, OverlayOrder } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
 import { forViewer } from './derive';
-import { buildPlay, defendsLeft, halfOf, hasCoordinates, orientPlay, playAt, toSvg } from './play';
+import { buildPlay, defendsLeft, drawnIn, halfOf, hasCoordinates, orientPlay, playAt, toSvg } from './play';
 
 const fanEn = forViewer(demoMatch.overlays, 'fan', 'en');
 const goals = fanEn.filter((o): o is GoalAnalysisOrder => o.type === 'goal_analysis');
@@ -125,5 +125,16 @@ describe('halves', () => {
     expect(defendsLeft('home', 2)).toBe(false);
     expect(halfOf(2699)).toBe(1);
     expect(halfOf(2700)).toBe(2);
+  });
+});
+
+describe('drawnIn', () => {
+  it('draws the latest first-half play in the second half once the clock passes 45:00', () => {
+    const first = playAt(fanEn, opener.show_at_s, demoMatch.playEvents, roster)!;
+    const later = drawnIn(first, halfOf(2700))!;
+    expect(later.half).toBe(2);
+    const raw = first.links[0].start!;
+    expect(orientPlay(later)[0].start).toEqual([105 - raw[0], 68 - raw[1]]);
+    expect(drawnIn(null, 2)).toBeNull();
   });
 });
