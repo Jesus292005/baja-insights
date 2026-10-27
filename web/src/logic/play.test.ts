@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChainLink, GoalAnalysisOrder, OverlayOrder } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
 import { forViewer } from './derive';
-import { buildPlay, hasCoordinates, playAt, toSvg } from './play';
+import { buildPlay, defendsLeft, drawnIn, halfOf, hasCoordinates, orientPlay, playAt, toSvg } from './play';
 
 const fanEn = forViewer(demoMatch.overlays, 'fan', 'en');
 const goals = fanEn.filter((o): o is GoalAnalysisOrder => o.type === 'goal_analysis');
@@ -88,5 +88,53 @@ describe('playAt', () => {
     const frame = fanEn.find((o) => o.type === 'duel_bar' && o.source_insight === null)!;
     const only: OverlayOrder[] = [frame, ...fanEn.filter((o) => o.type === 'team_phase')];
     expect(playAt(only, 5520, demoMatch.playEvents, roster)).toBeNull();
+  });
+});
+
+describe('plays from several possessions', () => {
+  const ev = (event_id: number, t_s: number, type: string, group: number, start: [number, number], end?: [number, number]) =>
+    ({ event_id, player: 'B. Haro', action: '', credit: 0, t_s, type, start, end, side: 'away', group }) as never;
+
+  it('joins the actions of one possession with the ball', () => {
+    const play = buildPlay([ev(1, 10, 'pass', 7, [50, 45], [28, 58]), ev(2, 19, 'shot', 7, [8, 36], [0, 35])], true);
+    expect(play.gaps).toHaveLength(1);
+    expect(play.tags).toEqual([]);
+  });
+
+  it('keeps separate possessions apart, each with its minute', () => {
+    const play = buildPlay([ev(1, 983, 'pass', 43, [84, 23], [53, 9]), ev(2, 1210, 'pass', 49, [58, 3], [40, 12])], true);
+    expect(play.gaps).toEqual([]);
+    expect(play.tags.map((g) => g.t_s)).toEqual([983, 1210]);
+  });
+});
+
+describe('halves', () => {
+  it('turns second-half plays 180° and keeps first-half ones', () => {
+    const second = playAt(fanEn, equaliser.show_at_s, demoMatch.playEvents, roster)!;
+    expect(second.half).toBe(2);
+    const raw = second.links[0].start!;
+    expect(orientPlay(second)[0].start).toEqual([105 - raw[0], 68 - raw[1]]);
+    const first = playAt(fanEn, opener.show_at_s, demoMatch.playEvents, roster)!;
+    expect(first.half).toBe(1);
+    expect(orientPlay(first)).toBe(first.links);
+  });
+
+  it('puts each team in front of its own goal', () => {
+    expect(defendsLeft('home', 1)).toBe(true);
+    expect(defendsLeft('away', 1)).toBe(false);
+    expect(defendsLeft('home', 2)).toBe(false);
+    expect(halfOf(2699)).toBe(1);
+    expect(halfOf(2700)).toBe(2);
+  });
+});
+
+describe('drawnIn', () => {
+  it('draws the latest first-half play in the second half once the clock passes 45:00', () => {
+    const first = playAt(fanEn, opener.show_at_s, demoMatch.playEvents, roster)!;
+    const later = drawnIn(first, halfOf(2700))!;
+    expect(later.half).toBe(2);
+    const raw = first.links[0].start!;
+    expect(orientPlay(later)[0].start).toEqual([105 - raw[0], 68 - raw[1]]);
+    expect(drawnIn(null, 2)).toBeNull();
   });
 });

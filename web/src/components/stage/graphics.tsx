@@ -100,6 +100,8 @@ const teamOf = (player: string | undefined) => roster.player(player)?.team;
 
 function MvpUpdate({ order, elapsed }: GraphicProps<MvpUpdateOrder>) {
   const { s, lang, mode } = usePrefs();
+  // The wide web card shows the ranking as a strip of narrow columns: surnames only there.
+  const compact = useContext(GraphicLayoutContext) === 'band';
   const { rank, previous_rank, mvp_score, ranking } = order.data;
   const card = order.card;
   // The order has no player name; its new rank points to a row of the ranking it carries (v1.1).
@@ -121,7 +123,7 @@ function MvpUpdate({ order, elapsed }: GraphicProps<MvpUpdateOrder>) {
           {ranking.slice(0, 5).map((r) => (
             <li key={r.player} className={r.player === mover ? 'is-mover' : ''}>
               <span className="g-ranking-pos">{r.rank}</span>
-              <span className="g-ranking-who">{r.player} <TeamChip team={teamOf(r.player)} /></span>
+              <span className="g-ranking-who" title={compact ? r.player : undefined}>{compact ? surname(r.player) : r.player} <TeamChip team={teamOf(r.player)} /></span>
               <span className="g-ranking-score">{asSent(r.mvp_score, lang, 1)}</span>
             </li>
           ))}

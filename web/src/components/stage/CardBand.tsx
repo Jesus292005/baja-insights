@@ -47,6 +47,7 @@ export interface ScaledGraphicProps {
  * box at web scale, so every card has the same width and no empty space beside it.
  */
 export function ScaledGraphic({ order, elapsed, orders, still }: ScaledGraphicProps) {
+  const { mode } = usePrefs();
   const { ref, width: room } = useWidth<HTMLDivElement>();
   const inner = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
@@ -67,6 +68,7 @@ export function ScaledGraphic({ order, elapsed, orders, still }: ScaledGraphicPr
     <div
       ref={ref}
       className={`card-scale${still ? ' is-still' : ''}${width >= WIDE ? ' is-wide' : ''}`}
+      data-mode={mode}
       style={{ height: height * scale, visibility: scale && height ? 'visible' : 'hidden' }}
     >
       <div ref={inner} className="card-scale-inner" style={{ width, transform: `scale(${scale})` }}>

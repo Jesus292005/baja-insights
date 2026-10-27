@@ -75,6 +75,9 @@
   --bi-team-away: var(--bi-cardon-tint);
   --bi-team-home-solid: var(--bi-bahia-solid);
   --bi-team-away-solid: var(--bi-cardon-solid);
+  /* Plays on the pitch: Real Cardón in the red of its label, so a play reads as the team's chip. */
+  --bi-play-home: var(--bi-bahia-tint);
+  --bi-play-away: var(--bi-cardon-solid);
   --bi-skeleton: var(--bi-ink-800);
   --bi-skeleton-shine: var(--bi-ink-700);
 
@@ -208,6 +211,8 @@
   --bi-focus: var(--bi-sol-700);
   --bi-team-home: var(--bi-bahia-solid);
   --bi-team-away: var(--bi-cardon-solid);
+  --bi-play-home: var(--bi-bahia-solid);
+  --bi-play-away: var(--bi-cardon-solid);
   --bi-skeleton: var(--bi-sand-100);
   --bi-skeleton-shine: var(--bi-sand-200);
   --bi-shadow-panel: 0 6px 20px rgb(19 32 42 / 0.12);
