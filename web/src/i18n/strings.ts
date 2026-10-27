@@ -47,6 +47,7 @@ const es = {
       ['N / P', 'Siguiente / anterior momento'],
       ['← / →', 'Retroceder / avanzar 10 s (Mayús: 60 s)'],
       ['B', 'Mostrar u ocultar el modo en pantalla'],
+      ['J', 'Mostrar u ocultar a los jugadores'],
       ['F', 'Pantalla completa'],
       ['H', 'Mostrar u ocultar esta ayuda'],
     ],
@@ -201,6 +202,11 @@ const es = {
     open: 'Ver la tarjeta de este momento',
     close: 'Ocultar la tarjeta',
   },
+  players: {
+    illustrative: 'Posiciones ilustrativas',
+    toggle: 'Jugadores en la cancha',
+    note: 'Ilustrativas: un modelo las ubica a partir de los eventos.',
+  },
   halftime: {
     title: 'Medio tiempo',
     swap: 'Los equipos cambian de lado',
@@ -276,6 +282,7 @@ const en: Shape<typeof es> = {
       ['N / P', 'Next / previous moment'],
       ['← / →', 'Back / forward 10 s (Shift: 60 s)'],
       ['B', 'Show or hide the mode on screen'],
+      ['J', 'Show or hide the players'],
       ['F', 'Full screen'],
       ['H', 'Show or hide this help'],
     ],
@@ -429,6 +436,11 @@ const en: Shape<typeof es> = {
     empty: 'Key moments show up here as they happen.',
     open: "Show this moment's card",
     close: 'Hide the card',
+  },
+  players: {
+    illustrative: 'Illustrative positions',
+    toggle: 'Players on the pitch',
+    note: 'Illustrative: a model places them from the events.',
   },
   halftime: {
     title: 'Half-time',

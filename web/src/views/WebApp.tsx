@@ -9,6 +9,7 @@ import {
   ConnectionBanner, ConnectionPill, LanguageToggle, MatchBug, ModeToggle, ReplayControls, SourceToggle, ThemeToggle,
 } from '../components/shell/shell';
 import { CardBand } from '../components/stage/CardBand';
+import { hasPositions, usePositions } from '../data/positions';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
@@ -46,6 +47,10 @@ export function WebApp({ config }: { config: AppConfig }) {
   const openOrder = useMemo(() => orders.find((o) => o.overlay_id === open) ?? null, [orders, open]);
   const openPlay = useMemo(() => (openOrder ? playOf(openOrder, demoMatch.playEvents, roster) : null), [openOrder]);
   const play = openPlay ?? latestPlay;
+  // Illustrative players: at the clock's second, or frozen at the last action of an opened moment.
+  const [showPlayers, setShowPlayers] = usePersisted<'on' | 'off'>('bi.players.v1', 'on', ['on', 'off']);
+  const positions = usePositions(showPlayers === 'on');
+  const playersT = openPlay ? Math.max(...openPlay.links.map((l) => l.t_s)) : t;
   // Both views carry the replay over as it is: same second and speed, still playing if it was.
   const carry = config.source === 'replay' ? replayQuery(t, replayState) : '&source=live';
   const cinemaHref = `/cine?mode=${mode}&lang=${lang}${carry}`;
@@ -88,10 +93,25 @@ export function WebApp({ config }: { config: AppConfig }) {
         </aside>
         <div className="main-col">
           <CardBand showing={showing} orders={orders} />
-          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} half={half}>
+          <Stage
+            showing={showing}
+            orders={orders}
+            variant="web"
+            graphics={false}
+            play={play}
+            half={half}
+            players={positions ? { file: positions, t: playersT, frozen: !!openPlay } : null}
+          >
             {halfTime && <HalfTimeNotice scoreline={snap.state?.scoreline ?? null} />}
           </Stage>
           <PlayLegend play={play} variant="web" />
+          {hasPositions && (
+            <label className="players-toggle">
+              <input type="checkbox" checked={showPlayers === 'on'} onChange={(e) => setShowPlayers(e.target.checked ? 'on' : 'off')} />
+              <span>{s.players.toggle}</span>
+              <span className="players-note">{s.players.note}</span>
+            </label>
+          )}
           {replay && replayState && (
             <ReplayControls
               state={replayState}

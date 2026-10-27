@@ -9,6 +9,8 @@ import { placeCards, playPoints, type Box, type CardToPlace } from '../../logic/
 import { VIEW_BOX, defendsLeft, type Half, type MatchPlay } from '../../logic/play';
 import { roster } from '../../data/match';
 import { PlayLayer } from './PlayLayer';
+import { PlayersLayer } from './PlayersLayer';
+import type { PositionsFile } from '../../logic/positions';
 import { Graphic } from './graphics';
 
 export interface StageProps {
@@ -25,6 +27,8 @@ export interface StageProps {
   play?: MatchPlay | null;
   /** Half the pitch shows when no play is drawn (the play brings its own). Default: first. */
   half?: Half;
+  /** The 22 players and the ball at second t (needs the backdrop). Frozen: no gliding, for a moment opened from the list. */
+  players?: { file: PositionsFile; t: number; frozen: boolean } | null;
   /** Extra layers on the canvas, in canvas pixels (cinema badge and help). */
   children?: React.ReactNode;
   /** Canvas boxes the cards must leave free when they move off the play (the cinema badge). */
@@ -76,7 +80,7 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
   return message;
 }
 
-export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, half, children, reserved }: StageProps) {
+export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, half, players, children, reserved }: StageProps) {
   const { s, mode } = usePrefs();
   const { ref, scale } = useFitScale(variant === 'web' ? 'width' : 'contain');
   const announcement = useAnnouncer(showing, variant === 'web');
@@ -98,7 +102,13 @@ export function Stage({ showing, orders, variant, graphics = true, bug, backdrop
         }}
       >
         {(backdrop ?? variant === 'web') && (
-          <PitchBackdrop label={s.app.videoPlaceholder} play={play ?? null} half={play?.half ?? half ?? 1} ends={s.pitch.ends} />
+          <PitchBackdrop
+            label={players ? s.players.illustrative : s.app.videoPlaceholder}
+            play={play ?? null}
+            half={drawnHalf}
+            ends={s.pitch.ends}
+            players={players ?? null}
+          />
         )}
         {bug}
         {graphics && SLOTS.map((slot) => {
@@ -229,7 +239,11 @@ function goalDock(order: OverlayOrder, half: Half) {
  * so the plays the engine sends land where they happened. Not drawn in the broadcast overlay, where the
  * real video goes and its camera does not match these coordinates.
  */
-function PitchBackdrop({ label, play, half, ends }: { label: string; play: MatchPlay | null; half: Half; ends: string }) {
+function PitchBackdrop({
+  label, play, half, ends, players,
+}: {
+  label: string; play: MatchPlay | null; half: Half; ends: string; players: StageProps['players'];
+}) {
   // Whose goal is on each end in this half: Bahía defends the left one in the first half.
   const left = defendsLeft('home', half) ? roster.home : roster.away;
   const right = left === roster.home ? roster.away : roster.home;
@@ -270,6 +284,7 @@ function PitchBackdrop({ label, play, half, ends }: { label: string; play: Match
           {chip(left, -44, -90)}
           {chip(right, 1094, 90)}
         </g>
+        {players && <PlayersLayer file={players.file} t={players.t} half={half} frozen={players.frozen} />}
         {play && <PlayLayer key={play.order.overlay_id} play={play} />}
       </svg>
       <span className="pitch-label" aria-hidden="true">{label}</span>

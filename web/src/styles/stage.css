@@ -472,3 +472,13 @@
 .halftime-ends > span { display: inline-flex; align-items: center; gap: 14px; }
 .halftime-ends .chip { font-size: 30px; padding: 2px 12px; }
 .halftime-note { font-size: 32px; color: var(--bi-text-muted); }
+
+/* Illustrative players and ball (PlayersLayer, pitch SVG units): under the play, in the play colours. */
+.pp-player circle { stroke-width: 3; }
+.pp-home circle { fill: var(--bi-play-home); stroke: var(--bi-ink-950); }
+.pp-away circle { fill: var(--bi-play-away); stroke: rgb(243 237 226 / 0.9); }
+.pp-keeper circle { stroke-dasharray: 5 3; }
+.pp-player text { font-family: var(--bi-font-data); font-size: 19px; font-weight: 700; pointer-events: none; }
+.pp-home text { fill: var(--bi-ink-950); }
+.pp-away text { fill: #ffffff; }
+.pp-ball { fill: var(--bi-sand-100); stroke: var(--bi-ink-950); stroke-width: 3; }
