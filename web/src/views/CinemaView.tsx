@@ -21,6 +21,9 @@ import { PlayLegend } from '../components/stage/PlayLegend';
 /** Seconds of lead before a moment, so the graphic enters on camera. */
 const LEAD_S = 2;
 
+/** Room of the mode badge at the top centre of the canvas (.cinema-badge), kept free of cards. */
+const BADGE_BOX = { x: 770, y: 40, w: 380, h: 74 };
+
 export function CinemaView({ config }: { config: AppConfig }) {
   const [mode, setMode] = useState<Mode>(config.mode ?? 'fan');
   const [lang, setLang] = useState<Language>(config.lang ?? 'en');
@@ -120,6 +123,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
           backdrop
           play={play}
           half={halfOf(rt.t)}
+          reserved={badge ? [BADGE_BOX] : []}
           bug={
             <div className="slot-bug">
               <MatchBug state={rt.snap.state} clockUpdate={rt.snap.clock} variant="broadcast" />

@@ -15,6 +15,8 @@ import type { Roster } from '../data/roster';
 
 export const PITCH_W = 1050;
 export const PITCH_H = 680;
+/** The pitch backdrop's viewBox: the pitch plus a margin, wider on the sides for the goal names. */
+export const VIEW_BOX = { x: -70, y: -30, w: 1190, h: 740 } as const;
 
 /**
  * Halves. The engine keeps one frame for the whole match (Bahía FC always attacks x = 105,
