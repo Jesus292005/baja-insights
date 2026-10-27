@@ -5,11 +5,15 @@
 Every viewer of a match shares one clock, which starts with the first subscriber. On ``subscribe``
 the server sends ``state``, the orders the client is missing (see ``Match.orders_to_resend``) and a
 ``clock``; then the orders and state changes as the clock reaches them, plus a ``clock`` every real second.
+
+Plain HTTP ``GET /positions/<match_id>`` returns the match's ``positions.json`` (gzipped, CORS open), the
+illustrative positions of the 22 players that the interface interpolates with the clock's ``t_s``.
 """
 
 from __future__ import annotations
 
 import asyncio
+import gzip
 import logging
 import time
 from pathlib import Path
@@ -32,10 +36,23 @@ def load_matches(data_dir: str | Path) -> dict[str, Match]:
     return matches
 
 
+def load_files(data_dir: str | Path) -> dict[str, tuple[str, bytes]]:
+    """``/positions/<match_id>`` for every ``<dir>/positions.json`` under ``data_dir``, gzipped once."""
+    files = {}
+    for path in sorted(Path(data_dir).glob("*/positions.json")):
+        events = path.with_name("events.jsonl")
+        if not events.exists():
+            continue
+        match_id = Match.from_files(events).match_id
+        files[f"/positions/{match_id}"] = ("application/json", gzip.compress(path.read_bytes(), 6))
+    return files
+
+
 class StreamServer:
     def __init__(self, matches: dict[str, Match], speed: float = 1.0, start_at: int = 0,
-                 half_time_pause_s: float = 0.0, now=time.monotonic):
+                 half_time_pause_s: float = 0.0, now=time.monotonic, files: dict[str, tuple[str, bytes]] | None = None):
         self.matches = matches
+        self.files = files or {}
         self.speed = speed
         self.start_at = start_at
         self.half_time_pause_s = half_time_pause_s
@@ -49,7 +66,7 @@ class StreamServer:
         return self.clocks[match_id]
 
     async def handle(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
-        ws = await handshake(reader, writer)
+        ws = await handshake(reader, writer, self.files)
         if ws is None:
             return
         self.viewers += 1
@@ -135,7 +152,8 @@ async def serve(data_dir: str | Path, host: str = "0.0.0.0", port: int = 8080, s
     matches = load_matches(data_dir)
     if not matches:
         raise SystemExit(f"no */events.jsonl under {data_dir}")
-    server = StreamServer(matches, speed=speed, start_at=start_at, half_time_pause_s=half_time_pause_s)
+    server = StreamServer(matches, speed=speed, start_at=start_at, half_time_pause_s=half_time_pause_s,
+                          files=load_files(data_dir))
     tcp = await asyncio.start_server(server.handle, host, port)
     summary = ", ".join(f"{m.match_id} ({len(m.orders)} orders)" for m in matches.values())
     log.warning("stream on ws://%s:%s, speed %sx, matches: %s", host, port, speed, summary)

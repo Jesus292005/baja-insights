@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baja-insights/contracts/positions.schema.json",
+  "title": "Baja-Insights illustrative positions of the 22 players and the ball (added to contract v1.1)",
+  "description": "One file per match, built from the events by python -m baja_insights positions. Only for drawing the pitch: the events track the player on the ball, everybody else is placed by a deterministic model anchored to the events. The engine, the insights, the agents and the chat never read it.",
+  "type": "object",
+  "required": ["match_id", "illustrative", "hz", "coordinates", "periods", "teams", "lineup_changes", "set_pieces", "frames"],
+  "additionalProperties": false,
+  "properties": {
+    "_nota": {"type": "string", "description": "Only in the mock: what the sample covers."},
+    "match_id": {"type": "string"},
+    "illustrative": {"const": true, "description": "Always true. Show it on screen, e.g. 'Illustrative positions'."},
+    "hz": {"const": 2, "description": "Frames per match second. Interpolate between frames to animate."},
+    "coordinates": {"type": "string", "description": "Same as the events: metres on 105 x 68, origin bottom left, home attacks x = 105 in both halves."},
+    "periods": {
+      "description": "On screen the teams change ends at half time: in period 2, draw every point of the pitch (players, ball, goal chain, events) at (105 - x, 68 - y).",
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object", "required": ["period", "from_t_s", "to_t_s", "home_attacks", "rotate_180"], "additionalProperties": false,
+        "properties": {
+          "period": {"enum": [1, 2]}, "from_t_s": {"type": "integer"}, "to_t_s": {"type": "integer"},
+          "home_attacks": {"enum": ["right", "left"]}, "rotate_180": {"type": "boolean"}
+        }
+      }
+    },
+    "teams": {
+      "type": "object", "required": ["home", "away"], "additionalProperties": false,
+      "properties": {"home": {"$ref": "#/$defs/team"}, "away": {"$ref": "#/$defs/team"}}
+    },
+    "lineup_changes": {
+      "description": "Substitutions: from t_s on, player_in takes the slot of player_out in the frames.",
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["t_s", "team", "slot", "player_out", "player_in", "number", "position"], "additionalProperties": false,
+        "properties": {
+          "t_s": {"type": "integer"}, "team": {"enum": ["home", "away"]}, "slot": {"type": "integer", "minimum": 0, "maximum": 10},
+          "player_out": {"type": "string"}, "player_in": {"type": "string"}, "number": {"type": "integer"}, "position": {"type": "string"}
+        }
+      }
+    },
+    "set_pieces": {
+      "description": "Every restart, with the second the ball went dead and the second it is taken (the pass with set_piece in the events).",
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["t_s", "kind", "team", "taker", "spot", "ball_out_from_t_s"], "additionalProperties": false,
+        "properties": {
+          "t_s": {"type": "number"}, "ball_out_from_t_s": {"type": "number"},
+          "kind": {"enum": ["kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper"]},
+          "team": {"enum": ["home", "away"]}, "taker": {"type": "string"}, "spot": {"$ref": "#/$defs/point"}
+        }
+      }
+    },
+    "frames": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["t", "b", "h", "a"], "additionalProperties": false,
+        "properties": {
+          "t": {"type": "number", "minimum": 0, "maximum": 5400, "description": "Match second."},
+          "b": {"$ref": "#/$defs/ball", "description": "The ball. It can be just off the pitch while it is out."},
+          "h": {"type": "array", "minItems": 11, "maxItems": 11, "items": {"$ref": "#/$defs/point"}, "description": "Home players, in the order of teams.home.players, after lineup_changes."},
+          "a": {"type": "array", "minItems": 11, "maxItems": 11, "items": {"$ref": "#/$defs/point"}, "description": "Away players, same rule."}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "point": {"type": "array", "prefixItems": [{"type": "number", "minimum": 0, "maximum": 105}, {"type": "number", "minimum": 0, "maximum": 68}], "minItems": 2, "maxItems": 2},
+    "ball": {"type": "array", "prefixItems": [{"type": "number", "minimum": -3, "maximum": 108}, {"type": "number", "minimum": -3, "maximum": 71}], "minItems": 2, "maxItems": 2},
+    "team": {
+      "type": "object", "required": ["name", "players"], "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "players": {
+          "type": "array", "minItems": 11, "maxItems": 11,
+          "items": {
+            "type": "object", "required": ["slot", "player", "number", "position"], "additionalProperties": false,
+            "properties": {"slot": {"type": "integer"}, "player": {"type": "string"}, "number": {"type": "integer"}, "position": {"type": "string"}}
+          }
+        }
+      }
+    }
+  }
+}

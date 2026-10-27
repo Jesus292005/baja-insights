@@ -480,6 +480,8 @@ class MatchGenerator:
                 side = "home" if e["team"] == self.home else "away"
                 self.scoreline[side] += 1
                 e["scoreline"] = dict(self.scoreline)
+            if e["type"] == "pass" and e.get("start") == [PITCH_LENGTH / 2, PITCH_WIDTH / 2] and "set_piece" not in e:
+                e["set_piece"] = "kickoff"  # a scripted pass from the centre spot is a kick-off
             if e["type"] == "substitution":
                 self.active[e["team"]].discard(e["player_out"])
                 self.active[e["team"]].add(e["player_in"])

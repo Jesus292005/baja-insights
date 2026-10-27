@@ -2,6 +2,7 @@
 
     python -m baja_insights generate --seed 769 --script m001 --out data/m001/events.jsonl
     python -m baja_insights analyze  --events data/m001/events.jsonl --out data/m001/insights.json
+    python -m baja_insights positions --events data/m001/events.jsonl --out data/m001/positions.json
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60
     python -m baja_insights ask      --events data/m001/events.jsonl get_mvp_ranking '{"at": "35:00", "top": 3}'
     python -m baja_insights validate data/m001/events.jsonl data/m001/insights.json
@@ -59,6 +60,20 @@ def cmd_analyze(args) -> int:
     insights = InsightEngine(roster).run(read_events(args.events))
     write_json(args.out, insights, jsonl=str(args.out).endswith(".jsonl"))
     print(f"{len(insights)} insights -> {args.out}", file=sys.stderr)
+    return 0
+
+
+def cmd_positions(args) -> int:
+    from .positions import build_positions
+
+    roster = Roster.load(args.teams)
+    script = None if args.script in (None, "none", "free") else args.script
+    out = build_positions(read_events(args.events), roster, script)
+    path = Path(args.out)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    print(f"{len(out['frames'])} frames at {out['hz']} Hz, {len(out['set_pieces'])} set pieces -> {args.out}",
+          file=sys.stderr)
     return 0
 
 
@@ -182,6 +197,12 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--events", required=True)
     a.add_argument("--out", required=True)
     a.set_defaults(func=cmd_analyze)
+
+    pz = sub.add_parser("positions", help="illustrative positions of the 22 players and the ball, from the events")
+    pz.add_argument("--events", required=True)
+    pz.add_argument("--script", default="m001", help="script whose phases set how high each team presses, or 'free'")
+    pz.add_argument("--out", required=True)
+    pz.set_defaults(func=cmd_positions)
 
     s = sub.add_parser("stream", help="replay a match and print insights live")
     s.add_argument("--events", required=True)

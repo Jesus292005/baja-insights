@@ -24,6 +24,7 @@ El partido de ejemplo es **Bahía FC 1-1 Real Cardón**. Equipos, jugadores y es
 | **insights_sample.json** | 15 insights como los que producirá el motor | Integrante 2 para construir los agentes |
 | **overlays_sample.json** | 53 órdenes de gráfico en cuatro variantes, aficionado y analista en español e inglés | Integrante 3 para construir la interfaz |
 | **chat_tools_sample.json** | Las 6 funciones de consulta de Pregúntale al partido y 6 conversaciones de ejemplo | Integrante 2 y el chat de la interfaz |
+| **positions_sample.json** | 60 s de las posiciones ilustrativas de los 22 jugadores y el balón, del 62:30 al 63:30 (el 1-1). Formato en `contracts/positions.schema.json` | Integrante 3 para dibujar la cancha |
 
 ---
 

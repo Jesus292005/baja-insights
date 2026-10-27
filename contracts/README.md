@@ -16,6 +16,7 @@ Generador ──eventos──▶ Motor ──insights──▶ Agentes ──ór
 | `overlay.schema.json` | Una orden de gráfico | Agentes, integrante 2 | Interfaz, integrante 3 |
 | `stream.schema.json` | Un mensaje del WebSocket en vivo (v1.1) | Servicio de stream, integrante 1 | Interfaz, integrante 3 |
 | `chat.schema.json` | Petición y respuesta de `POST /api/ask` (v1.1) | Interfaz y agente Pregúntale | Agente Pregúntale e interfaz |
+| `positions.schema.json` | Posiciones ilustrativas de los 22 jugadores y el balón, un archivo por partido (agregado a v1.1) | Modelo de posiciones, integrante 1 | Interfaz, integrante 3 |
 | `../mocks/chat_tools_sample.json` | Definición y ejemplos de las funciones del chat | Motor, integrante 1 | Agente Pregúntale, integrante 2 |
 
 Para validar cualquier archivo, JSON o JSONL:
@@ -136,6 +137,38 @@ Implementadas en `src/baja_insights/engine/tools.py` (`MatchQuery.dispatch(nombr
 | `get_goal_chain(goal_event_id)` | Misma forma que `goal_chain.facts` |
 
 Si un dato no existe, la función responde con `error` (`player_not_found`, `goal_not_found`, etc.) o lo lista en `not_tracked`. El agente nunca debe completar esos huecos por su cuenta.
+
+## Posiciones de los 22 jugadores (agregado a v1.1)
+
+`data/<partido>/positions.json`, con el formato de `positions.schema.json`. Se genera a partir de los eventos:
+
+```bash
+python -m baja_insights positions --events data/m001/events.jsonl --out data/m001/positions.json
+```
+
+El stream lo sirve en `GET /positions/<match_id>`, comprimido y con CORS abierto. Hay una muestra de 60 s del 1-1 en `../mocks/positions_sample.json`.
+
+**Son ilustrativas.** Los eventos solo dicen dónde está el jugador con balón. A los demás los coloca un modelo determinista (`src/baja_insights/positions/model.py`):
+
+- Cada jugador ocupa la zona de su posición, la misma que usa el generador.
+- El bloque sigue al balón, se abre con él y se cierra sin él.
+- La altura de la presión sale de las fases del guion.
+- Cada evento ancla a sus jugadores a sus coordenadas y a su segundo: el que tiene el balón, el receptor de cada pase, el corredor y el defensor arrastrado, el portero en una atajada, y el rival en duelos, presiones, entradas y faltas.
+- En cada balón parado los dos equipos toman la forma del saque: inicial, de banda, corner, saque de meta, tiro libre con barrera y saque del portero.
+
+**Nada más las lee:** ni el motor, ni los insights, ni los agentes, ni el chat. En pantalla deben llevar la etiqueta «Illustrative positions».
+
+| Campo | Qué es |
+| --- | --- |
+| `hz` | 2 cuadros por segundo de partido. La interfaz interpola entre cuadros y elige el cuadro con el `t_s` del reloj |
+| `frames[]` | `t` (segundo), `b` (balón), `h` y `a` (11 puntos `[x, y]` por equipo, en el orden de `teams.<lado>.players`) |
+| `lineup_changes` | Desde `t_s`, `player_in` ocupa el lugar de `player_out` |
+| `set_pieces` | Cada saque: el segundo en que el balón quedó muerto (`ball_out_from_t_s`), el segundo del saque (`t_s`), el tipo, el equipo, quién saca y desde dónde |
+| `periods` | **Cambio de lado.** En el segundo tiempo, todo lo que se dibuja en la cancha (jugadores, balón, cadena del gol, eventos) va en `(105 − x, 68 − y)`. Así el local ataca a la derecha en el primer tiempo y a la izquierda en el segundo |
+
+En un SVG de 1050 × 680, un punto va en `(x · 10, (68 − y) · 10)`, después de aplicar el cambio de lado.
+
+---
 
 ## Stream en vivo (v1.1)
 
