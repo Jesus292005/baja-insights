@@ -165,7 +165,8 @@ describe('long spell', () => {
   });
 
   it('leaves the other team phases off the pitch', () => {
-    const other = fanEn.find((o) => o.type === 'team_phase' && o.data?.label !== 'possession_spell')!;
+    // Built here: whether m001 has a control phase depends on the seed.
+    const other = { ...spell, overlay_id: 'phase-control', data: { label: 'control' } } as OverlayOrder;
     expect(playOf(other, demoMatch.playEvents, roster)).toBeNull();
   });
 });
