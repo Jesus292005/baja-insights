@@ -38,10 +38,18 @@ log = logging.getLogger(__name__)
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-8"
+VERSION = "ask-9"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
 # Questions about who plays. `lineups` answers them in full, so they need no function call.
+# Questions about a goal. The agent often explained one from the team's phase instead of its chain, so the
+# goals scored so far come with their chains up front.
+GOAL = re.compile(
+    r"(\bgol(es)?\b|\bgoals?\b|golazo|empat|equali[sz]|anot(ó|o|aron)\b|marc(ó|o|aron)\b|\bscor(e|ed|es|ing)\b"
+    r"|asistencia|\bassist)",
+    re.IGNORECASE,
+)
+
 LINEUP = re.compile(
     r"(alineaci|once (titular|inicial)|titulares|suplentes|banca|banquillo|cambios?\b|sustituc|qui[eé]n(es)? juega"
     r"|lineups?|line-up|starting (eleven|xi)|starters|bench|substitut|subs\b|who (is|are) playing)",
@@ -86,6 +94,8 @@ Which functions to call
   the opposing winger, most contested first: answer about the first, and mention the second if it is close.
   Never invent a player name for get_duel.
 - A goal: get_match_state for its goal_event_id, then get_goal_chain.
+- A goal: if `goals` is there, explain it from its `chain`, in time order: who started it, who passed, who
+  finished, and `invisible_assist` when someone opened the space without the ball. No function is needed for it.
 - Lineups, who is playing, the bench or the substitutions: answer from `lineups`, with no function needed.
   `on_pitch` is each team's eleven at `at`, `bench` who has not played, `substitutions` the changes so far. List
   exactly those names and positions, team by team; never take players from anywhere else.
@@ -168,6 +178,20 @@ def lineups(query: MatchQuery, at_s: int) -> dict:
     return out
 
 
+def goals_so_far(query: MatchQuery, at_s: int) -> list[dict]:
+    """The goals scored up to ``at_s``, each with its chain, as get_goal_chain returns it, but with team names,
+    scorelines as text, and no event ids or pitch coordinates."""
+    out = []
+    for goal in query.get_match_state(fmt_clock(at_s))["goals"]:
+        chain = query.get_goal_chain(goal["event_id"])
+        if "error" in chain:
+            continue
+        facts = {k: chain[k] for k in ("scoreline", "xg", "duration_s", "chain", "invisible_assist") if k in chain}
+        out.append({"clock": fmt_clock(goal["t_s"]), "team": goal["team"], "scorer": goal["scorer"],
+                    "assist": goal.get("assist"), **name_sides(_without_ids(without_ui_only(facts)), query.roster)})
+    return out
+
+
 def load_tool_definitions(path: Path = TOOLS_FILE) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8"))["tools"]
 
@@ -206,7 +230,8 @@ class ToolSession:
     at_s: int
     calls: list[str] = field(default_factory=list)
     results: list[dict] = field(default_factory=list)
-    context: list = field(default_factory=list)  # engine data given to the agent up front (flank_duels)
+    context: list = field(default_factory=list)  # engine data given to the agent up front (flank_duels, lineups, goals)
+    context_tools: list = field(default_factory=list)  # the functions code called to build that context
 
     def _clip(self, value):
         try:
@@ -264,7 +289,8 @@ class ToolSession:
         return {f"{s['home']}-{s['away']}" for s in found if "home" in s and "away" in s}
 
     def tools_used(self) -> list[str]:
-        return list(dict.fromkeys(self.calls))
+        """Functions whose results back the answer: the ones called, then the ones code called for the context."""
+        return list(dict.fromkeys(self.calls + self.context_tools))
 
     def evidence(self) -> list[int]:
         return list(dict.fromkeys(i for r in self.results for i in event_ids(r) if i >= 1))[:12]
@@ -326,7 +352,7 @@ class AskTheMatch:
             return None
         key = {k: request.get(k) for k in ("match_id", "mode", "language", "favorite_team", "history")}
         key.update(question=" ".join(request["question"].lower().split()), at_s=at_s, version=VERSION,
-                   model=self.runner.model)
+                   model=self.runner.model, reasoning=self.runner.reasoning_effort)
         digest = hashlib.sha256(json.dumps(key, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:32]
         return self.cache_dir / self.name / f"{digest}.json"
 
@@ -344,7 +370,10 @@ class AskTheMatch:
     def problems(self, session: ToolSession, request: dict, at_s: int, result: AskAnswer) -> list[str]:
         """Accuracy problems: an answer that still has one after the retry is never shown."""
         found = []
-        if not session.calls and not LINEUP.search(request["question"]):  # `lineups` answers who plays in full
+        # `lineups` answers who plays, and who does not: "Messi isn't in this match" needs no function either
+        answered_from_lineups = (LINEUP.search(request["question"]) or result.status == "not_found"
+                                 or bool(session.context_tools))  # the goals and their chains came with the question
+        if not session.calls and not answered_from_lineups:
             found.append("you answered without calling any function")
         allowed = session.allowed_numbers([request["question"], fmt_clock(at_s), at_s // 60,
                                            [h["text"] for h in request.get("history") or []]])
@@ -396,6 +425,8 @@ class AskTheMatch:
                    "history": request.get("history") or [], "home_team": home, "away_team": away,
                    "prediction_question": prediction, "flank_duels": flank_duels(query, at_s),
                    "lineups": lineups(query, at_s)}
+        if GOAL.search(request["question"]):
+            payload["goals"] = goals_so_far(query, at_s)
         try:
             out = await asyncio.wait_for(self._answer(query, request, at_s, payload, prediction), self.timeout_s)
         except asyncio.TimeoutError:
@@ -410,7 +441,8 @@ class AskTheMatch:
         return out
 
     async def _answer(self, query: MatchQuery, request: dict, at_s: int, payload: dict, prediction: bool) -> dict:
-        session = ToolSession(query, at_s, context=[payload["flank_duels"], payload["lineups"]])
+        session = ToolSession(query, at_s, context=[payload["flank_duels"], payload["lineups"], payload.get("goals", [])],
+                              context_tools=["get_match_state", "get_goal_chain"] if payload.get("goals") else [])
         result = await self.runner.run(self._agent(session), self.name, VERSION, payload, AskAnswer, cache=False)
         if result is None:
             return self.response(request, at_s, "error", None, session.tools_used(), error="agent_failed")

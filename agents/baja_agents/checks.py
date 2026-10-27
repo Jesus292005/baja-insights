@@ -102,10 +102,13 @@ def valid_scorelines(insight: dict, scoreline: dict | None = None) -> set[str]:
 
 
 def wrong_scorelines(text: str, valid: set[str]) -> list[str]:
+    """A scoreline written backwards ("1-0" when it is 0-1). Only that: "3-1" in duels is not a scoreline,
+    and any other N-M pair is already checked as numbers."""
     if not valid:
         return []
     written = {f"{a}-{b}" for a, b in SCORELINE.findall(text or "")}
-    return [f"scoreline {s} is wrong, write it home-away as {' or '.join(sorted(valid))}" for s in sorted(written - valid)]
+    backwards = {s for s in written - valid if "-".join(reversed(s.split("-"))) in valid}
+    return [f"scoreline {s} is wrong, write it home-away as {' or '.join(sorted(valid))}" for s in sorted(backwards)]
 
 
 def check_variant(insight: dict, title: str, text: str, allowed: set[float] | None = None,
