@@ -150,6 +150,50 @@ def test_the_chat_model_gets_no_pitch_coordinates():
     assert 92.0 not in session.allowed_numbers([])
 
 
+def test_duel_counts_are_not_scorelines():
+    # 30:00, Bahía FC 0-1 Real Cardón. "3-1" in duels was rejected as a scoreline; only "1-0" is backwards.
+    chat = FakeChat([([("get_duel", {"player_a": "Torres", "player_b": "Haro"})],
+                      answer("Torres le gana a Haro 3-1 en duelos, con Real Cardón arriba 0-1."))])
+    assert asyncio.run(chat.ask(request("Who's winning the flank duel?", at="30:00")))["status"] == "answered"
+    from baja_agents.checks import wrong_scorelines
+    assert wrong_scorelines("Real Cardón gana 1-0.", {"0-1"}) and not wrong_scorelines("ganó 3-1 los duelos", {"0-1"})
+
+
+def test_not_found_needs_no_function():
+    chat = FakeChat([([], answer("Messi no juega en este partido.", "not_found"))])
+    out = asyncio.run(chat.ask(request("¿Cómo va jugando Messi?", at="50:00")))
+    assert out["status"] == "not_found" and out["tools"] == []
+
+
+def test_reasoning_effort_reaches_the_model_and_the_cache_key():
+    plain = LLMRunner(max_calls=1, timeout_s=1, concurrency=1, cache_dir=None, model="m")
+    low = LLMRunner(max_calls=1, timeout_s=1, concurrency=1, cache_dir=None, model="m", reasoning_effort="low")
+    assert "reasoning" not in plain._options(AskAnswer)
+    assert low._options(AskAnswer)["reasoning"] == {"effort": "low"}
+    assert plain._key("a", "v", {}) != low._key("a", "v", {})
+
+
+def test_goal_questions_get_the_goals_with_their_chains(response_validator):
+    from baja_agents.ask import goals_so_far
+    assert goals_so_far(M001, 600) == []
+    at_35 = goals_so_far(M001, 2100)
+    assert [g["scorer"] for g in at_35] == ["S. Leyva"]  # the 1-1 has not happened yet
+    both = goals_so_far(M001, 4200)
+    text = json.dumps(both, ensure_ascii=False)
+    assert both[1]["scoreline"] == "Bahía FC 1-1 Real Cardón" and both[1]["invisible_assist"]["player"] == "J. Torres"
+    assert '"event_id"' not in text and '"start"' not in text and '"end"' not in text
+
+    chat = FakeChat([([], answer("Cota recupera, Torres arrastra a su marca, Salgado rompe dos líneas y Ramírez remata."))])
+    out = asyncio.run(chat.ask(request("Why did Bahía score the equaliser?", at="70:00", language="en")))
+    assert chat.prompts[0]["goals"] == both
+    assert out["status"] == "answered" and out["tools"] == ["get_match_state", "get_goal_chain"]
+    assert [e.message for e in response_validator.iter_errors(out)] == []
+
+    chat = FakeChat([([("get_match_state", {})], answer("Real Cardón gana por la mínima."))])
+    asyncio.run(chat.ask(request("¿Cómo va el partido?")))
+    assert "goals" not in chat.prompts[0]  # only for goal questions, to keep prompts short
+
+
 def test_prediction_questions_are_detected():
     for q in ("¿Quién va a ganar?", "¿Cómo va a terminar?", "Who will win?", "What are Bahía's chances to win?"):
         assert PREDICTION.search(q), q
