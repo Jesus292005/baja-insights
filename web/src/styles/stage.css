@@ -79,11 +79,30 @@
 .g-band.g-card-upgrade .g-upgrade-attr { padding-right: 28px; }
 .g-band.g-card-upgrade .g-upgrade-who { flex: 1; min-width: 240px; }
 .g-band.g-card-upgrade .g-reason { flex-basis: 100%; }
-/* MVP: the new rank beside the ranking it belongs to. */
-.g-band.g-mvp_update .g-band-body { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 14px 32px; }
-.g-band.g-mvp_update .g-rank { flex-direction: column; align-items: flex-start; gap: 8px; flex: 0 1 auto; max-width: 45%; }
-.g-band.g-mvp_update .g-ranking { flex: 1; min-width: 260px; margin: 0; }
-.g-band.g-mvp_update .g-band-body > :not(.g-rank):not(.g-ranking) { flex-basis: 100%; }
+/* MVP, compact: the new rank, its move and the score on one row; for analysts, the top five
+   as one strip of columns instead of a list, so the card stays short above the pitch. */
+/* A smaller caption: the text sets the height of this card, not the data. Fans only get the rank
+   row on the right, so the text takes half the card; analysts need room for the top-five strip. */
+.card-scale.is-wide .g-band.g-mvp_update .g-band-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; }
+.card-scale.is-wide[data-mode='analyst'] .g-band.g-mvp_update .g-band-main { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.g-band.g-mvp_update .g-title { font-size: 36px; }
+.g-band.g-mvp_update .g-text { font-size: 22px; line-height: 1.3; }
+.g-band.g-mvp_update .g-band-lead { gap: 6px; }
+.g-band.g-mvp_update .g-band-body { gap: 10px; }
+.g-band.g-mvp_update .g-rank { flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+.g-band.g-mvp_update .g-rank-big { font-size: 68px; line-height: 0.85; }
+.g-band.g-mvp_update .g-rank-who { font-size: 40px; }
+.g-band.g-mvp_update .g-rank .g-up { font-size: 22px; }
+.g-band.g-mvp_update .g-rank .g-score { margin-left: auto; font-size: 20px; }
+.g-band.g-mvp_update .g-rank .g-score b { font-size: 26px; }
+.g-band.g-mvp_update .g-ranking { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 4px; margin: 0; font-size: 20px; }
+.g-band.g-mvp_update .g-ranking li { grid-template-columns: auto minmax(0, 1fr); column-gap: 5px; row-gap: 0; padding: 4px 6px; align-items: baseline; }
+.g-band.g-mvp_update .g-ranking-pos { text-align: left; }
+.g-band.g-mvp_update .g-ranking-who { display: block; text-overflow: ellipsis; font-weight: 600; }
+.g-band.g-mvp_update .g-ranking-who .chip { display: none; }
+.g-band.g-mvp_update .g-ranking-score { grid-column: 1 / -1; font-size: 22px; }
+.g-band.g-mvp_update .g-card-change { font-size: 22px; }
+.g-band.g-mvp_update .evidence { font-size: 18px; }
 
 /* ---------- Panel frame ---------- */
 
