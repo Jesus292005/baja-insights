@@ -27,6 +27,9 @@ const FONT = {
 const DOT_R = 20;
 /** Gap between two names. */
 const PAD = 6;
+/** Room left between a name and the lines and dots of the play. */
+const CLEAR = 5;
+const grow = (b: Box, d: number): Box => ({ x: b.x - d, y: b.y - d, w: b.w + 2 * d, h: b.h + 2 * d });
 /** Drawing area of the pitch backdrop (its viewBox), minus a margin. */
 const BOUNDS = { x0: -24, y0: -24, x1: PITCH_W + 24, y1: PITCH_H + 24 };
 
@@ -34,7 +37,8 @@ export function textBox(text: string, kind: keyof typeof FONT, p: Placement): Bo
   const { size, em } = FONT[kind];
   const w = text.length * size * em;
   const x = p.anchor === 'start' ? p.x : p.anchor === 'end' ? p.x - w : p.x - w / 2;
-  return { x, y: p.y - size * 0.8, w, h: size * 1.05 };
+  // Ascent and descent of the font, as the browser measures the text.
+  return { x, y: p.y - size * 0.92, w, h: size * 1.2 };
 }
 
 /** Spots around a player at (x, y), in order of preference (the first ones are nearest). */
@@ -130,8 +134,9 @@ export function placeLabels(drawn: DrawnPlay, names: string[], defenderText: str
       let cost = i * 2;
       if (box.x < BOUNDS.x0 || box.y < BOUNDS.y0 || box.x + box.w > BOUNDS.x1 || box.y + box.h > BOUNDS.y1) cost += 2000;
       for (const p of placed) if (overlaps(box, p, PAD)) cost += 1000;
-      for (const d of dots) if (hitsDot(box, d, DOT_R)) cost += 200;
-      for (const line of lines) if (line.some((pt) => inside(box, pt))) cost += 120;
+      const near = grow(box, CLEAR);
+      for (const d of dots) if (hitsDot(near, d, DOT_R)) cost += 200;
+      for (const line of lines) if (line.some((pt) => inside(near, pt))) cost += 120;
       if (cost < bestCost) {
         bestCost = cost;
         best = c;
