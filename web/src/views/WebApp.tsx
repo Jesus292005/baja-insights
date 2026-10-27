@@ -16,7 +16,8 @@ import { demoMatch, roster } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
-import { drawnIn, halfOf, playAt, playOf } from '../logic/play';
+import { drawnIn, halfOf, playOf, playOnScreen } from '../logic/play';
+import type { Showing } from '../logic/plan';
 import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
@@ -42,7 +43,9 @@ export function WebApp({ config }: { config: AppConfig }) {
   // An opened moment draws its own play; otherwise the latest one stays on the pitch.
   // The latest play follows the clock's half, so the teams swap ends at 45:00; an opened moment keeps its own.
   const half = halfOf(t);
-  const latestPlay = useMemo(() => drawnIn(playAt(orders, t, demoMatch.playEvents, roster), half), [orders, t, half]);
+  // The play of the card on screen, only while it is up; it follows the clock's half.
+  const onScreen = useMemo(() => Object.values(showing).filter((x): x is Showing => !!x), [showing]);
+  const latestPlay = useMemo(() => drawnIn(playOnScreen(onScreen, demoMatch.playEvents, roster), half), [onScreen, half]);
   const halfTime = useHalfTime(t, snap.clock?.phase);
   const openOrder = useMemo(() => orders.find((o) => o.overlay_id === open) ?? null, [orders, open]);
   const openPlay = useMemo(() => (openOrder ? playOf(openOrder, demoMatch.playEvents, roster) : null), [openOrder]);

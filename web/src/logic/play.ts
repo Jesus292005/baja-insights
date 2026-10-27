@@ -194,6 +194,19 @@ export function playAt(orders: readonly OverlayOrder[], t: number, events: reado
   return null;
 }
 
+/**
+ * The play of the graphics on screen now: the newest one that has something to draw. The pitch
+ * clears when its card leaves, so no symbol or minute of an old play stays behind.
+ */
+export function playOnScreen(on: readonly { order: OverlayOrder }[], events: readonly PlayEvent[], roster: Roster): MatchPlay | null {
+  const newest = [...on].sort((a, b) => b.order.show_at_s - a.order.show_at_s);
+  for (const { order } of newest) {
+    const play = playOf(order, events, roster);
+    if (play) return play;
+  }
+  return null;
+}
+
 /** The play behind one graphic, or null when it has nothing to draw. */
 export function playOf(o: OverlayOrder, events: readonly PlayEvent[], roster: Roster): MatchPlay | null {
   if (!DRAWN.has(o.type) || o.source_insight === null) return null;

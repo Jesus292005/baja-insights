@@ -10,7 +10,7 @@ import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { demoMatch, roster } from '../data/match';
 import { forViewer, momentsAt } from '../logic/derive';
-import { drawnIn, halfOf, playAt } from '../logic/play';
+import { drawnIn, halfOf, playOnScreen } from '../logic/play';
 import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
@@ -118,7 +118,9 @@ export function CinemaView({ config }: { config: AppConfig }) {
   const halfTime = useHalfTime(rt.t, rt.snap.clock?.phase);
   const positions = usePositions(showPlayers === 'on');
   // Drawn in the clock's half, so the teams swap ends at 45:00.
-  const play = drawnIn(playAt(rt.orders, rt.t, demoMatch.playEvents, roster), halfOf(rt.t));
+  // The play of the card on screen, only while it is up.
+  const onScreen = Object.values(rt.showing).filter((x): x is NonNullable<typeof x> => !!x);
+  const play = drawnIn(playOnScreen(onScreen, demoMatch.playEvents, roster), halfOf(rt.t));
 
   return (
     <PrefsProvider mode={mode} lang={lang}>

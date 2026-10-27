@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChainLink, GoalAnalysisOrder, OverlayOrder } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
 import { forViewer } from './derive';
-import { buildPlay, defendsLeft, drawnIn, halfOf, hasCoordinates, orientPlay, playAt, toSvg } from './play';
+import { buildPlay, defendsLeft, drawnIn, halfOf, hasCoordinates, orientPlay, playAt, playOnScreen, toSvg } from './play';
 
 const fanEn = forViewer(demoMatch.overlays, 'fan', 'en');
 const goals = fanEn.filter((o): o is GoalAnalysisOrder => o.type === 'goal_analysis');
@@ -136,5 +136,17 @@ describe('drawnIn', () => {
     const raw = first.links[0].start!;
     expect(orientPlay(later)[0].start).toEqual([105 - raw[0], 68 - raw[1]]);
     expect(drawnIn(null, 2)).toBeNull();
+  });
+});
+
+describe('playOnScreen', () => {
+  it('draws the play of the card on screen, and nothing once it has left', () => {
+    expect(playOnScreen([{ order: equaliser }], demoMatch.playEvents, roster)?.order).toBe(equaliser);
+    expect(playOnScreen([], demoMatch.playEvents, roster)).toBeNull();
+  });
+
+  it('takes the newest card that has a play', () => {
+    const play = playOnScreen([{ order: opener }, { order: equaliser }], demoMatch.playEvents, roster);
+    expect(play?.order).toBe(equaliser);
   });
 });

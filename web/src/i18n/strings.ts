@@ -22,7 +22,7 @@ const es = {
   },
   legend: {
     title: 'En el campo:',
-    empty: 'Las jugadas aparecen en el campo cuando llega un momento con coordenadas.',
+    empty: 'La jugada de cada tarjeta se dibuja en el campo mientras la tarjeta está en pantalla.',
     pass: 'Pase',
     cross: 'Centro',
     shot: 'Remate',
@@ -257,7 +257,7 @@ const en: Shape<typeof es> = {
   },
   legend: {
     title: 'On the pitch:',
-    empty: 'Plays show up on the pitch when a moment with coordinates arrives.',
+    empty: 'Each card draws its play on the pitch while the card is on screen.',
     pass: 'Pass',
     cross: 'Cross',
     shot: 'Shot',
