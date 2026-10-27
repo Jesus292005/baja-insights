@@ -17,6 +17,11 @@ export const PITCH_W = 1050;
 export const PITCH_H = 680;
 /** Pitch metres (origin bottom-left) to the 1050 × 680 SVG (y grows downwards). */
 export const toSvg = ([x, y]: PitchPoint): [number, number] => [x * 10, (68 - y) * 10];
+/** Control point of a cross (SVG units): the ball bends towards the middle of the pitch. */
+export const crossControl = ([x1, y1]: [number, number], [x2, y2]: [number, number]): [number, number] => [
+  (x1 + x2) / 2 + (y2 - y1) * 0.25,
+  (y1 + y2) / 2 + (PITCH_H / 2 - (y1 + y2) / 2) * 0.35,
+];
 
 export type Side = 'home' | 'away';
 export type MarkerKind = 'recovery' | 'duel' | 'pressure';
