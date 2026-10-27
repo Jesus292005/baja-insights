@@ -202,7 +202,9 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .card-overall { flex-basis: 100%; font-size: var(--bi-text-xs); }
 
 /* Cards above the pitch (web): the play underneath stays clear. */
-.card-band { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--bi-space-4); }
+/* Equal columns, as many as fit; a card left alone on the last row takes the whole row. */
+.card-band { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); align-items: start; gap: var(--bi-space-4); }
+.card-band > .card-scale:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .card-band.is-empty { padding: var(--bi-space-3) var(--bi-space-4); border: var(--bi-border-width) dashed var(--bi-line); }
 .card-band-empty { font-size: var(--bi-text-sm); color: var(--bi-text-muted); }
 

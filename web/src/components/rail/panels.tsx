@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { OverlayOrder } from '../../contracts/overlay';
 import { roster } from '../../data/match';
 import { usePrefs } from '../../i18n/prefs';
@@ -8,7 +8,7 @@ import { cardAt, duelAt, momentsAt, mvpAt, playersWithChanges } from '../../logi
 import { AsOf, EmptyState, TeamChip } from '../common';
 import { DuelMeter } from '../DuelMeter';
 import { PlayerCard } from '../PlayerCard';
-import { ScaledGraphic, useWidth } from '../stage/CardBand';
+import { ScaledGraphic } from '../stage/CardBand';
 
 interface PanelProps {
   /** The viewer's orders (already filtered by mode and language). */
@@ -201,13 +201,13 @@ export function CardPanel({ orders, t: now, stale, loading }: PanelProps) {
 /** The card of an opened moment, at the row's width. */
 function MomentCard({ order, orders, id }: { order: OverlayOrder; orders: readonly OverlayOrder[]; id: string }) {
   const { s } = usePrefs();
-  const { ref, width } = useWidth<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }, [ref]);
+  }, []);
   return (
     <div ref={ref} id={id} className="moment-card" role="region" aria-label={order.title ?? s.kicker[order.type]}>
-      <ScaledGraphic order={order} elapsed={0} orders={orders} room={width} still />
+      <ScaledGraphic order={order} elapsed={0} orders={orders} still />
     </div>
   );
 }
