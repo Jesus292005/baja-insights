@@ -75,6 +75,11 @@ CARD_OFF_BALL_SHOT_MIN_SPACE_M = 5.0      # run that dragged a defender, possess
 CARD_PACE_KMH = 30.0                       # off-ball run at this speed or more: Ritmo +1
 CARD_DRIBBLE_COUNT = 2                     # duels won on the ball ...
 CARD_DRIBBLE_WINDOW_S = 10 * 60            # ... within this window: Regate +1
+CARD_PASS_STREAK = 20                      # completed passes in a row by an outfield player, every 20: Visión +1
+CARD_RECOVERY_SHOT_MIN_S = 3               # ball won in the own half and the team shoots between 3 ...
+CARD_RECOVERY_SHOT_S = 20                  # ... and 20 s later: Físico +1 (Defensa is for the recoveries card)
+CARD_SAVE_MIN_XG = 0.15                    # a keeper saves a shot worth at least this: Defensa +1 (+2 from 0.30)
+CARD_SAVE_BIG_XG = 0.30
 CARD_ATTRIBUTE_COOLDOWN_S = 10 * 60
 CARD_MAX_GAIN_PER_ATTRIBUTE = 6
 CARD_MAX_VALUE = 99
@@ -86,6 +91,8 @@ PHASE_CONTROL_PASS_ACCURACY = 85.0
 PHASE_CONTROL_MIN_PASSES = 30
 PHASE_PRESSURE_MIN_RECOVERIES = 4
 PHASE_PRESSURE_RATIO = 2.5                 # vs first-half average per 10 minutes
+PHASE_SPELL_MIN_PASSES = 12                # a single possession with this many completed passes ...
+PHASE_SPELL_COOLDOWN_S = 6 * 60            # ... at most one per team in this time
 
 # --- Goal chain credit -------------------------------------------------------
 CHAIN_WEIGHTS = {

@@ -83,7 +83,7 @@ def priority_milestone(role_delta: float) -> float:
 
 
 def priority_phase(label: str) -> float:
-    return round(0.5 + (0.1 if label == "pressure_shift" else 0.0), 2)
+    return round(0.5 + {"pressure_shift": 0.1, "possession_spell": 0.05}.get(label, 0.0), 2)
 
 
 # --- Goal chain ----------------------------------------------------------------

@@ -148,10 +148,15 @@ export function buildPlay(links: readonly ChainLink[], connectBall: boolean): Dr
 
 /* ---------- Which play is on the pitch ---------- */
 
-/** Graphics whose play is drawn. Team phase, match keys and the top 3 cite too many events to read. */
-const DRAWN = new Set(['goal_analysis', 'card_upgrade', 'mvp_update', 'standout_milestone', 'duel_bar']);
+/**
+ * Graphics whose play is drawn. Match keys and the top 3 cite too many events to read, and so do
+ * team phases, except a long spell: one possession, drawn as its last passes.
+ */
+const DRAWN = new Set(['goal_analysis', 'card_upgrade', 'mvp_update', 'standout_milestone', 'duel_bar', 'team_phase']);
 /** At most this many cited events per play, the latest ones. */
 export const MAX_EVENTS = 10;
+/** A long spell cites 12 to 17 passes, a pass map; its last passes are the ones that tell the story. */
+export const SPELL_PASSES = 6;
 
 export interface MatchPlay {
   order: OverlayOrder;
@@ -162,6 +167,8 @@ export interface MatchPlay {
   /** Space the invisible assist opened, from the goal order. */
   spaceOpened: number | null;
   invisible: string | null;
+  /** Events the graphic cites, when more than the links drawn (the legend says how many are shown). */
+  cited?: number;
 }
 
 /** Half of a play: that of its latest action, so a card citing both halves follows the latest one. */
@@ -210,6 +217,8 @@ export function playOnScreen(on: readonly { order: OverlayOrder }[], events: rea
 /** The play behind one graphic, or null when it has nothing to draw. */
 export function playOf(o: OverlayOrder, events: readonly PlayEvent[], roster: Roster): MatchPlay | null {
   if (!DRAWN.has(o.type) || o.source_insight === null) return null;
+  const spell = o.type === 'team_phase' && o.data?.label === 'possession_spell';
+  if (o.type === 'team_phase' && !spell) return null;
   const byId = new Map(events.map((e) => [e.event_id, e]));
 
   if (o.type === 'goal_analysis' && hasCoordinates(o.data.chain_detail)) {
@@ -226,11 +235,11 @@ export function playOf(o: OverlayOrder, events: readonly PlayEvent[], roster: Ro
     };
   }
 
-  const cited = (o.evidence ?? [])
+  const all = (o.evidence ?? [])
     .map((id) => byId.get(id))
     .filter((e): e is PlayEvent => !!e && e.type !== 'goal')
-    .sort((a, b) => a.t_s - b.t_s)
-    .slice(-MAX_EVENTS);
+    .sort((a, b) => a.t_s - b.t_s);
+  const cited = all.slice(-(spell ? SPELL_PASSES : MAX_EVENTS));
   if (!cited.length) return null;
   return {
     order: o,
@@ -246,5 +255,6 @@ export function playOf(o: OverlayOrder, events: readonly PlayEvent[], roster: Ro
     })),
     spaceOpened: cited.find((e) => e.space_opened_m != null)?.space_opened_m ?? null,
     invisible: null,
+    ...(all.length > cited.length ? { cited: all.length } : {}),
   };
 }

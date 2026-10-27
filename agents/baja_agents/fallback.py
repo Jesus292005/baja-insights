@@ -95,6 +95,12 @@ def card_reason_en(change: dict) -> str | None:
         return "defensive game above what the role expects"
     if code == "standout_creative":
         return "creative game above what the role expects"
+    if code == "pass_streak":
+        return f"{p['count']} passes in a row without a miss"
+    if code == "recovery_to_shot":
+        return f"won the ball in their own half and the team shot {p['seconds']} seconds later"
+    if code == "big_save":
+        return f"save from a shot worth {p['xg']:.2f} xG"
     return None
 
 
@@ -218,6 +224,14 @@ def _phase(f: dict, team: str, side: str) -> dict:
             "analyst_es": ("Control de la pelota", f"{team}: {f['possession_pct']}% de posesión entre {f['window']}{acc_es}."),
             "fan_en": (f"{team} in control", f"{team} has the ball and won't give it back."),
             "analyst_en": ("Ball control", f"{team}: {f['possession_pct']}% possession between {f['window']}{acc_en}."),
+        }
+    if f["label"] == "possession_spell":
+        n, secs, players = f["passes"], f["duration_s"], f["players_involved"]
+        return {
+            "fan_es": (f"{team} la mueve", f"{team} encadenó {n} pases seguidos."),
+            "analyst_es": ("Posesión larga", f"{team}: {n} pases en {secs} s, con {players} jugadores."),
+            "fan_en": (f"{team} keeps it", f"{team} strung {n} passes together."),
+            "analyst_en": ("Long spell", f"{team}: {n} passes in {secs} s, {players} players involved."),
         }
     return {
         "fan_es": (f"{team} aprieta arriba", f"{team} adelanta la presión y roba más cerca del área rival."),

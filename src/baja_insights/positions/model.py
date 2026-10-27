@@ -42,6 +42,9 @@ V_DEAD = 6.5          # m/s, jogging into place while the ball is out
 V_CRUISE = 6.0        # m/s, drifting with the shape when no anchor is near
 ANCHOR_WINDOW_S = 6.0  # a player heads for an anchor this long before it
 SECOND_WINDOW_S = 3.0  # ... or this long for the rival in a duel, pressure, tackle or foul
+ANTICIPATION_S = 1.5   # a receiver starts towards the pass this long before it is played, never earlier
+BALL_AT_FOOT_M = 0.7   # the ball runs this far ahead of the player who carries it
+SWAY_M = 1.8           # how far a player drifts around his spot in the shape
 SHAPE_LAG_S = 1.6      # time constant of the drift towards the shape
 MIN_GAP_M = 1.5
 FREE_KICK_GAP_M = 9.15
@@ -59,6 +62,7 @@ class Anchor:
     y: float
     priority: int
     window: float = ANCHOR_WINDOW_S
+    release: float | None = None  # the second the player can know about it: he does not move before
 
 
 @dataclass
@@ -150,8 +154,8 @@ class PositionModel:
     def _timeline(self) -> Timeline:
         tl = Timeline()
         anchors: dict[str, list[Anchor]] = {name: [] for name in self.roster.players}
-        add = lambda name, t, p, pr, w=ANCHOR_WINDOW_S: name in anchors and p is not None and \
-            anchors[name].append(Anchor(float(t), *clamp_pitch(p[0], p[1], 0.0), pr, w))
+        add = lambda name, t, p, pr, w=ANCHOR_WINDOW_S, release=None: name in anchors and p is not None and \
+            anchors[name].append(Anchor(float(t), *clamp_pitch(p[0], p[1], 0.0), pr, w, release))
         play = [e for e in self.events if e.get("start") is not None and e.get("team")]
         ball = tl.ball_keys
         last_end_t = 0.0
@@ -180,26 +184,39 @@ class PositionModel:
                 if e["set_piece"] == "kickoff" and t in (0.0, float(HALF_LENGTH_S)):
                     begin = t
                 tl.dead.append(DeadBall(begin, t, e["set_piece"], team, e["player"], tuple(start), out_at))
-            # --- anchors
+            # --- anchors. Nobody heads for an action before he can read it: the receiver when the pass
+            # is about to be played, the rival when the ball reaches his zone.
+            prev = play[i - 1] if i > 0 else None
+            release = t - ANCHOR_WINDOW_S
+            if prev is not None and prev["type"] == "pass" and prev.get("receiver") == e["player"] \
+                    and prev.get("outcome") == "complete":
+                release = prev["t_s"] - ANTICIPATION_S
+            elif prev is not None and prev["type"] == "pass" and prev.get("outcome") == "incomplete":
+                release = prev["t_s"] - 0.5  # reads the misplaced pass
+            elif prev is not None and prev["type"] == "shot":
+                release = float(prev["t_s"])
+            elif prev is not None and (kind in DEFENSIVE_ACTIONS or kind == "duel"):
+                release = max(prev["t_s"] - 1.0, t - ANCHOR_WINDOW_S)
+            release = min(release, t)
             if kind == "off_ball_run":
                 # the run lasts until the ball is played (the pass it was made for), at most 10 s
                 dt = math.dist(start, e["end"]) / ((e.get("speed_kmh") or 25) / 3.6)
                 played = next((n for n in play[i + 1:] if n["type"] in ("pass", "shot")), None)
                 if played is not None and played["team"] == team and 0 < played["t_s"] - t <= 10:
                     dt = max(dt, float(played["t_s"] - t))
-                add(e["player"], t, start, P_LINK)
-                add(e["player"], t + dt, e["end"], P_LINK)
+                add(e["player"], t, start, P_LINK, release=t - 2.0)
+                add(e["player"], t + dt, e["end"], P_LINK, release=t)
                 if e.get("dragged_defender_start") and e.get("dragged_defender_end"):
-                    add(e["dragged_defender"], t, e["dragged_defender_start"], P_LINK)
-                    add(e["dragged_defender"], t + dt, e["dragged_defender_end"], P_LINK)
+                    add(e["dragged_defender"], t, e["dragged_defender_start"], P_LINK, release=t - 2.0)
+                    add(e["dragged_defender"], t + dt, e["dragged_defender_end"], P_LINK, release=t)
                 continue
             if kind in DEFENSIVE_ACTIONS:
-                add(e["player"], t, toward_own_goal(start, team, self.home, 1.0), P_ACTOR)
+                add(e["player"], t, toward_own_goal(start, team, self.home, 1.0), P_ACTOR, release=release)
                 other = e.get("target") or e.get("opponent") or e.get("fouled")
                 if other in self.roster.players:
                     add(other, t, start, P_SECOND, SECOND_WINDOW_S)
             else:
-                add(e["player"], t, start, P_ACTOR)
+                add(e["player"], t, start, P_ACTOR, release=release)
                 if kind == "duel" and e.get("opponent") in self.roster.players:
                     loser_team = self.roster.players[e["opponent"]].team
                     add(e["opponent"], t, toward_own_goal(start, loser_team, self.home, 1.0), P_SECOND, SECOND_WINDOW_S)
@@ -214,14 +231,14 @@ class PositionModel:
                 ball.append((arrive, float(end[0]), float(end[1])))
                 last_end_t = arrive
                 if kind == "pass" and e.get("outcome") == "complete" and e.get("receiver"):
-                    add(e["receiver"], arrive, end, P_LINK)
+                    add(e["receiver"], arrive, end, P_LINK, release=t - ANTICIPATION_S)
                     if nxt is not None and nxt.get("player") == e["receiver"] and nxt["type"] not in DEFENSIVE_ACTIONS:
                         tl.holders.append((arrive, float(nxt["t_s"]), e["receiver"]))
                 if kind == "shot" and e.get("outcome") == "saved":
                     keeper = next((n for n in self.on_pitch(self.roster.opponent(team), t)
                                    if self.roster.players[n].position == "POR"), None)
                     if keeper:
-                        add(keeper, arrive, end, P_LINK)
+                        add(keeper, arrive, end, P_LINK, release=t - 0.5)
                 if kind == "shot" and e.get("outcome") == "goal":
                     last_end_t = arrive
             elif nxt is not None and nxt.get("player") == e["player"] and nxt["type"] not in DEFENSIVE_ACTIONS:
@@ -351,7 +368,16 @@ class PositionModel:
             if position in ("DFC", "LD", "LI"):
                 p = min(p, max(bp - 3.0, 12.0))  # the back line stays goal side of the ball
         p = clip(p, 3.0, 101.0)
-        return clamp_pitch(x_of(p, team, home), y, 1.0)
+        sx, sy = self._sway(name, t)
+        return clamp_pitch(x_of(p, team, home) + sx, y + sy, 1.0)
+
+    def _sway(self, name: str, t: float) -> tuple[float, float]:
+        """A slow, deterministic drift around the spot, so nobody stands still like a statue."""
+        seed = sum(ord(c) * (i + 1) for i, c in enumerate(name))
+        phase = (seed % 628) / 100.0
+        period = 9.0 + seed % 5
+        return (SWAY_M * math.sin(2 * math.pi * t / period + phase),
+                SWAY_M * 0.8 * math.cos(2 * math.pi * t / (period * 1.37) + phase * 1.7))
 
     def _keep_distance(self, team: str, name: str, t: float, dead: DeadBall) -> tuple[float, float]:
         """Rivals of a free kick stand 9.15 m away, three of them in a wall when it is close to goal.
@@ -464,6 +490,11 @@ class PositionModel:
                         if d < 1e-6:
                             dx, dy, d = 0.0, 1.0, 1.0
                         pos[name] = clamp_pitch(dead.spot[0] + dx / d * gap, dead.spot[1] + dy / d * gap)
+            holder = None if dead is not None else self._holder_at(t, holder_list)
+            if holder is not None and holder in pos:
+                hx, hy = pos[holder]
+                ahead = BALL_AT_FOOT_M if self.roster.players[holder].team == self.home else -BALL_AT_FOOT_M
+                ball = clamp_pitch(hx + ahead, hy, 0.2)
             frames.append((t, ball, [pos[n] for n in teams[self.home]], [pos[n] for n in teams[self.away]]))
         return self._output(frames)
 
@@ -477,8 +508,23 @@ class PositionModel:
     def _next_anchor(self, name: str, t: float, anchor_times) -> Anchor | None:
         lst = self.timeline.anchors.get(name, [])
         i = bisect.bisect_left(anchor_times[name], t - 1e-9)
-        if i < len(lst) and lst[i].t - t <= lst[i].window:
-            return lst[i]
+        if i < len(lst):
+            a = lst[i]
+            if (a.release is not None and t >= a.release) or (a.release is None and a.t - t <= a.window):
+                return a
+        return None
+
+    @staticmethod
+    def _holder_at(t: float, holders) -> str | None:
+        """Who carries the ball at ``t``: from the moment it reaches him to his next action, both excluded."""
+        i = bisect.bisect_right(holders, (t, float("inf"), "")) - 1
+        while i >= 0 and holders[i][0] <= t:
+            start, end, name = holders[i]
+            if start < t < end:
+                return name
+            if t - start > 60:
+                break
+            i -= 1
         return None
 
     @staticmethod

@@ -145,3 +145,10 @@ describe('momentsAt', () => {
     expect(momentsAt([chat], 200).map((o) => o.overlay_id)).toEqual(['chat-abc']);
   });
 });
+
+describe('momentsAt, whole match', () => {
+  it('lists every moment of the match at full time', () => {
+    const all = fanEs.filter((o) => !(o.type === 'duel_bar' && o.source_insight === null));
+    expect(momentsAt(fanEs, 99999)).toHaveLength(all.length);
+  });
+});

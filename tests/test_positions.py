@@ -73,6 +73,21 @@ class DemoPositionsTest(unittest.TestCase):
                and math.dist(self.pos["frames"][e["t_s"] * HZ]["b"], e["start"]) > 1.0]
         self.assertLessEqual(len(far), 2, far)
 
+    def test_the_ball_stays_at_the_foot_of_who_carries_it(self):
+        """Between receiving a pass and his next action, the ball goes with the player, not on its own."""
+        play = [e for e in self.events if e.get("start") and e.get("team") and e["type"] != "goal"]
+        far = total = 0
+        for a, b in zip(play, play[1:]):
+            if a["type"] == "pass" and a["outcome"] == "complete" and b["player"] == a["receiver"] \
+                    and b["type"] not in ("pressure", "tackle", "foul"):
+                v = max((a.get("speed_kmh") or 50) / 3.6, 5)
+                arrive = a["t_s"] + min(math.dist(a["start"], a["end"]) / v, 3)
+                for k in range(int(math.ceil(arrive * HZ)) + 1, int(b["t_s"] * HZ)):
+                    total += 1
+                    far += math.dist(self.pos["frames"][k]["b"], where(self.pos, b["player"], k / HZ)) > 1.0
+        self.assertGreater(total, 500)
+        self.assertEqual(far, 0)
+
     def test_receivers_meet_the_ball(self):
         n, far = 0, 0
         for e in self.events:

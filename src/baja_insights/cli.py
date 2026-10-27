@@ -1,6 +1,6 @@
 """Command line entry point.
 
-    python -m baja_insights generate --seed 769 --script m001 --out data/m001/events.jsonl
+    python -m baja_insights generate --seed 1387 --script m001 --out data/m001/events.jsonl
     python -m baja_insights analyze  --events data/m001/events.jsonl --out data/m001/insights.json
     python -m baja_insights positions --events data/m001/events.jsonl --out data/m001/positions.json
     python -m baja_insights stream   --events data/m001/events.jsonl --speed 60

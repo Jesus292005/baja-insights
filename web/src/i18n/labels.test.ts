@@ -64,3 +64,22 @@ describe('cardReasonLabel', () => {
     for (const c of cards) expect(cardReasonLabel(c, 'en')).not.toBe(c.reason);
   });
 });
+
+describe('cardReasonLabel, realism codes', () => {
+  const card = (reason_code: string, reason_params: Record<string, number | string>) =>
+    ({ reason_code, reason_params }) as Parameters<typeof cardReasonLabel>[0];
+
+  it('writes the Spanish exactly as the engine does', () => {
+    expect(cardReasonLabel(card('pass_streak', { count: 20 }), 'es')).toBe('20 pases completados seguidos');
+    expect(cardReasonLabel(card('recovery_to_shot', { seconds: 18, shooter: 'S. Leyva' }), 'es')).toBe(
+      'recuperación en campo propio que terminó en remate en 18 segundos',
+    );
+    expect(cardReasonLabel(card('big_save', { xg: 0.3, shooter: 'M. Ramírez' }), 'es')).toBe('atajada a un remate de xG 0.30');
+  });
+
+  it('has English for each of them', () => {
+    expect(cardReasonLabel(card('pass_streak', { count: 20 }), 'en')).toBe('20 passes completed in a row');
+    expect(cardReasonLabel(card('recovery_to_shot', { seconds: 18 }), 'en')).toBe('won the ball in his own half and the team shot 18 seconds later');
+    expect(cardReasonLabel(card('big_save', { xg: 0.56, shooter: 'M. Ramírez' }), 'en')).toBe("save from M. Ramírez's shot of xG 0.56");
+  });
+});
