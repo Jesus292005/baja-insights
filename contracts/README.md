@@ -78,7 +78,7 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 | `standout_milestone` | `player`, `position`, `profile` (`defensive` o `creative`), `stats`, `expected_for_role`, `vs_role`, `mvp_rank`, y `card_change` opcional |
 | `card_upgrade` | `player`, `attribute`, `from`, `to`, `delta`, `reason`, `overall_from`, `overall_to`, más extras según la regla, como `pass_difficulty`, `led_to` o `space_opened_m` |
 | `goal_chain` | `scoreline`, `scorer`, `assist`, `xg`, `duration_s`, `chain` (con `event_id`, `player`, `action`, `credit` y `t_s`, ordenada por tiempo y con créditos que suman 1, y opcionales `type`, `lines_broken`, `cross`, `start`, `end` y, en desmarques, `dragged_defender`, `dragged_defender_start` y `dragged_defender_end`), `invisible_assist` |
-| `team_phase` | `label` (`control` o `pressure_shift`), `window`, y métricas según la etiqueta |
+| `team_phase` | `label` (`control`, `pressure_shift` o `possession_spell`), `window`, y métricas según la etiqueta. `possession_spell` (agregado a v1.1) es una sola posesión de 12 pases completados o más: `passes`, `duration_s`, `players_involved` y `ended_in` (`goal`, `shot`, `out`, `foul` o `lost`). Sale cuando la posesión ya terminó, y su `evidence` son los pases |
 | `match_keys` | `scoreline`, `xg`, `possession_pct`, `keys` (por equipo, con `code`, `key` y `evidence`), `no_prediction: true` |
 | `top3` | `final_scoreline`, `top3` (con `rank`, `player`, `team`, `position`, `mvp_score`, `why` y `key_events`) |
 | `match_summary` | `final_scoreline`, `xg`, `possession_pct`, `goals`, `phases`, `story`, `who_really_won`, `who_really_won_basis` |
@@ -97,6 +97,9 @@ Campos comunes: `insight_id`, `match_id`, `period`, `minute`, `second`, `t_s`, `
 | `run_opened_goal` | `dragged_defender`, `dragged_position` | arrastró al central (si `dragged_position` es DFC) o a {dragged_defender} y abrió el espacio del gol |
 | `standout_defensive` | ninguno | partido defensivo por encima de lo esperado para su rol |
 | `standout_creative` | ninguno | partido creativo por encima de lo esperado para su rol |
+| `pass_streak` | `count` | {count} pases completados seguidos (cada 20, nunca un portero) |
+| `recovery_to_shot` | `seconds`, `shooter` | recuperación en campo propio que terminó en remate en {seconds} segundos |
+| `big_save` | `xg`, `shooter` | atajada a un remate de xG {xg} (el portero; +2 desde xG 0.30) |
 
 Ejemplos completos en `../mocks/insights_sample.json`, y un partido real en `../data/m001/insights.json`.
 

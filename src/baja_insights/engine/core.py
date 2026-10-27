@@ -13,7 +13,7 @@ an LLM, so the same events always produce the same insights.
 
 from __future__ import annotations
 
-from ..contract import STRUCTURAL_EVENTS, distance, fmt_clock, period_of
+from ..contract import STRUCTURAL_EVENTS, distance, fmt_clock, in_opponent_half, period_of
 from ..roster import Roster
 from . import params as P
 from .scoring import (
@@ -76,6 +76,9 @@ class InsightEngine:
         self._last_duel: dict[tuple[str, str], dict] = {}
         self._pending_cards: list[dict] = []
         self._dribbles: dict[str, list[tuple[int, int]]] = {}  # player -> (t, event_id) of duels won on the ball
+        self._pass_runs: dict[str, list[int]] = {}  # player -> event ids of his completed passes in a row
+        self._last_win: dict[str, tuple[int, str, int]] = {}  # team -> (t, player, event_id) of its last ball won
+        self._last_spell_t: dict[str, int] = {}
         self.goal_chains: dict[int, dict] = {}
 
     # ------------------------------------------------------------------ API
@@ -91,6 +94,7 @@ class InsightEngine:
         if event["type"] in STRUCTURAL_EVENTS or (pid is not None and pid != st.current_pid):
             out += self._resolve_pending()
 
+        prev_pid = st.current_pid
         points_before = {n: ps.raw_points for n, ps in st.players.items()}
         stats_before = {n: dict(ps.stats) for n, ps in st.players.items()}
         ranking_before = st.ranking()
@@ -113,6 +117,8 @@ class InsightEngine:
         if "duel_pair" in effects:
             self._register_duel(effects["duel_pair"], ev)
         out += self._phases(ev)
+        if prev_pid is not None and prev_pid != st.current_pid:
+            out += self._possession_spell(prev_pid, ev)
         if ev["type"] == "half_time":
             out.append(self._match_keys())
         if ev["type"] == "match_end":
@@ -220,6 +226,39 @@ class InsightEngine:
                         [run["event_id"], ev["event_id"]], {"space_opened_m": space},
                         code="run_opened_goal", params={"dragged_defender": run["dragged_defender"],
                                                        "dragged_position": defender.position if defender else None})
+
+        if kind == "pass":
+            run = self._pass_runs.setdefault(ev["player"], [])
+            if ev.get("outcome") == "complete":
+                run.append(ev["event_id"])
+                if len(run) % P.CARD_PASS_STREAK == 0 and ev.get("position") != "POR":
+                    add(ev["player"], "vision", 1, f"{len(run)} pases completados seguidos", run[-5:],
+                        code="pass_streak", params={"count": len(run)})
+            else:
+                run.clear()
+
+        if kind == "recovery" or (kind in ("tackle", "duel") and ev.get("outcome") == "won"):
+            # a counter-attack starts in the own half; winning it higher up has the recoveries card
+            own_half = ev.get("start") is not None and not in_opponent_half(ev["start"][0], ev["team"], st.home)
+            if own_half:
+                self._last_win[ev["team"]] = (st.t, ev["player"], ev["event_id"])
+            else:
+                self._last_win.pop(ev["team"], None)
+        if kind == "shot" and ev.get("team") in self._last_win:
+            won_t, winner, won_id = self._last_win.pop(ev["team"])
+            secs = st.t - won_t
+            if P.CARD_RECOVERY_SHOT_MIN_S <= secs <= P.CARD_RECOVERY_SHOT_S:
+                add(winner, "fisico", 1, f"recuperación en campo propio que terminó en remate en {secs} segundos",
+                    [won_id, ev["event_id"]], code="recovery_to_shot",
+                    params={"seconds": secs, "shooter": ev["player"]})
+
+        if kind == "shot" and ev.get("outcome") == "saved" and (ev.get("xg") or 0) >= P.CARD_SAVE_MIN_XG:
+            keeper = next((n for n, ps in st.players.items() if ps.position == "POR"
+                           and ps.team == st.roster.opponent(ev["team"]) and ps.on_since is not None), None)
+            if keeper:
+                xg = round(ev["xg"], 2)
+                add(keeper, "defensa", 2 if xg >= P.CARD_SAVE_BIG_XG else 1, f"atajada a un remate de xG {xg:.2f}",
+                    [ev["event_id"]], code="big_save", params={"xg": xg, "shooter": ev["player"]})
 
         if kind in ("duel", "tackle"):
             for name in (ev.get("player"), ev.get("opponent")):
@@ -470,6 +509,39 @@ class InsightEngine:
                     out.append(self._make("team_phase", priority_phase("pressure_shift"), [], team, facts,
                                           rec_ids[-5:], t=end))
         return out
+
+    def _possession_spell(self, pid: int, ev: dict) -> list[dict]:
+        """A long possession that just ended: how many passes, how long, how many players, how it ended."""
+        st = self.state
+        pos = st.possessions.get(pid)
+        if pos is None or pos.owner is None:
+            return []
+        events = [st.by_id[e] for e in pos.events]
+        passes = [e for e in events if e["type"] == "pass" and e.get("outcome") == "complete" and e["team"] == pos.owner]
+        if len(passes) < P.PHASE_SPELL_MIN_PASSES:
+            return []
+        if st.t - self._last_spell_t.get(pos.owner, -10**9) < P.PHASE_SPELL_COOLDOWN_S:
+            return []
+        self._last_spell_t[pos.owner] = st.t
+        last = [e for e in events if e["team"] == pos.owner][-1]
+        if last["type"] == "shot":
+            ended = "goal" if last.get("outcome") == "goal" else "shot"
+        elif last.get("out_of_play"):
+            ended = "out"
+        elif ev["type"] == "foul" or (ev.get("set_piece") == "free_kick" and ev.get("team") == pos.owner):
+            ended = "foul"
+        else:
+            ended = "lost"
+        end = max(e["t_s"] for e in events)
+        touches = {}
+        for e in passes:
+            touches[e["player"]] = touches.get(e["player"], 0) + 1
+        players = [n for n, _ in sorted(touches.items(), key=lambda kv: -kv[1])]
+        facts = {"label": "possession_spell", "window": f"{fmt_clock(pos.start_t)}-{fmt_clock(end)}",
+                 "passes": len(passes), "duration_s": end - pos.start_t, "players_involved": len(players),
+                 "ended_in": ended}
+        return [self._make("team_phase", priority_phase("possession_spell"), players[:3], pos.owner, facts,
+                           [e["event_id"] for e in passes])]
 
     # ------------------------------------------------------------ half time
     def _match_keys(self) -> dict:

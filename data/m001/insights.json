@@ -3,6 +3,49 @@
     "insight_id": "i01",
     "match_id": "m001",
     "period": 1,
+    "minute": 1,
+    "second": 8,
+    "t_s": 68,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "B. Haro",
+      "V. Meza",
+      "T. Esquer"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "00:11-01:06",
+      "passes": 17,
+      "duration_s": 55,
+      "players_involved": 7,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      22,
+      23,
+      24
+    ]
+  },
+  {
+    "insight_id": "i02",
+    "match_id": "m001",
+    "period": 1,
     "minute": 2,
     "second": 34,
     "t_s": 154,
@@ -31,7 +74,7 @@
     ]
   },
   {
-    "insight_id": "i02",
+    "insight_id": "i03",
     "match_id": "m001",
     "period": 1,
     "minute": 4,
@@ -64,7 +107,7 @@
     ]
   },
   {
-    "insight_id": "i03",
+    "insight_id": "i04",
     "match_id": "m001",
     "period": 1,
     "minute": 6,
@@ -97,7 +140,7 @@
     ]
   },
   {
-    "insight_id": "i04",
+    "insight_id": "i05",
     "match_id": "m001",
     "period": 1,
     "minute": 7,
@@ -128,7 +171,45 @@
     ]
   },
   {
-    "insight_id": "i05",
+    "insight_id": "i06",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 7,
+    "second": 11,
+    "t_s": 431,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "K. Rosas",
+      "N. Ruelas",
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "06:23-07:09",
+      "passes": 12,
+      "duration_s": 46,
+      "players_involved": 4,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      114,
+      115,
+      116,
+      118,
+      120,
+      121,
+      122,
+      123,
+      125,
+      127,
+      128,
+      131
+    ]
+  },
+  {
+    "insight_id": "i07",
     "match_id": "m001",
     "period": 1,
     "minute": 10,
@@ -154,7 +235,7 @@
     "evidence": []
   },
   {
-    "insight_id": "i06",
+    "insight_id": "i08",
     "match_id": "m001",
     "period": 1,
     "minute": 10,
@@ -231,7 +312,39 @@
     ]
   },
   {
-    "insight_id": "i07",
+    "insight_id": "i09",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 12,
+    "second": 25,
+    "t_s": 745,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "L. Arce"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "L. Arce",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 81,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.21",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.21,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 49,
+      "overall_to": 49
+    },
+    "evidence": [
+      219
+    ]
+  },
+  {
+    "insight_id": "i10",
     "match_id": "m001",
     "period": 1,
     "minute": 12,
@@ -264,7 +377,7 @@
     ]
   },
   {
-    "insight_id": "i08",
+    "insight_id": "i11",
     "match_id": "m001",
     "period": 1,
     "minute": 12,
@@ -299,7 +412,7 @@
     ]
   },
   {
-    "insight_id": "i09",
+    "insight_id": "i12",
     "match_id": "m001",
     "period": 1,
     "minute": 14,
@@ -330,7 +443,7 @@
     ]
   },
   {
-    "insight_id": "i10",
+    "insight_id": "i13",
     "match_id": "m001",
     "period": 1,
     "minute": 15,
@@ -408,7 +521,78 @@
     ]
   },
   {
-    "insight_id": "i11",
+    "insight_id": "i14",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 16,
+    "second": 56,
+    "t_s": 1016,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "A. Olvera",
+      "P. Lugo",
+      "O. Félix"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "label": "possession_spell",
+      "window": "15:51-16:51",
+      "passes": 12,
+      "duration_s": 60,
+      "players_involved": 5,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      272,
+      273,
+      274,
+      276,
+      277,
+      278,
+      281,
+      282,
+      283,
+      284,
+      286,
+      287
+    ]
+  },
+  {
+    "insight_id": "i15",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 17,
+    "second": 40,
+    "t_s": 1060,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "V. Meza",
+      "attribute": "fisico",
+      "from": 76,
+      "to": 77,
+      "delta": 1,
+      "reason": "recuperación en campo propio que terminó en remate en 18 segundos",
+      "reason_code": "recovery_to_shot",
+      "reason_params": {
+        "seconds": 18,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      296,
+      300
+    ]
+  },
+  {
+    "insight_id": "i16",
     "match_id": "m001",
     "period": 1,
     "minute": 17,
@@ -512,7 +696,7 @@
     ]
   },
   {
-    "insight_id": "i12",
+    "insight_id": "i17",
     "match_id": "m001",
     "period": 1,
     "minute": 17,
@@ -549,7 +733,42 @@
     ]
   },
   {
-    "insight_id": "i13",
+    "insight_id": "i18",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 20,
+    "second": 5,
+    "t_s": 1205,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "B. Haro"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "B. Haro",
+      "attribute": "vision",
+      "from": 58,
+      "to": 59,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 61,
+      "overall_to": 61
+    },
+    "evidence": [
+      194,
+      243,
+      322,
+      324,
+      326
+    ]
+  },
+  {
+    "insight_id": "i19",
     "match_id": "m001",
     "period": 1,
     "minute": 20,
@@ -589,7 +808,7 @@
         "reason_code": "standout_defensive",
         "reason_params": {},
         "overall_from": 65,
-        "overall_to": 65
+        "overall_to": 66
       }
     },
     "evidence": [
@@ -601,7 +820,50 @@
     ]
   },
   {
-    "insight_id": "i14",
+    "insight_id": "i20",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 21,
+    "second": 3,
+    "t_s": 1263,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "H. Zamora",
+      "B. Haro",
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "19:28-21:01",
+      "passes": 17,
+      "duration_s": 93,
+      "players_involved": 8,
+      "ended_in": "foul"
+    },
+    "evidence": [
+      318,
+      319,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      328,
+      329,
+      330,
+      331,
+      333,
+      334,
+      335,
+      336,
+      337
+    ]
+  },
+  {
+    "insight_id": "i21",
     "match_id": "m001",
     "period": 1,
     "minute": 24,
@@ -636,7 +898,7 @@
     ]
   },
   {
-    "insight_id": "i15",
+    "insight_id": "i22",
     "match_id": "m001",
     "period": 1,
     "minute": 25,
@@ -713,7 +975,7 @@
     ]
   },
   {
-    "insight_id": "i16",
+    "insight_id": "i23",
     "match_id": "m001",
     "period": 1,
     "minute": 27,
@@ -744,7 +1006,42 @@
     ]
   },
   {
-    "insight_id": "i17",
+    "insight_id": "i24",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 27,
+    "second": 58,
+    "t_s": 1678,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "V. Meza",
+      "attribute": "vision",
+      "from": 68,
+      "to": 69,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 66,
+      "overall_to": 66
+    },
+    "evidence": [
+      411,
+      413,
+      415,
+      445,
+      447
+    ]
+  },
+  {
+    "insight_id": "i25",
     "match_id": "m001",
     "period": 1,
     "minute": 29,
@@ -785,7 +1082,7 @@
     ]
   },
   {
-    "insight_id": "i18",
+    "insight_id": "i26",
     "match_id": "m001",
     "period": 1,
     "minute": 29,
@@ -863,7 +1160,48 @@
     ]
   },
   {
-    "insight_id": "i19",
+    "insight_id": "i27",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 30,
+    "second": 30,
+    "t_s": 1830,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "E. Sandoval",
+      "V. Meza",
+      "G. Cárdenas"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "29:24-30:14",
+      "passes": 15,
+      "duration_s": 50,
+      "players_involved": 6,
+      "ended_in": "out"
+    },
+    "evidence": [
+      471,
+      472,
+      473,
+      474,
+      475,
+      476,
+      477,
+      478,
+      479,
+      480,
+      481,
+      482,
+      483,
+      484,
+      485
+    ]
+  },
+  {
+    "insight_id": "i28",
     "match_id": "m001",
     "period": 1,
     "minute": 33,
@@ -943,7 +1281,39 @@
     ]
   },
   {
-    "insight_id": "i20",
+    "insight_id": "i29",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 34,
+    "second": 15,
+    "t_s": 2055,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "H. Zamora",
+      "attribute": "defensa",
+      "from": 79,
+      "to": 80,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.29",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.29,
+        "shooter": "M. Ramírez"
+      },
+      "overall_from": 50,
+      "overall_to": 51
+    },
+    "evidence": [
+      535
+    ]
+  },
+  {
+    "insight_id": "i30",
     "match_id": "m001",
     "period": 1,
     "minute": 34,
@@ -980,7 +1350,7 @@
     ]
   },
   {
-    "insight_id": "i21",
+    "insight_id": "i31",
     "match_id": "m001",
     "period": 1,
     "minute": 34,
@@ -1032,7 +1402,7 @@
     ]
   },
   {
-    "insight_id": "i22",
+    "insight_id": "i32",
     "match_id": "m001",
     "period": 1,
     "minute": 37,
@@ -1067,7 +1437,7 @@
     ]
   },
   {
-    "insight_id": "i23",
+    "insight_id": "i33",
     "match_id": "m001",
     "period": 1,
     "minute": 38,
@@ -1143,7 +1513,7 @@
     ]
   },
   {
-    "insight_id": "i24",
+    "insight_id": "i34",
     "match_id": "m001",
     "period": 1,
     "minute": 39,
@@ -1174,7 +1544,7 @@
     ]
   },
   {
-    "insight_id": "i25",
+    "insight_id": "i35",
     "match_id": "m001",
     "period": 1,
     "minute": 42,
@@ -1205,7 +1575,50 @@
     ]
   },
   {
-    "insight_id": "i26",
+    "insight_id": "i36",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 42,
+    "second": 26,
+    "t_s": 2546,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "G. Cárdenas",
+      "T. Esquer",
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "41:27-42:25",
+      "passes": 17,
+      "duration_s": 58,
+      "players_involved": 6,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      649,
+      650,
+      651,
+      652,
+      653,
+      655,
+      656,
+      657,
+      658,
+      659,
+      660,
+      661,
+      662,
+      663,
+      664,
+      665,
+      667
+    ]
+  },
+  {
+    "insight_id": "i37",
     "match_id": "m001",
     "period": 1,
     "minute": 43,
@@ -1257,7 +1670,7 @@
     ]
   },
   {
-    "insight_id": "i27",
+    "insight_id": "i38",
     "match_id": "m001",
     "period": 1,
     "minute": 44,
@@ -1288,7 +1701,7 @@
     ]
   },
   {
-    "insight_id": "i28",
+    "insight_id": "i39",
     "match_id": "m001",
     "period": 2,
     "minute": 45,
@@ -1347,7 +1760,7 @@
     ]
   },
   {
-    "insight_id": "i29",
+    "insight_id": "i40",
     "match_id": "m001",
     "period": 2,
     "minute": 46,
@@ -1383,7 +1796,7 @@
     ]
   },
   {
-    "insight_id": "i30",
+    "insight_id": "i41",
     "match_id": "m001",
     "period": 2,
     "minute": 47,
@@ -1414,7 +1827,7 @@
     ]
   },
   {
-    "insight_id": "i31",
+    "insight_id": "i42",
     "match_id": "m001",
     "period": 2,
     "minute": 47,
@@ -1445,7 +1858,7 @@
     ]
   },
   {
-    "insight_id": "i32",
+    "insight_id": "i43",
     "match_id": "m001",
     "period": 2,
     "minute": 48,
@@ -1476,7 +1889,7 @@
     ]
   },
   {
-    "insight_id": "i33",
+    "insight_id": "i44",
     "match_id": "m001",
     "period": 2,
     "minute": 49,
@@ -1507,7 +1920,7 @@
     ]
   },
   {
-    "insight_id": "i34",
+    "insight_id": "i45",
     "match_id": "m001",
     "period": 2,
     "minute": 51,
@@ -1548,7 +1961,39 @@
     ]
   },
   {
-    "insight_id": "i35",
+    "insight_id": "i46",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 51,
+    "second": 43,
+    "t_s": 3103,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "H. Zamora",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 81,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.16",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.16,
+        "shooter": "M. Ramírez"
+      },
+      "overall_from": 51,
+      "overall_to": 51
+    },
+    "evidence": [
+      813
+    ]
+  },
+  {
+    "insight_id": "i47",
     "match_id": "m001",
     "period": 2,
     "minute": 52,
@@ -1628,7 +2073,7 @@
     ]
   },
   {
-    "insight_id": "i36",
+    "insight_id": "i48",
     "match_id": "m001",
     "period": 2,
     "minute": 55,
@@ -1662,7 +2107,7 @@
     ]
   },
   {
-    "insight_id": "i37",
+    "insight_id": "i49",
     "match_id": "m001",
     "period": 2,
     "minute": 56,
@@ -1701,7 +2146,7 @@
         "reason": "partido defensivo por encima de lo esperado para su rol",
         "reason_code": "standout_defensive",
         "reason_params": {},
-        "overall_from": 65,
+        "overall_from": 66,
         "overall_to": 66
       }
     },
@@ -1714,7 +2159,7 @@
     ]
   },
   {
-    "insight_id": "i38",
+    "insight_id": "i50",
     "match_id": "m001",
     "period": 2,
     "minute": 57,
@@ -1745,7 +2190,7 @@
     ]
   },
   {
-    "insight_id": "i39",
+    "insight_id": "i51",
     "match_id": "m001",
     "period": 2,
     "minute": 58,
@@ -1777,7 +2222,7 @@
     ]
   },
   {
-    "insight_id": "i40",
+    "insight_id": "i52",
     "match_id": "m001",
     "period": 2,
     "minute": 58,
@@ -1811,7 +2256,7 @@
     ]
   },
   {
-    "insight_id": "i41",
+    "insight_id": "i53",
     "match_id": "m001",
     "period": 2,
     "minute": 59,
@@ -1889,7 +2334,7 @@
     ]
   },
   {
-    "insight_id": "i42",
+    "insight_id": "i54",
     "match_id": "m001",
     "period": 2,
     "minute": 59,
@@ -1920,7 +2365,7 @@
     ]
   },
   {
-    "insight_id": "i43",
+    "insight_id": "i55",
     "match_id": "m001",
     "period": 2,
     "minute": 60,
@@ -1951,7 +2396,7 @@
     ]
   },
   {
-    "insight_id": "i44",
+    "insight_id": "i56",
     "match_id": "m001",
     "period": 2,
     "minute": 62,
@@ -2003,7 +2448,7 @@
     ]
   },
   {
-    "insight_id": "i45",
+    "insight_id": "i57",
     "match_id": "m001",
     "period": 2,
     "minute": 63,
@@ -2122,7 +2567,7 @@
     ]
   },
   {
-    "insight_id": "i46",
+    "insight_id": "i58",
     "match_id": "m001",
     "period": 2,
     "minute": 63,
@@ -2156,7 +2601,7 @@
     ]
   },
   {
-    "insight_id": "i47",
+    "insight_id": "i59",
     "match_id": "m001",
     "period": 2,
     "minute": 63,
@@ -2235,7 +2680,7 @@
     ]
   },
   {
-    "insight_id": "i48",
+    "insight_id": "i60",
     "match_id": "m001",
     "period": 2,
     "minute": 63,
@@ -2272,7 +2717,39 @@
     ]
   },
   {
-    "insight_id": "i49",
+    "insight_id": "i61",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 64,
+    "second": 35,
+    "t_s": 3875,
+    "type": "card_upgrade",
+    "priority": 0.7,
+    "players": [
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "H. Zamora",
+      "attribute": "defensa",
+      "from": 81,
+      "to": 83,
+      "delta": 2,
+      "reason": "atajada a un remate de xG 0.56",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.56,
+        "shooter": "M. Ramírez"
+      },
+      "overall_from": 51,
+      "overall_to": 51
+    },
+    "evidence": [
+      995
+    ]
+  },
+  {
+    "insight_id": "i62",
     "match_id": "m001",
     "period": 2,
     "minute": 65,
@@ -2299,7 +2776,7 @@
     ]
   },
   {
-    "insight_id": "i50",
+    "insight_id": "i63",
     "match_id": "m001",
     "period": 2,
     "minute": 67,
@@ -2330,7 +2807,7 @@
     ]
   },
   {
-    "insight_id": "i51",
+    "insight_id": "i64",
     "match_id": "m001",
     "period": 2,
     "minute": 69,
@@ -2408,7 +2885,7 @@
     ]
   },
   {
-    "insight_id": "i52",
+    "insight_id": "i65",
     "match_id": "m001",
     "period": 2,
     "minute": 69,
@@ -2460,7 +2937,7 @@
     ]
   },
   {
-    "insight_id": "i53",
+    "insight_id": "i66",
     "match_id": "m001",
     "period": 2,
     "minute": 69,
@@ -2491,7 +2968,7 @@
     ]
   },
   {
-    "insight_id": "i54",
+    "insight_id": "i67",
     "match_id": "m001",
     "period": 2,
     "minute": 70,
@@ -2517,7 +2994,7 @@
     "evidence": []
   },
   {
-    "insight_id": "i55",
+    "insight_id": "i68",
     "match_id": "m001",
     "period": 2,
     "minute": 71,
@@ -2552,7 +3029,7 @@
     ]
   },
   {
-    "insight_id": "i56",
+    "insight_id": "i69",
     "match_id": "m001",
     "period": 2,
     "minute": 73,
@@ -2585,7 +3062,7 @@
     ]
   },
   {
-    "insight_id": "i57",
+    "insight_id": "i70",
     "match_id": "m001",
     "period": 2,
     "minute": 73,
@@ -2616,7 +3093,7 @@
     ]
   },
   {
-    "insight_id": "i58",
+    "insight_id": "i71",
     "match_id": "m001",
     "period": 2,
     "minute": 76,
@@ -2668,7 +3145,7 @@
     ]
   },
   {
-    "insight_id": "i59",
+    "insight_id": "i72",
     "match_id": "m001",
     "period": 2,
     "minute": 78,
@@ -2700,7 +3177,7 @@
     ]
   },
   {
-    "insight_id": "i60",
+    "insight_id": "i73",
     "match_id": "m001",
     "period": 2,
     "minute": 82,
@@ -2778,7 +3255,7 @@
     ]
   },
   {
-    "insight_id": "i61",
+    "insight_id": "i74",
     "match_id": "m001",
     "period": 2,
     "minute": 82,
@@ -2809,7 +3286,7 @@
     ]
   },
   {
-    "insight_id": "i62",
+    "insight_id": "i75",
     "match_id": "m001",
     "period": 2,
     "minute": 85,
@@ -2840,7 +3317,7 @@
     ]
   },
   {
-    "insight_id": "i63",
+    "insight_id": "i76",
     "match_id": "m001",
     "period": 2,
     "minute": 85,
@@ -2871,7 +3348,7 @@
     ]
   },
   {
-    "insight_id": "i64",
+    "insight_id": "i77",
     "match_id": "m001",
     "period": 2,
     "minute": 85,
@@ -2951,7 +3428,7 @@
     ]
   },
   {
-    "insight_id": "i65",
+    "insight_id": "i78",
     "match_id": "m001",
     "period": 2,
     "minute": 85,
@@ -2982,7 +3459,7 @@
     ]
   },
   {
-    "insight_id": "i66",
+    "insight_id": "i79",
     "match_id": "m001",
     "period": 2,
     "minute": 86,
@@ -3017,7 +3494,47 @@
     ]
   },
   {
-    "insight_id": "i67",
+    "insight_id": "i80",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 86,
+    "second": 41,
+    "t_s": 5201,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "R. Salgado",
+      "E. Quiroz",
+      "D. Mena"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "label": "possession_spell",
+      "window": "85:28-86:29",
+      "passes": 14,
+      "duration_s": 61,
+      "players_involved": 7,
+      "ended_in": "out"
+    },
+    "evidence": [
+      1334,
+      1335,
+      1336,
+      1337,
+      1340,
+      1341,
+      1343,
+      1345,
+      1346,
+      1347,
+      1348,
+      1351,
+      1352,
+      1353
+    ]
+  },
+  {
+    "insight_id": "i81",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -3103,7 +3620,7 @@
     ]
   },
   {
-    "insight_id": "i68",
+    "insight_id": "i82",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -3145,8 +3662,38 @@
       "phases": [
         {
           "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "00:11-01:06"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "06:23-07:09"
+        },
+        {
+          "team": "Real Cardón",
           "label": "control",
           "window": "00:00-10:00"
+        },
+        {
+          "team": "Bahía FC",
+          "label": "possession_spell",
+          "window": "15:51-16:51"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "19:28-21:01"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "29:24-30:14"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "41:27-42:25"
         },
         {
           "team": "Bahía FC",
@@ -3157,6 +3704,11 @@
           "team": "Bahía FC",
           "label": "control",
           "window": "60:00-70:00"
+        },
+        {
+          "team": "Bahía FC",
+          "label": "possession_spell",
+          "window": "85:28-86:29"
         }
       ],
       "story": [

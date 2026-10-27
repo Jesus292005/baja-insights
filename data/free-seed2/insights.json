@@ -75,6 +75,46 @@
     "insight_id": "i03",
     "match_id": "m001",
     "period": 1,
+    "minute": 6,
+    "second": 4,
+    "t_s": 364,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "E. Sandoval",
+      "S. Leyva",
+      "L. Montaño"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "04:57-06:01",
+      "passes": 14,
+      "duration_s": 64,
+      "players_involved": 7,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      74,
+      75,
+      77,
+      78,
+      79,
+      82,
+      83,
+      85,
+      86,
+      87,
+      88,
+      90,
+      91,
+      93
+    ]
+  },
+  {
+    "insight_id": "i04",
+    "match_id": "m001",
+    "period": 1,
     "minute": 10,
     "second": 7,
     "t_s": 607,
@@ -147,7 +187,7 @@
     ]
   },
   {
-    "insight_id": "i04",
+    "insight_id": "i05",
     "match_id": "m001",
     "period": 1,
     "minute": 10,
@@ -180,7 +220,7 @@
     ]
   },
   {
-    "insight_id": "i05",
+    "insight_id": "i06",
     "match_id": "m001",
     "period": 1,
     "minute": 11,
@@ -215,7 +255,7 @@
     ]
   },
   {
-    "insight_id": "i06",
+    "insight_id": "i07",
     "match_id": "m001",
     "period": 1,
     "minute": 13,
@@ -292,7 +332,7 @@
     ]
   },
   {
-    "insight_id": "i07",
+    "insight_id": "i08",
     "match_id": "m001",
     "period": 1,
     "minute": 16,
@@ -368,7 +408,7 @@
     ]
   },
   {
-    "insight_id": "i08",
+    "insight_id": "i09",
     "match_id": "m001",
     "period": 1,
     "minute": 20,
@@ -400,7 +440,7 @@
     ]
   },
   {
-    "insight_id": "i09",
+    "insight_id": "i10",
     "match_id": "m001",
     "period": 1,
     "minute": 20,
@@ -463,7 +503,7 @@
     ]
   },
   {
-    "insight_id": "i10",
+    "insight_id": "i11",
     "match_id": "m001",
     "period": 1,
     "minute": 22,
@@ -540,7 +580,7 @@
     ]
   },
   {
-    "insight_id": "i11",
+    "insight_id": "i12",
     "match_id": "m001",
     "period": 1,
     "minute": 23,
@@ -574,7 +614,45 @@
     ]
   },
   {
-    "insight_id": "i12",
+    "insight_id": "i13",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 23,
+    "second": 31,
+    "t_s": 1411,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "N. Ruelas",
+      "V. Meza",
+      "L. Montaño"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "22:12-23:27",
+      "passes": 12,
+      "duration_s": 75,
+      "players_involved": 7,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      345,
+      346,
+      347,
+      348,
+      349,
+      351,
+      352,
+      354,
+      355,
+      356,
+      359,
+      360
+    ]
+  },
+  {
+    "insight_id": "i14",
     "match_id": "m001",
     "period": 1,
     "minute": 26,
@@ -651,7 +729,7 @@
     ]
   },
   {
-    "insight_id": "i13",
+    "insight_id": "i15",
     "match_id": "m001",
     "period": 1,
     "minute": 27,
@@ -683,7 +761,7 @@
     ]
   },
   {
-    "insight_id": "i14",
+    "insight_id": "i16",
     "match_id": "m001",
     "period": 1,
     "minute": 29,
@@ -714,7 +792,7 @@
     ]
   },
   {
-    "insight_id": "i15",
+    "insight_id": "i17",
     "match_id": "m001",
     "period": 1,
     "minute": 29,
@@ -791,7 +869,7 @@
     ]
   },
   {
-    "insight_id": "i16",
+    "insight_id": "i18",
     "match_id": "m001",
     "period": 1,
     "minute": 30,
@@ -843,7 +921,7 @@
     ]
   },
   {
-    "insight_id": "i17",
+    "insight_id": "i19",
     "match_id": "m001",
     "period": 1,
     "minute": 31,
@@ -876,7 +954,7 @@
     ]
   },
   {
-    "insight_id": "i18",
+    "insight_id": "i20",
     "match_id": "m001",
     "period": 1,
     "minute": 37,
@@ -968,7 +1046,7 @@
     ]
   },
   {
-    "insight_id": "i19",
+    "insight_id": "i21",
     "match_id": "m001",
     "period": 1,
     "minute": 38,
@@ -1009,7 +1087,7 @@
     ]
   },
   {
-    "insight_id": "i20",
+    "insight_id": "i22",
     "match_id": "m001",
     "period": 1,
     "minute": 41,
@@ -1101,7 +1179,50 @@
     ]
   },
   {
-    "insight_id": "i21",
+    "insight_id": "i23",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 41,
+    "second": 23,
+    "t_s": 2483,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "S. Beltrán",
+      "E. Quiroz",
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "label": "possession_spell",
+      "window": "39:59-41:22",
+      "passes": 17,
+      "duration_s": 83,
+      "players_involved": 8,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      613,
+      614,
+      616,
+      617,
+      618,
+      620,
+      621,
+      622,
+      623,
+      624,
+      626,
+      627,
+      629,
+      630,
+      633,
+      634,
+      636
+    ]
+  },
+  {
+    "insight_id": "i24",
     "match_id": "m001",
     "period": 1,
     "minute": 42,
@@ -1132,7 +1253,7 @@
     ]
   },
   {
-    "insight_id": "i22",
+    "insight_id": "i25",
     "match_id": "m001",
     "period": 1,
     "minute": 42,
@@ -1163,7 +1284,7 @@
     ]
   },
   {
-    "insight_id": "i23",
+    "insight_id": "i26",
     "match_id": "m001",
     "period": 1,
     "minute": 43,
@@ -1215,7 +1336,7 @@
     ]
   },
   {
-    "insight_id": "i24",
+    "insight_id": "i27",
     "match_id": "m001",
     "period": 1,
     "minute": 44,
@@ -1247,7 +1368,39 @@
     ]
   },
   {
-    "insight_id": "i25",
+    "insight_id": "i28",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 44,
+    "second": 41,
+    "t_s": 2681,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "L. Arce"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "L. Arce",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 81,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.17",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.17,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 49,
+      "overall_to": 49
+    },
+    "evidence": [
+      688
+    ]
+  },
+  {
+    "insight_id": "i29",
     "match_id": "m001",
     "period": 2,
     "minute": 45,
@@ -1304,7 +1457,7 @@
     ]
   },
   {
-    "insight_id": "i26",
+    "insight_id": "i30",
     "match_id": "m001",
     "period": 2,
     "minute": 45,
@@ -1352,7 +1505,7 @@
     ]
   },
   {
-    "insight_id": "i27",
+    "insight_id": "i31",
     "match_id": "m001",
     "period": 2,
     "minute": 49,
@@ -1442,7 +1595,50 @@
     ]
   },
   {
-    "insight_id": "i28",
+    "insight_id": "i32",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 49,
+    "second": 12,
+    "t_s": 2952,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "K. Rosas",
+      "E. Sandoval",
+      "N. Ruelas"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "47:29-49:11",
+      "passes": 17,
+      "duration_s": 102,
+      "players_involved": 8,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      727,
+      728,
+      729,
+      731,
+      732,
+      733,
+      734,
+      736,
+      738,
+      740,
+      741,
+      742,
+      743,
+      747,
+      748,
+      749,
+      750
+    ]
+  },
+  {
+    "insight_id": "i33",
     "match_id": "m001",
     "period": 2,
     "minute": 49,
@@ -1512,7 +1708,7 @@
     ]
   },
   {
-    "insight_id": "i29",
+    "insight_id": "i34",
     "match_id": "m001",
     "period": 2,
     "minute": 50,
@@ -1553,7 +1749,7 @@
     ]
   },
   {
-    "insight_id": "i30",
+    "insight_id": "i35",
     "match_id": "m001",
     "period": 2,
     "minute": 52,
@@ -1584,7 +1780,7 @@
     ]
   },
   {
-    "insight_id": "i31",
+    "insight_id": "i36",
     "match_id": "m001",
     "period": 2,
     "minute": 52,
@@ -1660,7 +1856,74 @@
     ]
   },
   {
-    "insight_id": "i32",
+    "insight_id": "i37",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 53,
+    "second": 17,
+    "t_s": 3197,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "V. Meza",
+      "attribute": "vision",
+      "from": 68,
+      "to": 69,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      576,
+      592,
+      742,
+      769,
+      801
+    ]
+  },
+  {
+    "insight_id": "i38",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 54,
+    "second": 54,
+    "t_s": 3294,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "L. Arce"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "L. Arce",
+      "attribute": "defensa",
+      "from": 81,
+      "to": 82,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.18",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.18,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 49,
+      "overall_to": 49
+    },
+    "evidence": [
+      825
+    ]
+  },
+  {
+    "insight_id": "i39",
     "match_id": "m001",
     "period": 2,
     "minute": 56,
@@ -1712,7 +1975,7 @@
     ]
   },
   {
-    "insight_id": "i33",
+    "insight_id": "i40",
     "match_id": "m001",
     "period": 2,
     "minute": 60,
@@ -1743,7 +2006,7 @@
     ]
   },
   {
-    "insight_id": "i34",
+    "insight_id": "i41",
     "match_id": "m001",
     "period": 2,
     "minute": 63,
@@ -1795,7 +2058,7 @@
     ]
   },
   {
-    "insight_id": "i35",
+    "insight_id": "i42",
     "match_id": "m001",
     "period": 2,
     "minute": 63,
@@ -1872,7 +2135,7 @@
     ]
   },
   {
-    "insight_id": "i36",
+    "insight_id": "i43",
     "match_id": "m001",
     "period": 2,
     "minute": 65,
@@ -1898,7 +2161,83 @@
     "evidence": []
   },
   {
-    "insight_id": "i37",
+    "insight_id": "i44",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 65,
+    "second": 41,
+    "t_s": 3941,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "R. Salgado",
+      "attribute": "vision",
+      "from": 74,
+      "to": 75,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 68,
+      "overall_to": 68
+    },
+    "evidence": [
+      973,
+      979,
+      983,
+      988,
+      993
+    ]
+  },
+  {
+    "insight_id": "i45",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 65,
+    "second": 54,
+    "t_s": 3954,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "J. Torres",
+      "R. Salgado",
+      "E. Quiroz"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "label": "possession_spell",
+      "window": "64:44-65:52",
+      "passes": 15,
+      "duration_s": 68,
+      "players_involved": 7,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      977,
+      978,
+      979,
+      980,
+      981,
+      982,
+      983,
+      986,
+      988,
+      989,
+      991,
+      992,
+      993,
+      994,
+      995
+    ]
+  },
+  {
+    "insight_id": "i46",
     "match_id": "m001",
     "period": 2,
     "minute": 66,
@@ -1975,7 +2314,40 @@
     ]
   },
   {
-    "insight_id": "i38",
+    "insight_id": "i47",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 68,
+    "second": 24,
+    "t_s": 4104,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "D. Mena"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "D. Mena",
+      "attribute": "fisico",
+      "from": 70,
+      "to": 71,
+      "delta": 1,
+      "reason": "recuperación en campo propio que terminó en remate en 17 segundos",
+      "reason_code": "recovery_to_shot",
+      "reason_params": {
+        "seconds": 17,
+        "shooter": "J. Torres"
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      1038,
+      1042
+    ]
+  },
+  {
+    "insight_id": "i48",
     "match_id": "m001",
     "period": 2,
     "minute": 73,
@@ -2008,7 +2380,7 @@
     ]
   },
   {
-    "insight_id": "i39",
+    "insight_id": "i49",
     "match_id": "m001",
     "period": 2,
     "minute": 73,
@@ -2039,7 +2411,7 @@
     ]
   },
   {
-    "insight_id": "i40",
+    "insight_id": "i50",
     "match_id": "m001",
     "period": 2,
     "minute": 73,
@@ -2070,7 +2442,7 @@
     ]
   },
   {
-    "insight_id": "i41",
+    "insight_id": "i51",
     "match_id": "m001",
     "period": 2,
     "minute": 73,
@@ -2105,7 +2477,7 @@
     ]
   },
   {
-    "insight_id": "i42",
+    "insight_id": "i52",
     "match_id": "m001",
     "period": 2,
     "minute": 74,
@@ -2138,7 +2510,7 @@
     ]
   },
   {
-    "insight_id": "i43",
+    "insight_id": "i53",
     "match_id": "m001",
     "period": 2,
     "minute": 74,
@@ -2169,7 +2541,7 @@
     ]
   },
   {
-    "insight_id": "i44",
+    "insight_id": "i54",
     "match_id": "m001",
     "period": 2,
     "minute": 75,
@@ -2245,7 +2617,7 @@
     ]
   },
   {
-    "insight_id": "i45",
+    "insight_id": "i55",
     "match_id": "m001",
     "period": 2,
     "minute": 79,
@@ -2326,7 +2698,7 @@
     ]
   },
   {
-    "insight_id": "i46",
+    "insight_id": "i56",
     "match_id": "m001",
     "period": 2,
     "minute": 80,
@@ -2357,7 +2729,7 @@
     ]
   },
   {
-    "insight_id": "i47",
+    "insight_id": "i57",
     "match_id": "m001",
     "period": 2,
     "minute": 80,
@@ -2389,7 +2761,7 @@
     ]
   },
   {
-    "insight_id": "i48",
+    "insight_id": "i58",
     "match_id": "m001",
     "period": 2,
     "minute": 80,
@@ -2455,7 +2827,45 @@
     ]
   },
   {
-    "insight_id": "i49",
+    "insight_id": "i59",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 83,
+    "second": 18,
+    "t_s": 4998,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "J. Castro",
+      "V. Meza",
+      "N. Ruelas"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "82:19-83:14",
+      "passes": 12,
+      "duration_s": 55,
+      "players_involved": 6,
+      "ended_in": "shot"
+    },
+    "evidence": [
+      1246,
+      1247,
+      1248,
+      1249,
+      1250,
+      1252,
+      1253,
+      1254,
+      1255,
+      1256,
+      1257,
+      1258
+    ]
+  },
+  {
+    "insight_id": "i60",
     "match_id": "m001",
     "period": 2,
     "minute": 83,
@@ -2518,7 +2928,7 @@
     ]
   },
   {
-    "insight_id": "i50",
+    "insight_id": "i61",
     "match_id": "m001",
     "period": 2,
     "minute": 85,
@@ -2596,7 +3006,7 @@
     ]
   },
   {
-    "insight_id": "i51",
+    "insight_id": "i62",
     "match_id": "m001",
     "period": 2,
     "minute": 85,
@@ -2659,7 +3069,7 @@
     ]
   },
   {
-    "insight_id": "i52",
+    "insight_id": "i63",
     "match_id": "m001",
     "period": 2,
     "minute": 87,
@@ -2690,7 +3100,7 @@
     ]
   },
   {
-    "insight_id": "i53",
+    "insight_id": "i64",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -2774,7 +3184,7 @@
     ]
   },
   {
-    "insight_id": "i54",
+    "insight_id": "i65",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -2843,9 +3253,39 @@
       ],
       "phases": [
         {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "04:57-06:01"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "22:12-23:27"
+        },
+        {
+          "team": "Bahía FC",
+          "label": "possession_spell",
+          "window": "39:59-41:22"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "47:29-49:11"
+        },
+        {
           "team": "Bahía FC",
           "label": "control",
           "window": "55:00-65:00"
+        },
+        {
+          "team": "Bahía FC",
+          "label": "possession_spell",
+          "window": "64:44-65:52"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "82:19-83:14"
         }
       ],
       "story": [

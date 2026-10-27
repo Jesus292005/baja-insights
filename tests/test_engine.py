@@ -117,7 +117,8 @@ class CardReasonCodeTest(unittest.TestCase):
         "shot_speed": {"speed_kmh"}, "duel_streak": {"count"}, "run_speed": {"speed_kmh"},
         "dribbles": {"count", "window_min"}, "run_ended_in_shot": {"dragged_defender"},
         "run_opened_goal": {"dragged_defender", "dragged_position"}, "standout_defensive": set(),
-        "standout_creative": set(),
+        "standout_creative": set(), "pass_streak": {"count"}, "recovery_to_shot": {"seconds", "shooter"},
+        "big_save": {"xg", "shooter"},
     }
 
     def test_codes_and_params(self):
@@ -182,6 +183,52 @@ class MvpRankingTest(unittest.TestCase):
             self.assertEqual(insight["facts"]["ranking"], self.query.get_mvp_ranking(at, self.top)["ranking"])
             checked += 1
         self.assertGreater(checked, 0)
+
+
+class NewMomentsTest(unittest.TestCase):
+    """Long possessions, pass streaks, counter-attacks and big saves: shown once they have happened."""
+
+    @classmethod
+    def setUpClass(cls):
+        from baja_insights.generator import generate_match
+        cls.matches = [load(DATA / "m001" / "events.jsonl")] + [generate_match(roster(), seed=s, script=None) for s in (1, 2, 3, 4)]
+        cls.runs = [(events, InsightEngine(roster()).run(events)) for events in cls.matches]
+
+    def each(self, test):
+        found = 0
+        for events, insights in self.runs:
+            by_id = {e["event_id"]: e for e in events}
+            for i in insights:
+                if test(i):
+                    found += 1
+                    yield i, by_id
+        self.assertGreater(found, 0)
+
+    def test_possession_spell(self):
+        for i, by_id in self.each(lambda i: i["type"] == "team_phase" and i["facts"]["label"] == "possession_spell"):
+            f = i["facts"]
+            passes = [by_id[e] for e in i["evidence"]]
+            self.assertGreaterEqual(f["passes"], 12)
+            self.assertEqual(len(passes), f["passes"])
+            self.assertTrue(all(p["type"] == "pass" and p["outcome"] == "complete" and p["team"] == i["team"] for p in passes))
+            self.assertIn(f["ended_in"], ("goal", "shot", "out", "foul", "lost"))
+            self.assertGreaterEqual(i["t_s"], max(p["t_s"] for p in passes))  # once the move is over
+
+    def test_cards_come_after_what_they_cite(self):
+        codes = ("pass_streak", "recovery_to_shot", "big_save")
+        for i, by_id in self.each(lambda i: i["type"] == "card_upgrade" and i["facts"]["reason_code"] in codes):
+            self.assertGreaterEqual(i["t_s"], max(by_id[e]["t_s"] for e in i["evidence"]), i["facts"]["reason"])
+
+    def test_big_saves_go_to_the_keeper(self):
+        for i, by_id in self.each(lambda i: i["type"] == "card_upgrade" and i["facts"]["reason_code"] == "big_save"):
+            shot = by_id[i["evidence"][0]]
+            self.assertEqual((roster().players[i["facts"]["player"]].position, shot["outcome"]), ("POR", "saved"))
+            self.assertGreaterEqual(shot["xg"], 0.15)
+
+    def test_pass_streaks_are_outfield(self):
+        for i, _ in self.each(lambda i: i["type"] == "card_upgrade" and i["facts"]["reason_code"] == "pass_streak"):
+            self.assertNotEqual(roster().players[i["facts"]["player"]].position, "POR")
+            self.assertEqual(i["facts"]["reason_params"]["count"] % 20, 0)
 
 
 if __name__ == "__main__":
