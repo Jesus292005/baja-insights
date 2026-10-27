@@ -10,10 +10,12 @@ import {
 } from '../components/shell/shell';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode, OverlayOrder } from '../contracts/overlay';
-import { demoMatch } from '../data/match';
+import { demoMatch, roster } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
+import { playAt, playOf } from '../logic/play';
+import { PlayLegend } from '../components/stage/PlayLegend';
 import type { Showing } from '../logic/plan';
 
 /** Re-renders every frame while `active`, for the replayed moment's tide line. */
@@ -59,6 +61,10 @@ export function WebApp({ config }: { config: AppConfig }) {
   const { snap, orders, t, showing, loading, stale, replay, replayState } = rt;
   const s = strings[lang];
   const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
+  // A moment replayed from the list draws its own play; otherwise the latest one stays on the pitch.
+  const latestPlay = useMemo(() => playAt(orders, t, demoMatch.playEvents, roster), [orders, t]);
+  const pinnedPlay = useMemo(() => (pinned ? playOf(pinned.order, demoMatch.playEvents, roster) : null), [pinned]);
+  const play = pinnedPlay ?? latestPlay;
   const cinemaHref = `/cine?mode=${mode}&lang=${lang}${config.source === 'replay' ? `&t=${Math.floor(t)}&autoplay=0` : '&source=live'}`;
   const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
 
@@ -98,7 +104,8 @@ export function WebApp({ config }: { config: AppConfig }) {
           <CardPanel orders={orders} t={t} stale={stale} loading={loading} />
         </aside>
         <div className="main-col">
-          <Stage showing={showing} orders={orders} variant="web" override={override} />
+          <Stage showing={showing} orders={orders} variant="web" override={override} play={play} />
+          <PlayLegend play={play} variant="web" />
           {replay && replayState && (
             <ReplayControls
               state={replayState}

@@ -213,6 +213,42 @@ function GoalChain({ order, elapsed }: GraphicProps<GoalAnalysisOrder>) {
   const detail = d.chain_detail;
   const space = typeof d.invisible_assist === 'object' && d.invisible_assist ? d.invisible_assist.space_opened_m : null;
   const scorer = d.chain[d.chain.length - 1];
+  const chainList = (
+    <ol className="g-chain g-chain-list" style={{ '--n': d.chain.length } as CSSProperties}>
+      {d.chain.map((name, i) => {
+        const isInvisible = name === invisible;
+        const isScorer = i === d.chain.length - 1;
+        return (
+          <li key={`${name}-${i}`} className={`${isInvisible ? 'is-invisible' : ''}${isScorer ? ' is-scorer' : ''}`} style={{ animationDelay: `${i * 150}ms` }}>
+            <span className="g-node" aria-hidden="true">{surname(name).slice(0, 2).toUpperCase()}</span>
+            <b>{name}</b>
+            {mode === 'analyst' && detail?.[i] && <small>{chainActionLabel(detail[i], lang)} · {clock(detail[i].t_s)}</small>}
+            {mode === 'analyst' && d.credit[i] !== undefined && (
+              <span className="g-credit">
+                <span className="g-credit-bar" style={{ width: `${d.credit[i] * 100}%` }} />
+                <span className="mono">{pct(d.credit[i], lang)}%</span>
+              </span>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+  const invisibleLine = invisible && (
+      <p className="g-invisible">
+        <span className="g-invisible-badge">{s.goal.invisible}</span> {invisible}
+        <span className="g-invisible-hint">
+          {s.goal.invisibleHint}
+          {space !== null && ` ${t(s.goal.spaceOpened, { meters: asSent(space, lang) })}.`}
+        </span>
+      </p>
+    );
+  const analystRow = mode === 'analyst' && (
+      <div className="g-row">
+        {d.xg !== undefined && <span className="g-score">xG <b>{asSent(d.xg, lang)}</b></span>}
+        <Evidence ids={order.evidence ?? detail?.map((l) => l.event_id)} />
+      </div>
+    );
   return (
     <Panel order={order} elapsed={elapsed} team={teamOf(scorer)}>
       {d.scoreline && (
@@ -220,40 +256,9 @@ function GoalChain({ order, elapsed }: GraphicProps<GoalAnalysisOrder>) {
           <TeamChip team={roster.home} /> {d.scoreline.home} – {d.scoreline.away} <TeamChip team={roster.away} />
         </p>
       )}
-      <ol className="g-chain" style={{ '--n': d.chain.length } as CSSProperties}>
-        {d.chain.map((name, i) => {
-          const isInvisible = name === invisible;
-          const isScorer = i === d.chain.length - 1;
-          return (
-            <li key={`${name}-${i}`} className={`${isInvisible ? 'is-invisible' : ''}${isScorer ? ' is-scorer' : ''}`} style={{ animationDelay: `${i * 150}ms` }}>
-              <span className="g-node" aria-hidden="true">{surname(name).slice(0, 2).toUpperCase()}</span>
-              <b>{name}</b>
-              {mode === 'analyst' && detail?.[i] && <small>{chainActionLabel(detail[i], lang)} · {clock(detail[i].t_s)}</small>}
-              {mode === 'analyst' && d.credit[i] !== undefined && (
-                <span className="g-credit">
-                  <span className="g-credit-bar" style={{ width: `${d.credit[i] * 100}%` }} />
-                  <span className="mono">{pct(d.credit[i], lang)}%</span>
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-      {invisible && (
-        <p className="g-invisible">
-          <span className="g-invisible-badge">{s.goal.invisible}</span> {invisible}
-          <span className="g-invisible-hint">
-            {s.goal.invisibleHint}
-            {space !== null && ` ${t(s.goal.spaceOpened, { meters: asSent(space, lang) })}.`}
-          </span>
-        </p>
-      )}
-      {mode === 'analyst' && (
-        <div className="g-row">
-          {d.xg !== undefined && <span className="g-score">xG <b>{asSent(d.xg, lang)}</b></span>}
-          <Evidence ids={order.evidence ?? detail?.map((l) => l.event_id)} />
-        </div>
-      )}
+      {chainList}
+      {invisibleLine}
+      {analystRow}
     </Panel>
   );
 }

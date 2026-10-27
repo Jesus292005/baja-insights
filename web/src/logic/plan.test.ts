@@ -63,6 +63,14 @@ describe('planStage', () => {
     expect(plan.frames[13].top_right?.elapsed).toBe(1);
   });
 
+  it('center pauses the bottom bar too, so the goal board can use the full height', () => {
+    const bar = order('bottom_bar', 10, 4, { type: 'duel_bar', data: { player_a: 'A', player_b: 'B', bar: 0 } });
+    const goal = order('center', 11, 2, { type: 'goal_analysis', data: { chain: ['A'], credit: [1] } });
+    const plan = planStage([bar, goal]);
+    expect(at(plan, 11, 'bottom_bar')).toBeUndefined();
+    expect(plan.frames[13].bottom_bar?.elapsed).toBe(1);
+  });
+
   it('full_screen hides every other slot', () => {
     const bar = order('top_right', 0, 30, { type: 'mvp_update', data: { rank: 1, mvp_score: 1 } });
     const top = order('full_screen', 5, 5, { type: 'top3', data: { cards: [] } });

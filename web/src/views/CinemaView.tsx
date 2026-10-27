@@ -6,8 +6,10 @@ import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
-import { demoMatch } from '../data/match';
+import { demoMatch, roster } from '../data/match';
 import { forViewer, momentsAt } from '../logic/derive';
+import { playAt } from '../logic/play';
+import { PlayLegend } from '../components/stage/PlayLegend';
 
 /**
  * Cinema mode (/cine): the 1920×1080 stage on a black page, with the pitch and the score bug,
@@ -111,6 +113,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
           orders={rt.orders}
           variant="broadcast"
           backdrop
+          play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)}
           bug={
             <div className="slot-bug">
               <MatchBug state={rt.snap.state} clockUpdate={rt.snap.clock} variant="broadcast" />
@@ -122,6 +125,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
               {mode === 'fan' ? s.cinema.badgeFan : s.cinema.badgeAnalyst} · {lang.toUpperCase()}
             </p>
           )}
+          <PlayLegend play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)} variant="canvas" />
           {hint && !help && <p className="cinema-hint">{s.cinema.hint}</p>}
           {help && (
             <div className="cinema-help" role="dialog" aria-label={s.cinema.helpTitle}>

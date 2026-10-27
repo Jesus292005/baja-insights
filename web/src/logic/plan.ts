@@ -5,8 +5,8 @@ import type { OverlayOrder, Slot } from '../contracts/overlay';
  *
  * Rules (same spirit as the agents' Scheduler in agents/baja_agents/overlays.py):
  * - One order per slot. The next one waits in a queue, in show_at_s order.
- * - full_screen hides and pauses every other slot. center hides and pauses top_right, side_panel
- *   and lower_third, which overlap it (the agents block every slot during center too).
+ * - full_screen hides and pauses every other slot. center hides and pauses every slot but itself
+ *   (the agents block every slot during center too), so the goal board can use the full height.
  * - top_right and side_panel share the right column, so side_panel waits while top_right is on.
  *   The agents never schedule them together; this only matters for a chat answer put on screen.
  * - A paused order keeps its remaining time.
@@ -16,7 +16,7 @@ import type { OverlayOrder, Slot } from '../contracts/overlay';
  */
 
 export const SLOTS: Slot[] = ['full_screen', 'center', 'top_right', 'side_panel', 'lower_third', 'bottom_bar'];
-const BLOCKED_BY_CENTER: Slot[] = ['top_right', 'side_panel', 'lower_third'];
+const BLOCKED_BY_CENTER: Slot[] = ['top_right', 'side_panel', 'lower_third', 'bottom_bar'];
 const NEVER_DROP = new Set(['goal_analysis', 'match_keys', 'top3', 'chat_answer']);
 export const MAX_WAIT_S = 20;
 
