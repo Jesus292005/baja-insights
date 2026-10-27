@@ -201,6 +201,9 @@ const es = {
     open: 'Ver la tarjeta de este momento',
     close: 'Ocultar la tarjeta',
   },
+  pitch: {
+    ends: 'Cancha, tiempo {half}: portería de {left} a la izquierda y de {right} a la derecha.',
+  },
   band: {
     label: 'Tarjetas del partido',
     empty: 'Las tarjetas aparecen aquí cuando pasa algo en el campo.',
@@ -421,6 +424,9 @@ const en: Shape<typeof es> = {
     empty: 'Key moments show up here as they happen.',
     open: "Show this moment's card",
     close: 'Hide the card',
+  },
+  pitch: {
+    ends: 'Pitch, half {half}: {left} goal on the left, {right} goal on the right.',
   },
   band: {
     label: 'Match cards',

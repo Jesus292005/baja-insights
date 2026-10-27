@@ -2,9 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { OverlayOrder, Slot } from '../../contracts/overlay';
 import { broadcastSlots } from '../../design/tokens';
 import { usePrefs } from '../../i18n/prefs';
+import { t } from '../../i18n/strings';
 import { isFrame } from '../../logic/derive';
 import { SLOTS, type Showing } from '../../logic/plan';
-import type { MatchPlay } from '../../logic/play';
+import { defendsLeft, halfOf, type Half, type MatchPlay } from '../../logic/play';
 import { roster } from '../../data/match';
 import { PlayLayer } from './PlayLayer';
 import { Graphic } from './graphics';
@@ -21,6 +22,8 @@ export interface StageProps {
   backdrop?: boolean;
   /** The play drawn on the pitch (needs the backdrop). */
   play?: MatchPlay | null;
+  /** Half the pitch shows when no play is drawn (the play brings its own). Default: first. */
+  half?: Half;
   /** Extra layers on the canvas, in canvas pixels (cinema badge and help). */
   children?: React.ReactNode;
 }
@@ -70,7 +73,7 @@ function useAnnouncer(showing: Partial<Record<Slot, Showing>>, enabled: boolean)
   return message;
 }
 
-export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, children }: StageProps) {
+export function Stage({ showing, orders, variant, graphics = true, bug, backdrop, play, half, children }: StageProps) {
   const { s, mode } = usePrefs();
   const { ref, scale } = useFitScale(variant === 'web' ? 'width' : 'contain');
   const announcement = useAnnouncer(showing, variant === 'web');
@@ -87,7 +90,9 @@ export function Stage({ showing, orders, variant, graphics = true, bug, backdrop
           visibility: scale ? 'visible' : 'hidden',
         }}
       >
-        {(backdrop ?? variant === 'web') && <PitchBackdrop label={s.app.videoPlaceholder} play={play ?? null} />}
+        {(backdrop ?? variant === 'web') && (
+          <PitchBackdrop label={s.app.videoPlaceholder} play={play ?? null} half={play?.half ?? half ?? 1} ends={s.pitch.ends} />
+        )}
         {bug}
         {graphics && SLOTS.map((slot) => {
           const item = showing[slot];
@@ -114,15 +119,18 @@ export function Stage({ showing, orders, variant, graphics = true, bug, backdrop
 }
 
 /**
- * The goal card docks on the side of the pitch the scoring team defends, so the play stays visible:
- * Bahía attacks towards x = 105, so its goals dock left; Real Cardón's dock right.
+ * The goal card docks on the side of the pitch the scoring team defends in that half, so the play,
+ * which ends at the other goal, stays visible. Teams swap ends at half time (see logic/play.ts).
  */
 function goalDock(order: OverlayOrder) {
   const scorer = order.type === 'goal_analysis' ? order.data.chain[order.data.chain.length - 1] : undefined;
-  const side = roster.player(scorer)?.team.side ?? 'home';
+  const team = roster.player(scorer)?.team.side ?? 'home';
+  const links = order.type === 'goal_analysis' ? order.data.chain_detail : undefined;
+  const half = halfOf(links?.length ? Math.max(...links.map((l) => l.t_s)) : order.show_at_s);
+  const dockLeft = defendsLeft(team, half);
   // Below the score bug on the left. The bottom bar is paused during a goal, so the card can reach
   // y = 1000, just above the cinema legend.
-  return side === 'home' ? { x: 96, y: 140, w: 700, h: 860 } : { x: 1124, y: 54, w: 700, h: 946 };
+  return dockLeft ? { x: 96, y: 140, w: 700, h: 860 } : { x: 1124, y: 54, w: 700, h: 946 };
 }
 
 /**
@@ -130,17 +138,21 @@ function goalDock(order: OverlayOrder) {
  * so the plays the engine sends land where they happened. Not drawn in the broadcast overlay, where the
  * real video goes and its camera does not match these coordinates.
  */
-function PitchBackdrop({ label, play }: { label: string; play: MatchPlay | null }) {
+function PitchBackdrop({ label, play, half, ends }: { label: string; play: MatchPlay | null; half: Half; ends: string }) {
+  // Whose goal is on each end in this half: Bahía defends the left one in the first half.
+  const left = defendsLeft('home', half) ? roster.home : roster.away;
+  const right = left === roster.home ? roster.away : roster.home;
+  const goalColour = (team: typeof left) => `var(--bi-team-${team.side})`;
   return (
-    <div className="pitch">
-      <svg viewBox="-30 -30 1110 740" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <div className="pitch" data-half={half}>
+      <svg viewBox="-70 -30 1190 740" preserveAspectRatio="xMidYMid meet" role="img" aria-label={t(ends, { left: left.name, right: right.name, half })}>
         <defs>
           <pattern id="mow" x="0" width="105" height="740" patternUnits="userSpaceOnUse">
             <rect width="52.5" height="740" y="-30" fill="var(--pitch-a)" />
             <rect x="52.5" y="-30" width="52.5" height="740" fill="var(--pitch-b)" />
           </pattern>
         </defs>
-        <rect x="-30" y="-30" width="1110" height="740" fill="url(#mow)" />
+        <rect x="-70" y="-30" width="1190" height="740" fill="url(#mow)" />
         <g fill="none" stroke="var(--pitch-line)" strokeWidth="3">
           <rect x="0" y="0" width="1050" height="680" />
           <line x1="525" y1="0" x2="525" y2="680" />
@@ -153,6 +165,13 @@ function PitchBackdrop({ label, play }: { label: string; play: MatchPlay | null 
           <rect x="1050" y="303.4" width="20" height="73.2" />
           <circle cx="110" cy="340" r="3" fill="var(--pitch-line)" />
           <circle cx="940" cy="340" r="3" fill="var(--pitch-line)" />
+        </g>
+        {/* Each goal in the colour of the team that defends it, with its short name beside it. */}
+        <g className="pitch-goals">
+          <rect x="-20" y="303.4" width="20" height="73.2" fill={goalColour(left)} className="pitch-goal" />
+          <rect x="1050" y="303.4" width="20" height="73.2" fill={goalColour(right)} className="pitch-goal" />
+          <text className="pitch-goal-name" x="-44" y="340" fill={goalColour(left)} transform="rotate(-90 -44 340)" textAnchor="middle">{left.short}</text>
+          <text className="pitch-goal-name" x="1094" y="340" fill={goalColour(right)} transform="rotate(90 1094 340)" textAnchor="middle">{right.short}</text>
         </g>
         {play && <PlayLayer key={play.order.overlay_id} play={play} />}
       </svg>

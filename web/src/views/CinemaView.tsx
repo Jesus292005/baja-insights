@@ -8,7 +8,7 @@ import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { demoMatch, roster } from '../data/match';
 import { forViewer, momentsAt } from '../logic/derive';
-import { playAt } from '../logic/play';
+import { halfOf, playAt } from '../logic/play';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
 /**
@@ -114,6 +114,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
           variant="broadcast"
           backdrop
           play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)}
+          half={halfOf(rt.t)}
           bug={
             <div className="slot-bug">
               <MatchBug state={rt.snap.state} clockUpdate={rt.snap.clock} variant="broadcast" />

@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { usePrefs } from '../../i18n/prefs';
 import { asSent, clock, surname } from '../../i18n/strings';
 import { placeLabels } from '../../logic/labels';
-import { buildPlay, crossControl, toSvg, type MatchPlay, type Side } from '../../logic/play';
+import { buildPlay, crossControl, orientPlay, toSvg, type MatchPlay, type Side } from '../../logic/play';
 
 /**
  * The current play, drawn inside the pitch backdrop (1050 × 680 SVG units). Keyed by the order,
@@ -33,7 +33,8 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
   const { lang } = usePrefs();
   const uid = useId().replace(/:/g, '');
   // The ball joins the actions of one possession; separate possessions stay apart (see buildPlay).
-  const drawn = buildPlay(play.links, true);
+  // Drawn in the play's half: in the second half the teams have swapped ends.
+  const drawn = buildPlay(orientPlay(play), true);
   const order = new Map(
     play.links.map((l, i) => ({ l, i })).sort((a, b) => a.l.t_s - b.l.t_s).map(({ i }, n) => [i, n]),
   );

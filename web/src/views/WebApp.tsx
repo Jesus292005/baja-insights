@@ -15,7 +15,7 @@ import { demoMatch, roster } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
-import { playAt, playOf } from '../logic/play';
+import { halfOf, playAt, playOf } from '../logic/play';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
 export function WebApp({ config }: { config: AppConfig }) {
@@ -82,7 +82,7 @@ export function WebApp({ config }: { config: AppConfig }) {
         </aside>
         <div className="main-col">
           <CardBand showing={showing} orders={orders} />
-          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} />
+          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} half={halfOf(t)} />
           <PlayLegend play={play} variant="web" />
           {replay && replayState && (
             <ReplayControls

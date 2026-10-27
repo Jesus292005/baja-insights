@@ -40,6 +40,9 @@
 .pitch { position: absolute; inset: 0; background: #12293a; --pitch-a: #13303a; --pitch-b: #163640; --pitch-line: rgb(243 237 226 / 0.22); background: var(--pitch-a); }
 .pitch svg { width: 100%; height: 100%; display: block; }
 .pitch::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(12 20 24 / 0.55) 100%); }
+/* Goals in the colour of the team that defends them; the names sit outside the goal line. */
+.pitch-goal { opacity: 0.9; }
+.pitch-goal-name { font-family: var(--bi-font-data); font-size: 24px; font-weight: 700; letter-spacing: 0.12em; }
 .pitch-label { position: absolute; right: 96px; bottom: 30px; z-index: 1; font-family: var(--bi-font-data); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(243 237 226 / 0.55); }
 
 .slot { position: absolute; display: flex; flex-direction: column; justify-content: flex-start; z-index: var(--bi-z-slot); }

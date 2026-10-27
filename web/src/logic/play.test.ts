@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChainLink, GoalAnalysisOrder, OverlayOrder } from '../contracts/overlay';
 import { demoMatch, roster } from '../data/match';
 import { forViewer } from './derive';
-import { buildPlay, hasCoordinates, playAt, toSvg } from './play';
+import { buildPlay, defendsLeft, halfOf, hasCoordinates, orientPlay, playAt, toSvg } from './play';
 
 const fanEn = forViewer(demoMatch.overlays, 'fan', 'en');
 const goals = fanEn.filter((o): o is GoalAnalysisOrder => o.type === 'goal_analysis');
@@ -105,5 +105,25 @@ describe('plays from several possessions', () => {
     const play = buildPlay([ev(1, 983, 'pass', 43, [84, 23], [53, 9]), ev(2, 1210, 'pass', 49, [58, 3], [40, 12])], true);
     expect(play.gaps).toEqual([]);
     expect(play.tags.map((g) => g.t_s)).toEqual([983, 1210]);
+  });
+});
+
+describe('halves', () => {
+  it('turns second-half plays 180° and keeps first-half ones', () => {
+    const second = playAt(fanEn, equaliser.show_at_s, demoMatch.playEvents, roster)!;
+    expect(second.half).toBe(2);
+    const raw = second.links[0].start!;
+    expect(orientPlay(second)[0].start).toEqual([105 - raw[0], 68 - raw[1]]);
+    const first = playAt(fanEn, opener.show_at_s, demoMatch.playEvents, roster)!;
+    expect(first.half).toBe(1);
+    expect(orientPlay(first)).toBe(first.links);
+  });
+
+  it('puts each team in front of its own goal', () => {
+    expect(defendsLeft('home', 1)).toBe(true);
+    expect(defendsLeft('away', 1)).toBe(false);
+    expect(defendsLeft('home', 2)).toBe(false);
+    expect(halfOf(2699)).toBe(1);
+    expect(halfOf(2700)).toBe(2);
   });
 });
