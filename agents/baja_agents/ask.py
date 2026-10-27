@@ -25,10 +25,11 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from baja_insights.contract import fmt_clock, parse_clock
+from baja_insights.engine.core import FLANK_MATCHUPS
 from baja_insights.engine.tools import MatchQuery
 
 from . import config
-from .checks import EVENT_ID_KEYS, figures, numbers, wrong_scorelines
+from .checks import EVENT_ID_KEYS, UI_ONLY_FACTS, figures, numbers, wrong_scorelines, without_ui_only
 from .llm import LLMRunner
 from .narrator import name_sides
 
@@ -37,9 +38,24 @@ log = logging.getLogger(__name__)
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-6"
+VERSION = "ask-9"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
+# Questions about who plays. `lineups` answers them in full, so they need no function call.
+# Questions about a goal. The agent often explained one from the team's phase instead of its chain, so the
+# goals scored so far come with their chains up front.
+GOAL = re.compile(
+    r"(\bgol(es)?\b|\bgoals?\b|golazo|empat|equali[sz]|anot(ó|o|aron)\b|marc(ó|o|aron)\b|\bscor(e|ed|es|ing)\b"
+    r"|asistencia|\bassist)",
+    re.IGNORECASE,
+)
+
+LINEUP = re.compile(
+    r"(alineaci|once (titular|inicial)|titulares|suplentes|banca|banquillo|cambios?\b|sustituc|qui[eé]n(es)? juega"
+    r"|lineups?|line-up|starting (eleven|xi)|starters|bench|substitut|subs\b|who (is|are) playing)",
+    re.IGNORECASE,
+)
+
 PREDICTION = re.compile(
     r"(qui[eé]n (va a ganar|ganar[aá])|va(n)? a (ganar|perder|empatar)|c[oó]mo (va a )?(terminar|acabar)[aá]?"
     r"|resultado final|pron[oó]stic|predic|probabilidad|apuesta"
@@ -57,7 +73,8 @@ Rules
 - The current moment is `at`. Nothing after it exists yet: never ask about later moments and never talk about them.
 - To explain a goal, call get_match_state first to get its goal_event_id, then get_goal_chain.
 - `mode` fan: warm and simple, at most 3 figures besides the scoreline; say the rest in words. `mode` analyst: precise, with the key figures.
-- Write in `language` (es or en). At most 3 sentences for fans and 4 for analysts.
+- Write in `language` (es or en), even when the question is written in another language: the fan chose it in
+  the app. At most 3 sentences for fans and 4 for analysts.
 - Refer to players by surname. Do not use gendered pronouns for players.
 - Function results key per-team values by team name and give scorelines as text with the home team first,
   "Bahía FC 0-1 Real Cardón". A number belongs only to the team it is keyed by. Write scorelines in that order: 0-1.
@@ -72,8 +89,16 @@ Which functions to call
 - Why a team is winning or losing, who is better, or who will win: get_match_state, and get_team_phase for EACH
   team over the same window. A number belongs only to the team whose result contains it. Explain a goal with
   get_goal_chain when it helps.
-- A duel between two players: get_duel (player_a is the home player).
+- A duel between two players: get_duel (player_a is the home player). If the fan names no players ("the flank
+  duel", "el duelo de banda", "who is winning on the wing"), take them from `flank_duels`, the full-back against
+  the opposing winger, most contested first: answer about the first, and mention the second if it is close.
+  Never invent a player name for get_duel.
 - A goal: get_match_state for its goal_event_id, then get_goal_chain.
+- A goal: if `goals` is there, explain it from its `chain`, in time order: who started it, who passed, who
+  finished, and `invisible_assist` when someone opened the space without the ball. No function is needed for it.
+- Lineups, who is playing, the bench or the substitutions: answer from `lineups`, with no function needed.
+  `on_pitch` is each team's eleven at `at`, `bench` who has not played, `substitutions` the changes so far. List
+  exactly those names and positions, team by team; never take players from anywhere else.
 
 Status
 - answered: you answered from the functions.
@@ -91,6 +116,80 @@ Status
 class AskAnswer(BaseModel):
     status: Literal["answered", "not_tracked", "not_found", "no_prediction"]
     answer: str = Field(description="The answer, in the requested language and mode")
+
+
+OPPOSITE_FLANK = {"LD": "EI", "LI": "ED", "ED": "LI", "EI": "LD"}  # a full-back faces the winger on that side
+
+
+def flank_duels(query: MatchQuery, at_s: int, top: int = 4) -> list[dict]:
+    """The flank duels up to ``at_s`` (full-back against the opposing winger), most contested first.
+
+    get_duel needs two names, and a fan asking about "the flank duel" gives none. These are the
+    engine's own pairs: every starter flank matchup, plus any other flank pair (a substitute) that
+    already had a duel.
+    """
+    st = query.engine_at(at_s).state
+    home, away = query.roster.home, query.roster.away
+    pairs: dict[tuple[str, str], list] = {}
+    for p in query.roster.team_players(home, starters_only=True):
+        if p.position in OPPOSITE_FLANK:
+            for q in query.roster.by_position(away, OPPOSITE_FLANK[p.position]):
+                pairs[(p.name, q.name)] = []
+    for (a, b), history in st.duel_pairs.items():
+        if (st.players[a].position, st.players[b].position) in FLANK_MATCHUPS:
+            pairs[(a, b)] = history
+    out = [{"player_a": a, "player_b": b, "duels": len(h),
+            "won_a": sum(1 for _, w, _ in h if w == a), "won_b": sum(1 for _, w, _ in h if w == b)}
+           for (a, b), h in pairs.items()]
+    return sorted(out, key=lambda d: (-d["duels"], d["player_a"]))[:top]
+
+
+POSITION_ORDER = ("POR", "LD", "DFC", "LI", "MCD", "MC", "ED", "EI", "DC")
+
+
+def lineups(query: MatchQuery, at_s: int) -> dict:
+    """Who is on the pitch for each team at ``at_s``, with positions, the bench and the substitutions so far.
+
+    No chat function returns lineups, and a guess from the ``known_players`` of a ``player_not_found``
+    (one flat list of the whole roster) mixes teams and substitutes. This comes from the roster and the
+    match's substitution events, so it is the same every time and follows the changes.
+    """
+    roster = query.roster
+    on_pitch = {team: [p.name for p in roster.team_players(team, starters_only=True)] for team in (roster.home, roster.away)}
+    subs = {team: [] for team in on_pitch}
+    for e in query.events:
+        if e["type"] != "substitution" or e["t_s"] > at_s or e.get("team") not in on_pitch:
+            continue
+        team, player_in, player_out = e["team"], e.get("player_in"), e.get("player_out")
+        if player_out in on_pitch[team]:
+            on_pitch[team][on_pitch[team].index(player_out)] = player_in
+        subs[team].append({"clock": fmt_clock(e["t_s"]), "out": player_out, "in": player_in})
+
+    def entry(name: str) -> dict:
+        p = roster.players[name]
+        return {"player": p.name, "number": p.number, "position": p.position}
+
+    out = {}
+    for team, names in on_pitch.items():
+        playing = sorted((entry(n) for n in names), key=lambda x: (POSITION_ORDER.index(x["position"]), x["number"]))
+        used = set(names) | {s["out"] for s in subs[team]}
+        bench = [entry(p.name) for p in roster.team_players(team) if p.name not in used]
+        out[team] = {"on_pitch": playing, "bench": bench, "substitutions": subs[team]}
+    return out
+
+
+def goals_so_far(query: MatchQuery, at_s: int) -> list[dict]:
+    """The goals scored up to ``at_s``, each with its chain, as get_goal_chain returns it, but with team names,
+    scorelines as text, and no event ids or pitch coordinates."""
+    out = []
+    for goal in query.get_match_state(fmt_clock(at_s))["goals"]:
+        chain = query.get_goal_chain(goal["event_id"])
+        if "error" in chain:
+            continue
+        facts = {k: chain[k] for k in ("scoreline", "xg", "duration_s", "chain", "invisible_assist") if k in chain}
+        out.append({"clock": fmt_clock(goal["t_s"]), "team": goal["team"], "scorer": goal["scorer"],
+                    "assist": goal.get("assist"), **name_sides(_without_ids(without_ui_only(facts)), query.roster)})
+    return out
 
 
 def load_tool_definitions(path: Path = TOOLS_FILE) -> list[dict]:
@@ -116,7 +215,8 @@ def event_ids(value) -> list[int]:
 
 def _without_ids(value):
     if isinstance(value, dict):
-        return {k: _without_ids(v) for k, v in value.items() if k not in EVENT_ID_KEYS and k != "known_goals"}
+        return {k: _without_ids(v) for k, v in value.items()
+                if k not in EVENT_ID_KEYS and k not in UI_ONLY_FACTS and k != "known_goals"}
     if isinstance(value, list):
         return [_without_ids(v) for v in value]
     return value
@@ -130,6 +230,8 @@ class ToolSession:
     at_s: int
     calls: list[str] = field(default_factory=list)
     results: list[dict] = field(default_factory=list)
+    context: list = field(default_factory=list)  # engine data given to the agent up front (flank_duels, lineups, goals)
+    context_tools: list = field(default_factory=list)  # the functions code called to build that context
 
     def _clip(self, value):
         try:
@@ -166,7 +268,7 @@ class ToolSession:
         self.results.append(result)
 
     def allowed_numbers(self, extra: list) -> set[float]:
-        base = numbers(json.dumps([_without_ids(self.results), extra], ensure_ascii=False))
+        base = numbers(json.dumps([_without_ids(self.results), self.context, extra], ensure_ascii=False))
         return base | {float(round(n * 100)) for n in base if 0 < n <= 1}
 
     def scorelines(self) -> set[str]:
@@ -187,7 +289,8 @@ class ToolSession:
         return {f"{s['home']}-{s['away']}" for s in found if "home" in s and "away" in s}
 
     def tools_used(self) -> list[str]:
-        return list(dict.fromkeys(self.calls))
+        """Functions whose results back the answer: the ones called, then the ones code called for the context."""
+        return list(dict.fromkeys(self.calls + self.context_tools))
 
     def evidence(self) -> list[int]:
         return list(dict.fromkeys(i for r in self.results for i in event_ids(r) if i >= 1))[:12]
@@ -199,7 +302,8 @@ class ToolSession:
             def run(**arguments) -> str:
                 # The model sees team names instead of home/away and scorelines as text, as the graphics
                 # agents do; the checks keep using the raw result.
-                return json.dumps(name_sides(self.call(name, arguments), self.query.roster), ensure_ascii=False)
+                result = without_ui_only(self.call(name, arguments))  # no pitch coordinates for the model
+                return json.dumps(name_sides(result, self.query.roster), ensure_ascii=False)
             run.__name__ = name
             return run
 
@@ -248,7 +352,7 @@ class AskTheMatch:
             return None
         key = {k: request.get(k) for k in ("match_id", "mode", "language", "favorite_team", "history")}
         key.update(question=" ".join(request["question"].lower().split()), at_s=at_s, version=VERSION,
-                   model=self.runner.model)
+                   model=self.runner.model, reasoning=self.runner.reasoning_effort)
         digest = hashlib.sha256(json.dumps(key, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:32]
         return self.cache_dir / self.name / f"{digest}.json"
 
@@ -266,7 +370,10 @@ class AskTheMatch:
     def problems(self, session: ToolSession, request: dict, at_s: int, result: AskAnswer) -> list[str]:
         """Accuracy problems: an answer that still has one after the retry is never shown."""
         found = []
-        if not session.calls:
+        # `lineups` answers who plays, and who does not: "Messi isn't in this match" needs no function either
+        answered_from_lineups = (LINEUP.search(request["question"]) or result.status == "not_found"
+                                 or bool(session.context_tools))  # the goals and their chains came with the question
+        if not session.calls and not answered_from_lineups:
             found.append("you answered without calling any function")
         allowed = session.allowed_numbers([request["question"], fmt_clock(at_s), at_s // 60,
                                            [h["text"] for h in request.get("history") or []]])
@@ -316,7 +423,10 @@ class AskTheMatch:
         payload = {"question": request["question"], "at": fmt_clock(at_s), "mode": request["mode"],
                    "language": request["language"], "favorite_team": request.get("favorite_team"),
                    "history": request.get("history") or [], "home_team": home, "away_team": away,
-                   "prediction_question": prediction}
+                   "prediction_question": prediction, "flank_duels": flank_duels(query, at_s),
+                   "lineups": lineups(query, at_s)}
+        if GOAL.search(request["question"]):
+            payload["goals"] = goals_so_far(query, at_s)
         try:
             out = await asyncio.wait_for(self._answer(query, request, at_s, payload, prediction), self.timeout_s)
         except asyncio.TimeoutError:
@@ -331,7 +441,8 @@ class AskTheMatch:
         return out
 
     async def _answer(self, query: MatchQuery, request: dict, at_s: int, payload: dict, prediction: bool) -> dict:
-        session = ToolSession(query, at_s)
+        session = ToolSession(query, at_s, context=[payload["flank_duels"], payload["lineups"], payload.get("goals", [])],
+                              context_tools=["get_match_state", "get_goal_chain"] if payload.get("goals") else [])
         result = await self.runner.run(self._agent(session), self.name, VERSION, payload, AskAnswer, cache=False)
         if result is None:
             return self.response(request, at_s, "error", None, session.tools_used(), error="agent_failed")

@@ -44,9 +44,11 @@ class Stats:
 
 class LLMRunner:
     def __init__(self, *, max_calls: int, timeout_s: float, concurrency: int,
-                 cache_dir: Path | None, model: str = "", offline: bool = False):
+                 cache_dir: Path | None, model: str = "", offline: bool = False, reasoning_effort: str = ""):
         self.max_calls = max_calls
         self.timeout_s = timeout_s
+        # Only for reasoning models (gpt-5.x): non-reasoning ones such as gpt-4.1 reject the option.
+        self.reasoning_effort = reasoning_effort
         self.cache_dir = cache_dir
         self.model = model
         self.offline = offline
@@ -54,12 +56,19 @@ class LLMRunner:
         self._sem = asyncio.Semaphore(concurrency)
 
     def _key(self, agent_name: str, version: str, payload: dict) -> str:
-        raw = json.dumps({"agent": agent_name, "version": version, "model": self.model, "payload": payload},
+        model = f"{self.model}:{self.reasoning_effort}" if self.reasoning_effort else self.model
+        raw = json.dumps({"agent": agent_name, "version": version, "model": model, "payload": payload},
                          ensure_ascii=False, sort_keys=True)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
 
     def _cache_path(self, agent_name: str, key: str) -> Path | None:
         return self.cache_dir / agent_name / f"{key}.json" if self.cache_dir else None
+
+    def _options(self, schema) -> dict:
+        options = {"response_format": schema}
+        if self.reasoning_effort:
+            options["reasoning"] = {"effort": self.reasoning_effort}
+        return options
 
     async def run(self, agent, agent_name: str, version: str, payload: dict, schema: type[T],
                   cache: bool = True) -> T | None:
@@ -84,7 +93,7 @@ class LLMRunner:
             try:
                 async with self._sem:
                     response = await asyncio.wait_for(
-                        agent.run(json.dumps(payload, ensure_ascii=False), options={"response_format": schema}),
+                        agent.run(json.dumps(payload, ensure_ascii=False), options=self._options(schema)),
                         timeout=self.timeout_s,
                     )
                 value = response.value if isinstance(response.value, schema) else schema.model_validate_json(response.text)

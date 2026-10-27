@@ -81,7 +81,7 @@ def make_chat(args):
 
     cache = Path(args.cache_dir or os.environ.get("CHAT_CACHE_DIR") or config.DEFAULT_CACHE_DIR)
     runner = LLMRunner(max_calls=int(os.environ.get("CHAT_MAX_CALLS", 3000)), timeout_s=40, concurrency=4,
-                       cache_dir=None, model=config.model_name())
+                       cache_dir=None, model=config.model_name(), reasoning_effort=config.reasoning_effort())
     return AskTheMatch(load_matches(Path(args.data), args.teams), runner, client=config.make_client(),
                        cache_dir=cache, per_minute=int(os.environ.get("CHAT_PER_MINUTE", 20)))
 

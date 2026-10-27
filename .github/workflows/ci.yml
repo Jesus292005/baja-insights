@@ -39,3 +39,22 @@ jobs:
         run: python -m pytest -q agents/tests
       - name: Demo overlays match the contract
         run: python -m baja_insights validate data/m001/overlays.json
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck and unit tests
+        run: npm run typecheck && npm test
+      - name: Build, with the demo match bundled from data/m001
+        run: npm run build

@@ -88,6 +88,112 @@ def test_the_model_sees_team_names_not_home_and_away():
     assert session.results[-1]["possession_pct"] == {"home": 44, "away": 56}  # the checks keep the raw result
 
 
+def test_flank_duels_are_the_full_backs_against_the_opposing_wingers():
+    from baja_agents.ask import flank_duels
+    start = flank_duels(M001, 0)
+    pairs = {(d["player_a"], d["player_b"]) for d in start}
+    assert pairs == {("D. Mena", "D. Verdugo"), ("P. Lugo", "L. Montaño"), ("J. Torres", "B. Haro"),
+                     ("A. Olvera", "N. Ruelas")}
+    assert all(d["duels"] == 0 for d in start)
+    at_30 = flank_duels(M001, 1800)
+    assert [d["duels"] for d in at_30] == sorted((d["duels"] for d in at_30), reverse=True)
+    assert all(d["won_a"] + d["won_b"] == d["duels"] for d in at_30)
+    assert at_30[0]["duels"] > 0
+
+
+def test_the_agent_gets_the_flank_duels_and_may_quote_them():
+    from baja_agents.ask import flank_duels
+    duels = flank_duels(M001, 1800)
+    top = duels[0]  # Torres vs Haro at 30:00
+    text = f"Torres va ganando la banda: {top['won_a']} de {top['duels']} duelos."
+    chat = FakeChat([([("get_duel", {"player_a": "Torres", "player_b": "Haro"})], answer(text))])
+    out = asyncio.run(chat.ask(request("Who's winning the flank duel?", at="30:00")))
+    assert chat.prompts[0]["flank_duels"] == duels and top["player_a"] == "J. Torres"
+    assert out["status"] == "answered" and out["answer"] == text
+
+
+def test_lineups_follow_the_substitutions():
+    from baja_agents.ask import lineups
+    start = lineups(M001, 0)
+    bahia, cardon = start["Bahía FC"], start["Real Cardón"]
+    assert len(bahia["on_pitch"]) == len(cardon["on_pitch"]) == 11
+    on = {x["player"] for x in bahia["on_pitch"]} | {x["player"] for x in cardon["on_pitch"]}
+    assert {"E. Quiroz", "D. Verdugo"} <= on and not {"C. Ibarra", "J. Castro", "R. Amador"} & on  # the bug's mix-up
+    assert [x["player"] for x in bahia["bench"]] == ["C. Ibarra"] and bahia["on_pitch"][0]["position"] == "POR"
+
+    later = lineups(M001, 4500)  # 75:00: Amador on for Montaño at 70:00
+    cardon_on = {x["player"] for x in later["Real Cardón"]["on_pitch"]}
+    assert "R. Amador" in cardon_on and "L. Montaño" not in cardon_on
+    assert later["Real Cardón"]["substitutions"] == [{"clock": "70:00", "out": "L. Montaño", "in": "R. Amador"}]
+    assert "L. Montaño" not in {x["player"] for x in later["Real Cardón"]["bench"]}  # subbed off is not bench
+
+    end = lineups(M001, 5400)
+    assert end["Bahía FC"]["bench"] == [] and len(end["Bahía FC"]["on_pitch"]) == 11
+
+
+def test_a_lineup_question_needs_no_function_but_others_do():
+    chat = FakeChat([([], answer("Bahía FC: L. Arce (POR), D. Mena (LD)..."))])
+    out = asyncio.run(chat.ask(request("¿Me das las alineaciones de los equipos?", at="00:00")))
+    assert out["status"] == "answered" and out["tools"] == []
+    assert chat.prompts[0]["lineups"]["Bahía FC"]["on_pitch"][0]["player"] == "L. Arce"
+    chat = FakeChat([([], answer("Va muy bien.")), ([], answer("Va muy bien."))])
+    assert asyncio.run(chat.ask(request("¿Cómo va el partido?")))["status"] == "error"
+
+
+def test_the_chat_model_gets_no_pitch_coordinates():
+    pytest.importorskip("agent_framework")
+    session = ToolSession(M001, at_s=4200)
+    chain_tool = next(t for t in session.as_agent_tools(load_definitions()) if t.name == "get_goal_chain")
+    seen = json.loads(chain_tool.func(goal_event_id=GOALS[1]["event_id"]))
+    assert all("start" not in link and "end" not in link for link in seen["chain"])
+    assert session.results[-1]["chain"][1]["end"] == [92, 26]  # the raw result keeps them
+    assert 92.0 not in session.allowed_numbers([])
+
+
+def test_duel_counts_are_not_scorelines():
+    # 30:00, Bahía FC 0-1 Real Cardón. "3-1" in duels was rejected as a scoreline; only "1-0" is backwards.
+    chat = FakeChat([([("get_duel", {"player_a": "Torres", "player_b": "Haro"})],
+                      answer("Torres le gana a Haro 3-1 en duelos, con Real Cardón arriba 0-1."))])
+    assert asyncio.run(chat.ask(request("Who's winning the flank duel?", at="30:00")))["status"] == "answered"
+    from baja_agents.checks import wrong_scorelines
+    assert wrong_scorelines("Real Cardón gana 1-0.", {"0-1"}) and not wrong_scorelines("ganó 3-1 los duelos", {"0-1"})
+
+
+def test_not_found_needs_no_function():
+    chat = FakeChat([([], answer("Messi no juega en este partido.", "not_found"))])
+    out = asyncio.run(chat.ask(request("¿Cómo va jugando Messi?", at="50:00")))
+    assert out["status"] == "not_found" and out["tools"] == []
+
+
+def test_reasoning_effort_reaches_the_model_and_the_cache_key():
+    plain = LLMRunner(max_calls=1, timeout_s=1, concurrency=1, cache_dir=None, model="m")
+    low = LLMRunner(max_calls=1, timeout_s=1, concurrency=1, cache_dir=None, model="m", reasoning_effort="low")
+    assert "reasoning" not in plain._options(AskAnswer)
+    assert low._options(AskAnswer)["reasoning"] == {"effort": "low"}
+    assert plain._key("a", "v", {}) != low._key("a", "v", {})
+
+
+def test_goal_questions_get_the_goals_with_their_chains(response_validator):
+    from baja_agents.ask import goals_so_far
+    assert goals_so_far(M001, 600) == []
+    at_35 = goals_so_far(M001, 2100)
+    assert [g["scorer"] for g in at_35] == ["S. Leyva"]  # the 1-1 has not happened yet
+    both = goals_so_far(M001, 4200)
+    text = json.dumps(both, ensure_ascii=False)
+    assert both[1]["scoreline"] == "Bahía FC 1-1 Real Cardón" and both[1]["invisible_assist"]["player"] == "J. Torres"
+    assert '"event_id"' not in text and '"start"' not in text and '"end"' not in text
+
+    chat = FakeChat([([], answer("Cota recupera, Torres arrastra a su marca, Salgado rompe dos líneas y Ramírez remata."))])
+    out = asyncio.run(chat.ask(request("Why did Bahía score the equaliser?", at="70:00", language="en")))
+    assert chat.prompts[0]["goals"] == both
+    assert out["status"] == "answered" and out["tools"] == ["get_match_state", "get_goal_chain"]
+    assert [e.message for e in response_validator.iter_errors(out)] == []
+
+    chat = FakeChat([([("get_match_state", {})], answer("Real Cardón gana por la mínima."))])
+    asyncio.run(chat.ask(request("¿Cómo va el partido?")))
+    assert "goals" not in chat.prompts[0]  # only for goal questions, to keep prompts short
+
+
 def test_prediction_questions_are_detected():
     for q in ("¿Quién va a ganar?", "¿Cómo va a terminar?", "Who will win?", "What are Bahía's chances to win?"):
         assert PREDICTION.search(q), q

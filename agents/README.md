@@ -141,6 +141,13 @@ The agent answers only through the six engine functions of `MatchQuery` (`get_ma
 - **No predictions.** "Who will win?" is detected in code and always answered with `no_prediction`. The agent still says what each team needs, with data, as in the examples.
 - **Style.** A fan answer shows at most 3 figures besides the scoreline. Breaking this is worth a retry, but an accurate answer is kept even if the retry still breaks it.
 - `not_tracked` (for example distance run) and `not_found` (a player who isn't in the match) come from what the functions return.
+- **Flank duels without names.** `get_duel` needs two players, and "who's winning the flank duel?" names none. With every question, code computes the flank duels up to that moment (each full-back against the opposing winger, plus any substitute pair that already had a duel), most contested first, and gives them to the agent as `flank_duels`. The agent takes the names from there and asks `get_duel` for the figures.
+- **Lineups.** No function returns lineups, so the agent used to guess them from the flat list of all 25 players in a `player_not_found`, mixing teams and substitutes. With every question, code now gives it `lineups` for that moment, from the roster and the substitution events: each team's eleven on the pitch with positions, the bench and the substitutions so far. A question about lineups, the bench or substitutions (detected in code, like predictions) may be answered from it with no function call; every other question still needs one.
+- **Goals.** For a question about a goal (detected in code), the agent also gets `goals`: every goal scored so far with its chain (who started it, who passed, who finished, the run without the ball), with team names and no ids or coordinates. Before this, gpt-4.1-mini sometimes explained the equaliser from the team's phase instead of the chain. It may answer from it with no function call, and the response lists `get_match_state` and `get_goal_chain` as the functions behind it.
+- **"Not in this match"** (`not_found`) may also be answered from `lineups` with no function call.
+- **Scorelines.** Only a scoreline written backwards ("1-0" when it is 0-1) is rejected; "3-1 in duels" is not a scoreline.
+- **Reasoning effort.** `FOUNDRY_REASONING_EFFORT` (`none`, `low`, `medium`...) is passed to reasoning models such as gpt-5.4-mini. Leave it empty for gpt-4.1 and gpt-4.1-mini, which reject the option.
+- **Language.** The answer is always in the request's `language`, the one the fan chose in the app, even when the question is typed in another language.
 
 **Service:**
 - `GET /healthz` and `POST /api/ask`, with open CORS for the UI.
