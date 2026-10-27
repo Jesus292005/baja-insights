@@ -34,12 +34,17 @@
   --bi-focus: #ffd9a8;
   --bi-team-home: var(--bi-bahia-tint);
   --bi-team-away: var(--bi-cardon-tint);
+  --bi-play-home: var(--bi-bahia-tint);
+  --bi-play-away: var(--bi-cardon-solid);
   color: var(--bi-text);
 }
 
 .pitch { position: absolute; inset: 0; background: #12293a; --pitch-a: #13303a; --pitch-b: #163640; --pitch-line: rgb(243 237 226 / 0.22); background: var(--pitch-a); }
 .pitch svg { width: 100%; height: 100%; display: block; }
 .pitch::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(12 20 24 / 0.55) 100%); }
+/* Goals in the colour of the team that defends them, with its name as a chip outside the goal line. */
+.pitch-goal { stroke: rgb(243 237 226 / 0.85); stroke-width: 2; }
+.pitch-goal-name { font-family: var(--bi-font-data); font-size: 22px; font-weight: 700; letter-spacing: 0.1em; fill: #ffffff; }
 .pitch-label { position: absolute; right: 96px; bottom: 30px; z-index: 1; font-family: var(--bi-font-data); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(243 237 226 / 0.55); }
 
 .slot { position: absolute; display: flex; flex-direction: column; justify-content: flex-start; z-index: var(--bi-z-slot); }
@@ -74,11 +79,30 @@
 .g-band.g-card-upgrade .g-upgrade-attr { padding-right: 28px; }
 .g-band.g-card-upgrade .g-upgrade-who { flex: 1; min-width: 240px; }
 .g-band.g-card-upgrade .g-reason { flex-basis: 100%; }
-/* MVP: the new rank beside the ranking it belongs to. */
-.g-band.g-mvp_update .g-band-body { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 14px 32px; }
-.g-band.g-mvp_update .g-rank { flex-direction: column; align-items: flex-start; gap: 8px; flex: 0 1 auto; max-width: 45%; }
-.g-band.g-mvp_update .g-ranking { flex: 1; min-width: 260px; margin: 0; }
-.g-band.g-mvp_update .g-band-body > :not(.g-rank):not(.g-ranking) { flex-basis: 100%; }
+/* MVP, compact: the new rank, its move and the score on one row; for analysts, the top five
+   as one strip of columns instead of a list, so the card stays short above the pitch. */
+/* A smaller caption: the text sets the height of this card, not the data. Fans only get the rank
+   row on the right, so the text takes half the card; analysts need room for the top-five strip. */
+.card-scale.is-wide .g-band.g-mvp_update .g-band-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; }
+.card-scale.is-wide[data-mode='analyst'] .g-band.g-mvp_update .g-band-main { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.g-band.g-mvp_update .g-title { font-size: 36px; }
+.g-band.g-mvp_update .g-text { font-size: 22px; line-height: 1.3; }
+.g-band.g-mvp_update .g-band-lead { gap: 6px; }
+.g-band.g-mvp_update .g-band-body { gap: 10px; }
+.g-band.g-mvp_update .g-rank { flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+.g-band.g-mvp_update .g-rank-big { font-size: 68px; line-height: 0.85; }
+.g-band.g-mvp_update .g-rank-who { font-size: 40px; }
+.g-band.g-mvp_update .g-rank .g-up { font-size: 22px; }
+.g-band.g-mvp_update .g-rank .g-score { margin-left: auto; font-size: 20px; }
+.g-band.g-mvp_update .g-rank .g-score b { font-size: 26px; }
+.g-band.g-mvp_update .g-ranking { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 4px; margin: 0; font-size: 20px; }
+.g-band.g-mvp_update .g-ranking li { grid-template-columns: auto minmax(0, 1fr); column-gap: 5px; row-gap: 0; padding: 4px 6px; align-items: baseline; }
+.g-band.g-mvp_update .g-ranking-pos { text-align: left; }
+.g-band.g-mvp_update .g-ranking-who { display: block; text-overflow: ellipsis; font-weight: 600; }
+.g-band.g-mvp_update .g-ranking-who .chip { display: none; }
+.g-band.g-mvp_update .g-ranking-score { grid-column: 1 / -1; font-size: 22px; }
+.g-band.g-mvp_update .g-card-change { font-size: 22px; }
+.g-band.g-mvp_update .evidence { font-size: 18px; }
 
 /* ---------- Panel frame ---------- */
 
@@ -372,8 +396,16 @@
 .pl-pressure { fill: none; stroke-width: 6; }
 .pl-defender { fill: none; stroke-width: 5; stroke-dasharray: 10 10; }
 .pl-defender-from { fill: none; stroke-width: 4; }
+/* The ball at the end of a shot: light body, dark patch and seams, whatever the team. */
+.pl-ball-body { fill: var(--bi-sand-100); stroke: var(--bi-ink-950); stroke-width: 3; }
+.pl-ball-patch { fill: var(--bi-ink-950); }
+.pl-ball-seam { stroke: var(--bi-ink-950); stroke-width: 2.5; }
 .pl-label { font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; font-size: 26px; fill: var(--bi-text); paint-order: stroke; stroke: var(--bi-bg); stroke-width: 7px; stroke-linejoin: round; }
 .pl-label-rival { font-family: var(--bi-font-data); font-weight: 600; font-size: 22px; fill: var(--bi-text-muted); }
+/* Minute of each separate action (labels.ts sizes it as 'tag'). */
+.pl-tag { font-family: var(--bi-font-data); font-stretch: 100%; font-weight: 600; font-size: 20px; fill: var(--bi-accent); }
+/* Cardón's red is dark on the pitch: a thin light outline keeps its plays readable. */
+.pl-away { filter: drop-shadow(0 0 2.5px rgb(243 237 226 / 0.95)) drop-shadow(0 0 1px rgb(243 237 226 / 0.95)); }
 .pl-fade { opacity: 0; animation: pl-fade 360ms var(--bi-ease-out) forwards; }
 @keyframes pl-draw { to { stroke-dashoffset: 0; } }
 @keyframes pl-fade { to { opacity: 1; } }
@@ -420,3 +452,33 @@
 /* Off the canvas the goal card is a wide band: the chain reads left to right again. */
 .card-scale .g-chain.g-chain-list { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 16px; }
 .card-scale .g-goal_analysis .g-chain-list li { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+
+/* Legend swatch: the same ball, with lines thin enough for its size. */
+.legend .pl-ball-body { stroke-width: 1; }
+.legend .pl-ball-seam { stroke-width: 0.8; }
+
+/* Half-time notice over the pitch (canvas pixels): big enough to read on the scaled web stage too. */
+.halftime {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: var(--bi-z-fullscreen);
+  display: flex; flex-direction: column; align-items: center; gap: 18px; width: 1180px; padding: 48px 64px 44px;
+  background: var(--bi-surface-overlay); box-shadow: var(--bi-shadow-panel); clip-path: var(--bi-clip-notch-bc);
+  text-align: center; animation: g-in var(--bi-dur-reveal) var(--bi-ease-out) both;
+}
+.halftime-kicker { font-family: var(--bi-font-data); font-size: 44px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bi-accent); }
+.halftime-score { display: flex; align-items: center; gap: 28px; font-family: var(--bi-font-display); font-stretch: 70%; font-weight: 900; font-size: 140px; line-height: 0.9; }
+.halftime-score .chip { font-size: 40px; padding: 4px 16px; }
+.halftime-swap { font-size: 56px; font-weight: 800; }
+.halftime-ends { display: flex; justify-content: space-between; width: 100%; font-family: var(--bi-font-data); font-size: 40px; font-weight: 600; }
+.halftime-ends > span { display: inline-flex; align-items: center; gap: 14px; }
+.halftime-ends .chip { font-size: 30px; padding: 2px 12px; }
+.halftime-note { font-size: 32px; color: var(--bi-text-muted); }
+
+/* Illustrative players and ball (PlayersLayer, pitch SVG units): under the play, in the play colours. */
+.pp-player circle { stroke-width: 3; }
+.pp-home circle { fill: var(--bi-play-home); stroke: var(--bi-ink-950); }
+.pp-away circle { fill: var(--bi-play-away); stroke: rgb(243 237 226 / 0.9); }
+.pp-keeper circle { stroke-dasharray: 5 3; }
+.pp-player text { font-family: var(--bi-font-data); font-size: 19px; font-weight: 700; pointer-events: none; }
+.pp-home text { fill: var(--bi-ink-950); }
+.pp-away text { fill: #ffffff; }
+.pp-ball { fill: var(--bi-sand-100); stroke: var(--bi-ink-950); stroke-width: 3; }

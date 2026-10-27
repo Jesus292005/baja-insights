@@ -22,7 +22,7 @@ const es = {
   },
   legend: {
     title: 'En el campo:',
-    empty: 'Las jugadas aparecen en el campo cuando llega un momento con coordenadas.',
+    empty: 'La jugada de cada tarjeta se dibuja en el campo mientras la tarjeta está en pantalla.',
     pass: 'Pase',
     cross: 'Centro',
     shot: 'Remate',
@@ -32,6 +32,7 @@ const es = {
     recovery: 'Recuperación',
     duel: 'Duelo o entrada',
     pressure: 'Presión',
+    separate: '{n} acciones de posesiones distintas, cada una con su minuto',
   },
   cinema: {
     link: 'Modo cine',
@@ -46,6 +47,7 @@ const es = {
       ['N / P', 'Siguiente / anterior momento'],
       ['← / →', 'Retroceder / avanzar 10 s (Mayús: 60 s)'],
       ['B', 'Mostrar u ocultar el modo en pantalla'],
+      ['J', 'Mostrar u ocultar a los jugadores'],
       ['F', 'Pantalla completa'],
       ['H', 'Mostrar u ocultar esta ayuda'],
     ],
@@ -200,6 +202,19 @@ const es = {
     open: 'Ver la tarjeta de este momento',
     close: 'Ocultar la tarjeta',
   },
+  players: {
+    illustrative: 'Posiciones ilustrativas',
+    toggle: 'Jugadores en la cancha',
+    note: 'Ilustrativas: un modelo las ubica a partir de los eventos.',
+  },
+  halftime: {
+    title: 'Medio tiempo',
+    swap: 'Los equipos cambian de lado',
+    attacks: 'En el segundo tiempo cada equipo ataca hacia su flecha.',
+  },
+  pitch: {
+    ends: 'Cancha, tiempo {half}: portería de {left} a la izquierda y de {right} a la derecha.',
+  },
   band: {
     label: 'Tarjetas del partido',
     empty: 'Las tarjetas aparecen aquí cuando pasa algo en el campo.',
@@ -242,7 +257,7 @@ const en: Shape<typeof es> = {
   },
   legend: {
     title: 'On the pitch:',
-    empty: 'Plays show up on the pitch when a moment with coordinates arrives.',
+    empty: 'Each card draws its play on the pitch while the card is on screen.',
     pass: 'Pass',
     cross: 'Cross',
     shot: 'Shot',
@@ -252,6 +267,7 @@ const en: Shape<typeof es> = {
     recovery: 'Recovery',
     duel: 'Duel or tackle',
     pressure: 'Pressure',
+    separate: '{n} actions from separate possessions, each with its minute',
   },
   cinema: {
     link: 'Cinema mode',
@@ -266,6 +282,7 @@ const en: Shape<typeof es> = {
       ['N / P', 'Next / previous moment'],
       ['← / →', 'Back / forward 10 s (Shift: 60 s)'],
       ['B', 'Show or hide the mode on screen'],
+      ['J', 'Show or hide the players'],
       ['F', 'Full screen'],
       ['H', 'Show or hide this help'],
     ],
@@ -419,6 +436,19 @@ const en: Shape<typeof es> = {
     empty: 'Key moments show up here as they happen.',
     open: "Show this moment's card",
     close: 'Hide the card',
+  },
+  players: {
+    illustrative: 'Illustrative positions',
+    toggle: 'Players on the pitch',
+    note: 'Illustrative: a model places them from the events.',
+  },
+  halftime: {
+    title: 'Half-time',
+    swap: 'Teams switch ends',
+    attacks: 'In the second half each team attacks towards its arrow.',
+  },
+  pitch: {
+    ends: 'Pitch, half {half}: {left} goal on the left, {right} goal on the right.',
   },
   band: {
     label: 'Match cards',

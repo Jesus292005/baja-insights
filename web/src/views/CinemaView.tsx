@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AppConfig } from '../app/config';
 import { useMatchRuntime } from '../app/useMatchRuntime';
+import { usePersisted } from '../app/usePersisted';
+import { usePositions } from '../data/positions';
 import { MatchBug } from '../components/shell/shell';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
@@ -8,7 +10,8 @@ import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { demoMatch, roster } from '../data/match';
 import { forViewer, momentsAt } from '../logic/derive';
-import { playAt } from '../logic/play';
+import { drawnIn, halfOf, playOnScreen } from '../logic/play';
+import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
 /**
@@ -20,10 +23,15 @@ import { PlayLegend } from '../components/stage/PlayLegend';
 /** Seconds of lead before a moment, so the graphic enters on camera. */
 const LEAD_S = 2;
 
+/** Room of the mode badge at the top centre of the canvas (.cinema-badge), kept free of cards. */
+const BADGE_BOX = { x: 770, y: 40, w: 380, h: 74 };
+
 export function CinemaView({ config }: { config: AppConfig }) {
   const [mode, setMode] = useState<Mode>(config.mode ?? 'fan');
   const [lang, setLang] = useState<Language>(config.lang ?? 'en');
   const [badge, setBadge] = useState(true);
+  // Same choice as the web app: the illustrative players are on unless hidden (J).
+  const [showPlayers, setShowPlayers] = usePersisted<'on' | 'off'>('bi.players.v1', 'on', ['on', 'off']);
   const [help, setHelp] = useState(false);
   const [hint, setHint] = useState(true);
   const [pulse, setPulse] = useState(0);
@@ -86,6 +94,8 @@ export function CinemaView({ config }: { config: AppConfig }) {
         replay.seek(t + step);
       } else if (key === 'b') {
         setBadge((v) => !v);
+      } else if (key === 'j') {
+        setShowPlayers(showPlayers === 'on' ? 'off' : 'on');
       } else if (key === 'h' || (key === 'escape' && help)) {
         setHelp((v) => (key === 'escape' ? false : !v));
         setHint(false);
@@ -97,13 +107,20 @@ export function CinemaView({ config }: { config: AppConfig }) {
       }
       if (handled) e.preventDefault();
     },
-    [rt.replay, momentTimes, help],
+    [rt.replay, momentTimes, help, showPlayers, setShowPlayers],
   );
 
   useEffect(() => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onKey]);
+
+  const halfTime = useHalfTime(rt.t, rt.snap.clock?.phase);
+  const positions = usePositions(showPlayers === 'on');
+  // Drawn in the clock's half, so the teams swap ends at 45:00.
+  // The play of the card on screen, only while it is up.
+  const onScreen = Object.values(rt.showing).filter((x): x is NonNullable<typeof x> => !!x);
+  const play = drawnIn(playOnScreen(onScreen, demoMatch.playEvents, roster), halfOf(rt.t));
 
   return (
     <PrefsProvider mode={mode} lang={lang}>
@@ -113,7 +130,10 @@ export function CinemaView({ config }: { config: AppConfig }) {
           orders={rt.orders}
           variant="broadcast"
           backdrop
-          play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)}
+          play={play}
+          half={halfOf(rt.t)}
+          players={positions ? { file: positions, t: rt.t, frozen: false } : null}
+          reserved={badge ? [BADGE_BOX] : []}
           bug={
             <div className="slot-bug">
               <MatchBug state={rt.snap.state} clockUpdate={rt.snap.clock} variant="broadcast" />
@@ -125,7 +145,8 @@ export function CinemaView({ config }: { config: AppConfig }) {
               {mode === 'fan' ? s.cinema.badgeFan : s.cinema.badgeAnalyst} · {lang.toUpperCase()}
             </p>
           )}
-          <PlayLegend play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)} variant="canvas" />
+          <PlayLegend play={play} variant="canvas" />
+          {halfTime && <HalfTimeNotice scoreline={rt.snap.state?.scoreline ?? null} />}
           {hint && !help && <p className="cinema-hint">{s.cinema.hint}</p>}
           {help && (
             <div className="cinema-help" role="dialog" aria-label={s.cinema.helpTitle}>
