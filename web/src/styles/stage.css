@@ -372,6 +372,10 @@
 .pl-pressure { fill: none; stroke-width: 6; }
 .pl-defender { fill: none; stroke-width: 5; stroke-dasharray: 10 10; }
 .pl-defender-from { fill: none; stroke-width: 4; }
+/* The ball at the end of a shot: light body, dark patch and seams, whatever the team. */
+.pl-ball-body { fill: var(--bi-sand-100); stroke: var(--bi-ink-950); stroke-width: 3; }
+.pl-ball-patch { fill: var(--bi-ink-950); }
+.pl-ball-seam { stroke: var(--bi-ink-950); stroke-width: 2.5; }
 .pl-label { font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; font-size: 26px; fill: var(--bi-text); paint-order: stroke; stroke: var(--bi-bg); stroke-width: 7px; stroke-linejoin: round; }
 .pl-label-rival { font-family: var(--bi-font-data); font-weight: 600; font-size: 22px; fill: var(--bi-text-muted); }
 .pl-fade { opacity: 0; animation: pl-fade 360ms var(--bi-ease-out) forwards; }
@@ -420,3 +424,7 @@
 /* Off the canvas the goal card is a wide band: the chain reads left to right again. */
 .card-scale .g-chain.g-chain-list { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 16px; }
 .card-scale .g-goal_analysis .g-chain-list li { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+
+/* Legend swatch: the same ball, with lines thin enough for its size. */
+.legend .pl-ball-body { stroke-width: 1; }
+.legend .pl-ball-seam { stroke-width: 0.8; }

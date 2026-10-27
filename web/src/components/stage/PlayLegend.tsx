@@ -3,6 +3,7 @@ import { usePrefs } from '../../i18n/prefs';
 import { clock } from '../../i18n/strings';
 import { buildPlay, type LegendKind, type MatchPlay } from '../../logic/play';
 import { TeamChip } from '../common';
+import { Ball } from './PlayLayer';
 
 /**
  * Explains the lines and arrows of the play on the pitch: only the kinds the current play uses,
@@ -16,7 +17,13 @@ function Swatch({ kind }: { kind: LegendKind }) {
     case 'pass':
       return <svg {...common}><line x1="2" y1="7" x2="26" y2="7" stroke={team} strokeWidth="3" /><path d="M24 2 L33 7 L24 12 z" fill={team} /></svg>;
     case 'shot':
-      return <svg {...common}><line x1="2" y1="7" x2="26" y2="7" stroke={team} strokeWidth="5" /><path d="M24 1 L34 7 L24 13 z" fill={team} /></svg>;
+      // Same ball as on the pitch (PlayLayer's Ball), so a shot never reads as a pass.
+      return (
+        <svg {...common}>
+          <line x1="2" y1="7" x2="24" y2="7" stroke={team} strokeWidth="4" />
+          <Ball cx={27} cy={7} r={6.5} />
+        </svg>
+      );
     case 'cross':
       return <svg {...common}><path d="M2 12 Q16 -2 27 9" fill="none" stroke={team} strokeWidth="3" /><path d="M24 5 L33 11 L23 13 z" fill={team} /></svg>;
     case 'ball':

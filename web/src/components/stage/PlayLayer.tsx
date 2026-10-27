@@ -1,7 +1,8 @@
 import { useId } from 'react';
 import { usePrefs } from '../../i18n/prefs';
 import { asSent, surname } from '../../i18n/strings';
-import { buildPlay, toSvg, type MatchPlay, type Side } from '../../logic/play';
+import { placeLabels } from '../../logic/labels';
+import { buildPlay, crossControl, toSvg, type MatchPlay, type Side } from '../../logic/play';
 
 /**
  * The current play, drawn inside the pitch backdrop (1050 × 680 SVG units). Keyed by the order,
@@ -9,7 +10,24 @@ import { buildPlay, toSvg, type MatchPlay, type Side } from '../../logic/play';
  */
 
 const STEP_MS = 450;
+/** The shot line takes this long to draw (pl-draw in stage.css); the ball lands after it. */
+const DRAW_MS = 420;
 const teamColour = (side: Side) => `var(--bi-team-${side})`;
+
+/** A football: the end of a shot, so it never reads as a pass. Drawn in pitch SVG units. */
+export function Ball({ cx, cy, r = 20, className, style }: { cx: number; cy: number; r?: number; className?: string; style?: React.CSSProperties }) {
+  const pent = Array.from({ length: 5 }, (_, k) => {
+    const a = ((-90 + 72 * k) * Math.PI) / 180;
+    return [cx + Math.cos(a) * r * 0.42, cy + Math.sin(a) * r * 0.42, cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  });
+  return (
+    <g className={`pl-ball-end ${className ?? ''}`} style={style}>
+      <circle cx={cx} cy={cy} r={r} className="pl-ball-body" />
+      {pent.map(([x1, y1, x2, y2], k) => <line key={k} x1={x1} y1={y1} x2={x2} y2={y2} className="pl-ball-seam" />)}
+      <polygon points={pent.map(([x, y]) => `${x},${y}`).join(' ')} className="pl-ball-patch" />
+    </g>
+  );
+}
 
 export function PlayLayer({ play }: { play: MatchPlay }) {
   const { lang } = usePrefs();
@@ -21,8 +39,11 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
   const delay = (link: number) => ({ animationDelay: `${(order.get(link) ?? 0) * STEP_MS}ms` });
   const side = (link: number) => play.links[link]?.side ?? 'home';
   const rival = (link: number) => (side(link) === 'home' ? 'away' : 'home');
-  // Labels on the right of the pitch are written leftwards, so they never run off it.
-  const leftward = (x: number) => x > 760;
+  const defenderText = drawn.defender
+    ? `${drawn.defender.name ? surname(drawn.defender.name) : ''}${play.spaceOpened != null ? ` +${asSent(play.spaceOpened, lang)} m` : ''}`.trim()
+    : null;
+  // Each name takes the spot around its player that touches no other name, dot or line.
+  const spots = placeLabels(drawn, drawn.labels.map((l) => surname(l.player)), defenderText);
 
   return (
     <g className="pl">
@@ -47,15 +68,14 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
         const [x1, y1] = toSvg(drawn.defender.from);
         const [x2, y2] = toSvg(drawn.defender.to);
         const r = rival(drawn.defender.link);
-        const left = leftward(x1);
+        const at = spots.defender;
         return (
           <g className="pl-fade" style={delay(drawn.defender.link)}>
             <circle className="pl-defender-from" cx={x1} cy={y1} r="12" stroke={teamColour(r)} />
             <line className="pl-defender" x1={x1} y1={y1} x2={x2} y2={y2} stroke={teamColour(r)} markerEnd={`url(#${uid}-${r})`} />
-            <text className="pl-label pl-label-rival" x={left ? x1 - 20 : x1 + 20} y={y1 + 8} textAnchor={left ? 'end' : 'start'}>
-              {drawn.defender.name ? surname(drawn.defender.name) : ''}
-              {play.spaceOpened != null && ` +${asSent(play.spaceOpened, lang)} m`}
-            </text>
+            {at && defenderText && (
+              <text className="pl-label pl-label-rival" x={at.x} y={at.y} textAnchor={at.anchor}>{defenderText}</text>
+            )}
           </g>
         );
       })()}
@@ -75,11 +95,11 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
         const [x1, y1] = toSvg(st.from);
         const [x2, y2] = toSvg(st.to);
         const run = st.kind === 'run';
+        const shot = st.kind === 'shot';
         // A cross bends towards the middle of the pitch.
-        const d = st.cross
-          ? `M${x1} ${y1} Q${(x1 + x2) / 2 + (y2 - y1) * 0.25} ${(y1 + y2) / 2 + (340 - (y1 + y2) / 2) * 0.35} ${x2} ${y2}`
-          : `M${x1} ${y1} L${x2} ${y2}`;
-        return (
+        const [qx, qy] = crossControl([x1, y1], [x2, y2]);
+        const d = st.cross ? `M${x1} ${y1} Q${qx} ${qy} ${x2} ${y2}` : `M${x1} ${y1} L${x2} ${y2}`;
+        const path = (
           <path
             key={st.link}
             className={`pl-step pl-${st.kind}${run ? ' pl-fade' : ''}`}
@@ -87,16 +107,25 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
             d={d}
             pathLength={run ? undefined : 1}
             stroke={run ? 'var(--bi-accent)' : colour}
-            markerEnd={`url(#${uid}-${run ? 'run' : side(st.link)})`}
+            markerEnd={shot ? undefined : `url(#${uid}-${run ? 'run' : side(st.link)})`}
           />
+        );
+        if (!shot) return path;
+        // A shot ends in the ball instead of an arrowhead.
+        const ms = (order.get(st.link) ?? 0) * STEP_MS + DRAW_MS;
+        return (
+          <g key={st.link}>
+            {path}
+            <Ball cx={x2} cy={y2} className="pl-fade" style={{ animationDelay: `${ms}ms` }} />
+          </g>
         );
       })}
 
       {drawn.labels.map((l) => {
-        const [x, y] = toSvg(l.at);
-        const left = leftward(x);
+        const at = spots.players.get(l.link);
+        if (!at) return null;
         return (
-          <text key={l.link} className="pl-label pl-fade" style={delay(l.link)} x={left ? x - 16 : x + 16} y={y - 16} textAnchor={left ? 'end' : 'start'}>
+          <text key={l.link} className="pl-label pl-fade" style={delay(l.link)} x={at.x} y={at.y} textAnchor={at.anchor}>
             {surname(l.player)}
           </text>
         );
