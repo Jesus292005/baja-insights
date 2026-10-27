@@ -222,7 +222,7 @@ export function MomentsPanel({
     <section className="moments" aria-labelledby="moments-title">
       <h2 id="moments-title">{s.timeline.title}</h2>
       {items.length ? (
-        <ol>
+        <ol className="moments-list">
           {items.map((o) => {
             const isOpen = o.overlay_id === open;
             const cardId = `moment-${o.overlay_id}`;
