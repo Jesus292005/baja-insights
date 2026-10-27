@@ -132,7 +132,7 @@ export function CinemaView({ config }: { config: AppConfig }) {
           backdrop
           play={play}
           half={halfOf(rt.t)}
-          players={positions ? { file: positions, t: rt.t, frozen: false } : null}
+          players={positions ? { file: positions, t: rt.t, frozen: rt.replayState?.playing === false } : null}
           reserved={badge ? [BADGE_BOX] : []}
           bug={
             <div className="slot-bug">

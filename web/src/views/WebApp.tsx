@@ -103,7 +103,8 @@ export function WebApp({ config }: { config: AppConfig }) {
             graphics={false}
             play={play}
             half={half}
-            players={positions ? { file: positions, t: playersT, frozen: !!openPlay } : null}
+            // Held still while a moment is open or the replay is paused, so they never drift past the clock.
+            players={positions ? { file: positions, t: playersT, frozen: !!openPlay || replayState?.playing === false } : null}
           >
             {halfTime && <HalfTimeNotice scoreline={snap.state?.scoreline ?? null} />}
           </Stage>
