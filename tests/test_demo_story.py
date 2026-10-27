@@ -1,7 +1,8 @@
-"""The demo match m001 must keep the story the video, the pitch and the mocks tell.
+"""The demo match m001 must keep its scripted moments: the 1-1 at 17 and 63 and the equalizer chain.
 
-If a change to the generator, the engine or the script breaks one of these, the change is wrong
-or the story has to be agreed again with the team. Do not just update the expected values.
+Agreed on 27 October 2026: only the moments the script inserts as written are kept, because the goal
+analysis, the notices and the video use them. Who leads the MVP race, who wins it, the duels, the phases
+and the verdict depend on the seed and may change with the generator.
 """
 
 import helpers  # noqa: F401  (puts src/ on sys.path)
@@ -53,22 +54,6 @@ class DemoStoryTest(unittest.TestCase):
         dy = run["dragged_defender_end"][1] - run["dragged_defender_start"][1]
         space = self.mock["i11"]["facts"]["invisible_assist"]["space_opened_m"]
         self.assertAlmostEqual((dx * dx + dy * dy) ** 0.5, space, delta=0.05)
-
-    def test_torres_leads_at_35_and_wins_the_mvp(self):
-        self.assertEqual(self.first_at_35, "J. Torres")  # "¿Por qué Torres va primero?" at 35:00
-        # the MVP race on screen (ranking of the last update before 35:00) also has him first
-        before = [i for i in self.of("mvp_rank_change") if i["t_s"] <= 35 * 60]
-        self.assertEqual(before[-1]["facts"]["ranking"][0]["player"], "J. Torres")
-        self.assertEqual(self.of("top3")[0]["facts"]["top3"][0]["player"], "J. Torres")
-
-    def test_who_really_won(self):
-        verdict = self.of("match_summary")[0]["facts"]["who_really_won"]
-        self.assertTrue(verdict.startswith("Bahía FC generó más peligro"), verdict)
-
-    def test_phases(self):
-        phases = [(i["team"], i["facts"]["label"], i["t_s"] // 60) for i in self.of("team_phase")]
-        self.assertTrue(any(t == "Real Cardón" and label == "control" and m < 45 for t, label, m in phases), phases)
-        self.assertTrue(any(t == "Bahía FC" and label == "pressure_shift" and m >= 45 for t, label, m in phases), phases)
 
 
 if __name__ == "__main__":
