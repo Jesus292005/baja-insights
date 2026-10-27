@@ -44,7 +44,12 @@ ANCHOR_WINDOW_S = 6.0  # a player heads for an anchor this long before it
 SECOND_WINDOW_S = 3.0  # ... or this long for the rival in a duel, pressure, tackle or foul
 ANTICIPATION_S = 1.5   # a receiver starts towards the pass this long before it is played, never earlier
 BALL_AT_FOOT_M = 0.7   # the ball runs this far ahead of the player who carries it
-SWAY_M = 1.8           # how far a player drifts around his spot in the shape
+SWAY_M = 0.8           # how far a player drifts around his spot in the shape
+TEAMMATE_GAP_M = 4.0   # team-mates keep the width of a disc on screen (3.6 m) between them, with margin
+PRESS_GAP_M = (3.5, 5.0)  # the nearest rival closes the carrier to this distance, closer with a high press
+COVER_GAP_M = 9.0      # the second rival covers behind him, on the line to his goal
+MARK_GAP_M = 1.8       # a defender tracks a runner this close, goal side
+SUPPORT_M = (6.0, 10.0)  # two team-mates offer a pass: one behind and wide, one ahead on the other side
 SHAPE_LAG_S = 1.6      # time constant of the drift towards the shape
 MIN_GAP_M = 1.5
 FREE_KICK_GAP_M = 9.15
@@ -84,6 +89,7 @@ class Timeline:
     holders: list[tuple[float, float, str]] = field(default_factory=list)     # (from, to, player)
     possession: list[tuple[float, str]] = field(default_factory=list)          # (from, team)
     dead: list[DeadBall] = field(default_factory=list)
+    runs: list[tuple[float, float, str, str, bool]] = field(default_factory=list)  # (from, to, runner, team, marked)
 
 
 # ---------------------------------------------------------------- geometry
@@ -206,6 +212,7 @@ class PositionModel:
                     dt = max(dt, float(played["t_s"] - t))
                 add(e["player"], t, start, P_LINK, release=t - 2.0)
                 add(e["player"], t + dt, e["end"], P_LINK, release=t)
+                tl.runs.append((t, t + dt, e["player"], team, bool(e.get("dragged_defender_end"))))
                 if e.get("dragged_defender_start") and e.get("dragged_defender_end"):
                     add(e["dragged_defender"], t, e["dragged_defender_start"], P_LINK, release=t - 2.0)
                     add(e["dragged_defender"], t + dt, e["dragged_defender_end"], P_LINK, release=t)
@@ -423,6 +430,7 @@ class PositionModel:
         self._ball_times = [k[0] for k in tl.ball_keys]
         anchor_times = {n: [a.t for a in a_list] for n, a_list in tl.anchors.items()}
         holder_list = sorted(tl.holders)
+        self._event_times = {float(e["t_s"]) for e in self.events if e.get("start") is not None and e.get("team")}
         n_frames = int(MATCH_LENGTH_S * HZ) + 1
         pos: dict[str, tuple[float, float]] = {}
         frames = []
@@ -442,6 +450,9 @@ class PositionModel:
                             pos[name] = (a.x, a.y)
             vmax = V_DEAD if dead is not None else V_PLAY
             engaged: set[str] = set()
+            holder_now = None if dead is not None or restart else self._holder_at(t, holder_list)
+            roles = {} if holder_now is None or holder_now not in pos else \
+                self._roles(t, teams, pos, holder_now, anchor_times)
             for team, names in teams.items():
                 for name in names:
                     if name not in pos:  # a substitute takes the place of the player he replaces
@@ -469,13 +480,17 @@ class PositionModel:
                         if dist > 1e-9:
                             pos[name] = (cur[0] + dx / dist * step, cur[1] + dy / dist * step)
                         continue
-                    tx, ty = self.shape(team, name, t, ball, dead)
+                    if name in roles:  # pressing, covering, tracking a run or offering a pass
+                        tx, ty, lag, speed = roles[name]
+                    else:
+                        tx, ty = self.shape(team, name, t, ball, dead)
+                        lag, speed = SHAPE_LAG_S, (V_CRUISE if dead is None else vmax)
                     if self._holding(name, t, holder_list):
                         engaged.add(name)
                     dx, dy = tx - cur[0], ty - cur[1]
                     dist = math.hypot(dx, dy)
-                    want = dist * DT / SHAPE_LAG_S
-                    step = min(want, (V_CRUISE if dead is None else vmax) * DT)
+                    want = dist * DT / lag
+                    step = min(want, speed * DT)
                     if dist > 1e-9:
                         pos[name] = (cur[0] + dx / dist * step, cur[1] + dy / dist * step)
             on = teams[self.home] + teams[self.away]
@@ -490,13 +505,66 @@ class PositionModel:
                         if d < 1e-6:
                             dx, dy, d = 0.0, 1.0, 1.0
                         pos[name] = clamp_pitch(dead.spot[0] + dx / d * gap, dead.spot[1] + dy / d * gap)
-            holder = None if dead is not None else self._holder_at(t, holder_list)
-            if holder is not None and holder in pos:
+            holder = None if dead is not None or t in self._event_times else self._holder_at(t, holder_list)
+            if holder is not None and holder in pos:  # at the second of an action the ball is where it happened
                 hx, hy = pos[holder]
                 ahead = BALL_AT_FOOT_M if self.roster.players[holder].team == self.home else -BALL_AT_FOOT_M
                 ball = clamp_pitch(hx + ahead, hy, 0.2)
             frames.append((t, ball, [pos[n] for n in teams[self.home]], [pos[n] for n in teams[self.away]]))
         return self._output(frames)
+
+    def _roles(self, t: float, teams: dict, pos: dict, holder: str, anchor_times) -> dict:
+        """Who presses the carrier, who covers, who tracks a run and who offers a pass, this frame.
+
+        Only players with no event of their own coming up take a role: the events always win."""
+        attack = self.roster.players[holder].team
+        defend = self.roster.opponent(attack)
+        bx, by = pos[holder]
+        free = lambda name: self.roster.players[name].position != "POR" and not self._busy(name, t, anchor_times)
+        roles: dict[str, tuple[float, float, float, float]] = {}
+        # the rival's own goal and the direction to it from the ball
+        gx = x_of(0.0, defend, self.home)
+        ux, uy = gx - bx, PITCH_WIDTH / 2 - by
+        norm = math.hypot(ux, uy) or 1.0
+        ux, uy = ux / norm, uy / norm
+        defenders = sorted((n for n in teams[defend] if free(n)), key=lambda n: math.dist(pos[n], (bx, by)))
+        press = clip((self.press_of(defend, t) - 0.2) / 0.5, 0.0, 1.0)
+        gap = PRESS_GAP_M[1] - (PRESS_GAP_M[1] - PRESS_GAP_M[0]) * press
+        if defenders:
+            roles[defenders[0]] = (*clamp_pitch(bx + ux * gap, by + uy * gap, 1.0), 1.0, 6.5)
+        if len(defenders) > 1:
+            roles[defenders[1]] = (*clamp_pitch(bx + ux * COVER_GAP_M, by + uy * COVER_GAP_M, 1.0), 1.8, 5.0)
+        # a run nobody was told to follow: the nearest free defender tracks it, goal side
+        for t0, t1, runner, team, marked in self.timeline.runs:
+            if t0 <= t <= t1 and team == attack and not marked and runner in pos:
+                rx, ry = pos[runner]
+                left = [n for n in defenders[2:] if n not in roles]
+                if left:
+                    marker = min(left, key=lambda n: math.dist(pos[n], (rx, ry)))
+                    vx, vy = gx - rx, PITCH_WIDTH / 2 - ry
+                    d = math.hypot(vx, vy) or 1.0
+                    roles[marker] = (*clamp_pitch(rx + vx / d * MARK_GAP_M, ry + vy / d * MARK_GAP_M, 1.0), 0.5, V_PLAY)
+        # two team-mates offer the pass: one behind and wide, one ahead on the other side
+        forward = 1.0 if attack == self.home else -1.0
+        wide = 1.0 if by < PITCH_WIDTH / 2 else -1.0  # towards the middle of the pitch
+        spots = [(bx - forward * SUPPORT_M[0], by + wide * SUPPORT_M[1]),
+                 (bx + forward * SUPPORT_M[0], by - wide * SUPPORT_M[1] * 0.8)]
+        mates = [n for n in teams[attack] if n != holder and free(n)]
+        for sx, sy in spots:
+            sx, sy = clamp_pitch(sx, sy, 2.0)
+            if mates:
+                mate = min(mates, key=lambda n: math.dist(pos[n], (sx, sy)))
+                mates.remove(mate)
+                roles[mate] = (sx, sy, 2.0, 4.5)
+        return roles
+
+    def _busy(self, name: str, t: float, anchor_times, horizon: float = 4.0) -> bool:
+        """He has an action of his own within ``horizon`` seconds (or one released already): no role for him."""
+        if self._next_anchor(name, t, anchor_times) is not None:
+            return True
+        lst = self.timeline.anchors.get(name, [])
+        i = bisect.bisect_left(anchor_times[name], t - 1e-9)
+        return i < len(lst) and lst[i].t - t <= horizon
 
     def _anchor_now(self, name: str, t: float, anchor_times) -> Anchor | None:
         lst = self.timeline.anchors.get(name, [])
@@ -539,6 +607,10 @@ class PositionModel:
         return False
 
     def _separate(self, names: list[str], pos: dict, engaged: set[str], dead: DeadBall | None) -> None:
+        """Rivals keep 1.5 m apart (marking close is normal). Team-mates keep the width of a disc, except
+        in a wall or in the box at a corner."""
+        crowded = dead is not None and dead.kind in ("corner", "free_kick")
+        team_of = {n: self.roster.players[n].team for n in names}
         for _ in range(2):
             for i in range(len(names)):
                 a = names[i]
@@ -548,11 +620,12 @@ class PositionModel:
                     bx, by = pos[b]
                     dx, dy = bx - ax, by - ay
                     d = math.hypot(dx, dy)
-                    if d >= MIN_GAP_M or (a in engaged and b in engaged):
+                    gap = TEAMMATE_GAP_M if team_of[a] == team_of[b] and not crowded else MIN_GAP_M
+                    if d >= gap or (a in engaged and b in engaged):
                         continue
                     if d < 1e-6:
                         dx, dy, d = 0.0, 1.0, 1.0
-                    push = (MIN_GAP_M - d) / 2
+                    push = (gap - d) / 2
                     ux, uy = dx / d, dy / d
                     if a not in engaged:
                         pos[a] = clamp_pitch(ax - ux * push * (2 if b in engaged else 1), ay - uy * push * (2 if b in engaged else 1))

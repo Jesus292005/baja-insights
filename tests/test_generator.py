@@ -119,5 +119,41 @@ class SetPieceTest(unittest.TestCase):
                                      ("free_kick", roster().players[a["fouled"]].team))
 
 
+class MovementTest(unittest.TestCase):
+    """Players carry the ball, and an off-ball run usually ends with the pass to the runner."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.matches = [generate_match(roster(), seed=DEMO_SEED, script="m001")] + \
+                      [generate_match(roster(), seed=s, script=None) for s in (1, 2, 3)]
+
+    def test_players_carry_the_ball(self):
+        import math
+        carries = []
+        for events in self.matches:
+            play = [e for e in events if e.get("start") and e.get("team") and e["type"] != "goal"]
+            for a, b in zip(play, play[1:]):
+                if a["type"] == "pass" and a["outcome"] == "complete" and b["player"] == a["receiver"] \
+                        and b["type"] in ("pass", "shot") and not b.get("under_pressure"):
+                    carries.append(math.dist(a["end"], b["start"]))
+        carries.sort()
+        self.assertGreaterEqual(carries[len(carries) // 2], 3.0)
+        self.assertLessEqual(carries[-1], 16.0)
+
+    def test_runs_end_in_the_pass_to_the_runner(self):
+        runs = to_runner = 0
+        for events in self.matches:
+            play = [e for e in events if e.get("start") and e.get("team") and e["type"] != "goal"]
+            for i, e in enumerate(play):
+                if e["type"] != "off_ball_run":
+                    continue
+                runs += 1
+                nxt = next((n for n in play[i + 1:] if n["type"] in ("pass", "shot")), None)
+                to_runner += bool(nxt and nxt["type"] == "pass" and nxt.get("receiver") == e["player"])
+                if e.get("dragged_defender"):
+                    self.assertIn("dragged_defender_end", e)
+        self.assertGreaterEqual(to_runner / runs, 0.6)
+
+
 if __name__ == "__main__":
     unittest.main()
