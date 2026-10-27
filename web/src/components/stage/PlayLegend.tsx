@@ -55,6 +55,7 @@ export function PlayLegend({ play, variant }: { play: MatchPlay | null; variant:
         <p className="legend-caption">
           <b>{s.legend.title}</b> {s.kicker[o.type]} · {o.title ?? ''} · <span className="mono">{clock(o.show_at_s)}</span>
           {drawn.tags.length > 1 && <> · {t(s.legend.separate, { n: drawn.tags.length })}</>}
+          {play.cited !== undefined && <> · {t(s.legend.lastOf, { shown: play.links.length, total: play.cited })}</>}
         </p>
       )}
       <ul>

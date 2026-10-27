@@ -33,6 +33,7 @@ const es = {
     duel: 'Duelo o entrada',
     pressure: 'Presión',
     separate: '{n} acciones de posesiones distintas, cada una con su minuto',
+    lastOf: 'las últimas {shown} de {total} acciones citadas',
   },
   cinema: {
     link: 'Modo cine',
@@ -154,7 +155,15 @@ const es = {
     spaceOpened: '{meters} m abiertos',
     empty: 'Todavía no hay goles.',
   },
-  phase: { control: 'Control', pressure_shift: 'Cambio de presión' },
+  phase: { control: 'Control', pressure_shift: 'Cambio de presión', possession_spell: 'Posesión larga' },
+  spell: {
+    passes: 'Pases seguidos',
+    duration: 'Duración',
+    players: 'Jugadores que la tocaron',
+    ended: 'Terminó en',
+    summary: '{passes} pases en {seconds} s',
+    endedIn: { goal: 'gol', shot: 'remate', out: 'balón fuera', foul: 'falta', lost: 'pérdida' },
+  },
   keys: {
     title: 'Claves del partido',
     noPrediction: 'No hacemos predicciones. Mostramos qué necesita cada equipo.',
@@ -268,6 +277,7 @@ const en: Shape<typeof es> = {
     duel: 'Duel or tackle',
     pressure: 'Pressure',
     separate: '{n} actions from separate possessions, each with its minute',
+    lastOf: 'the last {shown} of {total} cited actions',
   },
   cinema: {
     link: 'Cinema mode',
@@ -389,7 +399,15 @@ const en: Shape<typeof es> = {
     spaceOpened: '{meters} m opened',
     empty: 'No goals yet.',
   },
-  phase: { control: 'Control', pressure_shift: 'Pressure shift' },
+  phase: { control: 'Control', pressure_shift: 'Pressure shift', possession_spell: 'Long spell' },
+  spell: {
+    passes: 'Passes in a row',
+    duration: 'Duration',
+    players: 'Players involved',
+    ended: 'Ended in',
+    summary: '{passes} passes in {seconds} s',
+    endedIn: { goal: 'a goal', shot: 'a shot', out: 'the ball going out', foul: 'a foul', lost: 'losing the ball' },
+  },
   keys: {
     title: 'Match keys',
     noPrediction: "We don't make predictions. We show what each team needs.",
