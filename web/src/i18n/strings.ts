@@ -32,6 +32,7 @@ const es = {
     recovery: 'Recuperación',
     duel: 'Duelo o entrada',
     pressure: 'Presión',
+    separate: '{n} acciones de posesiones distintas, cada una con su minuto',
   },
   cinema: {
     link: 'Modo cine',
@@ -200,6 +201,14 @@ const es = {
     open: 'Ver la tarjeta de este momento',
     close: 'Ocultar la tarjeta',
   },
+  halftime: {
+    title: 'Medio tiempo',
+    swap: 'Los equipos cambian de lado',
+    attacks: 'En el segundo tiempo cada equipo ataca hacia su flecha.',
+  },
+  pitch: {
+    ends: 'Cancha, tiempo {half}: portería de {left} a la izquierda y de {right} a la derecha.',
+  },
   band: {
     label: 'Tarjetas del partido',
     empty: 'Las tarjetas aparecen aquí cuando pasa algo en el campo.',
@@ -252,6 +261,7 @@ const en: Shape<typeof es> = {
     recovery: 'Recovery',
     duel: 'Duel or tackle',
     pressure: 'Pressure',
+    separate: '{n} actions from separate possessions, each with its minute',
   },
   cinema: {
     link: 'Cinema mode',
@@ -419,6 +429,14 @@ const en: Shape<typeof es> = {
     empty: 'Key moments show up here as they happen.',
     open: "Show this moment's card",
     close: 'Hide the card',
+  },
+  halftime: {
+    title: 'Half-time',
+    swap: 'Teams switch ends',
+    attacks: 'In the second half each team attacks towards its arrow.',
+  },
+  pitch: {
+    ends: 'Pitch, half {half}: {left} goal on the left, {right} goal on the right.',
   },
   band: {
     label: 'Match cards',

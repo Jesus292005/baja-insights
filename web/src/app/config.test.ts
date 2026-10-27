@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hrefWithSource, readConfig } from './config';
+import { hrefWithSource, readConfig, replayQuery } from './config';
 
 const loc = (search: string, pathname = '/') => ({ pathname, search });
 
@@ -30,5 +30,21 @@ describe('hrefWithSource', () => {
   it('keeps the query and drops the replay start time when going live', () => {
     expect(hrefWithSource('live', loc('?mode=fan&t=10:00'))).toBe('/?mode=fan&source=live');
     expect(hrefWithSource('replay', loc('?source=live&lang=en'))).toBe('/?source=replay&lang=en');
+  });
+});
+
+describe('replayQuery', () => {
+  it('keeps the replay playing in the view it opens, at the same speed', () => {
+    const q = replayQuery(3795.6, { playing: true, speed: 60, skip: true });
+    expect(q).toBe('&t=3795&speed=60&skip=1');
+    const c = readConfig({ pathname: '/cine', search: `?mode=fan${q}` });
+    expect(c.autoplay).toBe(true);
+    expect(c.speed).toBe(60);
+    expect(c.startAt).toBe(3795);
+  });
+
+  it('opens paused only when the replay was paused', () => {
+    const q = replayQuery(100, { playing: false, speed: 1, skip: false });
+    expect(readConfig({ pathname: '/cine', search: `?${q.slice(1)}` }).autoplay).toBe(false);
   });
 });

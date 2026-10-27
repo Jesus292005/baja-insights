@@ -8,7 +8,8 @@ import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { demoMatch, roster } from '../data/match';
 import { forViewer, momentsAt } from '../logic/derive';
-import { playAt } from '../logic/play';
+import { drawnIn, halfOf, playAt } from '../logic/play';
+import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
 /**
@@ -19,6 +20,9 @@ import { PlayLegend } from '../components/stage/PlayLegend';
 
 /** Seconds of lead before a moment, so the graphic enters on camera. */
 const LEAD_S = 2;
+
+/** Room of the mode badge at the top centre of the canvas (.cinema-badge), kept free of cards. */
+const BADGE_BOX = { x: 770, y: 40, w: 380, h: 74 };
 
 export function CinemaView({ config }: { config: AppConfig }) {
   const [mode, setMode] = useState<Mode>(config.mode ?? 'fan');
@@ -105,6 +109,10 @@ export function CinemaView({ config }: { config: AppConfig }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onKey]);
 
+  const halfTime = useHalfTime(rt.t, rt.snap.clock?.phase);
+  // Drawn in the clock's half, so the teams swap ends at 45:00.
+  const play = drawnIn(playAt(rt.orders, rt.t, demoMatch.playEvents, roster), halfOf(rt.t));
+
   return (
     <PrefsProvider mode={mode} lang={lang}>
       <main className="cinema" aria-label={s.cinema.link}>
@@ -113,7 +121,9 @@ export function CinemaView({ config }: { config: AppConfig }) {
           orders={rt.orders}
           variant="broadcast"
           backdrop
-          play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)}
+          play={play}
+          half={halfOf(rt.t)}
+          reserved={badge ? [BADGE_BOX] : []}
           bug={
             <div className="slot-bug">
               <MatchBug state={rt.snap.state} clockUpdate={rt.snap.clock} variant="broadcast" />
@@ -125,7 +135,8 @@ export function CinemaView({ config }: { config: AppConfig }) {
               {mode === 'fan' ? s.cinema.badgeFan : s.cinema.badgeAnalyst} · {lang.toUpperCase()}
             </p>
           )}
-          <PlayLegend play={playAt(rt.orders, rt.t, demoMatch.playEvents, roster)} variant="canvas" />
+          <PlayLegend play={play} variant="canvas" />
+          {halfTime && <HalfTimeNotice scoreline={rt.snap.state?.scoreline ?? null} />}
           {hint && !help && <p className="cinema-hint">{s.cinema.hint}</p>}
           {help && (
             <div className="cinema-help" role="dialog" aria-label={s.cinema.helpTitle}>

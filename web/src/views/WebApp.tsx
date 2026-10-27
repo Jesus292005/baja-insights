@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { usePersisted } from '../app/usePersisted';
 import { useMatchRuntime } from '../app/useMatchRuntime';
-import { hrefWithSource, type AppConfig } from '../app/config';
+import { hrefWithSource, replayQuery, type AppConfig } from '../app/config';
 import { BrandLogo } from '../components/BrandLogo';
 import { AskTheMatch } from '../components/rail/AskTheMatch';
 import { CardPanel, DuelPanel, MomentsPanel, MvpRacePanel } from '../components/rail/panels';
@@ -15,7 +15,8 @@ import { demoMatch, roster } from '../data/match';
 import { PrefsProvider } from '../i18n/prefs';
 import { strings } from '../i18n/strings';
 import { mvpAt } from '../logic/derive';
-import { playAt, playOf } from '../logic/play';
+import { drawnIn, halfOf, playAt, playOf } from '../logic/play';
+import { HalfTimeNotice, useHalfTime } from '../components/stage/HalfTime';
 import { PlayLegend } from '../components/stage/PlayLegend';
 
 export function WebApp({ config }: { config: AppConfig }) {
@@ -38,12 +39,17 @@ export function WebApp({ config }: { config: AppConfig }) {
   const s = strings[lang];
   const leader = useMemo(() => mvpAt(orders, t).ranking?.[0]?.player ?? null, [orders, t]);
   // An opened moment draws its own play; otherwise the latest one stays on the pitch.
-  const latestPlay = useMemo(() => playAt(orders, t, demoMatch.playEvents, roster), [orders, t]);
+  // The latest play follows the clock's half, so the teams swap ends at 45:00; an opened moment keeps its own.
+  const half = halfOf(t);
+  const latestPlay = useMemo(() => drawnIn(playAt(orders, t, demoMatch.playEvents, roster), half), [orders, t, half]);
+  const halfTime = useHalfTime(t, snap.clock?.phase);
   const openOrder = useMemo(() => orders.find((o) => o.overlay_id === open) ?? null, [orders, open]);
   const openPlay = useMemo(() => (openOrder ? playOf(openOrder, demoMatch.playEvents, roster) : null), [openOrder]);
   const play = openPlay ?? latestPlay;
-  const cinemaHref = `/cine?mode=${mode}&lang=${lang}${config.source === 'replay' ? `&t=${Math.floor(t)}&autoplay=0` : '&source=live'}`;
-  const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${config.source === 'replay' ? `&t=${Math.floor(t)}` : '&source=live'}`;
+  // Both views carry the replay over as it is: same second and speed, still playing if it was.
+  const carry = config.source === 'replay' ? replayQuery(t, replayState) : '&source=live';
+  const cinemaHref = `/cine?mode=${mode}&lang=${lang}${carry}`;
+  const broadcastHref = `/broadcast?mode=${mode}&lang=${lang}&bug=1${carry}`;
 
   return (
     <PrefsProvider mode={mode} lang={lang}>
@@ -82,7 +88,9 @@ export function WebApp({ config }: { config: AppConfig }) {
         </aside>
         <div className="main-col">
           <CardBand showing={showing} orders={orders} />
-          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} />
+          <Stage showing={showing} orders={orders} variant="web" graphics={false} play={play} half={half}>
+            {halfTime && <HalfTimeNotice scoreline={snap.state?.scoreline ?? null} />}
+          </Stage>
           <PlayLegend play={play} variant="web" />
           {replay && replayState && (
             <ReplayControls
