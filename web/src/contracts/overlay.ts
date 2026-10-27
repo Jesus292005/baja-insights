@@ -116,7 +116,13 @@ export const invisibleAssistPlayer = (v: GoalAnalysisData['invisible_assist']) =
  * La orden no dice a qué equipo se refiere un número suelto, así que la UI no lo atribuye.
  */
 export interface TeamPhaseData {
-  label: 'control' | 'pressure_shift';
+  /** possession_spell: one possession of 12 completed passes or more (realism notice). */
+  label: 'control' | 'pressure_shift' | 'possession_spell';
+  /** possession_spell only: completed passes, seconds, players who touched it and how it ended. */
+  passes?: number;
+  duration_s?: number;
+  players_involved?: number;
+  ended_in?: 'goal' | 'shot' | 'out' | 'foul' | 'lost';
   possession_pct?: number | HomeAway;
   pass_accuracy_pct?: number | HomeAway;
   passes_per_min?: number | HomeAway;

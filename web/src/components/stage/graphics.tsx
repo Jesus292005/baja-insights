@@ -320,7 +320,20 @@ function TeamPhase({ order, elapsed }: GraphicProps<TeamPhaseOrder>) {
   return (
     <Panel order={order} elapsed={elapsed}>
       {d && <p className={`g-phase g-phase-${d.label}`}>{s.phase[d.label]}</p>}
-      {d && mode === 'analyst' && (
+      {d?.label === 'possession_spell' ? (
+        mode === 'analyst' ? (
+          <dl className="g-stats">
+            <Metric label={s.spell.passes} value={d.passes} />
+            <Metric label={s.spell.duration} value={d.duration_s} unit=" s" />
+            <Metric label={s.spell.players} value={d.players_involved} />
+            {d.ended_in && <div className="g-metric"><dt>{s.spell.ended}</dt><dd>{s.spell.endedIn[d.ended_in]}</dd></div>}
+          </dl>
+        ) : (
+          d.passes !== undefined && d.duration_s !== undefined && (
+            <p className="g-score">{t(s.spell.summary, { passes: d.passes, seconds: d.duration_s })}</p>
+          )
+        )
+      ) : d && mode === 'analyst' && (
         <dl className="g-stats">
           <Metric label={s.stats.possession} value={d.possession_pct} unit="%" />
           <Metric label={s.stats.pass_accuracy} value={d.pass_accuracy_pct} unit="%" />
