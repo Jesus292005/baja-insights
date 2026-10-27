@@ -42,7 +42,9 @@ export interface OverlayCard {
 
 export type ReasonCode =
   | 'line_breaking_pass' | 'opp_half_recoveries' | 'shot_speed' | 'duel_streak' | 'run_speed'
-  | 'dribbles' | 'run_ended_in_shot' | 'run_opened_goal' | 'standout_defensive' | 'standout_creative';
+  | 'dribbles' | 'run_ended_in_shot' | 'run_opened_goal' | 'standout_defensive' | 'standout_creative'
+  // Realism notice (docs/aviso-realismo.md): pass streaks, recoveries that end in a shot, keeper saves.
+  | 'pass_streak' | 'recovery_to_shot' | 'big_save';
 
 export interface RankingEntry { rank: number; player: string; team: string; position: Position; mvp_score: number }
 
