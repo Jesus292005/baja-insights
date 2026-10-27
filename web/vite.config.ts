@@ -39,7 +39,7 @@ function matchData(): Plugin {
       const overlays = JSON.parse(readFileSync(overlaysPath, 'utf8'));
       // The plays behind each graphic: only the events the orders cite as evidence, with their coordinates.
       const cited = new Set<number>(overlays.flatMap((o: { evidence?: number[] }) => o.evidence ?? []));
-      const keep = ['event_id', 't_s', 'type', 'team', 'player', 'start', 'end', 'outcome', 'cross', 'lines_broken',
+      const keep = ['event_id', 't_s', 'type', 'team', 'player', 'possession_id', 'start', 'end', 'outcome', 'cross', 'lines_broken',
         'dragged_defender', 'dragged_defender_start', 'dragged_defender_end', 'space_opened_m'];
       const playEvents = allEvents
         .filter((e) => cited.has(e.event_id) && Array.isArray(e.start))

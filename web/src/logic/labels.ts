@@ -21,6 +21,7 @@ type Point = [number, number];
 const FONT = {
   player: { size: 26, em: 0.62 },
   rival: { size: 22, em: 0.66 },
+  tag: { size: 20, em: 0.66 },
 } as const;
 /** Radius kept clear around each dot of the play: markers, ends of lines, the ball. */
 const DOT_R = 20;
@@ -40,7 +41,7 @@ export function textBox(text: string, kind: keyof typeof FONT, p: Placement): Bo
 function candidates(x: number, y: number, kind: keyof typeof FONT): Placement[] {
   const size = FONT[kind].size;
   const spots: Placement[] = [];
-  for (const d of [16, 30, 48]) {
+  for (const d of [16, 30, 48, 70]) {
     const above = y - d;
     const below = y + d + size * 0.75;
     const side = y + size * 0.3;
@@ -90,13 +91,16 @@ export interface PlayLabels {
   /** One per player label, by the link it belongs to. */
   players: Map<number, Placement>;
   defender: Placement | null;
+  /** Minute tags of separate actions, by link (see DrawnPlay.tags). */
+  tags: Map<number, Placement>;
 }
 
 /**
  * @param names Text of each player label, in the order of `drawn.labels`.
  * @param defenderText Text next to the dragged defender, if any.
+ * @param tagTexts Text of each minute tag, in the order of `drawn.tags`.
  */
-export function placeLabels(drawn: DrawnPlay, names: string[], defenderText: string | null): PlayLabels {
+export function placeLabels(drawn: DrawnPlay, names: string[], defenderText: string | null, tagTexts: string[] = []): PlayLabels {
   const dots: Point[] = [];
   const lines: Point[][] = [];
   for (const st of drawn.steps) {
@@ -140,5 +144,7 @@ export function placeLabels(drawn: DrawnPlay, names: string[], defenderText: str
   const players = new Map<number, Placement>();
   drawn.labels.forEach((l, i) => players.set(l.link, place(names[i] ?? '', 'player', toSvg(l.at))));
   const defender = drawn.defender && defenderText ? place(defenderText, 'rival', toSvg(drawn.defender.from)) : null;
-  return { players, defender };
+  const tags = new Map<number, Placement>();
+  drawn.tags.forEach((g, i) => tags.set(g.link, place(tagTexts[i] ?? '', 'tag', toSvg(g.at))));
+  return { players, defender, tags };
 }

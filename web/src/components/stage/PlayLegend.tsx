@@ -1,6 +1,6 @@
 import { roster } from '../../data/match';
 import { usePrefs } from '../../i18n/prefs';
-import { clock } from '../../i18n/strings';
+import { clock, t } from '../../i18n/strings';
 import { buildPlay, type LegendKind, type MatchPlay } from '../../logic/play';
 import { TeamChip } from '../common';
 import { Ball } from './PlayLayer';
@@ -46,13 +46,15 @@ export function PlayLegend({ play, variant }: { play: MatchPlay | null; variant:
   if (!play) {
     return variant === 'web' ? <p className="legend legend-web legend-empty">{s.legend.empty}</p> : null;
   }
-  const kinds = buildPlay(play.links, play.goal).legend;
+  const drawn = buildPlay(play.links, true);
+  const kinds = drawn.legend;
   const o = play.order;
   return (
     <section className={`legend legend-${variant}`} aria-label={s.legend.title}>
       {variant === 'web' && (
         <p className="legend-caption">
           <b>{s.legend.title}</b> {s.kicker[o.type]} · {o.title ?? ''} · <span className="mono">{clock(o.show_at_s)}</span>
+          {drawn.tags.length > 1 && <> · {t(s.legend.separate, { n: drawn.tags.length })}</>}
         </p>
       )}
       <ul>

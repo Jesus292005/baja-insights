@@ -32,6 +32,7 @@ const es = {
     recovery: 'Recuperación',
     duel: 'Duelo o entrada',
     pressure: 'Presión',
+    separate: '{n} acciones de posesiones distintas, cada una con su minuto',
   },
   cinema: {
     link: 'Modo cine',
@@ -252,6 +253,7 @@ const en: Shape<typeof es> = {
     recovery: 'Recovery',
     duel: 'Duel or tackle',
     pressure: 'Pressure',
+    separate: '{n} actions from separate possessions, each with its minute',
   },
   cinema: {
     link: 'Cinema mode',

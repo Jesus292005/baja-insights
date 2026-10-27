@@ -30,6 +30,8 @@ export type LegendKind = 'pass' | 'cross' | 'shot' | 'ball' | 'run' | 'defender'
 /** A link of a play, with the side of the team that made it (for its colour). */
 export interface PlayLink extends ChainLink {
   side: Side;
+  /** Possession the action belongs to. Goal chains leave it out: the whole chain is one possession. */
+  group?: number | null;
 }
 
 export type PlayStep =
@@ -41,6 +43,11 @@ export interface DrawnPlay {
   gaps: { from: PitchPoint; to: PitchPoint; before: number }[];
   defender: { name: string | null; from: PitchPoint; to: PitchPoint; link: number } | null;
   labels: { link: number; player: string; at: PitchPoint }[];
+  /**
+   * Minute tags, one per possession, when the actions come from several possessions: those are
+   * separate actions of the match, not one play, so they are not joined by the ball.
+   */
+  tags: { link: number; at: PitchPoint; t_s: number }[];
   /** What the legend needs to explain, in a fixed order. */
   legend: LegendKind[];
 }
@@ -55,18 +62,31 @@ const isPoint = (p: unknown): p is PitchPoint =>
 export const hasCoordinates = (links: readonly ChainLink[] | undefined): links is ChainLink[] =>
   !!links?.length && links.every((l) => isPoint(l.start));
 
+/** Possession of a link, when it says one (see PlayLink.group). */
+const groupOf = (l: ChainLink) => (l as Partial<PlayLink>).group ?? null;
+
 export function buildPlay(links: readonly ChainLink[], connectBall: boolean): DrawnPlay {
   const ordered = links.map((l, i) => ({ l, i })).sort((a, b) => a.l.t_s - b.l.t_s || a.i - b.i);
   const steps: PlayStep[] = [];
   const gaps: DrawnPlay['gaps'] = [];
   const labels: DrawnPlay['labels'] = [];
+  const tags: DrawnPlay['tags'] = [];
   const legend = new Set<LegendKind>();
   let defender: DrawnPlay['defender'] = null;
   let ball: PitchPoint | null = null;
+  const groups = new Set(ordered.filter(({ l }) => isPoint(l.start)).map(({ l }) => groupOf(l)));
+  const separate = groups.size > 1;
+  let group: number | null | undefined;
 
   for (const { l, i } of ordered) {
     if (!isPoint(l.start)) continue;
     const start = l.start;
+    // A new possession starts a new action: the ball of the last one does not carry over.
+    if (groupOf(l) !== group) {
+      group = groupOf(l);
+      ball = null;
+      if (separate) tags.push({ link: i, at: start, t_s: l.t_s });
+    }
     const end = isPoint(l.end) ? l.end : null;
     // One label per player, at their first action: three recoveries by Torres say "Torres" once.
     if (!labels.some((x) => x.player === l.player)) labels.push({ link: i, player: l.player, at: start });
@@ -101,7 +121,7 @@ export function buildPlay(links: readonly ChainLink[], connectBall: boolean): Dr
       ball = end;
     }
   }
-  return { steps, gaps, defender, labels, legend: LEGEND_ORDER.filter((k) => legend.has(k)) };
+  return { steps, gaps, defender, labels, tags, legend: LEGEND_ORDER.filter((k) => legend.has(k)) };
 }
 
 /* ---------- Which play is on the pitch ---------- */
@@ -165,6 +185,8 @@ export function playOf(o: OverlayOrder, events: readonly PlayEvent[], roster: Ro
       type: e.type as ChainLink['type'], start: e.start, end: e.end, cross: e.cross, lines_broken: e.lines_broken,
       dragged_defender: e.dragged_defender, dragged_defender_start: e.dragged_defender_start, dragged_defender_end: e.dragged_defender_end,
       side: roster.team(e.team)?.side ?? 'home',
+      // Without a possession, each event stands alone.
+      group: e.possession_id ?? -e.event_id,
     })),
     spaceOpened: cited.find((e) => e.space_opened_m != null)?.space_opened_m ?? null,
     invisible: null,

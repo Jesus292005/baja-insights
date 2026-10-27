@@ -19,6 +19,8 @@ export interface PlayEvent {
   type: ChainLinkType | 'goal';
   team: string;
   player: string;
+  /** Events of the same possession make one play; different possessions are separate actions. */
+  possession_id?: number | null;
   start: PitchPoint;
   end: PitchPoint | null;
   outcome?: string | null;

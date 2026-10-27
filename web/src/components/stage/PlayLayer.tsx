@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { usePrefs } from '../../i18n/prefs';
-import { asSent, surname } from '../../i18n/strings';
+import { asSent, clock, surname } from '../../i18n/strings';
 import { placeLabels } from '../../logic/labels';
 import { buildPlay, crossControl, toSvg, type MatchPlay, type Side } from '../../logic/play';
 
@@ -32,7 +32,8 @@ export function Ball({ cx, cy, r = 20, className, style }: { cx: number; cy: num
 export function PlayLayer({ play }: { play: MatchPlay }) {
   const { lang } = usePrefs();
   const uid = useId().replace(/:/g, '');
-  const drawn = buildPlay(play.links, play.goal);
+  // The ball joins the actions of one possession; separate possessions stay apart (see buildPlay).
+  const drawn = buildPlay(play.links, true);
   const order = new Map(
     play.links.map((l, i) => ({ l, i })).sort((a, b) => a.l.t_s - b.l.t_s).map(({ i }, n) => [i, n]),
   );
@@ -43,7 +44,8 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
     ? `${drawn.defender.name ? surname(drawn.defender.name) : ''}${play.spaceOpened != null ? ` +${asSent(play.spaceOpened, lang)} m` : ''}`.trim()
     : null;
   // Each name takes the spot around its player that touches no other name, dot or line.
-  const spots = placeLabels(drawn, drawn.labels.map((l) => surname(l.player)), defenderText);
+  const tagTexts = drawn.tags.map((g) => clock(g.t_s));
+  const spots = placeLabels(drawn, drawn.labels.map((l) => surname(l.player)), defenderText, tagTexts);
 
   return (
     <g className="pl">
@@ -127,6 +129,16 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
         return (
           <text key={l.link} className="pl-label pl-fade" style={delay(l.link)} x={at.x} y={at.y} textAnchor={at.anchor}>
             {surname(l.player)}
+          </text>
+        );
+      })}
+
+      {drawn.tags.map((g, i) => {
+        const at = spots.tags.get(g.link);
+        if (!at) return null;
+        return (
+          <text key={`tag-${g.link}`} className="pl-label pl-tag pl-fade" style={delay(g.link)} x={at.x} y={at.y} textAnchor={at.anchor}>
+            {tagTexts[i]}
           </text>
         );
       })}

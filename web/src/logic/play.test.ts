@@ -90,3 +90,20 @@ describe('playAt', () => {
     expect(playAt(only, 5520, demoMatch.playEvents, roster)).toBeNull();
   });
 });
+
+describe('plays from several possessions', () => {
+  const ev = (event_id: number, t_s: number, type: string, group: number, start: [number, number], end?: [number, number]) =>
+    ({ event_id, player: 'B. Haro', action: '', credit: 0, t_s, type, start, end, side: 'away', group }) as never;
+
+  it('joins the actions of one possession with the ball', () => {
+    const play = buildPlay([ev(1, 10, 'pass', 7, [50, 45], [28, 58]), ev(2, 19, 'shot', 7, [8, 36], [0, 35])], true);
+    expect(play.gaps).toHaveLength(1);
+    expect(play.tags).toEqual([]);
+  });
+
+  it('keeps separate possessions apart, each with its minute', () => {
+    const play = buildPlay([ev(1, 983, 'pass', 43, [84, 23], [53, 9]), ev(2, 1210, 'pass', 49, [58, 3], [40, 12])], true);
+    expect(play.gaps).toEqual([]);
+    expect(play.tags.map((g) => g.t_s)).toEqual([983, 1210]);
+  });
+});

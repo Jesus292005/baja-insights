@@ -378,6 +378,8 @@
 .pl-ball-seam { stroke: var(--bi-ink-950); stroke-width: 2.5; }
 .pl-label { font-family: var(--bi-font-display); font-stretch: 80%; font-weight: 800; font-size: 26px; fill: var(--bi-text); paint-order: stroke; stroke: var(--bi-bg); stroke-width: 7px; stroke-linejoin: round; }
 .pl-label-rival { font-family: var(--bi-font-data); font-weight: 600; font-size: 22px; fill: var(--bi-text-muted); }
+/* Minute of each separate action (labels.ts sizes it as 'tag'). */
+.pl-tag { font-family: var(--bi-font-data); font-stretch: 100%; font-weight: 600; font-size: 20px; fill: var(--bi-accent); }
 .pl-fade { opacity: 0; animation: pl-fade 360ms var(--bi-ease-out) forwards; }
 @keyframes pl-draw { to { stroke-dashoffset: 0; } }
 @keyframes pl-fade { to { opacity: 1; } }
