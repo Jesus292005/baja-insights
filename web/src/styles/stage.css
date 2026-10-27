@@ -10,6 +10,7 @@
 .stage-canvas { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-size: 28px; }
 
 .stage-canvas,
+.card-scale,
 .pcard,
 .duel-broadcast {
   /* video palette, redeclared so the light web theme does not leak in */
@@ -46,6 +47,16 @@
 .slot-center { z-index: var(--bi-z-center); justify-content: center; }
 .slot-full_screen { z-index: var(--bi-z-fullscreen); }
 .slot-bug { position: absolute; left: 96px; top: 54px; z-index: var(--bi-z-slot); }
+
+/* ---------- Graphics off the canvas (web band and moments) ---------- */
+
+/* Laid out at a canvas width and scaled down; the outer box takes the scaled size. */
+.card-scale { position: relative; flex: none; max-width: 100%; }
+.card-scale-inner { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-size: 28px; }
+.card-scale .g-panel { max-height: none; }
+.card-scale .g-fullscreen { position: static; display: block; background: none; }
+.card-scale .g-top3-panel { width: auto; }
+.card-scale.is-still .g-tide { display: none; }
 
 /* ---------- Panel frame ---------- */
 
@@ -383,3 +394,7 @@
 .g-goal_analysis .g-invisible-badge { font-size: 19px; }
 .g-goal_analysis .g-invisible-hint { font-size: 20px; }
 .g-goal_analysis .g-row .evidence { font-size: 19px; }
+
+/* Off the canvas the goal card is a wide band: the chain reads left to right again. */
+.card-scale .g-chain.g-chain-list { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 16px; }
+.card-scale .g-goal_analysis .g-chain-list li { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }

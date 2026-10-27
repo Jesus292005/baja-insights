@@ -199,6 +199,10 @@ const es = {
     empty: 'Los momentos clave aparecen aquí conforme pasan.',
     replay: 'Ver otra vez',
   },
+  band: {
+    label: 'Tarjetas del partido',
+    empty: 'Las tarjetas aparecen aquí cuando pasa algo en el campo.',
+  },
   replay: {
     label: 'Repetición del partido',
     play: 'Reproducir',
@@ -413,6 +417,10 @@ const en: Shape<typeof es> = {
     title: 'Moments',
     empty: 'Key moments show up here as they happen.',
     replay: 'Show again',
+  },
+  band: {
+    label: 'Match cards',
+    empty: 'Cards show up here when something happens on the pitch.',
   },
   replay: {
     label: 'Match replay',
