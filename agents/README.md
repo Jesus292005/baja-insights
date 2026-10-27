@@ -159,7 +159,7 @@ The agent answers only through the six engine functions of `MatchQuery` (`get_ma
 
 ```bash
 venv/Scripts/python.exe -m baja_agents serve --port 8080
-venv/Scripts/python.exe -m baja_agents ask "¿Por qué Torres va primero?" --at 35:00
+venv/Scripts/python.exe -m baja_agents ask "¿Quién lidera la carrera al MVP?" --at 35:00
 ```
 
 The image is `chat.Dockerfile`, built by `.github/workflows/chat-image.yml` into `ghcr.io/jesus292005/baja-chat`, and deployed as `baja-chat` (see `docs/despliegue.md`). Offline tests are in `tests/test_ask.py`: a fake agent calls the real engine functions.
