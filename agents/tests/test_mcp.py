@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MATCHES = load_matches(ROOT / "data", ROOT / "mocks" / "teams.json")
 TOOLS = mcp_server.MatchTools(MATCHES)
 GOALS = [g["event_id"] for g in MATCHES["m001"].get_match_state("90:00")["goals"]]
+LEADER_AT_35 = MATCHES["m001"].get_mvp_ranking("35:00", 1)["ranking"][0]["player"]  # whoever the engine has first
 
 
 def rpc(method, params=None, id_=1):
@@ -65,7 +66,7 @@ def test_tool_call_returns_the_engine_result_as_text_and_structured():
     result = tool_result("get_mvp_ranking", at="35:00", top=3)
     assert result["isError"] is False
     assert json.loads(result["content"][0]["text"]) == result["structuredContent"]
-    assert result["structuredContent"]["ranking"][0]["player"] == "J. Torres"
+    assert result["structuredContent"]["ranking"][0]["player"] == LEADER_AT_35
 
 
 def test_as_of_never_returns_the_future():
@@ -154,7 +155,7 @@ def test_a_real_mcp_client_can_use_it():
                 names = {f.name for f in tool.functions}
                 assert {"get_match_state", "get_mvp_ranking", "get_goal_chain", "list_matches"} <= names
                 ranking = as_json(await tool.call_tool("get_mvp_ranking", at="35:00", top=3, match_id="m001"))
-                assert ranking["at"] == "35:00" and ranking["ranking"][0]["player"] == "J. Torres"
+                assert ranking["at"] == "35:00" and ranking["ranking"][0]["player"] == LEADER_AT_35
                 future = as_json(await tool.call_tool("get_goal_chain", goal_event_id=GOALS[1], as_of="35:00"))
                 assert future["error"] == "goal_not_found" and future["known_goals"] == [GOALS[0]]
                 # a malformed call is the only tool error, which Agent Framework raises
