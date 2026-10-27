@@ -12,7 +12,9 @@ import { buildPlay, crossControl, orientPlay, toSvg, type MatchPlay, type Side }
 const STEP_MS = 450;
 /** The shot line takes this long to draw (pl-draw in stage.css); the ball lands after it. */
 const DRAW_MS = 420;
-const teamColour = (side: Side) => `var(--bi-team-${side})`;
+const teamColour = (side: Side) => `var(--bi-play-${side})`;
+/** Class of the marks drawn in a team's colour (Cardón's get a light outline, see stage.css). */
+const teamClass = (side: Side) => (side === 'away' ? ' pl-away' : '');
 
 /** A football: the end of a shot, so it never reads as a pass. Drawn in pitch SVG units. */
 export function Ball({ cx, cy, r = 20, className, style }: { cx: number; cy: number; r?: number; className?: string; style?: React.CSSProperties }) {
@@ -74,8 +76,8 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
         const at = spots.defender;
         return (
           <g className="pl-fade" style={delay(drawn.defender.link)}>
-            <circle className="pl-defender-from" cx={x1} cy={y1} r="12" stroke={teamColour(r)} />
-            <line className="pl-defender" x1={x1} y1={y1} x2={x2} y2={y2} stroke={teamColour(r)} markerEnd={`url(#${uid}-${r})`} />
+            <circle className={`pl-defender-from${teamClass(r)}`} cx={x1} cy={y1} r="12" stroke={teamColour(r)} />
+            <line className={`pl-defender${teamClass(r)}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={teamColour(r)} markerEnd={`url(#${uid}-${r})`} />
             {at && defenderText && (
               <text className="pl-label pl-label-rival" x={at.x} y={at.y} textAnchor={at.anchor}>{defenderText}</text>
             )}
@@ -85,15 +87,16 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
 
       {drawn.steps.map((st) => {
         const colour = teamColour(side(st.link));
+        const away = teamClass(side(st.link));
         if (st.kind === 'marker') {
           const [cx, cy] = toSvg(st.at);
           if (st.marker === 'duel') {
-            return <rect key={st.link} className="pl-marker pl-fade" style={delay(st.link)} x={cx - 11} y={cy - 11} width="22" height="22" transform={`rotate(45 ${cx} ${cy})`} fill={colour} />;
+            return <rect key={st.link} className={`pl-marker pl-fade${away}`} style={delay(st.link)} x={cx - 11} y={cy - 11} width="22" height="22" transform={`rotate(45 ${cx} ${cy})`} fill={colour} />;
           }
           if (st.marker === 'pressure') {
-            return <circle key={st.link} className="pl-marker pl-pressure pl-fade" style={delay(st.link)} cx={cx} cy={cy} r="13" stroke={colour} />;
+            return <circle key={st.link} className={`pl-marker pl-pressure pl-fade${away}`} style={delay(st.link)} cx={cx} cy={cy} r="13" stroke={colour} />;
           }
-          return <circle key={st.link} className="pl-marker pl-fade" style={delay(st.link)} cx={cx} cy={cy} r="13" fill={colour} />;
+          return <circle key={st.link} className={`pl-marker pl-fade${away}`} style={delay(st.link)} cx={cx} cy={cy} r="13" fill={colour} />;
         }
         const [x1, y1] = toSvg(st.from);
         const [x2, y2] = toSvg(st.to);
@@ -105,7 +108,7 @@ export function PlayLayer({ play }: { play: MatchPlay }) {
         const path = (
           <path
             key={st.link}
-            className={`pl-step pl-${st.kind}${run ? ' pl-fade' : ''}`}
+            className={`pl-step pl-${st.kind}${run ? ' pl-fade' : away}`}
             style={delay(st.link)}
             d={d}
             pathLength={run ? undefined : 1}

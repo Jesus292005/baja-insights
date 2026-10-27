@@ -11,7 +11,7 @@ import { Ball } from './PlayLayer';
  */
 
 function Swatch({ kind }: { kind: LegendKind }) {
-  const team = 'var(--bi-team-home)';
+  const team = 'var(--bi-play-home)';
   const common = { width: 34, height: 14, viewBox: '0 0 34 14', 'aria-hidden': true } as const;
   switch (kind) {
     case 'pass':
@@ -31,7 +31,7 @@ function Swatch({ kind }: { kind: LegendKind }) {
     case 'run':
       return <svg {...common}><line x1="2" y1="7" x2="26" y2="7" stroke="var(--bi-accent)" strokeWidth="3" strokeDasharray="7 4" /><path d="M24 2 L33 7 L24 12 z" fill="var(--bi-accent)" /></svg>;
     case 'defender':
-      return <svg {...common}><circle cx="6" cy="7" r="4" fill="none" stroke="var(--bi-team-away)" strokeWidth="2" /><line x1="10" y1="7" x2="26" y2="7" stroke="var(--bi-team-away)" strokeWidth="2.5" strokeDasharray="4 3" /><path d="M24 3 L32 7 L24 11 z" fill="var(--bi-team-away)" /></svg>;
+      return <svg {...common}><circle cx="6" cy="7" r="4" fill="none" stroke="var(--bi-play-away)" strokeWidth="2" /><line x1="10" y1="7" x2="26" y2="7" stroke="var(--bi-play-away)" strokeWidth="2.5" strokeDasharray="4 3" /><path d="M24 3 L32 7 L24 11 z" fill="var(--bi-play-away)" /></svg>;
     case 'recovery':
       return <svg {...common}><circle cx="17" cy="7" r="6" fill={team} /></svg>;
     case 'duel':
@@ -65,8 +65,8 @@ export function PlayLegend({ play, variant }: { play: MatchPlay | null; variant:
           </li>
         ))}
         <li className="legend-teams">
-          <span className="legend-team"><i style={{ background: 'var(--bi-team-home)' }} /> <TeamChip team={roster.home} /></span>
-          <span className="legend-team"><i style={{ background: 'var(--bi-team-away)' }} /> <TeamChip team={roster.away} /></span>
+          <span className="legend-team"><i style={{ background: 'var(--bi-play-home)' }} /> <TeamChip team={roster.home} /></span>
+          <span className="legend-team"><i style={{ background: 'var(--bi-play-away)' }} /> <TeamChip team={roster.away} /></span>
         </li>
       </ul>
     </section>
