@@ -214,7 +214,9 @@ const es = {
   players: {
     illustrative: 'Posiciones ilustrativas',
     toggle: 'Jugadores en la cancha',
-    note: 'Ilustrativas: un modelo las ubica a partir de los eventos.',
+    note: 'Ilustrativas: un modelo las ubica a partir de los eventos. Selecciona a un jugador para ver su carta.',
+    cardOf: 'Carta de {player}',
+    close: 'Cerrar la carta del jugador',
   },
   halftime: {
     title: 'Medio tiempo',
@@ -458,7 +460,9 @@ const en: Shape<typeof es> = {
   players: {
     illustrative: 'Illustrative positions',
     toggle: 'Players on the pitch',
-    note: 'Illustrative: a model places them from the events.',
+    note: 'Illustrative: a model places them from the events. Select a player to see their card.',
+    cardOf: "{player}'s card",
+    close: 'Close the player card',
   },
   halftime: {
     title: 'Half-time',

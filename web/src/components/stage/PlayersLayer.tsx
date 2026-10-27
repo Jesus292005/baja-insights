@@ -34,7 +34,18 @@ function useGlide(target: number, hold: boolean) {
   return hold ? target : shown;
 }
 
-export function PlayersLayer({ file, t, half, frozen }: { file: PositionsFile; t: number; half: Half; frozen: boolean }) {
+export interface PlayersLayerProps {
+  file: PositionsFile;
+  t: number;
+  half: Half;
+  frozen: boolean;
+  /** Web app: a click (or Enter) on a player selects them. Without it the players are not interactive. */
+  onSelect?: (player: string) => void;
+  /** The selected player, drawn with a ring. */
+  selected?: string | null;
+}
+
+export function PlayersLayer({ file, t, half, frozen, onSelect, selected }: PlayersLayerProps) {
   const shown = useGlide(t, frozen);
   const frame = frameAt(file, shown);
   if (!frame) return null;
@@ -42,15 +53,39 @@ export function PlayersLayer({ file, t, half, frozen }: { file: PositionsFile; t
   const at = (p: [number, number]) => toSvg(inHalf(p, half));
   const [bx, by] = at(frame.ball);
   return (
-    <g className="pp" aria-hidden="true">
+    <g className={`pp${onSelect ? ' is-interactive' : ''}`} aria-hidden={onSelect ? undefined : true}>
       {(['home', 'away'] as const).map((side) =>
         frame[side].map((p, slot) => {
           const [x, y] = at(p);
           const who = lineup[side][slot];
+          const label = who ? `${who.number} ${who.player}` : '';
+          const pick = onSelect && who ? () => onSelect(who.player) : undefined;
           return (
-            <g key={`${side}-${slot}`} className={`pp-player pp-${side}${slot === 0 ? ' pp-keeper' : ''}`} transform={`translate(${x} ${y})`}>
-              <title>{who ? `${who.number} ${who.player}` : ''}</title>
-              <circle r="18" />
+            <g
+              key={`${side}-${slot}`}
+              className={`pp-player pp-${side}${slot === 0 ? ' pp-keeper' : ''}${who && who.player === selected ? ' is-selected' : ''}`}
+              transform={`translate(${x} ${y})`}
+              {...(pick && {
+                role: 'button',
+                tabIndex: 0,
+                'aria-label': label,
+                'aria-pressed': who?.player === selected,
+                onClick: (e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  pick();
+                },
+                onKeyDown: (e: React.KeyboardEvent) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    pick();
+                  }
+                },
+              })}
+            >
+              <title>{label}</title>
+              {/* A bigger, invisible target than the disc, so a moving player is easy to click. */}
+              {pick && <circle className="pp-hit" r="30" />}
+              <circle className="pp-disc" r="18" />
               <text y="6.5" textAnchor="middle">{who?.number}</text>
             </g>
           );

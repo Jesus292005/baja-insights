@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePersisted } from '../app/usePersisted';
 import { useMatchRuntime } from '../app/useMatchRuntime';
 import { hrefWithSource, replayQuery, type AppConfig } from '../app/config';
@@ -9,6 +9,7 @@ import {
   ConnectionBanner, ConnectionPill, LanguageToggle, MatchBug, ModeToggle, ReplayControls, SourceToggle, ThemeToggle,
 } from '../components/shell/shell';
 import { CardBand } from '../components/stage/CardBand';
+import { PlayerCorner } from '../components/stage/PlayerCorner';
 import { hasPositions, useDeadBall, usePositions } from '../data/positions';
 import { Stage } from '../components/stage/Stage';
 import type { Language, Mode } from '../contracts/overlay';
@@ -56,6 +57,12 @@ export function WebApp({ config }: { config: AppConfig }) {
   const positionsFile = usePositions();
   useDeadBall(replay, positionsFile);
   const positions = showPlayers === 'on' ? positionsFile : null;
+  // A player picked on the pitch: their card shows in its top-right corner until closed.
+  const [picked, setPicked] = useState<string | null>(null);
+  const closePicked = useCallback(() => setPicked(null), []);
+  useEffect(() => {
+    if (!positions) setPicked(null);
+  }, [positions]);
   const playersT = openPlay ? Math.max(...openPlay.links.map((l) => l.t_s)) : t;
   // Both views carry the replay over as it is: same second and speed, still playing if it was.
   const carry = config.source === 'replay' ? replayQuery(t, replayState) : '&source=live';
@@ -99,18 +106,31 @@ export function WebApp({ config }: { config: AppConfig }) {
         </aside>
         <div className="main-col">
           <CardBand showing={showing} orders={orders} />
-          <Stage
-            showing={showing}
-            orders={orders}
-            variant="web"
-            graphics={false}
-            play={play}
-            half={half}
-            // Held still while a moment is open or the replay is paused, so they never drift past the clock.
-            players={positions ? { file: positions, t: playersT, frozen: !!openPlay || replayState?.playing === false } : null}
-          >
-            {halfTime && <HalfTimeNotice scoreline={snap.state?.scoreline ?? null} />}
-          </Stage>
+          {/* The picked player's card: over the pitch's top-right corner, or under it on a phone. */}
+          <div className="pitch-wrap">
+            <Stage
+              showing={showing}
+              orders={orders}
+              variant="web"
+              graphics={false}
+              play={play}
+              half={half}
+              // Held still while a moment is open or the replay is paused, so they never drift past the clock.
+              players={
+                positions
+                  ? { file: positions, t: playersT, frozen: !!openPlay || replayState?.playing === false, onSelect: setPicked, selected: picked }
+                  : null
+              }
+              onPitchClick={picked ? closePicked : undefined}
+            >
+              {halfTime && <HalfTimeNotice scoreline={snap.state?.scoreline ?? null} />}
+            </Stage>
+            {picked && positions && (
+              <div className="stage-corner">
+                <PlayerCorner player={picked} orders={orders} t={playersT} onClose={closePicked} />
+              </div>
+            )}
+          </div>
           <PlayLegend play={play} variant="web" />
           {hasPositions && (
             <label className="players-toggle">
