@@ -1,6 +1,7 @@
 """Curator: decides which insights of a block go on screen.
 
-Hard rules live in code: goals, match keys and the top 3 always show, repeats are
+Hard rules live in code: goals, match keys, the top 3 and the first duel of each half
+always show (without a duel notice there is no duel bar), repeats are
 dropped, and no block shows more than ``MAX_PER_BLOCK`` optional graphics. The
 model only chooses among the remaining candidates, and if it fails the highest
 priorities win.
@@ -43,6 +44,13 @@ class Selection:
     decisions: list[dict] = field(default_factory=list)
 
 
+def first_duel_of_half(insight: dict, history: list[dict]) -> bool:
+    """The first duel_state of its half that reaches the screen. It always shows: the duel bar frames follow the
+    last duel shown, so a match whose duels the curator never picks (f091) had no duel bar at all."""
+    return insight["type"] == "duel_state" and not any(
+        h["insight_type"] == "duel_state" and h.get("period") == insight["period"] for h in history)
+
+
 def _shares_player(a: dict, shown: dict) -> bool:
     return bool(set(a["players"]) & set(shown["players"]))
 
@@ -72,9 +80,15 @@ class Curator:
     def triage(self, insights: list[dict], history: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
         """Split a block into (must show, candidates for the model, decisions already taken by rule)."""
         must, candidates, decided = [], [], []
+        history = list(history)  # a first duel taken here counts for the rest of the block
         for insight in insights:
             iid = insight["insight_id"]
-            if insight["type"] in NO_OVERLAY:
+            if first_duel_of_half(insight, history):
+                must.append(insight)
+                history.append({"t_s": insight["t_s"], "insight_type": "duel_state", "period": insight["period"],
+                                "players": insight["players"], "team": insight["team"]})
+                decided.append({"insight_id": iid, "show": True, "by": "rule", "reason": "primer duelo del tiempo, siempre se muestra"})
+            elif insight["type"] in NO_OVERLAY:
                 decided.append({"insight_id": iid, "show": False, "by": "rule", "reason": "no tiene gráfico, sirve de contexto"})
             elif insight["type"] in MUST_SHOW:
                 must.append(insight)

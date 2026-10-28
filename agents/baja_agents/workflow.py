@@ -20,7 +20,7 @@ from baja_insights.contract import fmt_clock
 from baja_insights.roster import Roster
 
 from . import overlays
-from .curator import MUST_SHOW, Curator
+from .curator import MUST_SHOW, Curator, first_duel_of_half
 from .models import Story
 from .narrator import Narrator
 from .personalizer import Personalized, Personalizer
@@ -136,13 +136,15 @@ class ComposerStep(Executor):
         out = []
         for insight, result in sorted(written.items, key=lambda item: item[0]["t_s"]):
             result: Personalized
-            show_at = self.scheduler.place(insight, must_show=insight["type"] in MUST_SHOW)
+            must_show = insight["type"] in MUST_SHOW or first_duel_of_half(insight, self.context.history)
+            show_at = self.scheduler.place(insight, must_show=must_show)
             if show_at is None:
                 self.context.unscheduled.append({"insight_id": insight["insight_id"], "reason": "su espacio en pantalla seguía ocupado"})
                 continue
             out.extend(overlays.build(insight, result.texts, show_at, self.roster))
-            self.context.history.append({"t_s": insight["t_s"], "insight_type": insight["type"], "players": insight["players"],
-                                         "team": insight["team"], "title": result.texts["fan_es"]["title"]})
+            self.context.history.append({"t_s": insight["t_s"], "period": insight["period"], "insight_type": insight["type"],
+                                         "players": insight["players"], "team": insight["team"],
+                                         "title": result.texts["fan_es"]["title"]})
             self.context.texts.append({"insight_id": insight["insight_id"], "sources": result.sources,
                                        "problems": result.problems})
         await ctx.yield_output(out)

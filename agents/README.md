@@ -17,7 +17,7 @@ insights ──▶ Curator ──▶ Narrator ──▶ Personalization ⇄ Veri
 
 | Step | What it does | File |
 | --- | --- | --- |
-| **Curator** | Chooses what goes on screen. The rules live in code: goals, match keys and the top 3 always show, repeats are dropped, and each block has a budget of 3. The model chooses among the rest. | `baja_agents/curator.py` |
+| **Curator** | Chooses what goes on screen. The rules live in code: goals, match keys, the top 3 and the first duel of each half always show, repeats are dropped, and each block has a budget of 3. The model chooses among the rest. | `baja_agents/curator.py` |
 | **Narrator** | Explains why the moment matters, using the scoreline and what has already been on screen. | `baja_agents/narrator.py` |
 | **Personalization** | Writes the four versions: fan and analyst, in Spanish and English. | `baja_agents/personalizer.py` |
 | **Verifier** | Checks every claim in the four versions against the insight: each player's team, who did what, who is ahead. If it fails, nothing is blocked. | `baja_agents/verifier.py` |
@@ -36,7 +36,7 @@ The agents share a context (`MatchContext` in `baja_agents/workflow.py`): the sc
 
 Then the verifier reviews the versions that passed. If something fails, the model gets one retry with the problems listed, and each version keeps the latest attempt that passed. Whatever still fails is replaced by a template (`baja_agents/fallback.py`). The same happens when an agent fails, takes longer than 30 s, or the budget of 250 calls per match runs out. Responses are cached in `agents/.cache/`, so running again costs no tokens.
 
-**Duel bar frames.** These are the `duel_bar` orders with `source_insight: null` and `mode`/`language` set to `all`. Every 5 minutes, the bar of the last duel shown is refreshed with the engine's value (`MatchQuery.get_duel`). A frame is skipped if the bar moved less than 0.05, if its slot is busy, or if no duel notice has been shown yet. It needs `events.jsonl` next to the insights, or `--events`.
+**Duel bar frames.** These are the `duel_bar` orders with `source_insight: null` and `mode`/`language` set to `all`. Every 5 minutes, the bar of the last duel shown is refreshed with the engine's value (`MatchQuery.get_duel`). A frame is skipped if the bar moved less than 0.05, if its slot is busy, or if no duel notice has been shown yet. That is why the first duel of each half always shows: f091's duels never beat the other graphics, and the match had no duel bar. It needs `events.jsonl` next to the insights, or `--events`.
 
 ## Running
 
