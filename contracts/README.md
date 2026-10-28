@@ -42,7 +42,7 @@ Desde JavaScript se pueden usar los mismos esquemas con [Ajv](https://ajv.js.org
 - **Duelos.** Un evento por duelo. `outcome` se lee desde `player`, y `opponent` es obligatorio.
 - **Goles.** Puntúa el `shot` con `outcome: "goal"`. El evento `goal` solo trae `scoreline` y `assist`.
 - **Conducción.** No hay un evento para conducir el balón: el jugador que recibe puede avanzar con él antes de su siguiente acción, así que el `start` de esa acción no tiene que coincidir con el `end` del pase que recibió. La diferencia es lo que condujo.
-- **Balón parado.** Un balón que sale cruza una línea: el pase termina en ella con `out_of_play`, y el rival reanuda con un pase con `set_piece`: `throw_in` desde la banda, `goal_kick` desde el área chica si salió por la línea de fondo que ataca quien lo perdió, o `corner` desde el banderín si salió por su propia línea de fondo. Los saques iniciales, los tiros libres tras falta y el saque del portero tras una atajada también llevan `set_piece`. Nadie presiona ni disputa el balón antes de que se cobre.
+- **Balón parado.** Un balón que sale cruza una línea: el pase termina en ella con `out_of_play`, y el rival reanuda con un pase con `set_piece`: `throw_in` desde la banda, `goal_kick` desde el área chica si salió por la línea de fondo que ataca quien lo perdió, o `corner` desde el banderín si salió por su propia línea de fondo. Los saques iniciales, los tiros libres tras falta y el saque del portero tras una atajada también llevan `set_piece`. Nadie presiona ni disputa el balón antes de que se cobre. En los partidos libres, una falta dentro del área es penal: el remate desde el punto lleva `set_piece: "penalty"` (el demo `m001` no tiene penales).
 - **Nombres** ficticios. Nada de marcas reales.
 
 ---
@@ -55,7 +55,7 @@ Campos siempre presentes: `match_id`, `event_id`, `period`, `minute`, `second`, 
 | --- | --- | --- |
 | `match_start` | — | `home`, `away` |
 | `pass` | `complete`, `incomplete` | `receiver`, y opcionales `cross`, `set_piece` (`kickoff`, `throw_in`, `corner`, `goal_kick`, `free_kick` o `keeper`, en el pase que reanuda el juego) y `out_of_play` (el pase se fue fuera y `end` es el punto de la línea por donde salió) |
-| `shot` | `goal`, `saved`, `off_target`, `blocked` | `xg` |
+| `shot` | `goal`, `saved`, `off_target`, `blocked` | `xg`, y opcional `set_piece: "penalty"` (desde el punto, tras una falta en el área; nunca `blocked`) |
 | `goal` | — | `assist`, que puede ser null, y `scoreline` |
 | `recovery` | `won` | — |
 | `tackle`, `duel` | `won`, `lost` | `opponent` |
@@ -167,7 +167,7 @@ El stream lo sirve en `GET /positions/<match_id>`, comprimido y con CORS abierto
 | `hz` | 2 cuadros por segundo de partido. La interfaz interpola entre cuadros y elige el cuadro con el `t_s` del reloj |
 | `frames[]` | `t` (segundo), `b` (balón), `h` y `a` (11 puntos `[x, y]` por equipo, en el orden de `teams.<lado>.players`) |
 | `lineup_changes` | Desde `t_s`, `player_in` ocupa el lugar de `player_out` |
-| `set_pieces` | Cada saque: el segundo en que el balón quedó muerto (`ball_out_from_t_s`), el segundo del saque (`t_s`), el tipo, el equipo, quién saca y desde dónde |
+| `set_pieces` | Cada saque: el segundo en que el balón quedó muerto (`ball_out_from_t_s`), el segundo del saque (`t_s`), el tipo, el equipo, quién saca y desde dónde. El tipo `penalty` solo sale en partidos libres: portero en su línea, el que patea en el punto y los demás fuera del área y del arco |
 | `periods` | **Cambio de lado.** En el segundo tiempo, todo lo que se dibuja en la cancha (jugadores, balón, cadena del gol, eventos) va en `(105 − x, 68 − y)`. Así el local ataca a la derecha en el primer tiempo y a la izquierda en el segundo |
 
 En un SVG de 1050 × 680, un punto va en `(x · 10, (68 − y) · 10)`, después de aplicar el cambio de lado.
