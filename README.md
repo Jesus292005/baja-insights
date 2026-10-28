@@ -4,7 +4,7 @@
 >
 > *From Baja to the Premier: insight has no borders.*
 
-**[Live demo](https://ambitious-smoke-08207d610.6.azurestaticapps.net)** · **[Demo video]((https://www.youtube.com/watch?v=gwrig1QaKmw))**
+**[Live demo](https://ambitious-smoke-08207d610.6.azurestaticapps.net)** · **[Demo video](https://www.youtube.com/watch?v=gwrig1QaKmw)**
 
 Baja-Insights turns a live stream of football match events into explainable, personalised match intelligence: a live MVP race, flank duels measured against role baselines, standout milestones for the players who usually go unnoticed, goal-chain analysis that credits the *invisible assist*, player cards that level up during the match, and an "Ask the match" chat that only answers from real data.
 
