@@ -78,7 +78,7 @@ python -m baja_insights serve --data data --port 8080 --speed 60
 python -m pytest
 ```
 
-An unscripted match (`--script free`) uses the same simulator with goals sampled from xG, which shows that the generator is general and not a replay.
+An unscripted match (`--script free`) is played by a decision generator (`generator/decisions.py`): whoever is nearest presses or wins the ball, players shoot when the chance is worth it and look for the better-placed team-mate, a foul in the box is a penalty, and the score changes the rhythm but never the finishing. Player profiles come from their cards and team styles from `generator/tactics.json`. The insight engine runs on it unchanged, which shows it does not depend on the script.
 
 ## Microsoft technologies
 

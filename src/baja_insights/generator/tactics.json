@@ -1,0 +1,38 @@
+{
+  "_nota": "Tácticas de los partidos libres (sin guion). El perfil de cada jugador sale de su carta en mocks/teams.json. Aquí solo va el estilo de cada equipo y cómo reacciona al marcador. Nada de esto cambia la probabilidad de que un remate entre: esa es siempre su xG.",
+  "teams": {
+    "Bahía FC": {
+      "pass_acc": 0.78,
+      "tempo": 1.0,
+      "press": 0.32,
+      "directness": 0.55,
+      "aggression": 1.1
+    },
+    "Real Cardón": {
+      "pass_acc": 0.84,
+      "tempo": 1.1,
+      "press": 0.22,
+      "directness": 0.35,
+      "aggression": 0.9
+    }
+  },
+  "game_state": {
+    "_nota": "El que va ganando baja el ritmo, presiona menos y la guarda; el que va perdiendo acelera, presiona y va más directo, pero se encuentra un área llena (crowded_box: más remates presionados). Después de un gol, unos minutos más tranquilos. Al final, cansancio: menos presión. day_form_sd: cada equipo tiene días buenos y malos; en cada partido juega un poco mejor o peor que de costumbre.",
+    "leading": {
+      "tempo": 0.97,
+      "press": -0.03,
+      "directness": -0.06
+    },
+    "trailing": {
+      "tempo": 1.0,
+      "press": 0.02,
+      "directness": 0.08
+    },
+    "crowded_box": 0.45,
+    "calm_after_goal_s": 180,
+    "calm_tempo": 0.85,
+    "late_from_s": 4500,
+    "late_press": 0.9,
+    "day_form_sd": 0.15
+  }
+}
