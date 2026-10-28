@@ -228,6 +228,38 @@ def test_the_retry_can_fix_it():
     assert asyncio.run(chat.ask(request()))["status"] == "answered"
 
 
+def test_a_markdown_answer_is_checked_without_its_markup():
+    # "1. " and "2. " are list markers, not figures; the bold scoreline is still checked home-away.
+    md = "Real Cardón gana **0-1**:\n\n1. *Cota* recupera\n2. Torres arrastra a su marca"
+    chat = FakeChat([([("get_match_state", {})], answer(md))])
+    out = asyncio.run(chat.ask(request(at="60:00")))
+    assert out["status"] == "answered" and out["answer"] == md and len(chat.prompts) == 1
+
+
+def test_lineup_positions_come_abbreviated_for_the_answer_language():
+    from baja_agents.ask import lineups
+    es, en = lineups(M001, 0)["Bahía FC"]["on_pitch"], lineups(M001, 0, "en")["Bahía FC"]["on_pitch"]
+    assert [x["position"] for x in es[:3]] == ["POR", "LD", "DFC"]
+    assert [x["position"] for x in en[:3]] == ["GK", "RB", "CB"]
+    assert [x["player"] for x in es] == [x["player"] for x in en]
+
+
+def test_a_made_up_position_gets_a_retry():
+    chat = FakeChat([([], answer("**Bahía FC**\n- Defenders: Mena (RD), Quiroz (DC)")),
+                     ([], answer("**Bahía FC**\n- Defenders: Mena (RB), Quiroz (CB)"))])
+    out = asyncio.run(chat.ask(request("What are the lineups?", language="en")))
+    assert chat.prompts[1]["fix"] == ["Mena is RB, not RD: copy the position from lineups",
+                                      "Quiroz is CB, not DC: copy the position from lineups"]
+    assert out["answer"] == "**Bahía FC**\n- Defenders: Mena (RB), Quiroz (CB)"
+
+
+def test_bullets_written_in_a_row_get_their_own_lines():
+    row = "Bahía FC line-up: - Goalkeeper: Arce - Defenders: Mena (right), Lugo (left) - Bench: Ibarra"
+    chat = FakeChat([([], answer(row))])
+    out = asyncio.run(chat.ask(request("Dame las alineaciones", language="en")))
+    assert out["answer"] == "Bahía FC line-up:\n- Goalkeeper: Arce\n- Defenders: Mena (right), Lugo (left)\n- Bench: Ibarra"
+
+
 def test_a_scoreline_written_backwards_is_fixed_or_rejected():
     # 60:00: Real Cardón leads 0-1 (home-away). "1-0" is how a Cardón fan would say it, and it is wrong here.
     chat = FakeChat([([("get_match_state", {})], answer("Real Cardón gana 1-0.")),

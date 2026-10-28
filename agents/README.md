@@ -147,6 +147,7 @@ The agent answers only through the six engine functions of `MatchQuery` (`get_ma
 - **"Not in this match"** (`not_found`) may also be answered from `lineups` with no function call.
 - **Scorelines.** Only a scoreline written backwards ("1-0" when it is 0-1) is rejected; "3-1 in duels" is not a scoreline.
 - **Reasoning effort.** `FOUNDRY_REASONING_EFFORT` (`none`, `low`, `medium`...) is passed to reasoning models such as gpt-5.4-mini. Leave it empty for gpt-4.1 and gpt-4.1-mini, which reject the option.
+- **Markdown.** The answer is Markdown (paragraphs, `- ` and `1. ` lists, bold, italics), rendered by the chat in `web/src/chat/ChatMarkdown.tsx`. The checks read it without its markup (`checks.plain_text`), so a `1. ` list marker is not a figure, and `POST /api/chat-overlay` puts the plain text on the stage.
 - **Language.** The answer is always in the request's `language`, the one the fan chose in the app, even when the question is typed in another language.
 
 **Service:**

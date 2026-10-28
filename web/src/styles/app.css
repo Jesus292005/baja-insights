@@ -237,6 +237,13 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 .bubble-match { align-self: flex-start; border: var(--bi-border-width) solid var(--bi-line-strong); border-left: 3px solid var(--bi-accent); }
 .bubble-limited { border-left-color: var(--bi-text-muted); }
 .bubble-flag { display: block; font-family: var(--bi-font-data); font-size: var(--bi-text-2xs); letter-spacing: var(--bi-tracking-label); text-transform: uppercase; color: var(--bi-text-muted); margin-bottom: var(--bi-space-2); }
+.md > * + * { margin-top: var(--bi-space-2); }
+.md ul, .md ol { padding-left: 1.25em; }
+.md ul { list-style: disc; }
+.md ol { list-style: decimal; }
+.md li + li { margin-top: var(--bi-space-1); }
+.md strong { font-weight: var(--bi-weight-bold); }
+.md code { font-family: var(--bi-font-data); font-size: 0.95em; }
 .bubble-wait { color: var(--bi-text-muted); font-style: italic; }
 .bubble-action { display: block; margin-top: var(--bi-space-3); font-size: var(--bi-text-xs); color: var(--bi-accent); }
 .bubble-action:disabled { color: var(--bi-text-muted); text-decoration: none; opacity: 1; }

@@ -90,3 +90,9 @@ def test_the_endpoint(overlay_validator):
             assert no_text.status == 422
 
     asyncio.run(scenario())
+
+
+def test_the_stage_shows_the_answer_without_markdown(overlay_validator):
+    order = chat_answer_order({**ANSWER, "answer": "**Torres** va primero:\n\n- 3 pases *clave*\n- `2` duelos"}, "fan", "es")
+    assert order["text"] == "Torres va primero:\n\n3 pases clave\n2 duelos"
+    assert [e.message for e in overlay_validator.iter_errors(order)] == []

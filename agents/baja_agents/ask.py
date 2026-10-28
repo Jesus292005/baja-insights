@@ -29,7 +29,8 @@ from baja_insights.engine.core import FLANK_MATCHUPS
 from baja_insights.engine.tools import MatchQuery
 
 from . import config
-from .checks import EVENT_ID_KEYS, UI_ONLY_FACTS, figures, numbers, wrong_scorelines, without_ui_only
+from .checks import (EVENT_ID_KEYS, UI_ONLY_FACTS, figures, numbers, plain_text, tidy_markdown, wrong_scorelines,
+                     without_ui_only)
 from .llm import LLMRunner
 from .narrator import name_sides
 
@@ -38,7 +39,7 @@ log = logging.getLogger(__name__)
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-9"
+VERSION = "ask-14"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
 # Questions about who plays. `lineups` answers them in full, so they need no function call.
@@ -75,6 +76,10 @@ Rules
 - `mode` fan: warm and simple, at most 3 figures besides the scoreline; say the rest in words. `mode` analyst: precise, with the key figures.
 - Write in `language` (es or en), even when the question is written in another language: the fan chose it in
   the app. At most 3 sentences for fans and 4 for analysts.
+- Format the answer in Markdown, which the chat renders: **bold** for the key player or figure (at most 2 per
+  answer), *italics* sparingly, and a "- " bullet list when you list several players or points (lineups,
+  substitutions, the links of a goal), each bullet on its own line. Use "1. " lists only for an order that matters (a ranking, a goal chain).
+  No headings, tables, links, images or code blocks. Keep short answers as one plain paragraph.
 - Refer to players by surname. Do not use gendered pronouns for players.
 - Function results key per-team values by team name and give scorelines as text with the home team first,
   "Bahía FC 0-1 Real Cardón". A number belongs only to the team it is keyed by. Write scorelines in that order: 0-1.
@@ -98,7 +103,12 @@ Which functions to call
   finished, and `invisible_assist` when someone opened the space without the ball. No function is needed for it.
 - Lineups, who is playing, the bench or the substitutions: answer from `lineups`, with no function needed.
   `on_pitch` is each team's eleven at `at`, `bench` who has not played, `substitutions` the changes so far. List
-  exactly those names and positions, team by team; never take players from anywhere else.
+  exactly those names and positions, team by team; never take players from anywhere else. Each `position` is the
+  abbreviation for the answer's language: write it exactly as it comes, in parentheses after the surname, and never
+  make up another. Format: the team name in bold on its own line, then one "- " bullet per line of the team, in the
+  answer's language: goalkeeper, defenders, midfielders, forwards and bench (e.g. "- Defensas: Mena (LD), Quiroz
+  (DFC), Beltrán (DFC), Lugo (LI)"), and a bullet for the substitutions if there were any. A blank line between the
+  two teams.
 - Where a player was or is on the pitch: the system does not track positions, and the players drawn on the pitch
   in the app are illustrative. Answer only with what the player did (get_player_summary, or the goal chain), and
   say that the pitch is illustrative.
@@ -118,7 +128,7 @@ Status
 
 class AskAnswer(BaseModel):
     status: Literal["answered", "not_tracked", "not_found", "no_prediction"]
-    answer: str = Field(description="The answer, in the requested language and mode")
+    answer: str = Field(description="The answer in Markdown, in the requested language and mode")
 
 
 OPPOSITE_FLANK = {"LD": "EI", "LI": "ED", "ED": "LI", "EI": "LD"}  # a full-back faces the winger on that side
@@ -148,14 +158,21 @@ def flank_duels(query: MatchQuery, at_s: int, top: int = 4) -> list[dict]:
 
 
 POSITION_ORDER = ("POR", "LD", "DFC", "LI", "MCD", "MC", "ED", "EI", "DC")
+# Position abbreviations per language, the ones the UI shows (positionLabel in web/src/i18n/strings.ts). Answering
+# in English from the Spanish codes, the model made up its own ("RD"); wrong_positions catches any that slip through.
+POSITION_CODES = {
+    "es": {code: code for code in POSITION_ORDER},
+    "en": {"POR": "GK", "LD": "RB", "DFC": "CB", "LI": "LB", "MCD": "DM", "MC": "CM", "ED": "RW", "EI": "LW", "DC": "ST"},
+}
 
 
-def lineups(query: MatchQuery, at_s: int) -> dict:
+def lineups(query: MatchQuery, at_s: int, language: str = "es") -> dict:
     """Who is on the pitch for each team at ``at_s``, with positions, the bench and the substitutions so far.
 
     No chat function returns lineups, and a guess from the ``known_players`` of a ``player_not_found``
     (one flat list of the whole roster) mixes teams and substitutes. This comes from the roster and the
-    match's substitution events, so it is the same every time and follows the changes.
+    match's substitution events, so it is the same every time and follows the changes. Positions come
+    abbreviated for ``language``.
     """
     roster = query.roster
     on_pitch = {team: [p.name for p in roster.team_players(team, starters_only=True)] for team in (roster.home, roster.away)}
@@ -168,17 +185,35 @@ def lineups(query: MatchQuery, at_s: int) -> dict:
             on_pitch[team][on_pitch[team].index(player_out)] = player_in
         subs[team].append({"clock": fmt_clock(e["t_s"]), "out": player_out, "in": player_in})
 
+    codes = POSITION_CODES[language]
+
     def entry(name: str) -> dict:
         p = roster.players[name]
-        return {"player": p.name, "number": p.number, "position": p.position}
+        return {"player": p.name, "number": p.number, "position": codes[p.position]}
+
+    def lineup_order(name: str) -> tuple:
+        p = roster.players[name]
+        return POSITION_ORDER.index(p.position), p.number
 
     out = {}
     for team, names in on_pitch.items():
-        playing = sorted((entry(n) for n in names), key=lambda x: (POSITION_ORDER.index(x["position"]), x["number"]))
+        playing = [entry(n) for n in sorted(names, key=lineup_order)]
         used = set(names) | {s["out"] for s in subs[team]}
         bench = [entry(p.name) for p in roster.team_players(team) if p.name not in used]
         out[team] = {"on_pitch": playing, "bench": bench, "substitutions": subs[team]}
     return out
+
+
+def wrong_positions(answer: str, lineup: dict) -> list[str]:
+    """"Quiroz (DC)" when Quiroz is DFC: an abbreviation in parentheses after a surname that is not that player's."""
+    codes = {p["player"].split(". ")[-1]: p["position"]
+             for team in lineup.values() for p in team["on_pitch"] + team["bench"]}
+    found = []
+    for surname, code in codes.items():
+        for m in re.finditer(rf"\b{re.escape(surname)}\s*\(([A-Z]{{2,3}})\)", answer):
+            if m.group(1) != code:
+                found.append(f"{surname} is {code}, not {m.group(1)}: copy the position from lineups")
+    return found
 
 
 def goals_so_far(query: MatchQuery, at_s: int) -> list[dict]:
@@ -380,18 +415,20 @@ class AskTheMatch:
             found.append("you answered without calling any function")
         allowed = session.allowed_numbers([request["question"], fmt_clock(at_s), at_s // 60,
                                            [h["text"] for h in request.get("history") or []]])
-        invented = sorted(numbers(result.answer) - allowed)
+        text = plain_text(result.answer)  # list markers like "1. " are not figures
+        invented = sorted(numbers(text) - allowed)
         if invented:
             found.append(f"numbers not in any function result: {invented}")
-        found.extend(wrong_scorelines(result.answer, session.scorelines()))
-        if not result.answer.strip():
+        found.extend(wrong_scorelines(text, session.scorelines()))
+        found.extend(wrong_positions(text, lineups(session.query, at_s, request["language"])))
+        if not text.strip():
             found.append("empty answer")
         return found
 
     @staticmethod
     def style_problems(request: dict, result: AskAnswer) -> list[str]:
         """Style problems: worth a retry, but an accurate answer is shown even if the retry keeps them."""
-        if request["mode"] == "fan" and figures(result.answer) > MAX_FAN_FIGURES:
+        if request["mode"] == "fan" and figures(plain_text(result.answer)) > MAX_FAN_FIGURES:
             return [f"a fan answer shows at most {MAX_FAN_FIGURES} figures besides the scoreline; "
                     "keep the most telling ones and say the rest in words"]
         return []
@@ -427,7 +464,7 @@ class AskTheMatch:
                    "language": request["language"], "favorite_team": request.get("favorite_team"),
                    "history": request.get("history") or [], "home_team": home, "away_team": away,
                    "prediction_question": prediction, "flank_duels": flank_duels(query, at_s),
-                   "lineups": lineups(query, at_s)}
+                   "lineups": lineups(query, at_s, request["language"])}
         if GOAL.search(request["question"]):
             payload["goals"] = goals_so_far(query, at_s)
         try:
@@ -464,7 +501,7 @@ class AskTheMatch:
             log.warning("ask rejected: %s", problems)
             return self.response(request, at_s, "error", None, session.tools_used(), error="agent_failed")
         status = "no_prediction" if prediction else result.status
-        return self.response(request, at_s, status, result.answer.strip(), session.tools_used(), session.evidence())
+        return self.response(request, at_s, status, tidy_markdown(result.answer), session.tools_used(), session.evidence())
 
 
 def load_matches(data_dir: Path, teams: Path | None = None) -> dict[str, MatchQuery]:
