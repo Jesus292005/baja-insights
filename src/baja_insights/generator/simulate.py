@@ -751,6 +751,11 @@ def load_script(script: dict | str | Path) -> dict:
 
 def generate_match(roster: Roster, seed: int = DEMO_SEED, script: dict | str | Path | None = "m001",
                    match_id: str | None = None) -> list[dict]:
+    """A scripted match (the demo ``m001``), or with ``script=None`` a free match where every decision
+    comes from the play (``decisions.DecisionGenerator``)."""
+    if script is None:
+        from .decisions import DecisionGenerator
+        return DecisionGenerator(roster, seed=seed, match_id=match_id).generate()
     return MatchGenerator(roster, seed=seed, script=script, match_id=match_id).generate()
 
 

@@ -184,7 +184,7 @@ Todas las tasas están en `GEN`, al inicio de `generator/simulate.py`:
 
 ### Realismo
 
-`python -m baja_insights realism --seeds 30` mide los partidos libres (la tabla usa esas mismas 30 semillas) contra rangos aproximados de la Premier League, por equipo y partido salvo que se indique. `tests/test_realism.py` exige que los 40 primeros partidos libres caigan dentro de todos los rangos.
+`python -m baja_insights realism --seeds 30` mide los partidos libres (la tabla usa esas mismas 30 semillas) contra rangos aproximados de la Premier League, por equipo y partido salvo que se indique. `tests/test_realism.py` exige que los 100 primeros partidos libres caigan dentro de todos los rangos. Desde el 27 de octubre los partidos libres usan el generador de decisiones (sección 13); su tabla está ahí.
 
 | Métrica | Antes del 23 de octubre | Ahora | Referencia |
 | --- | --- | --- | --- |
@@ -208,7 +208,7 @@ Todas las tasas están en `GEN`, al inicio de `generator/simulate.py`:
 - Las **fases** de cada equipo: precisión de pase, ritmo, presión y verticalidad por tramo de tiempo.
 - La **forma** de algunos jugadores: multiplicadores para presionar, recuperar, recibir, romper líneas o ganar duelos.
 
-Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`--script free`), los goles se sortean con el xG de cada tiro.
+Con `lock_scoreline` el marcador solo cambia en los momentos clave. Sin guion (`--script free`) el partido lo juega el generador de decisiones de la sección 13.
 
 ---
 
@@ -219,3 +219,64 @@ El partido de demo es **m001 con la semilla 1387** (`DEMO_SEED` en `generator/si
 **Desde el 27 de octubre de 2026 el guion solo fija las jugadas que inserta tal cual:** el 1-1 en el 17 y el 63 y la cadena del empate (recuperación de Cota, desmarque de Torres arrastrando a Cárdenas, pase de Salgado y remate de Ramírez). El análisis del gol, los avisos y el video dependen de ellas. Todo lo demás sale de la semilla y puede cambiar cuando cambia el generador: quién lidera la carrera del MVP, quién la gana, los duelos, las fases y el veredicto. Así el generador se puede mejorar sin buscar una semilla nueva cada vez.
 
 `tests/test_demo_story.py` protege lo que se conserva: los goles, y que la cadena del 1-1 tenga los mismos jugadores, acciones y créditos que el mock, con la asistencia invisible de Torres y las coordenadas para dibujarla.
+
+---
+
+## 13. Partidos libres: decisiones por contexto
+
+Desde el 27 de octubre de 2026, `--script free` (y `generate_match(..., script=None)`) usa `generator/decisions.py`. **El demo `m001` sigue con el generador con guion, evento por evento igual:** la CI y `tests/test_decisions.py` lo comprueban.
+
+### Qué decide cada jugador
+
+| Decisión | Cómo |
+| --- | --- |
+| **Quién actúa** | El generador sabe dónde está cada bloque en cada momento, con la misma forma que dibuja el modelo de posiciones. El que presiona, entra, disputa, recibe o recoge un balón suelto es uno de los más cercanos a ese punto; la carta y el rol solo desempatan |
+| **Balón suelto** | Lo recoge el rival más cercano cuando de verdad llega, a unos 6 m/s |
+| **Tirar o no** | Probabilidad logística sobre el xG de la ocasión: la mitad de las veces con 0.27 xG para una carta de disparo media, casi siempre desde 0.4. Desde fuera del área, con espacio, un buen pateador a veces lo intenta |
+| **Pase dentro del área** | Si un compañero tiene una ocasión claramente mejor (0.05 xG más), se la busca, más seguido cuanto mejor sea su visión. Si no, la guarda corto y hacia el centro |
+| **Defensa cerca de su arco** | En el último tercio se cierra sobre el que tiene el balón (35% de las acciones, 80% en el área), contiene en lugar de tirarse (60% de las entradas) y nadie conduce hasta el área chica |
+| **Desmarques** | Salen de donde está el jugador. Si arrastra a un defensor y el pase no va para él, a veces el balón va al hueco que dejó: la asistencia invisible sale sola |
+| **Faltas y penales** | En el área se cometen muchas menos faltas que en el resto de la cancha. Cada una es penal: un `shot` con `set_piece: "penalty"` desde el punto, con xG 0.76, que tira el mejor pateador en la cancha |
+
+### Perfiles y tácticas
+
+- **Perfiles:** salen de la carta de cada jugador en `mocks/teams.json`. Cada atributo (50 es la media) se vuelve un multiplicador de 0.85 a 1.2: `disparo` para tirar, `vision` para pasar, `regate` y `ritmo` para conducir, `defensa` y `fisico` para entradas y duelos, `sin_balon` para desmarques y recibir.
+- **Tácticas:** `generator/tactics.json`, con el estilo de cada equipo (precisión, ritmo, presión, verticalidad y agresividad) y cómo reacciona al marcador.
+
+### El marcador cambia el ritmo, nunca la puntería
+
+Un remate entra con la probabilidad de su xG, vaya como vaya el partido. Lo que cambia es cómo se juega:
+
+- El que va ganando baja el ritmo, presiona menos y la guarda.
+- El que va perdiendo va más directo y presiona un poco más, pero se encuentra un área llena: más remates presionados, de peor xG y más bloqueados.
+- Después de un gol, 3 minutos más tranquilos.
+- Desde el minuto 75, cansancio: menos presión.
+- Cada equipo tiene días buenos y malos: en cada partido su precisión de pase varía un poco.
+
+### Resultado
+
+En 100 partidos libres (`tests/test_realism.py`):
+
+| Métrica | Generador con guion, sin guion | Generador de decisiones | Referencia |
+| --- | --- | --- | --- |
+| Goles por partido | 2.97 | 3.00 | 2.2 a 3.4 |
+| Empates | 24% | 21% | 12% a 35% |
+| Tiros | 13.5 | 11.0 | 9 a 16 |
+| Tiros a puerta | 5.8 | 4.9 | 3 a 6 |
+| xG | 1.45 | 1.49 | 1.0 a 1.8 |
+| xG por tiro | 0.11 | 0.14 | 0.08 a 0.14 |
+| Tiros desde fuera del área | 32% | 35% | 25% a 50% |
+| Faltas | 10.5 | 9.5 | 8 a 14 |
+| Entradas | 14.9 | 17.9 | 10 a 22 |
+| Recuperaciones | 60.4 | 59.7 | 35 a 65 |
+
+`tests/test_decisions.py` además pide, en 200 partidos: de 2.3 a 3.4 goles de promedio, 0-0 entre el 2% y el 15%, 8 goles o más en el 2% como mucho y nunca más de 10. Hoy: 2.9 de promedio, 3.5% de 0-0, uno solo de 8 goles y unos 0.3 penales por partido, como en la Premier League.
+
+| Lo que se veía en la cancha | Generador con guion | Generador de decisiones |
+| --- | --- | --- |
+| Presiones de alguien que no era de los 2 compañeros más cercanos | 31% | 15% |
+| Balones sueltos ganados por alguien que no era de los 2 más cercanos | 33% | 14% |
+| Segundos del pase errado a la recuperación (mediana) | 4 | 2 |
+| Ocasiones de 0.35 xG o más, sin presión, en las que tiró | 30% | 94% |
+| Pases desde el área que van hacia atrás | 88% | 49% |
+

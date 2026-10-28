@@ -3,118 +3,22 @@
     "insight_id": "i01",
     "match_id": "m001",
     "period": 1,
-    "minute": 2,
-    "second": 58,
-    "t_s": 178,
-    "type": "duel_state",
-    "priority": 0.38,
-    "players": [
-      "J. Torres",
-      "B. Haro"
-    ],
-    "team": null,
-    "facts": {
-      "player_a": "J. Torres",
-      "player_b": "B. Haro",
-      "bar": 0.14,
-      "a_vs_role": 0.38,
-      "b_vs_role": 0.11,
-      "duels_won_a": 0,
-      "duels_won_b": 1,
-      "direct_duels": 1,
-      "chances_created_a": 1,
-      "chances_created_b": 0,
-      "flipped": false
-    },
-    "evidence": [
-      52
-    ]
-  },
-  {
-    "insight_id": "i02",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 3,
-    "second": 16,
-    "t_s": 196,
-    "type": "goal_chain",
-    "priority": 1.0,
-    "players": [
-      "M. Ramírez"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "scoreline": {
-        "home": 1,
-        "away": 0
-      },
-      "scorer": "M. Ramírez",
-      "assist": "J. Torres",
-      "xg": 0.17,
-      "duration_s": 11,
-      "chain": [
-        {
-          "event_id": 55,
-          "player": "M. Ramírez",
-          "action": "recuperación",
-          "credit": 0.44,
-          "t_s": 185,
-          "type": "recovery",
-          "lines_broken": 0,
-          "start": [
-            70.4,
-            13.5
-          ],
-          "end": null
-        },
-        {
-          "event_id": 59,
-          "player": "M. Ramírez",
-          "action": "remate",
-          "credit": 0.56,
-          "t_s": 196,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            92.4,
-            30.1
-          ],
-          "end": [
-            105.0,
-            30.7
-          ]
-        }
-      ],
-      "invisible_assist": null
-    },
-    "evidence": [
-      55,
-      57,
-      58,
-      59,
-      60
-    ]
-  },
-  {
-    "insight_id": "i03",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 6,
-    "second": 22,
-    "t_s": 382,
+    "minute": 1,
+    "second": 1,
+    "t_s": 61,
     "type": "duel_state",
     "priority": 0.37,
     "players": [
-      "A. Olvera",
-      "N. Ruelas"
+      "P. Lugo",
+      "L. Montaño"
     ],
     "team": null,
     "facts": {
-      "player_a": "A. Olvera",
-      "player_b": "N. Ruelas",
-      "bar": -0.12,
-      "a_vs_role": -0.27,
-      "b_vs_role": -0.04,
+      "player_a": "P. Lugo",
+      "player_b": "L. Montaño",
+      "bar": 0.12,
+      "a_vs_role": 0.45,
+      "b_vs_role": 0.21,
       "duels_won_a": 0,
       "duels_won_b": 1,
       "direct_duels": 1,
@@ -123,270 +27,114 @@
       "flipped": false
     },
     "evidence": [
-      96
+      22
+    ]
+  },
+  {
+    "insight_id": "i02",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 3,
+    "second": 32,
+    "t_s": 212,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "M. Ramírez"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "M. Ramírez",
+      "attribute": "sin_balon",
+      "from": 70,
+      "to": 71,
+      "delta": 1,
+      "reason": "arrastró a T. Esquer y la jugada terminó en remate",
+      "reason_code": "run_ended_in_shot",
+      "reason_params": {
+        "dragged_defender": "T. Esquer"
+      },
+      "overall_from": 66,
+      "overall_to": 66,
+      "space_opened_m": 7.2
+    },
+    "evidence": [
+      65,
+      68
+    ]
+  },
+  {
+    "insight_id": "i03",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 3,
+    "second": 32,
+    "t_s": 212,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "H. Zamora",
+      "attribute": "defensa",
+      "from": 79,
+      "to": 80,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.22",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.22,
+        "shooter": "M. Ramírez"
+      },
+      "overall_from": 50,
+      "overall_to": 51
+    },
+    "evidence": [
+      68
     ]
   },
   {
     "insight_id": "i04",
     "match_id": "m001",
     "period": 1,
-    "minute": 6,
-    "second": 27,
-    "t_s": 387,
-    "type": "team_phase",
-    "priority": 0.55,
+    "minute": 5,
+    "second": 42,
+    "t_s": 342,
+    "type": "card_upgrade",
+    "priority": 0.6,
     "players": [
-      "A. Olvera",
-      "O. Félix",
-      "M. Ramírez"
+      "O. Félix"
     ],
     "team": "Bahía FC",
     "facts": {
-      "label": "possession_spell",
-      "window": "05:17-06:22",
-      "passes": 12,
-      "duration_s": 65,
-      "players_involved": 5,
-      "ended_in": "lost"
+      "player": "O. Félix",
+      "attribute": "regate",
+      "from": 64,
+      "to": 65,
+      "delta": 1,
+      "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
+      "overall_from": 63,
+      "overall_to": 63
     },
     "evidence": [
-      80,
-      81,
-      82,
-      84,
-      85,
-      86,
-      87,
-      89,
-      91,
-      92,
-      93,
-      94
+      9,
+      113
     ]
   },
   {
     "insight_id": "i05",
     "match_id": "m001",
     "period": 1,
-    "minute": 6,
+    "minute": 5,
     "second": 48,
-    "t_s": 408,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "P. Lugo"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "P. Lugo",
-      "attribute": "fisico",
-      "from": 68,
-      "to": 69,
-      "delta": 1,
-      "reason": "recuperación en campo propio que terminó en remate en 14 segundos",
-      "reason_code": "recovery_to_shot",
-      "reason_params": {
-        "seconds": 14,
-        "shooter": "M. Ramírez"
-      },
-      "overall_from": 63,
-      "overall_to": 63
-    },
-    "evidence": [
-      99,
-      102
-    ]
-  },
-  {
-    "insight_id": "i06",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 6,
-    "second": 48,
-    "t_s": 408,
-    "type": "goal_chain",
-    "priority": 1.0,
-    "players": [
-      "M. Ramírez",
-      "P. Lugo"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "scoreline": {
-        "home": 2,
-        "away": 0
-      },
-      "scorer": "M. Ramírez",
-      "assist": "A. Olvera",
-      "xg": 0.07,
-      "duration_s": 14,
-      "chain": [
-        {
-          "event_id": 99,
-          "player": "P. Lugo",
-          "action": "recuperación",
-          "credit": 0.44,
-          "t_s": 394,
-          "type": "recovery",
-          "lines_broken": 0,
-          "start": [
-            45.5,
-            57.1
-          ],
-          "end": null
-        },
-        {
-          "event_id": 102,
-          "player": "M. Ramírez",
-          "action": "remate",
-          "credit": 0.56,
-          "t_s": 408,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            90.9,
-            48.5
-          ],
-          "end": [
-            105.0,
-            30.6
-          ]
-        }
-      ],
-      "invisible_assist": null
-    },
-    "evidence": [
-      99,
-      100,
-      101,
-      102,
-      103
-    ]
-  },
-  {
-    "insight_id": "i07",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 10,
-    "second": 29,
-    "t_s": 629,
-    "type": "team_phase",
-    "priority": 0.55,
-    "players": [
-      "S. Leyva",
-      "D. Verdugo",
-      "N. Ruelas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "label": "possession_spell",
-      "window": "09:11-10:17",
-      "passes": 15,
-      "duration_s": 66,
-      "players_involved": 7,
-      "ended_in": "out"
-    },
-    "evidence": [
-      128,
-      129,
-      130,
-      132,
-      134,
-      135,
-      136,
-      137,
-      138,
-      139,
-      141,
-      142,
-      144,
-      145,
-      146
-    ]
-  },
-  {
-    "insight_id": "i08",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 10,
-    "second": 45,
-    "t_s": 645,
-    "type": "mvp_rank_change",
-    "priority": 0.49,
-    "players": [
-      "J. Torres"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "J. Torres",
-      "from_rank": 3,
-      "to_rank": 2,
-      "mvp_score": 1.8,
-      "trigger_event_id": 153,
-      "leader": "M. Ramírez",
-      "stats": {
-        "key_passes": 2,
-        "progressive_passes": 1,
-        "assists": 1
-      },
-      "expected_for_role": {
-        "duels_won": 0.42,
-        "recoveries": 0.42,
-        "progressive_passes": 0.66,
-        "key_passes": 0.3
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 4.1
-        },
-        {
-          "rank": 2,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 1.8
-        },
-        {
-          "rank": 3,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 1.6
-        },
-        {
-          "rank": 4,
-          "player": "K. Rosas",
-          "team": "Real Cardón",
-          "position": "MC",
-          "mvp_score": 1.3
-        },
-        {
-          "rank": 5,
-          "player": "P. Lugo",
-          "team": "Bahía FC",
-          "position": "LI",
-          "mvp_score": 1.3
-        }
-      ]
-    },
-    "evidence": [
-      18,
-      58,
-      60,
-      153
-    ]
-  },
-  {
-    "insight_id": "i09",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 13,
-    "second": 43,
-    "t_s": 823,
+    "t_s": 348,
     "type": "card_upgrade",
     "priority": 0.6,
     "players": [
@@ -399,17 +147,243 @@
       "from": 82,
       "to": 83,
       "delta": 1,
-      "reason": "desmarque a 30 km/h",
+      "reason": "desmarque a 33 km/h",
       "reason_code": "run_speed",
       "reason_params": {
-        "speed_kmh": 30
+        "speed_kmh": 33
       },
       "overall_from": 65,
       "overall_to": 66,
-      "run_speed_kmh": 30.2
+      "run_speed_kmh": 33.3
     },
     "evidence": [
-      197
+      116
+    ]
+  },
+  {
+    "insight_id": "i06",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 6,
+    "second": 38,
+    "t_s": 398,
+    "type": "duel_state",
+    "priority": 0.43,
+    "players": [
+      "J. Torres",
+      "B. Haro"
+    ],
+    "team": null,
+    "facts": {
+      "player_a": "J. Torres",
+      "player_b": "B. Haro",
+      "bar": 0.39,
+      "a_vs_role": 0.47,
+      "b_vs_role": -0.31,
+      "duels_won_a": 1,
+      "duels_won_b": 0,
+      "direct_duels": 1,
+      "chances_created_a": 1,
+      "chances_created_b": 0,
+      "flipped": false
+    },
+    "evidence": [
+      132
+    ]
+  },
+  {
+    "insight_id": "i07",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 6,
+    "second": 49,
+    "t_s": 409,
+    "type": "goal_chain",
+    "priority": 1.0,
+    "players": [
+      "M. Ramírez",
+      "J. Torres"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "scoreline": {
+        "home": 1,
+        "away": 0
+      },
+      "scorer": "M. Ramírez",
+      "assist": "J. Torres",
+      "xg": 0.19,
+      "duration_s": 9,
+      "chain": [
+        {
+          "event_id": 133,
+          "player": "J. Torres",
+          "action": "recuperación",
+          "credit": 0.31,
+          "t_s": 400,
+          "type": "recovery",
+          "lines_broken": 0,
+          "start": [
+            95.8,
+            6.4
+          ],
+          "end": null
+        },
+        {
+          "event_id": 135,
+          "player": "J. Torres",
+          "action": "centro",
+          "credit": 0.31,
+          "t_s": 404,
+          "type": "pass",
+          "lines_broken": 0,
+          "start": [
+            95.8,
+            6.5
+          ],
+          "end": [
+            93.7,
+            29.4
+          ],
+          "cross": true
+        },
+        {
+          "event_id": 136,
+          "player": "M. Ramírez",
+          "action": "remate",
+          "credit": 0.38,
+          "t_s": 409,
+          "type": "shot",
+          "lines_broken": 0,
+          "start": [
+            93.7,
+            29.3
+          ],
+          "end": [
+            105.0,
+            34.3
+          ]
+        }
+      ],
+      "invisible_assist": null
+    },
+    "evidence": [
+      133,
+      135,
+      136,
+      137
+    ]
+  },
+  {
+    "insight_id": "i08",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 10,
+    "second": 19,
+    "t_s": 619,
+    "type": "duel_state",
+    "priority": 0.37,
+    "players": [
+      "P. Lugo",
+      "L. Montaño"
+    ],
+    "team": null,
+    "facts": {
+      "player_a": "P. Lugo",
+      "player_b": "L. Montaño",
+      "bar": 0.1,
+      "a_vs_role": 0.51,
+      "b_vs_role": 0.32,
+      "duels_won_a": 1,
+      "duels_won_b": 2,
+      "direct_duels": 3,
+      "chances_created_a": 0,
+      "chances_created_b": 0,
+      "flipped": false
+    },
+    "evidence": [
+      184,
+      185,
+      186
+    ]
+  },
+  {
+    "insight_id": "i09",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 11,
+    "second": 44,
+    "t_s": 704,
+    "type": "mvp_rank_change",
+    "priority": 0.83,
+    "players": [
+      "J. Torres"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "J. Torres",
+      "from_rank": 3,
+      "to_rank": 1,
+      "mvp_score": 3.4,
+      "trigger_event_id": 202,
+      "previous_leader": "O. Félix",
+      "stats": {
+        "recoveries": 2,
+        "recoveries_opp_half": 2,
+        "duels_won": 1,
+        "key_passes": 2,
+        "progressive_passes": 1,
+        "assists": 1
+      },
+      "expected_for_role": {
+        "duels_won": 0.46,
+        "recoveries": 0.46,
+        "progressive_passes": 0.72,
+        "key_passes": 0.33
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 3.4
+        },
+        {
+          "rank": 2,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 3.4
+        },
+        {
+          "rank": 3,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 3.2
+        },
+        {
+          "rank": 4,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 2.1
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 1.9
+        }
+      ]
+    },
+    "evidence": [
+      124,
+      133,
+      137,
+      202
     ]
   },
   {
@@ -417,194 +391,279 @@
     "match_id": "m001",
     "period": 1,
     "minute": 13,
-    "second": 58,
-    "t_s": 838,
-    "type": "goal_chain",
-    "priority": 1.0,
+    "second": 10,
+    "t_s": 790,
+    "type": "team_phase",
+    "priority": 0.55,
     "players": [
-      "J. Torres",
-      "O. Félix",
-      "M. Ramírez"
+      "N. Ruelas",
+      "K. Rosas",
+      "G. Cárdenas"
     ],
-    "team": "Bahía FC",
+    "team": "Real Cardón",
     "facts": {
-      "scoreline": {
-        "home": 3,
-        "away": 0
-      },
-      "scorer": "J. Torres",
-      "assist": "M. Ramírez",
-      "xg": 0.09,
-      "duration_s": 44,
-      "chain": [
-        {
-          "event_id": 187,
-          "player": "O. Félix",
-          "action": "recuperación",
-          "credit": 0.24,
-          "t_s": 794,
-          "type": "recovery",
-          "lines_broken": 0,
-          "start": [
-            54.4,
-            29.2
-          ],
-          "end": null
-        },
-        {
-          "event_id": 198,
-          "player": "O. Félix",
-          "action": "pase que rompió 1 línea",
-          "credit": 0.24,
-          "t_s": 823,
-          "type": "pass",
-          "lines_broken": 1,
-          "start": [
-            70.3,
-            47.8
-          ],
-          "end": [
-            84.5,
-            56.9
-          ]
-        },
-        {
-          "event_id": 202,
-          "player": "M. Ramírez",
-          "action": "pase",
-          "credit": 0.23,
-          "t_s": 835,
-          "type": "pass",
-          "lines_broken": 0,
-          "start": [
-            90.2,
-            45.0
-          ],
-          "end": [
-            87.0,
-            24.6
-          ]
-        },
-        {
-          "event_id": 203,
-          "player": "J. Torres",
-          "action": "remate",
-          "credit": 0.29,
-          "t_s": 838,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            90.3,
-            22.6
-          ],
-          "end": [
-            105.0,
-            32.3
-          ]
-        }
-      ],
-      "invisible_assist": null
+      "label": "possession_spell",
+      "window": "12:03-13:06",
+      "passes": 15,
+      "duration_s": 63,
+      "players_involved": 6,
+      "ended_in": "lost"
     },
     "evidence": [
-      187,
-      188,
-      190,
-      191,
-      192,
-      193,
-      194,
-      195,
-      197,
-      198,
-      199,
-      202,
-      203,
-      204
+      206,
+      209,
+      211,
+      212,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      221,
+      222,
+      223,
+      225,
+      226
     ]
   },
   {
     "insight_id": "i11",
     "match_id": "m001",
     "period": 1,
-    "minute": 14,
-    "second": 52,
-    "t_s": 892,
-    "type": "mvp_rank_change",
-    "priority": 0.53,
+    "minute": 13,
+    "second": 59,
+    "t_s": 839,
+    "type": "card_upgrade",
+    "priority": 0.6,
     "players": [
-      "O. Félix"
+      "M. Ramírez"
     ],
     "team": "Bahía FC",
     "facts": {
-      "player": "O. Félix",
-      "from_rank": 4,
-      "to_rank": 2,
-      "mvp_score": 3.0,
-      "trigger_event_id": 210,
-      "leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 3,
-        "recoveries_opp_half": 2,
-        "progressive_passes": 4,
-        "line_breaking_passes": 1
+      "player": "M. Ramírez",
+      "attribute": "sin_balon",
+      "from": 71,
+      "to": 72,
+      "delta": 1,
+      "reason": "arrastró a T. Esquer y la jugada terminó en remate",
+      "reason_code": "run_ended_in_shot",
+      "reason_params": {
+        "dragged_defender": "T. Esquer"
       },
-      "expected_for_role": {
-        "duels_won": 0.91,
-        "recoveries": 1.24,
-        "progressive_passes": 2.07,
-        "key_passes": 0.08
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 5.3
-        },
-        {
-          "rank": 2,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 3.0
-        },
-        {
-          "rank": 3,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 2.9
-        },
-        {
-          "rank": 4,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 2.6
-        },
-        {
-          "rank": 5,
-          "player": "K. Rosas",
-          "team": "Real Cardón",
-          "position": "MC",
-          "mvp_score": 1.7
-        }
-      ]
+      "overall_from": 66,
+      "overall_to": 66,
+      "space_opened_m": 8.3
     },
     "evidence": [
-      176,
-      187,
-      210
+      238,
+      245
     ]
   },
   {
     "insight_id": "i12",
     "match_id": "m001",
     "period": 1,
+    "minute": 14,
+    "second": 39,
+    "t_s": 879,
+    "type": "card_upgrade",
+    "priority": 0.7,
+    "players": [
+      "J. Torres"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "J. Torres",
+      "attribute": "defensa",
+      "from": 58,
+      "to": 60,
+      "delta": 2,
+      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+      "reason_code": "opp_half_recoveries",
+      "reason_params": {
+        "count": 3,
+        "window_min": 10
+      },
+      "overall_from": 70,
+      "overall_to": 70,
+      "recoveries_window": "06:08-14:39"
+    },
+    "evidence": [
+      124,
+      133,
+      256
+    ]
+  },
+  {
+    "insight_id": "i13",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 14,
+    "second": 47,
+    "t_s": 887,
+    "type": "duel_state",
+    "priority": 0.4,
+    "players": [
+      "D. Mena",
+      "D. Verdugo"
+    ],
+    "team": null,
+    "facts": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": -0.23,
+      "a_vs_role": -0.58,
+      "b_vs_role": -0.12,
+      "duels_won_a": 0,
+      "duels_won_b": 1,
+      "direct_duels": 1,
+      "chances_created_a": 0,
+      "chances_created_b": 0,
+      "flipped": false
+    },
+    "evidence": [
+      259
+    ]
+  },
+  {
+    "insight_id": "i14",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 15,
+    "second": 3,
+    "t_s": 903,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "R. Salgado",
+      "attribute": "fisico",
+      "from": 66,
+      "to": 67,
+      "delta": 1,
+      "reason": "recuperación en campo propio que terminó en remate en 10 segundos",
+      "reason_code": "recovery_to_shot",
+      "reason_params": {
+        "seconds": 10,
+        "shooter": "J. Torres"
+      },
+      "overall_from": 68,
+      "overall_to": 68
+    },
+    "evidence": [
+      261,
+      266
+    ]
+  },
+  {
+    "insight_id": "i15",
+    "match_id": "m001",
+    "period": 1,
     "minute": 17,
-    "second": 16,
-    "t_s": 1036,
+    "second": 39,
+    "t_s": 1059,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "E. Sandoval"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "E. Sandoval",
+      "attribute": "sin_balon",
+      "from": 64,
+      "to": 65,
+      "delta": 1,
+      "reason": "arrastró a F. Cota y la jugada terminó en remate",
+      "reason_code": "run_ended_in_shot",
+      "reason_params": {
+        "dragged_defender": "F. Cota"
+      },
+      "overall_from": 65,
+      "overall_to": 65,
+      "space_opened_m": 6.3
+    },
+    "evidence": [
+      303,
+      306
+    ]
+  },
+  {
+    "insight_id": "i16",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 17,
+    "second": 39,
+    "t_s": 1059,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "E. Sandoval"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "E. Sandoval",
+      "attribute": "fisico",
+      "from": 62,
+      "to": 63,
+      "delta": 1,
+      "reason": "recuperación en campo propio que terminó en remate en 18 segundos",
+      "reason_code": "recovery_to_shot",
+      "reason_params": {
+        "seconds": 18,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      300,
+      306
+    ]
+  },
+  {
+    "insight_id": "i17",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 17,
+    "second": 39,
+    "t_s": 1059,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "L. Arce"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "L. Arce",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 81,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.28",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.28,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 49,
+      "overall_to": 49
+    },
+    "evidence": [
+      306
+    ]
+  },
+  {
+    "insight_id": "i18",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 18,
+    "second": 19,
+    "t_s": 1099,
     "type": "card_upgrade",
     "priority": 0.6,
     "players": [
@@ -626,770 +685,396 @@
       "overall_to": 63
     },
     "evidence": [
-      212,
-      238,
-      240,
-      242,
-      246
-    ]
-  },
-  {
-    "insight_id": "i13",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 17,
-    "second": 39,
-    "t_s": 1059,
-    "type": "team_phase",
-    "priority": 0.55,
-    "players": [
-      "O. Félix",
-      "D. Mena",
-      "A. Olvera"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "label": "possession_spell",
-      "window": "16:08-17:26",
-      "passes": 12,
-      "duration_s": 78,
-      "players_involved": 7,
-      "ended_in": "shot"
-    },
-    "evidence": [
-      231,
-      232,
+      233,
       236,
-      237,
-      238,
       239,
-      240,
-      241,
-      242,
-      243,
-      246,
-      247
-    ]
-  },
-  {
-    "insight_id": "i14",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 18,
-    "second": 7,
-    "t_s": 1087,
-    "type": "duel_state",
-    "priority": 0.52,
-    "players": [
-      "A. Olvera",
-      "N. Ruelas"
-    ],
-    "team": null,
-    "facts": {
-      "player_a": "A. Olvera",
-      "player_b": "N. Ruelas",
-      "bar": 0.11,
-      "a_vs_role": 0.47,
-      "b_vs_role": 0.24,
-      "duels_won_a": 0,
-      "duels_won_b": 2,
-      "direct_duels": 2,
-      "chances_created_a": 2,
-      "chances_created_b": 0,
-      "flipped": true
-    },
-    "evidence": [
-      254,
-      256
-    ]
-  },
-  {
-    "insight_id": "i15",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 18,
-    "second": 53,
-    "t_s": 1133,
-    "type": "card_upgrade",
-    "priority": 0.7,
-    "players": [
-      "R. Salgado"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "R. Salgado",
-      "attribute": "defensa",
-      "from": 60,
-      "to": 62,
-      "delta": 2,
-      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
-      "reason_code": "opp_half_recoveries",
-      "reason_params": {
-        "count": 3,
-        "window_min": 10
-      },
-      "overall_from": 68,
-      "overall_to": 68,
-      "recoveries_window": "11:16-18:53"
-    },
-    "evidence": [
-      163,
-      215,
-      266
-    ]
-  },
-  {
-    "insight_id": "i16",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 19,
-    "second": 32,
-    "t_s": 1172,
-    "type": "mvp_rank_change",
-    "priority": 0.49,
-    "players": [
-      "A. Olvera"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "A. Olvera",
-      "from_rank": 4,
-      "to_rank": 3,
-      "mvp_score": 3.8,
-      "trigger_event_id": 275,
-      "leader": "M. Ramírez",
-      "stats": {
-        "duels_won": 1,
-        "key_passes": 4,
-        "progressive_passes": 2,
-        "shots": 1,
-        "assists": 1
-      },
-      "expected_for_role": {
-        "duels_won": 0.76,
-        "recoveries": 0.76,
-        "progressive_passes": 1.19,
-        "key_passes": 0.54
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 5.6
-        },
-        {
-          "rank": 2,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 4.0
-        },
-        {
-          "rank": 3,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 3.8
-        },
-        {
-          "rank": 4,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 3.8
-        },
-        {
-          "rank": 5,
-          "player": "R. Salgado",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 2.4
-        }
-      ]
-    },
-    "evidence": [
-      197,
-      247,
-      259,
-      275
-    ]
-  },
-  {
-    "insight_id": "i17",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 19,
-    "second": 32,
-    "t_s": 1172,
-    "type": "duel_state",
-    "priority": 0.39,
-    "players": [
-      "J. Torres",
-      "B. Haro"
-    ],
-    "team": null,
-    "facts": {
-      "player_a": "J. Torres",
-      "player_b": "B. Haro",
-      "bar": 0.18,
-      "a_vs_role": 0.65,
-      "b_vs_role": 0.29,
-      "duels_won_a": 1,
-      "duels_won_b": 1,
-      "direct_duels": 2,
-      "chances_created_a": 2,
-      "chances_created_b": 0,
-      "flipped": false
-    },
-    "evidence": [
-      272,
-      273,
-      274,
-      275
-    ]
-  },
-  {
-    "insight_id": "i18",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 20,
-    "second": 2,
-    "t_s": 1202,
-    "type": "standout_milestone",
-    "priority": 0.85,
-    "players": [
-      "J. Torres"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "J. Torres",
-      "position": "ED",
-      "profile": "creative",
-      "stats": {
-        "recoveries": 1,
-        "duels_won": 1,
-        "duels_total": 3,
-        "progressive_passes": 2,
-        "key_passes": 3
-      },
-      "expected_for_role": {
-        "duels_won": 0.78,
-        "recoveries": 0.78,
-        "progressive_passes": 1.22,
-        "key_passes": 0.56
-      },
-      "vs_role": 0.77,
-      "mvp_rank": 2,
-      "card_change": {
-        "attribute": "vision",
-        "from": 66,
-        "to": 67,
-        "delta": 1,
-        "reason": "partido creativo por encima de lo esperado para su rol",
-        "reason_code": "standout_creative",
-        "reason_params": {},
-        "overall_from": 70,
-        "overall_to": 70
-      }
-    },
-    "evidence": [
-      18,
-      60,
-      203,
-      270,
-      281
+      298,
+      316
     ]
   },
   {
     "insight_id": "i19",
     "match_id": "m001",
     "period": 1,
-    "minute": 20,
-    "second": 31,
-    "t_s": 1231,
+    "minute": 18,
+    "second": 15,
+    "t_s": 1095,
     "type": "card_upgrade",
-    "priority": 0.6,
+    "priority": 0.7,
     "players": [
-      "J. Torres"
+      "L. Arce"
     ],
     "team": "Bahía FC",
     "facts": {
-      "player": "J. Torres",
-      "attribute": "regate",
-      "from": 78,
-      "to": 79,
-      "delta": 1,
-      "reason": "dos regates ganados en menos de 10 minutos",
-      "reason_code": "dribbles",
+      "player": "L. Arce",
+      "attribute": "vision",
+      "from": 55,
+      "to": 57,
+      "delta": 2,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
       "reason_params": {
-        "count": 2,
-        "window_min": 10
+        "lines": 2,
+        "under_pressure": true
       },
-      "overall_from": 70,
-      "overall_to": 70
+      "overall_from": 49,
+      "overall_to": 49,
+      "pass_distance_m": 31.3,
+      "pass_difficulty": 0.92,
+      "led_to": "remate de M. Ramírez, xG 0.09",
+      "led_to_event_id": 322
     },
     "evidence": [
-      272,
-      290
+      314,
+      322
     ]
   },
   {
     "insight_id": "i20",
     "match_id": "m001",
     "period": 1,
-    "minute": 26,
-    "second": 52,
-    "t_s": 1612,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "D. Mena"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "D. Mena",
-      "attribute": "fisico",
-      "from": 70,
-      "to": 71,
-      "delta": 1,
-      "reason": "recuperación en campo propio que terminó en remate en 18 segundos",
-      "reason_code": "recovery_to_shot",
-      "reason_params": {
-        "seconds": 18,
-        "shooter": "M. Ramírez"
-      },
-      "overall_from": 65,
-      "overall_to": 65
-    },
-    "evidence": [
-      386,
-      391
-    ]
-  },
-  {
-    "insight_id": "i21",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 31,
-    "second": 39,
-    "t_s": 1899,
-    "type": "goal_chain",
-    "priority": 1.0,
-    "players": [
-      "M. Ramírez"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "scoreline": {
-        "home": 4,
-        "away": 0
-      },
-      "scorer": "M. Ramírez",
-      "assist": "A. Olvera",
-      "xg": 0.06,
-      "duration_s": 39,
-      "chain": [
-        {
-          "event_id": 462,
-          "player": "M. Ramírez",
-          "action": "remate",
-          "credit": 1.0,
-          "t_s": 1899,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            93.0,
-            44.0
-          ],
-          "end": [
-            105.0,
-            34.6
-          ]
-        }
-      ],
-      "invisible_assist": null
-    },
-    "evidence": [
-      453,
-      454,
-      455,
-      456,
-      457,
-      458,
-      459,
-      460,
-      461,
-      462,
-      463
-    ]
-  },
-  {
-    "insight_id": "i22",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 34,
-    "second": 20,
-    "t_s": 2060,
+    "minute": 19,
+    "second": 48,
+    "t_s": 1188,
     "type": "mvp_rank_change",
-    "priority": 0.49,
+    "priority": 0.79,
     "players": [
       "O. Félix"
     ],
     "team": "Bahía FC",
     "facts": {
       "player": "O. Félix",
-      "from_rank": 3,
-      "to_rank": 2,
-      "mvp_score": 5.2,
-      "trigger_event_id": 490,
-      "leader": "M. Ramírez",
+      "from_rank": 2,
+      "to_rank": 1,
+      "mvp_score": 4.5,
+      "trigger_event_id": 342,
+      "previous_leader": "J. Torres",
       "stats": {
-        "recoveries": 5,
-        "recoveries_opp_half": 3,
-        "duels_won": 3,
-        "progressive_passes": 9,
-        "line_breaking_passes": 3
+        "recoveries": 3,
+        "recoveries_opp_half": 1,
+        "duels_won": 4,
+        "key_passes": 1,
+        "progressive_passes": 7,
+        "line_breaking_passes": 2
       },
       "expected_for_role": {
-        "duels_won": 2.1,
-        "recoveries": 2.86,
-        "progressive_passes": 4.77,
-        "key_passes": 0.19
+        "duels_won": 1.21,
+        "recoveries": 1.65,
+        "progressive_passes": 2.75,
+        "key_passes": 0.11
       },
       "ranking": [
         {
           "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 6.4
-        },
-        {
-          "rank": 2,
           "player": "O. Félix",
           "team": "Bahía FC",
           "position": "MC",
-          "mvp_score": 5.2
-        },
-        {
-          "rank": 3,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 5.2
-        },
-        {
-          "rank": 4,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
           "mvp_score": 4.5
         },
         {
-          "rank": 5,
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 4.4
+        },
+        {
+          "rank": 3,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 3.7
+        },
+        {
+          "rank": 4,
           "player": "F. Cota",
           "team": "Bahía FC",
           "position": "MCD",
           "mvp_score": 3.5
+        },
+        {
+          "rank": 5,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 3.3
         }
       ]
     },
     "evidence": [
-      441,
-      445,
-      490
+      239,
+      341,
+      342
+    ]
+  },
+  {
+    "insight_id": "i21",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 20,
+    "second": 2,
+    "t_s": 1202,
+    "type": "standout_milestone",
+    "priority": 0.77,
+    "players": [
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "R. Salgado",
+      "position": "MC",
+      "profile": "creative",
+      "stats": {
+        "recoveries": 2,
+        "duels_won": 1,
+        "duels_total": 3,
+        "progressive_passes": 4,
+        "key_passes": 3
+      },
+      "expected_for_role": {
+        "duels_won": 1.22,
+        "recoveries": 1.67,
+        "progressive_passes": 2.78,
+        "key_passes": 0.11
+      },
+      "vs_role": 0.61,
+      "mvp_rank": 4,
+      "card_change": {
+        "attribute": "vision",
+        "from": 74,
+        "to": 75,
+        "delta": 1,
+        "reason": "partido creativo por encima de lo esperado para su rol",
+        "reason_code": "standout_creative",
+        "reason_params": {},
+        "overall_from": 68,
+        "overall_to": 68
+      }
+    },
+    "evidence": [
+      172,
+      243,
+      251,
+      261,
+      346
+    ]
+  },
+  {
+    "insight_id": "i22",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 20,
+    "second": 2,
+    "t_s": 1202,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "O. Félix"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "O. Félix",
+      "attribute": "fisico",
+      "from": 64,
+      "to": 65,
+      "delta": 1,
+      "reason": "recuperación en campo propio que terminó en remate en 14 segundos",
+      "reason_code": "recovery_to_shot",
+      "reason_params": {
+        "seconds": 14,
+        "shooter": "J. Torres"
+      },
+      "overall_from": 63,
+      "overall_to": 64
+    },
+    "evidence": [
+      342,
+      346
     ]
   },
   {
     "insight_id": "i23",
     "match_id": "m001",
     "period": 1,
-    "minute": 36,
-    "second": 0,
-    "t_s": 2160,
-    "type": "card_upgrade",
-    "priority": 0.6,
+    "minute": 22,
+    "second": 45,
+    "t_s": 1365,
+    "type": "duel_state",
+    "priority": 0.53,
     "players": [
-      "S. Leyva"
+      "D. Mena",
+      "D. Verdugo"
     ],
-    "team": "Real Cardón",
+    "team": null,
     "facts": {
-      "player": "S. Leyva",
-      "attribute": "disparo",
-      "from": 80,
-      "to": 81,
-      "delta": 1,
-      "reason": "remate a 107 km/h",
-      "reason_code": "shot_speed",
-      "reason_params": {
-        "speed_kmh": 107
-      },
-      "overall_from": 65,
-      "overall_to": 65,
-      "shot_speed_kmh": 106.7
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": 0.15,
+      "a_vs_role": 0.38,
+      "b_vs_role": 0.08,
+      "duels_won_a": 1,
+      "duels_won_b": 1,
+      "direct_duels": 2,
+      "chances_created_a": 2,
+      "chances_created_b": 0,
+      "flipped": true
     },
     "evidence": [
-      520
+      393
     ]
   },
   {
     "insight_id": "i24",
     "match_id": "m001",
     "period": 1,
-    "minute": 36,
-    "second": 0,
-    "t_s": 2160,
-    "type": "goal_chain",
-    "priority": 1.0,
+    "minute": 22,
+    "second": 59,
+    "t_s": 1379,
+    "type": "card_upgrade",
+    "priority": 0.6,
     "players": [
-      "S. Leyva",
-      "K. Rosas"
+      "E. Sandoval"
     ],
     "team": "Real Cardón",
     "facts": {
-      "scoreline": {
-        "home": 4,
-        "away": 1
+      "player": "E. Sandoval",
+      "attribute": "ritmo",
+      "from": 68,
+      "to": 69,
+      "delta": 1,
+      "reason": "desmarque a 31 km/h",
+      "reason_code": "run_speed",
+      "reason_params": {
+        "speed_kmh": 31
       },
-      "scorer": "S. Leyva",
-      "assist": "D. Verdugo",
-      "xg": 0.05,
-      "duration_s": 10,
-      "chain": [
-        {
-          "event_id": 517,
-          "player": "K. Rosas",
-          "action": "recuperación",
-          "credit": 0.44,
-          "t_s": 2150,
-          "type": "recovery",
-          "lines_broken": 0,
-          "start": [
-            49.8,
-            6.7
-          ],
-          "end": null
-        },
-        {
-          "event_id": 520,
-          "player": "S. Leyva",
-          "action": "remate",
-          "credit": 0.56,
-          "t_s": 2160,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            16.3,
-            17.6
-          ],
-          "end": [
-            0,
-            29.5
-          ]
-        }
-      ],
-      "invisible_assist": null
+      "overall_from": 65,
+      "overall_to": 65,
+      "run_speed_kmh": 31.4
     },
     "evidence": [
-      517,
-      518,
-      519,
-      520,
-      521
+      398
     ]
   },
   {
     "insight_id": "i25",
     "match_id": "m001",
     "period": 1,
-    "minute": 37,
-    "second": 33,
-    "t_s": 2253,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "M. Ramírez"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "M. Ramírez",
-      "attribute": "regate",
-      "from": 68,
-      "to": 69,
-      "delta": 1,
-      "reason": "dos regates ganados en menos de 10 minutos",
-      "reason_code": "dribbles",
-      "reason_params": {
-        "count": 2,
-        "window_min": 10
-      },
-      "overall_from": 66,
-      "overall_to": 66
-    },
-    "evidence": [
-      423,
-      538
-    ]
-  },
-  {
-    "insight_id": "i26",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 37,
-    "second": 45,
-    "t_s": 2265,
+    "minute": 23,
+    "second": 17,
+    "t_s": 1397,
     "type": "mvp_rank_change",
-    "priority": 0.49,
+    "priority": 0.53,
     "players": [
-      "A. Olvera"
+      "R. Salgado"
     ],
     "team": "Bahía FC",
     "facts": {
-      "player": "A. Olvera",
-      "from_rank": 4,
+      "player": "R. Salgado",
+      "from_rank": 5,
       "to_rank": 3,
-      "mvp_score": 5.2,
-      "trigger_event_id": 544,
-      "leader": "M. Ramírez",
+      "mvp_score": 4.2,
+      "trigger_event_id": 404,
+      "leader": "O. Félix",
       "stats": {
+        "recoveries": 2,
         "duels_won": 2,
-        "key_passes": 6,
-        "progressive_passes": 3,
-        "shots": 1,
-        "assists": 2
+        "key_passes": 3,
+        "progressive_passes": 4,
+        "line_breaking_passes": 1
       },
       "expected_for_role": {
-        "duels_won": 1.47,
-        "recoveries": 1.47,
-        "progressive_passes": 2.31,
-        "key_passes": 1.05
+        "duels_won": 1.42,
+        "recoveries": 1.94,
+        "progressive_passes": 3.23,
+        "key_passes": 0.13
       },
       "ranking": [
         {
           "rank": 1,
-          "player": "M. Ramírez",
+          "player": "O. Félix",
           "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 6.5
+          "position": "MC",
+          "mvp_score": 5.1
         },
         {
           "rank": 2,
           "player": "J. Torres",
           "team": "Bahía FC",
           "position": "ED",
-          "mvp_score": 5.3
+          "mvp_score": 4.5
         },
         {
           "rank": 3,
-          "player": "A. Olvera",
+          "player": "R. Salgado",
           "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 5.2
+          "position": "MC",
+          "mvp_score": 4.2
         },
         {
           "rank": 4,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 5.0
-        },
-        {
-          "rank": 5,
           "player": "F. Cota",
           "team": "Bahía FC",
           "position": "MCD",
-          "mvp_score": 4.6
+          "mvp_score": 4.2
+        },
+        {
+          "rank": 5,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.0
         }
       ]
     },
     "evidence": [
-      461,
-      463,
-      543,
-      544
+      243,
+      251,
+      261,
+      404
+    ]
+  },
+  {
+    "insight_id": "i26",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 25,
+    "second": 0,
+    "t_s": 1500,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "R. Salgado",
+      "attribute": "sin_balon",
+      "from": 70,
+      "to": 71,
+      "delta": 1,
+      "reason": "arrastró a V. Meza y la jugada terminó en remate",
+      "reason_code": "run_ended_in_shot",
+      "reason_params": {
+        "dragged_defender": "V. Meza"
+      },
+      "overall_from": 68,
+      "overall_to": 68,
+      "space_opened_m": 5.6
+    },
+    "evidence": [
+      427,
+      431
     ]
   },
   {
     "insight_id": "i27",
     "match_id": "m001",
     "period": 1,
-    "minute": 39,
-    "second": 0,
-    "t_s": 2340,
-    "type": "duel_state",
-    "priority": 0.45,
-    "players": [
-      "P. Lugo",
-      "L. Montaño"
-    ],
-    "team": null,
-    "facts": {
-      "player_a": "P. Lugo",
-      "player_b": "L. Montaño",
-      "bar": 0.48,
-      "a_vs_role": 0.05,
-      "b_vs_role": -0.9,
-      "duels_won_a": 1,
-      "duels_won_b": 0,
-      "direct_duels": 1,
-      "chances_created_a": 0,
-      "chances_created_b": 0,
-      "flipped": false
-    },
-    "evidence": [
-      564
-    ]
-  },
-  {
-    "insight_id": "i28",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 39,
-    "second": 2,
-    "t_s": 2342,
-    "type": "team_phase",
-    "priority": 0.55,
-    "players": [
-      "V. Meza",
-      "G. Cárdenas",
-      "K. Rosas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "label": "possession_spell",
-      "window": "37:58-39:00",
-      "passes": 13,
-      "duration_s": 62,
-      "players_involved": 7,
-      "ended_in": "lost"
-    },
-    "evidence": [
-      548,
-      549,
-      550,
-      551,
-      552,
-      553,
-      555,
-      558,
-      559,
-      560,
-      561,
-      562,
-      563
-    ]
-  },
-  {
-    "insight_id": "i29",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 42,
-    "second": 15,
-    "t_s": 2535,
+    "minute": 25,
+    "second": 27,
+    "t_s": 1527,
     "type": "standout_milestone",
-    "priority": 0.72,
+    "priority": 0.86,
     "players": [
       "F. Cota"
     ],
@@ -1399,20 +1084,20 @@
       "position": "MCD",
       "profile": "defensive",
       "stats": {
-        "recoveries": 9,
-        "duels_won": 4,
-        "duels_total": 4,
+        "recoveries": 6,
+        "duels_won": 3,
+        "duels_total": 3,
         "progressive_passes": 4,
         "key_passes": 0
       },
       "expected_for_role": {
-        "duels_won": 2.58,
-        "recoveries": 3.52,
-        "progressive_passes": 4.46,
+        "duels_won": 1.56,
+        "recoveries": 2.12,
+        "progressive_passes": 2.69,
         "key_passes": 0.0
       },
-      "vs_role": 0.5,
-      "mvp_rank": 4,
+      "vs_role": 0.81,
+      "mvp_rank": 2,
       "card_change": {
         "attribute": "defensa",
         "from": 78,
@@ -1426,1306 +1111,31 @@
       }
     },
     "evidence": [
-      10,
-      169,
-      257,
-      286,
-      610
+      44,
+      178,
+      228,
+      308,
+      437
     ]
   },
   {
-    "insight_id": "i30",
+    "insight_id": "i28",
     "match_id": "m001",
     "period": 1,
-    "minute": 42,
-    "second": 17,
-    "t_s": 2537,
-    "type": "mvp_rank_change",
-    "priority": 0.49,
-    "players": [
-      "F. Cota"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "F. Cota",
-      "from_rank": 4,
-      "to_rank": 3,
-      "mvp_score": 5.1,
-      "trigger_event_id": 611,
-      "leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 9,
-        "recoveries_opp_half": 2,
-        "duels_won": 4,
-        "progressive_passes": 4
-      },
-      "expected_for_role": {
-        "duels_won": 2.58,
-        "recoveries": 3.52,
-        "progressive_passes": 4.46,
-        "key_passes": 0.0
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 6.4
-        },
-        {
-          "rank": 2,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 5.1
-        },
-        {
-          "rank": 3,
-          "player": "F. Cota",
-          "team": "Bahía FC",
-          "position": "MCD",
-          "mvp_score": 5.1
-        },
-        {
-          "rank": 4,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 5.1
-        },
-        {
-          "rank": 5,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 4.8
-        }
-      ]
-    },
-    "evidence": [
-      474,
-      533,
-      608,
-      611
-    ]
-  },
-  {
-    "insight_id": "i31",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 42,
-    "second": 39,
-    "t_s": 2559,
-    "type": "card_upgrade",
-    "priority": 0.7,
-    "players": [
-      "T. Esquer"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "T. Esquer",
-      "attribute": "vision",
-      "from": 56,
-      "to": 58,
-      "delta": 2,
-      "reason": "pase que rompió 2 líneas bajo presión",
-      "reason_code": "line_breaking_pass",
-      "reason_params": {
-        "lines": 2,
-        "under_pressure": true
-      },
-      "overall_from": 58,
-      "overall_to": 59,
-      "pass_distance_m": 31.7,
-      "pass_difficulty": 0.94
-    },
-    "evidence": [
-      618
-    ]
-  },
-  {
-    "insight_id": "i32",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 44,
-    "second": 30,
-    "t_s": 2670,
+    "minute": 28,
+    "second": 2,
+    "t_s": 1682,
     "type": "card_upgrade",
     "priority": 0.6,
     "players": [
-      "P. Lugo"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "P. Lugo",
-      "attribute": "fisico",
-      "from": 69,
-      "to": 70,
-      "delta": 1,
-      "reason": "recuperación en campo propio que terminó en remate en 10 segundos",
-      "reason_code": "recovery_to_shot",
-      "reason_params": {
-        "seconds": 10,
-        "shooter": "M. Ramírez"
-      },
-      "overall_from": 63,
-      "overall_to": 63
-    },
-    "evidence": [
-      645,
-      648
-    ]
-  },
-  {
-    "insight_id": "i33",
-    "match_id": "m001",
-    "period": 1,
-    "minute": 44,
-    "second": 49,
-    "t_s": 2689,
-    "type": "card_upgrade",
-    "priority": 0.7,
-    "players": [
-      "H. Zamora"
+      "E. Sandoval"
     ],
     "team": "Real Cardón",
     "facts": {
-      "player": "H. Zamora",
-      "attribute": "defensa",
-      "from": 79,
-      "to": 81,
-      "delta": 2,
-      "reason": "atajada a un remate de xG 0.56",
-      "reason_code": "big_save",
-      "reason_params": {
-        "xg": 0.56,
-        "shooter": "M. Ramírez"
-      },
-      "overall_from": 50,
-      "overall_to": 51
-    },
-    "evidence": [
-      650
-    ]
-  },
-  {
-    "insight_id": "i34",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 45,
-    "second": 0,
-    "t_s": 2700,
-    "type": "match_keys",
-    "priority": 0.9,
-    "players": [],
-    "team": null,
-    "facts": {
-      "scoreline": {
-        "home": 4,
-        "away": 1
-      },
-      "xg": {
-        "home": 1.6,
-        "away": 0.43
-      },
-      "possession_pct": {
-        "home": 52,
-        "away": 48
-      },
-      "keys": {
-        "Bahía FC": [
-          {
-            "code": "create_danger",
-            "key": "generar más peligro",
-            "evidence": "xG 1.60 en el primer tiempo"
-          }
-        ],
-        "Real Cardón": [
-          {
-            "code": "win_ball_high",
-            "key": "recuperar en campo rival",
-            "evidence": "5 recuperaciones en mitad rival, 2 de V. Meza"
-          },
-          {
-            "code": "more_bodies_in_box",
-            "key": "llegar con más gente al área",
-            "evidence": "1 tiro a puerta en el primer tiempo"
-          }
-        ]
-      },
-      "no_prediction": true
-    },
-    "evidence": [
-      60,
-      103,
-      204,
-      463,
-      521
-    ]
-  },
-  {
-    "insight_id": "i35",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 45,
-    "second": 23,
-    "t_s": 2723,
-    "type": "mvp_rank_change",
-    "priority": 0.53,
-    "players": [
-      "J. Torres"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "J. Torres",
-      "from_rank": 4,
-      "to_rank": 2,
-      "mvp_score": 5.7,
-      "trigger_event_id": 659,
-      "leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 1,
-        "recoveries_opp_half": 1,
-        "duels_won": 4,
-        "key_passes": 4,
-        "progressive_passes": 3,
-        "shots": 1,
-        "goals": 1,
-        "assists": 1
-      },
-      "expected_for_role": {
-        "duels_won": 1.76,
-        "recoveries": 1.76,
-        "progressive_passes": 2.77,
-        "key_passes": 1.26
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 6.7
-        },
-        {
-          "rank": 2,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 5.7
-        },
-        {
-          "rank": 3,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 5.5
-        },
-        {
-          "rank": 4,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 5.4
-        },
-        {
-          "rank": 5,
-          "player": "F. Cota",
-          "team": "Bahía FC",
-          "position": "MCD",
-          "mvp_score": 5.0
-        }
-      ]
-    },
-    "evidence": [
-      649,
-      659
-    ]
-  },
-  {
-    "insight_id": "i36",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 47,
-    "second": 35,
-    "t_s": 2855,
-    "type": "standout_milestone",
-    "priority": 0.77,
-    "players": [
-      "A. Olvera"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "A. Olvera",
-      "position": "EI",
-      "profile": "creative",
-      "stats": {
-        "recoveries": 1,
-        "duels_won": 2,
-        "duels_total": 5,
-        "progressive_passes": 5,
-        "key_passes": 7
-      },
-      "expected_for_role": {
-        "duels_won": 1.85,
-        "recoveries": 1.85,
-        "progressive_passes": 2.91,
-        "key_passes": 1.32
-      },
-      "vs_role": 0.59,
-      "mvp_rank": 3,
-      "card_change": {
-        "attribute": "vision",
-        "from": 64,
-        "to": 65,
-        "delta": 1,
-        "reason": "partido creativo por encima de lo esperado para su rol",
-        "reason_code": "standout_creative",
-        "reason_params": {},
-        "overall_from": 66,
-        "overall_to": 66
-      }
-    },
-    "evidence": [
-      103,
-      197,
-      463,
-      691
-    ]
-  },
-  {
-    "insight_id": "i37",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 47,
-    "second": 40,
-    "t_s": 2860,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "M. Ramírez"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "M. Ramírez",
-      "attribute": "ritmo",
-      "from": 76,
-      "to": 77,
-      "delta": 1,
-      "reason": "desmarque a 30 km/h",
-      "reason_code": "run_speed",
-      "reason_params": {
-        "speed_kmh": 30
-      },
-      "overall_from": 66,
-      "overall_to": 66,
-      "run_speed_kmh": 30.1
-    },
-    "evidence": [
-      693
-    ]
-  },
-  {
-    "insight_id": "i38",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 47,
-    "second": 53,
-    "t_s": 2873,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "N. Ruelas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "N. Ruelas",
-      "attribute": "fisico",
+      "player": "E. Sandoval",
+      "attribute": "regate",
       "from": 70,
       "to": 71,
-      "delta": 1,
-      "reason": "4 duelos ganados seguidos",
-      "reason_code": "duel_streak",
-      "reason_params": {
-        "count": 4
-      },
-      "overall_from": 63,
-      "overall_to": 63
-    },
-    "evidence": [
-      699
-    ]
-  },
-  {
-    "insight_id": "i39",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 48,
-    "second": 14,
-    "t_s": 2894,
-    "type": "duel_state",
-    "priority": 0.4,
-    "players": [
-      "A. Olvera",
-      "N. Ruelas"
-    ],
-    "team": null,
-    "facts": {
-      "player_a": "A. Olvera",
-      "player_b": "N. Ruelas",
-      "bar": 0.26,
-      "a_vs_role": 0.57,
-      "b_vs_role": 0.05,
-      "duels_won_a": 0,
-      "duels_won_b": 3,
-      "direct_duels": 3,
-      "chances_created_a": 7,
-      "chances_created_b": 0,
-      "flipped": false
-    },
-    "evidence": [
-      699,
-      700,
-      701,
-      702,
-      704,
-      705,
-      706
-    ]
-  },
-  {
-    "insight_id": "i40",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 51,
-    "second": 48,
-    "t_s": 3108,
-    "type": "goal_chain",
-    "priority": 1.0,
-    "players": [
-      "D. Verdugo",
-      "G. Cárdenas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "scoreline": {
-        "home": 4,
-        "away": 2
-      },
-      "scorer": "D. Verdugo",
-      "assist": "L. Montaño",
-      "xg": 0.08,
-      "duration_s": 49,
-      "chain": [
-        {
-          "event_id": 748,
-          "player": "G. Cárdenas",
-          "action": "recuperación",
-          "credit": 0.44,
-          "t_s": 3059,
-          "type": "recovery",
-          "lines_broken": 0,
-          "start": [
-            53.7,
-            47.1
-          ],
-          "end": null
-        },
-        {
-          "event_id": 763,
-          "player": "D. Verdugo",
-          "action": "remate",
-          "credit": 0.56,
-          "t_s": 3108,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            13.9,
-            21.7
-          ],
-          "end": [
-            0,
-            37.2
-          ]
-        }
-      ],
-      "invisible_assist": null
-    },
-    "evidence": [
-      748,
-      750,
-      751,
-      752,
-      753,
-      754,
-      756,
-      757,
-      758,
-      759,
-      760,
-      761,
-      762,
-      763,
-      764
-    ]
-  },
-  {
-    "insight_id": "i41",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 52,
-    "second": 28,
-    "t_s": 3148,
-    "type": "team_phase",
-    "priority": 0.55,
-    "players": [
-      "D. Verdugo",
-      "E. Sandoval",
-      "K. Rosas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "label": "possession_spell",
-      "window": "50:59-51:48",
-      "passes": 12,
-      "duration_s": 49,
-      "players_involved": 6,
-      "ended_in": "lost"
-    },
-    "evidence": [
-      750,
-      751,
-      752,
-      753,
-      754,
-      756,
-      757,
-      758,
-      759,
-      760,
-      761,
-      762
-    ]
-  },
-  {
-    "insight_id": "i42",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 52,
-    "second": 42,
-    "t_s": 3162,
-    "type": "standout_milestone",
-    "priority": 0.72,
-    "players": [
-      "G. Cárdenas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "G. Cárdenas",
-      "position": "DFC",
-      "profile": "defensive",
-      "stats": {
-        "recoveries": 7,
-        "duels_won": 4,
-        "duels_total": 9,
-        "progressive_passes": 2,
-        "key_passes": 0
-      },
-      "expected_for_role": {
-        "duels_won": 1.76,
-        "recoveries": 2.93,
-        "progressive_passes": 5.86,
-        "key_passes": 0.0
-      },
-      "vs_role": 0.5,
-      "mvp_rank": 6,
-      "card_change": {
-        "attribute": "defensa",
-        "from": 80,
-        "to": 82,
-        "delta": 2,
-        "reason": "partido defensivo por encima de lo esperado para su rol",
-        "reason_code": "standout_defensive",
-        "reason_params": {},
-        "overall_from": 58,
-        "overall_to": 59
-      }
-    },
-    "evidence": [
-      156,
-      348,
-      373,
-      492,
-      769
-    ]
-  },
-  {
-    "insight_id": "i43",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 55,
-    "second": 25,
-    "t_s": 3325,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "G. Cárdenas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "G. Cárdenas",
-      "attribute": "vision",
-      "from": 54,
-      "to": 55,
-      "delta": 1,
-      "reason": "20 pases completados seguidos",
-      "reason_code": "pass_streak",
-      "reason_params": {
-        "count": 20
-      },
-      "overall_from": 59,
-      "overall_to": 59
-    },
-    "evidence": [
-      714,
-      750,
-      769,
-      784,
-      814
-    ]
-  },
-  {
-    "insight_id": "i44",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 55,
-    "second": 33,
-    "t_s": 3333,
-    "type": "mvp_rank_change",
-    "priority": 0.49,
-    "players": [
-      "J. Torres"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "J. Torres",
-      "from_rank": 3,
-      "to_rank": 2,
-      "mvp_score": 6.4,
-      "trigger_event_id": 816,
-      "leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 1,
-        "recoveries_opp_half": 1,
-        "duels_won": 5,
-        "key_passes": 5,
-        "progressive_passes": 5,
-        "shots": 1,
-        "goals": 1,
-        "assists": 1
-      },
-      "expected_for_role": {
-        "duels_won": 2.16,
-        "recoveries": 2.16,
-        "progressive_passes": 3.39,
-        "key_passes": 1.54
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 7.1
-        },
-        {
-          "rank": 2,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 6.4
-        },
-        {
-          "rank": 3,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 6.1
-        },
-        {
-          "rank": 4,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 5.7
-        },
-        {
-          "rank": 5,
-          "player": "G. Cárdenas",
-          "team": "Real Cardón",
-          "position": "DFC",
-          "mvp_score": 5.7
-        }
-      ],
-      "card_change": {
-        "attribute": "fisico",
-        "from": 66,
-        "to": 67,
-        "delta": 1,
-        "reason": "4 duelos ganados seguidos",
-        "reason_code": "duel_streak",
-        "reason_params": {
-          "count": 4
-        },
-        "overall_from": 70,
-        "overall_to": 70
-      }
-    },
-    "evidence": [
-      673,
-      780,
-      816
-    ]
-  },
-  {
-    "insight_id": "i45",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 55,
-    "second": 33,
-    "t_s": 3333,
-    "type": "duel_state",
-    "priority": 0.43,
-    "players": [
-      "J. Torres",
-      "B. Haro"
-    ],
-    "team": null,
-    "facts": {
-      "player_a": "J. Torres",
-      "player_b": "B. Haro",
-      "bar": 0.38,
-      "a_vs_role": 0.81,
-      "b_vs_role": 0.06,
-      "duels_won_a": 2,
-      "duels_won_b": 1,
-      "direct_duels": 3,
-      "chances_created_a": 5,
-      "chances_created_b": 1,
-      "flipped": false
-    },
-    "evidence": [
-      816
-    ]
-  },
-  {
-    "insight_id": "i46",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 57,
-    "second": 0,
-    "t_s": 3420,
-    "type": "team_phase",
-    "priority": 0.5,
-    "players": [],
-    "team": "Real Cardón",
-    "facts": {
-      "label": "control",
-      "window": "47:00-57:00",
-      "possession_pct": 64,
-      "pass_accuracy_pct": {
-        "away": 89,
-        "home": 82
-      },
-      "passes_per_min": {
-        "away": 6.6,
-        "home": 4.0
-      }
-    },
-    "evidence": []
-  },
-  {
-    "insight_id": "i47",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 60,
-    "second": 10,
-    "t_s": 3610,
-    "type": "standout_milestone",
-    "priority": 0.91,
-    "players": [
-      "J. Torres"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "J. Torres",
-      "position": "ED",
-      "profile": "defensive",
-      "stats": {
-        "recoveries": 2,
-        "duels_won": 5,
-        "duels_total": 7,
-        "progressive_passes": 6,
-        "key_passes": 6
-      },
-      "expected_for_role": {
-        "duels_won": 2.34,
-        "recoveries": 2.34,
-        "progressive_passes": 3.68,
-        "key_passes": 1.67
-      },
-      "vs_role": 0.91,
-      "mvp_rank": 2,
-      "card_change": {
-        "attribute": "defensa",
-        "from": 58,
-        "to": 60,
-        "delta": 2,
-        "reason": "partido defensivo por encima de lo esperado para su rol",
-        "reason_code": "standout_defensive",
-        "reason_params": {},
-        "overall_from": 70,
-        "overall_to": 70
-      }
-    },
-    "evidence": [
-      270,
-      276,
-      649,
-      817,
-      889
-    ]
-  },
-  {
-    "insight_id": "i48",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 64,
-    "second": 23,
-    "t_s": 3863,
-    "type": "mvp_rank_change",
-    "priority": 0.49,
-    "players": [
-      "G. Cárdenas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "G. Cárdenas",
-      "from_rank": 4,
-      "to_rank": 3,
-      "mvp_score": 6.2,
-      "trigger_event_id": 952,
-      "leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 9,
-        "duels_won": 5,
-        "progressive_passes": 5,
-        "line_breaking_passes": 2
-      },
-      "expected_for_role": {
-        "duels_won": 2.15,
-        "recoveries": 3.58,
-        "progressive_passes": 7.15,
-        "key_passes": 0.0
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 7.0
-        },
-        {
-          "rank": 2,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 6.9
-        },
-        {
-          "rank": 3,
-          "player": "G. Cárdenas",
-          "team": "Real Cardón",
-          "position": "DFC",
-          "mvp_score": 6.2
-        },
-        {
-          "rank": 4,
-          "player": "F. Cota",
-          "team": "Bahía FC",
-          "position": "MCD",
-          "mvp_score": 6.1
-        },
-        {
-          "rank": 5,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 6.0
-        }
-      ]
-    },
-    "evidence": [
-      893,
-      904,
-      952
-    ]
-  },
-  {
-    "insight_id": "i49",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 65,
-    "second": 49,
-    "t_s": 3949,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "B. Haro"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "B. Haro",
-      "attribute": "regate",
-      "from": 60,
-      "to": 61,
-      "delta": 1,
-      "reason": "dos regates ganados en menos de 10 minutos",
-      "reason_code": "dribbles",
-      "reason_params": {
-        "count": 2,
-        "window_min": 10
-      },
-      "overall_from": 61,
-      "overall_to": 61
-    },
-    "evidence": [
-      826,
-      974
-    ]
-  },
-  {
-    "insight_id": "i50",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 66,
-    "second": 24,
-    "t_s": 3984,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "H. Zamora"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "H. Zamora",
-      "attribute": "fisico",
-      "from": 72,
-      "to": 73,
-      "delta": 1,
-      "reason": "recuperación en campo propio que terminó en remate en 10 segundos",
-      "reason_code": "recovery_to_shot",
-      "reason_params": {
-        "seconds": 10,
-        "shooter": "S. Leyva"
-      },
-      "overall_from": 51,
-      "overall_to": 51
-    },
-    "evidence": [
-      982,
-      985
-    ]
-  },
-  {
-    "insight_id": "i51",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 67,
-    "second": 50,
-    "t_s": 4070,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "E. Quiroz"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "E. Quiroz",
-      "attribute": "vision",
-      "from": 55,
-      "to": 56,
-      "delta": 1,
-      "reason": "20 pases completados seguidos",
-      "reason_code": "pass_streak",
-      "reason_params": {
-        "count": 20
-      },
-      "overall_from": 59,
-      "overall_to": 59
-    },
-    "evidence": [
-      803,
-      897,
-      922,
-      935,
-      1006
-    ]
-  },
-  {
-    "insight_id": "i52",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 68,
-    "second": 27,
-    "t_s": 4107,
-    "type": "mvp_rank_change",
-    "priority": 0.53,
-    "players": [
-      "A. Olvera"
-    ],
-    "team": "Bahía FC",
-    "facts": {
-      "player": "A. Olvera",
-      "from_rank": 5,
-      "to_rank": 3,
-      "mvp_score": 6.4,
-      "trigger_event_id": 1015,
-      "leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 2,
-        "recoveries_opp_half": 2,
-        "duels_won": 2,
-        "key_passes": 7,
-        "progressive_passes": 5,
-        "line_breaking_passes": 1,
-        "shots": 1,
-        "assists": 2
-      },
-      "expected_for_role": {
-        "duels_won": 2.66,
-        "recoveries": 2.66,
-        "progressive_passes": 4.18,
-        "key_passes": 1.9
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 7.0
-        },
-        {
-          "rank": 2,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 7.0
-        },
-        {
-          "rank": 3,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 6.4
-        },
-        {
-          "rank": 4,
-          "player": "G. Cárdenas",
-          "team": "Real Cardón",
-          "position": "DFC",
-          "mvp_score": 6.3
-        },
-        {
-          "rank": 5,
-          "player": "F. Cota",
-          "team": "Bahía FC",
-          "position": "MCD",
-          "mvp_score": 6.0
-        }
-      ]
-    },
-    "evidence": [
-      878,
-      991,
-      1015
-    ]
-  },
-  {
-    "insight_id": "i53",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 73,
-    "second": 0,
-    "t_s": 4380,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "B. Haro"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "B. Haro",
-      "attribute": "fisico",
-      "from": 68,
-      "to": 69,
-      "delta": 1,
-      "reason": "4 duelos ganados seguidos",
-      "reason_code": "duel_streak",
-      "reason_params": {
-        "count": 4
-      },
-      "overall_from": 61,
-      "overall_to": 62
-    },
-    "evidence": [
-      1089
-    ]
-  },
-  {
-    "insight_id": "i54",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 73,
-    "second": 25,
-    "t_s": 4405,
-    "type": "goal_chain",
-    "priority": 1.0,
-    "players": [
-      "S. Leyva",
-      "B. Haro"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "scoreline": {
-        "home": 4,
-        "away": 3
-      },
-      "scorer": "S. Leyva",
-      "assist": "D. Verdugo",
-      "xg": 0.16,
-      "duration_s": 21,
-      "chain": [
-        {
-          "event_id": 1090,
-          "player": "B. Haro",
-          "action": "pase que rompió 2 líneas",
-          "credit": 0.5,
-          "t_s": 4384,
-          "type": "pass",
-          "lines_broken": 2,
-          "start": [
-            86.6,
-            21.3
-          ],
-          "end": [
-            61.7,
-            21.8
-          ]
-        },
-        {
-          "event_id": 1096,
-          "player": "S. Leyva",
-          "action": "remate",
-          "credit": 0.5,
-          "t_s": 4405,
-          "type": "shot",
-          "lines_broken": 0,
-          "start": [
-            6.3,
-            24.3
-          ],
-          "end": [
-            0,
-            38.7
-          ]
-        }
-      ],
-      "invisible_assist": null
-    },
-    "evidence": [
-      1090,
-      1092,
-      1093,
-      1094,
-      1095,
-      1096,
-      1097
-    ]
-  },
-  {
-    "insight_id": "i55",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 76,
-    "second": 8,
-    "t_s": 4568,
-    "type": "standout_milestone",
-    "priority": 0.73,
-    "players": [
-      "B. Haro"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "B. Haro",
-      "position": "LI",
-      "profile": "defensive",
-      "stats": {
-        "recoveries": 4,
-        "duels_won": 5,
-        "duels_total": 10,
-        "progressive_passes": 10,
-        "key_passes": 1
-      },
-      "expected_for_role": {
-        "duels_won": 2.96,
-        "recoveries": 4.23,
-        "progressive_passes": 7.19,
-        "key_passes": 0.0
-      },
-      "vs_role": 0.51,
-      "mvp_rank": 8,
-      "card_change": {
-        "attribute": "defensa",
-        "from": 71,
-        "to": 73,
-        "delta": 2,
-        "reason": "partido defensivo por encima de lo esperado para su rol",
-        "reason_code": "standout_defensive",
-        "reason_params": {},
-        "overall_from": 62,
-        "overall_to": 62
-      }
-    },
-    "evidence": [
-      822,
-      1055,
-      1089,
-      1090,
-      1127
-    ]
-  },
-  {
-    "insight_id": "i56",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 77,
-    "second": 11,
-    "t_s": 4631,
-    "type": "card_upgrade",
-    "priority": 0.6,
-    "players": [
-      "V. Meza"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "V. Meza",
-      "attribute": "regate",
-      "from": 58,
-      "to": 59,
       "delta": 1,
       "reason": "dos regates ganados en menos de 10 minutos",
       "reason_code": "dribbles",
@@ -2737,19 +1147,634 @@
       "overall_to": 65
     },
     "evidence": [
-      1002,
-      1146
+      353,
+      467
     ]
   },
   {
-    "insight_id": "i57",
+    "insight_id": "i29",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 28,
+    "second": 21,
+    "t_s": 1701,
+    "type": "mvp_rank_change",
+    "priority": 0.53,
+    "players": [
+      "E. Sandoval"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "E. Sandoval",
+      "from_rank": 5,
+      "to_rank": 3,
+      "mvp_score": 4.8,
+      "trigger_event_id": 472,
+      "leader": "O. Félix",
+      "stats": {
+        "recoveries": 2,
+        "duels_won": 3,
+        "key_passes": 1,
+        "progressive_passes": 10,
+        "shots": 1
+      },
+      "expected_for_role": {
+        "duels_won": 1.73,
+        "recoveries": 2.36,
+        "progressive_passes": 3.94,
+        "key_passes": 0.16
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.4
+        },
+        {
+          "rank": 2,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 5.0
+        },
+        {
+          "rank": 3,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.8
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 4.7
+        },
+        {
+          "rank": 5,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 4.7
+        }
+      ]
+    },
+    "evidence": [
+      390,
+      398,
+      407,
+      472
+    ]
+  },
+  {
+    "insight_id": "i30",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 29,
+    "second": 1,
+    "t_s": 1741,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "E. Sandoval",
+      "B. Haro",
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "possession_spell",
+      "window": "27:57-28:53",
+      "passes": 12,
+      "duration_s": 56,
+      "players_involved": 7,
+      "ended_in": "out"
+    },
+    "evidence": [
+      466,
+      468,
+      469,
+      470,
+      471,
+      472,
+      473,
+      475,
+      477,
+      478,
+      480,
+      482
+    ]
+  },
+  {
+    "insight_id": "i31",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 30,
+    "second": 3,
+    "t_s": 1803,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "O. Félix"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "O. Félix",
+      "attribute": "regate",
+      "from": 65,
+      "to": 66,
+      "delta": 1,
+      "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
+      "overall_from": 64,
+      "overall_to": 64
+    },
+    "evidence": [
+      373,
+      501
+    ]
+  },
+  {
+    "insight_id": "i32",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 30,
+    "second": 39,
+    "t_s": 1839,
+    "type": "standout_milestone",
+    "priority": 0.95,
+    "players": [
+      "O. Félix"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "O. Félix",
+      "position": "MC",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 4,
+        "duels_won": 6,
+        "duels_total": 7,
+        "progressive_passes": 10,
+        "key_passes": 1
+      },
+      "expected_for_role": {
+        "duels_won": 1.87,
+        "recoveries": 2.55,
+        "progressive_passes": 4.26,
+        "key_passes": 0.17
+      },
+      "vs_role": 1.0,
+      "mvp_rank": 1,
+      "card_change": {
+        "attribute": "defensa",
+        "from": 62,
+        "to": 64,
+        "delta": 2,
+        "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
+        "overall_from": 64,
+        "overall_to": 64
+      }
+    },
+    "evidence": [
+      66,
+      97,
+      108,
+      342,
+      509
+    ]
+  },
+  {
+    "insight_id": "i33",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 30,
+    "second": 50,
+    "t_s": 1850,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "O. Félix"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "O. Félix",
+      "attribute": "fisico",
+      "from": 65,
+      "to": 66,
+      "delta": 1,
+      "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
+      "overall_from": 64,
+      "overall_to": 64
+    },
+    "evidence": [
+      514
+    ]
+  },
+  {
+    "insight_id": "i34",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 32,
+    "second": 56,
+    "t_s": 1976,
+    "type": "duel_state",
+    "priority": 0.55,
+    "players": [
+      "P. Lugo",
+      "L. Montaño"
+    ],
+    "team": null,
+    "facts": {
+      "player_a": "P. Lugo",
+      "player_b": "L. Montaño",
+      "bar": -0.24,
+      "a_vs_role": -0.2,
+      "b_vs_role": 0.29,
+      "duels_won_a": 1,
+      "duels_won_b": 3,
+      "direct_duels": 4,
+      "chances_created_a": 0,
+      "chances_created_b": 0,
+      "flipped": true
+    },
+    "evidence": [
+      546,
+      548,
+      550,
+      551,
+      553
+    ]
+  },
+  {
+    "insight_id": "i35",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 36,
+    "second": 0,
+    "t_s": 2160,
+    "type": "team_phase",
+    "priority": 0.5,
+    "players": [],
+    "team": "Real Cardón",
+    "facts": {
+      "label": "control",
+      "window": "26:00-36:00",
+      "possession_pct": 62,
+      "pass_accuracy_pct": {
+        "away": 85,
+        "home": 76
+      },
+      "passes_per_min": {
+        "away": 6.1,
+        "home": 4.2
+      }
+    },
+    "evidence": []
+  },
+  {
+    "insight_id": "i36",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 40,
+    "second": 10,
+    "t_s": 2410,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "H. Zamora"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "H. Zamora",
+      "attribute": "defensa",
+      "from": 80,
+      "to": 81,
+      "delta": 1,
+      "reason": "atajada a un remate de xG 0.21",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.21,
+        "shooter": "M. Ramírez"
+      },
+      "overall_from": 51,
+      "overall_to": 51
+    },
+    "evidence": [
+      661
+    ]
+  },
+  {
+    "insight_id": "i37",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 41,
+    "second": 5,
+    "t_s": 2465,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "V. Meza",
+      "attribute": "vision",
+      "from": 68,
+      "to": 69,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      619,
+      630,
+      632,
+      652,
+      671
+    ]
+  },
+  {
+    "insight_id": "i38",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 41,
+    "second": 9,
+    "t_s": 2469,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "O. Félix"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "O. Félix",
+      "attribute": "fisico",
+      "from": 66,
+      "to": 67,
+      "delta": 1,
+      "reason": "8 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 8
+      },
+      "overall_from": 64,
+      "overall_to": 64
+    },
+    "evidence": [
+      672
+    ]
+  },
+  {
+    "insight_id": "i39",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 41,
+    "second": 49,
+    "t_s": 2509,
+    "type": "mvp_rank_change",
+    "priority": 0.49,
+    "players": [
+      "K. Rosas"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "K. Rosas",
+      "from_rank": 4,
+      "to_rank": 3,
+      "mvp_score": 5.2,
+      "trigger_event_id": 686,
+      "leader": "O. Félix",
+      "stats": {
+        "recoveries": 8,
+        "recoveries_opp_half": 1,
+        "duels_won": 1,
+        "key_passes": 1,
+        "progressive_passes": 5,
+        "line_breaking_passes": 1
+      },
+      "expected_for_role": {
+        "duels_won": 2.56,
+        "recoveries": 3.48,
+        "progressive_passes": 5.81,
+        "key_passes": 0.23
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 7.4
+        },
+        {
+          "rank": 2,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 5.7
+        },
+        {
+          "rank": 3,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.2
+        },
+        {
+          "rank": 4,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 5.0
+        },
+        {
+          "rank": 5,
+          "player": "J. Torres",
+          "team": "Bahía FC",
+          "position": "ED",
+          "mvp_score": 4.9
+        }
+      ]
+    },
+    "evidence": [
+      541,
+      582,
+      602,
+      686
+    ]
+  },
+  {
+    "insight_id": "i40",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 43,
+    "second": 41,
+    "t_s": 2621,
+    "type": "standout_milestone",
+    "priority": 0.74,
+    "players": [
+      "K. Rosas"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "K. Rosas",
+      "position": "MC",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 11,
+        "duels_won": 1,
+        "duels_total": 9,
+        "progressive_passes": 6,
+        "key_passes": 1
+      },
+      "expected_for_role": {
+        "duels_won": 2.67,
+        "recoveries": 3.64,
+        "progressive_passes": 6.07,
+        "key_passes": 0.24
+      },
+      "vs_role": 0.53,
+      "mvp_rank": 2,
+      "card_change": {
+        "attribute": "defensa",
+        "from": 58,
+        "to": 60,
+        "delta": 2,
+        "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+        "reason_code": "opp_half_recoveries",
+        "reason_params": {
+          "count": 3,
+          "window_min": 10
+        },
+        "overall_from": 69,
+        "overall_to": 70
+      }
+    },
+    "evidence": [
+      335,
+      691,
+      707,
+      713
+    ]
+  },
+  {
+    "insight_id": "i41",
     "match_id": "m001",
     "period": 2,
-    "minute": 78,
-    "second": 8,
-    "t_s": 4688,
+    "minute": 45,
+    "second": 0,
+    "t_s": 2700,
+    "type": "match_keys",
+    "priority": 0.9,
+    "players": [],
+    "team": null,
+    "facts": {
+      "scoreline": {
+        "home": 1,
+        "away": 0
+      },
+      "xg": {
+        "home": 1.93,
+        "away": 0.38
+      },
+      "possession_pct": {
+        "home": 50,
+        "away": 50
+      },
+      "keys": {
+        "Bahía FC": [
+          {
+            "code": "win_flank",
+            "key": "recuperar la banda de P. Lugo",
+            "evidence": "L. Montaño ganó 2 de los últimos 3 duelos"
+          }
+        ],
+        "Real Cardón": [
+          {
+            "code": "more_bodies_in_box",
+            "key": "llegar con más gente al área",
+            "evidence": "1 tiro a puerta en el primer tiempo"
+          },
+          {
+            "code": "win_flank",
+            "key": "recuperar la banda de D. Verdugo",
+            "evidence": "D. Mena ganó 2 de los últimos 3 duelos"
+          }
+        ]
+      },
+      "no_prediction": true
+    },
+    "evidence": [
+      47,
+      137,
+      184,
+      259,
+      393,
+      395,
+      546
+    ]
+  },
+  {
+    "insight_id": "i42",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 47,
+    "second": 16,
+    "t_s": 2836,
+    "type": "card_upgrade",
+    "priority": 0.7,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "attribute": "vision",
+      "from": 70,
+      "to": 72,
+      "delta": 2,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
+      "overall_from": 68,
+      "overall_to": 68,
+      "pass_distance_m": 27.6,
+      "pass_difficulty": 0.89
+    },
+    "evidence": [
+      773
+    ]
+  },
+  {
+    "insight_id": "i43",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 48,
+    "second": 11,
+    "t_s": 2891,
     "type": "duel_state",
-    "priority": 0.37,
+    "priority": 0.4,
     "players": [
       "J. Torres",
       "B. Haro"
@@ -2758,314 +1783,929 @@
     "facts": {
       "player_a": "J. Torres",
       "player_b": "B. Haro",
-      "bar": 0.1,
-      "a_vs_role": 0.77,
-      "b_vs_role": 0.56,
-      "duels_won_a": 2,
-      "duels_won_b": 2,
-      "direct_duels": 4,
-      "chances_created_a": 6,
-      "chances_created_b": 1,
+      "bar": 0.27,
+      "a_vs_role": 0.6,
+      "b_vs_role": 0.06,
+      "duels_won_a": 1,
+      "duels_won_b": 1,
+      "direct_duels": 2,
+      "chances_created_a": 3,
+      "chances_created_b": 0,
       "flipped": false
     },
     "evidence": [
-      1161
+      779,
+      780,
+      783,
+      784,
+      786,
+      787,
+      788,
+      789,
+      790,
+      791,
+      792
     ]
   },
   {
-    "insight_id": "i58",
+    "insight_id": "i44",
     "match_id": "m001",
     "period": 2,
-    "minute": 79,
-    "second": 2,
-    "t_s": 4742,
-    "type": "goal_chain",
-    "priority": 1.0,
+    "minute": 48,
+    "second": 45,
+    "t_s": 2925,
+    "type": "standout_milestone",
+    "priority": 0.75,
     "players": [
-      "S. Leyva",
-      "H. Zamora",
-      "R. Amador"
+      "K. Rosas"
     ],
     "team": "Real Cardón",
     "facts": {
-      "scoreline": {
-        "home": 4,
-        "away": 4
+      "player": "K. Rosas",
+      "position": "MC",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 12,
+        "duels_won": 2,
+        "duels_total": 12,
+        "progressive_passes": 6,
+        "key_passes": 1
       },
-      "scorer": "S. Leyva",
-      "assist": "R. Amador",
-      "xg": 0.15,
-      "duration_s": 34,
+      "expected_for_role": {
+        "duels_won": 2.98,
+        "recoveries": 4.06,
+        "progressive_passes": 6.77,
+        "key_passes": 0.27
+      },
+      "vs_role": 0.56,
+      "mvp_rank": 2
+    },
+    "evidence": [
+      335,
+      691,
+      707,
+      713,
+      799
+    ]
+  },
+  {
+    "insight_id": "i45",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 49,
+    "second": 6,
+    "t_s": 2946,
+    "type": "goal_chain",
+    "priority": 1.0,
+    "players": [
+      "M. Ramírez"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "scoreline": {
+        "home": 2,
+        "away": 0
+      },
+      "scorer": "M. Ramírez",
+      "assist": null,
+      "xg": 0.19,
+      "duration_s": 2,
       "chain": [
         {
-          "event_id": 1166,
-          "player": "H. Zamora",
-          "action": "pase que rompió 2 líneas",
-          "credit": 0.34,
-          "t_s": 4708,
-          "type": "pass",
-          "lines_broken": 2,
-          "start": [
-            99.5,
-            39.5
-          ],
-          "end": [
-            67.6,
-            60.4
-          ]
-        },
-        {
-          "event_id": 1175,
-          "player": "R. Amador",
-          "action": "centro",
-          "credit": 0.33,
-          "t_s": 4739,
-          "type": "pass",
-          "lines_broken": 1,
-          "start": [
-            24.4,
-            56.3
-          ],
-          "end": [
-            6.4,
-            27.5
-          ],
-          "cross": true
-        },
-        {
-          "event_id": 1176,
-          "player": "S. Leyva",
+          "event_id": 809,
+          "player": "M. Ramírez",
           "action": "remate",
-          "credit": 0.33,
-          "t_s": 4742,
+          "credit": 1.0,
+          "t_s": 2946,
           "type": "shot",
           "lines_broken": 0,
           "start": [
-            6.4,
-            27.5
+            94.6,
+            35.4
           ],
           "end": [
-            0,
-            32.0
+            105.0,
+            35.9
           ]
         }
       ],
       "invisible_assist": null
     },
     "evidence": [
-      1166,
-      1168,
-      1169,
-      1170,
-      1172,
-      1174,
-      1175,
-      1176,
-      1177
+      809,
+      810
     ]
   },
   {
-    "insight_id": "i59",
+    "insight_id": "i46",
     "match_id": "m001",
     "period": 2,
-    "minute": 80,
-    "second": 3,
-    "t_s": 4803,
-    "type": "card_upgrade",
-    "priority": 0.7,
+    "minute": 54,
+    "second": 14,
+    "t_s": 3254,
+    "type": "standout_milestone",
+    "priority": 0.95,
     "players": [
       "O. Félix"
     ],
     "team": "Bahía FC",
     "facts": {
       "player": "O. Félix",
-      "attribute": "defensa",
-      "from": 62,
-      "to": 64,
-      "delta": 2,
-      "reason": "tercera recuperación en campo rival en menos de 10 minutos",
-      "reason_code": "opp_half_recoveries",
-      "reason_params": {
-        "count": 3,
-        "window_min": 10
+      "position": "MC",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 6,
+        "duels_won": 12,
+        "duels_total": 13,
+        "progressive_passes": 15,
+        "key_passes": 3
       },
-      "overall_from": 63,
-      "overall_to": 64,
-      "recoveries_window": "72:45-80:03"
+      "expected_for_role": {
+        "duels_won": 3.31,
+        "recoveries": 4.52,
+        "progressive_passes": 7.53,
+        "key_passes": 0.3
+      },
+      "vs_role": 1.0,
+      "mvp_rank": 1,
+      "card_change": {
+        "attribute": "defensa",
+        "from": 64,
+        "to": 66,
+        "delta": 2,
+        "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
+        "overall_from": 64,
+        "overall_to": 65
+      }
     },
     "evidence": [
-      1084,
-      1164,
-      1184
+      342,
+      372,
+      514,
+      579,
+      874
+    ]
+  },
+  {
+    "insight_id": "i47",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 55,
+    "second": 4,
+    "t_s": 3304,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "attribute": "regate",
+      "from": 60,
+      "to": 61,
+      "delta": 1,
+      "reason": "dos regates ganados en menos de 10 minutos",
+      "reason_code": "dribbles",
+      "reason_params": {
+        "count": 2,
+        "window_min": 10
+      },
+      "overall_from": 68,
+      "overall_to": 68
+    },
+    "evidence": [
+      825,
+      883
+    ]
+  },
+  {
+    "insight_id": "i48",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 55,
+    "second": 43,
+    "t_s": 3343,
+    "type": "duel_state",
+    "priority": 0.42,
+    "players": [
+      "D. Mena",
+      "D. Verdugo"
+    ],
+    "team": null,
+    "facts": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": 0.37,
+      "a_vs_role": 0.51,
+      "b_vs_role": -0.23,
+      "duels_won_a": 3,
+      "duels_won_b": 1,
+      "direct_duels": 4,
+      "chances_created_a": 2,
+      "chances_created_b": 0,
+      "flipped": false
+    },
+    "evidence": [
+      887,
+      889,
+      890,
+      891,
+      892
+    ]
+  },
+  {
+    "insight_id": "i49",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 57,
+    "second": 46,
+    "t_s": 3466,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "D. Mena"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "D. Mena",
+      "attribute": "fisico",
+      "from": 70,
+      "to": 71,
+      "delta": 1,
+      "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      918
+    ]
+  },
+  {
+    "insight_id": "i50",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 61,
+    "second": 26,
+    "t_s": 3686,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "P. Lugo",
+      "O. Félix",
+      "S. Beltrán"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "label": "possession_spell",
+      "window": "60:20-61:16",
+      "passes": 13,
+      "duration_s": 56,
+      "players_involved": 7,
+      "ended_in": "out"
+    },
+    "evidence": [
+      963,
+      964,
+      965,
+      966,
+      967,
+      968,
+      969,
+      970,
+      971,
+      972,
+      973,
+      974,
+      975
+    ]
+  },
+  {
+    "insight_id": "i51",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 61,
+    "second": 44,
+    "t_s": 3704,
+    "type": "mvp_rank_change",
+    "priority": 0.49,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "from_rank": 4,
+      "to_rank": 3,
+      "mvp_score": 6.7,
+      "trigger_event_id": 984,
+      "leader": "O. Félix",
+      "stats": {
+        "recoveries": 11,
+        "duels_won": 5,
+        "progressive_passes": 9,
+        "line_breaking_passes": 2
+      },
+      "expected_for_role": {
+        "duels_won": 3.77,
+        "recoveries": 5.14,
+        "progressive_passes": 6.52,
+        "key_passes": 0.0
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.0
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.2
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 6.7
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.6
+        },
+        {
+          "rank": 5,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 6.0
+        }
+      ]
+    },
+    "evidence": [
+      924,
+      955,
+      984
+    ]
+  },
+  {
+    "insight_id": "i52",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 61,
+    "second": 48,
+    "t_s": 3708,
+    "type": "standout_milestone",
+    "priority": 0.72,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "position": "MCD",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 11,
+        "duels_won": 5,
+        "duels_total": 8,
+        "progressive_passes": 10,
+        "key_passes": 0
+      },
+      "expected_for_role": {
+        "duels_won": 3.78,
+        "recoveries": 5.15,
+        "progressive_passes": 6.52,
+        "key_passes": 0.0
+      },
+      "vs_role": 0.5,
+      "mvp_rank": 3,
+      "card_change": {
+        "attribute": "defensa",
+        "from": 80,
+        "to": 82,
+        "delta": 2,
+        "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
+        "overall_from": 68,
+        "overall_to": 69
+      }
+    },
+    "evidence": [
+      308,
+      332,
+      356,
+      773,
+      985
+    ]
+  },
+  {
+    "insight_id": "i53",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 65,
+    "second": 4,
+    "t_s": 3904,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "P. Lugo"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "P. Lugo",
+      "attribute": "vision",
+      "from": 60,
+      "to": 61,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 63,
+      "overall_to": 63
+    },
+    "evidence": [
+      878,
+      969,
+      971,
+      973,
+      1035
+    ]
+  },
+  {
+    "insight_id": "i54",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 68,
+    "second": 47,
+    "t_s": 4127,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "S. Leyva"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "S. Leyva",
+      "attribute": "fisico",
+      "from": 76,
+      "to": 77,
+      "delta": 1,
+      "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      1091
+    ]
+  },
+  {
+    "insight_id": "i55",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 68,
+    "second": 51,
+    "t_s": 4131,
+    "type": "card_upgrade",
+    "priority": 0.7,
+    "players": [
+      "L. Arce"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "L. Arce",
+      "attribute": "defensa",
+      "from": 81,
+      "to": 83,
+      "delta": 2,
+      "reason": "atajada a un remate de xG 0.44",
+      "reason_code": "big_save",
+      "reason_params": {
+        "xg": 0.44,
+        "shooter": "S. Leyva"
+      },
+      "overall_from": 49,
+      "overall_to": 50
+    },
+    "evidence": [
+      1093
+    ]
+  },
+  {
+    "insight_id": "i56",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 70,
+    "second": 46,
+    "t_s": 4246,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "E. Sandoval"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "E. Sandoval",
+      "attribute": "vision",
+      "from": 72,
+      "to": 73,
+      "delta": 1,
+      "reason": "20 pases completados seguidos",
+      "reason_code": "pass_streak",
+      "reason_params": {
+        "count": 20
+      },
+      "overall_from": 65,
+      "overall_to": 66
+    },
+    "evidence": [
+      1022,
+      1046,
+      1069,
+      1096,
+      1119
+    ]
+  },
+  {
+    "insight_id": "i57",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 72,
+    "second": 13,
+    "t_s": 4333,
+    "type": "mvp_rank_change",
+    "priority": 0.49,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "from_rank": 3,
+      "to_rank": 2,
+      "mvp_score": 7.3,
+      "trigger_event_id": 1139,
+      "leader": "O. Félix",
+      "stats": {
+        "recoveries": 13,
+        "recoveries_opp_half": 1,
+        "duels_won": 5,
+        "progressive_passes": 12,
+        "line_breaking_passes": 3
+      },
+      "expected_for_role": {
+        "duels_won": 4.41,
+        "recoveries": 6.02,
+        "progressive_passes": 7.62,
+        "key_passes": 0.0
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.4
+        },
+        {
+          "rank": 2,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 7.3
+        },
+        {
+          "rank": 3,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.2
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 6.6
+        },
+        {
+          "rank": 5,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 6.6
+        }
+      ]
+    },
+    "evidence": [
+      1056,
+      1137,
+      1139
+    ]
+  },
+  {
+    "insight_id": "i58",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 72,
+    "second": 26,
+    "t_s": 4346,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "attribute": "fisico",
+      "from": 77,
+      "to": 78,
+      "delta": 1,
+      "reason": "recuperación en campo propio que terminó en remate en 15 segundos",
+      "reason_code": "recovery_to_shot",
+      "reason_params": {
+        "seconds": 15,
+        "shooter": "J. Torres"
+      },
+      "overall_from": 69,
+      "overall_to": 69
+    },
+    "evidence": [
+      1137,
+      1142
+    ]
+  },
+  {
+    "insight_id": "i59",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 72,
+    "second": 13,
+    "t_s": 4333,
+    "type": "card_upgrade",
+    "priority": 0.7,
+    "players": [
+      "F. Cota"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "F. Cota",
+      "attribute": "vision",
+      "from": 72,
+      "to": 74,
+      "delta": 2,
+      "reason": "pase que rompió 2 líneas bajo presión",
+      "reason_code": "line_breaking_pass",
+      "reason_params": {
+        "lines": 2,
+        "under_pressure": true
+      },
+      "overall_from": 69,
+      "overall_to": 69,
+      "pass_distance_m": 22.9,
+      "pass_difficulty": 0.82,
+      "led_to": "remate de J. Torres, xG 0.02",
+      "led_to_event_id": 1142
+    },
+    "evidence": [
+      1139,
+      1142
     ]
   },
   {
     "insight_id": "i60",
     "match_id": "m001",
     "period": 2,
-    "minute": 81,
-    "second": 9,
-    "t_s": 4869,
-    "type": "duel_state",
-    "priority": 0.39,
+    "minute": 73,
+    "second": 40,
+    "t_s": 4420,
+    "type": "standout_milestone",
+    "priority": 0.74,
     "players": [
-      "A. Olvera",
-      "N. Ruelas"
+      "E. Sandoval"
     ],
-    "team": null,
+    "team": "Real Cardón",
     "facts": {
-      "player_a": "A. Olvera",
-      "player_b": "N. Ruelas",
-      "bar": 0.2,
-      "a_vs_role": 0.32,
-      "b_vs_role": -0.07,
-      "duels_won_a": 0,
-      "duels_won_b": 4,
-      "direct_duels": 4,
-      "chances_created_a": 7,
-      "chances_created_b": 0,
-      "flipped": false
+      "player": "E. Sandoval",
+      "position": "MC",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 4,
+        "duels_won": 5,
+        "duels_total": 7,
+        "progressive_passes": 18,
+        "key_passes": 2
+      },
+      "expected_for_role": {
+        "duels_won": 4.5,
+        "recoveries": 6.14,
+        "progressive_passes": 10.23,
+        "key_passes": 0.41
+      },
+      "vs_role": 0.53,
+      "mvp_rank": 4,
+      "card_change": {
+        "attribute": "defensa",
+        "from": 56,
+        "to": 58,
+        "delta": 2,
+        "reason": "partido defensivo por encima de lo esperado para su rol",
+        "reason_code": "standout_defensive",
+        "reason_params": {},
+        "overall_from": 66,
+        "overall_to": 66
+      }
     },
     "evidence": [
-      1201,
-      1202
+      753,
+      893,
+      1119,
+      1153,
+      1160
     ]
   },
   {
     "insight_id": "i61",
     "match_id": "m001",
     "period": 2,
-    "minute": 81,
-    "second": 22,
-    "t_s": 4882,
-    "type": "mvp_rank_change",
-    "priority": 0.49,
+    "minute": 74,
+    "second": 52,
+    "t_s": 4492,
+    "type": "duel_state",
+    "priority": 0.39,
     "players": [
-      "G. Cárdenas"
+      "J. Torres",
+      "B. Haro"
     ],
-    "team": "Real Cardón",
+    "team": null,
     "facts": {
-      "player": "G. Cárdenas",
-      "from_rank": 3,
-      "to_rank": 2,
-      "mvp_score": 7.1,
-      "trigger_event_id": 1204,
-      "leader": "J. Torres",
-      "stats": {
-        "recoveries": 13,
-        "duels_won": 6,
-        "progressive_passes": 5,
-        "line_breaking_passes": 2
-      },
-      "expected_for_role": {
-        "duels_won": 2.71,
-        "recoveries": 4.52,
-        "progressive_passes": 9.04,
-        "key_passes": 0.0
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 7.2
-        },
-        {
-          "rank": 2,
-          "player": "G. Cárdenas",
-          "team": "Real Cardón",
-          "position": "DFC",
-          "mvp_score": 7.1
-        },
-        {
-          "rank": 3,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 7.0
-        },
-        {
-          "rank": 4,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 6.8
-        },
-        {
-          "rank": 5,
-          "player": "F. Cota",
-          "team": "Bahía FC",
-          "position": "MCD",
-          "mvp_score": 6.7
-        }
-      ]
+      "player_a": "J. Torres",
+      "player_b": "B. Haro",
+      "bar": 0.22,
+      "a_vs_role": 0.34,
+      "b_vs_role": -0.1,
+      "duels_won_a": 2,
+      "duels_won_b": 1,
+      "direct_duels": 3,
+      "chances_created_a": 3,
+      "chances_created_b": 0,
+      "flipped": false
     },
     "evidence": [
-      1204
+      1177,
+      1179,
+      1181,
+      1182
     ]
   },
   {
     "insight_id": "i62",
     "match_id": "m001",
     "period": 2,
-    "minute": 86,
-    "second": 3,
-    "t_s": 5163,
-    "type": "standout_milestone",
-    "priority": 0.73,
+    "minute": 75,
+    "second": 56,
+    "t_s": 4556,
+    "type": "team_phase",
+    "priority": 0.55,
     "players": [
-      "R. Amador"
+      "G. Cárdenas",
+      "B. Haro",
+      "V. Meza"
     ],
     "team": "Real Cardón",
     "facts": {
-      "player": "R. Amador",
-      "position": "ED",
-      "profile": "creative",
-      "stats": {
-        "recoveries": 0,
-        "duels_won": 0,
-        "duels_total": 0,
-        "progressive_passes": 4,
-        "key_passes": 3
-      },
-      "expected_for_role": {
-        "duels_won": 0.89,
-        "recoveries": 0.89,
-        "progressive_passes": 1.4,
-        "key_passes": 0.64
-      },
-      "vs_role": 0.52,
-      "mvp_rank": 19,
-      "card_change": {
-        "attribute": "vision",
-        "from": 62,
-        "to": 63,
-        "delta": 1,
-        "reason": "partido creativo por encima de lo esperado para su rol",
-        "reason_code": "standout_creative",
-        "reason_params": {},
-        "overall_from": 61,
-        "overall_to": 62
-      }
+      "label": "possession_spell",
+      "window": "74:57-75:43",
+      "passes": 12,
+      "duration_s": 46,
+      "players_involved": 7,
+      "ended_in": "out"
     },
     "evidence": [
-      984,
-      1175,
-      1177,
-      1268,
-      1269
+      1183,
+      1184,
+      1185,
+      1186,
+      1187,
+      1188,
+      1189,
+      1190,
+      1191,
+      1193,
+      1194,
+      1195
     ]
   },
   {
     "insight_id": "i63",
     "match_id": "m001",
     "period": 2,
-    "minute": 86,
-    "second": 59,
-    "t_s": 5219,
+    "minute": 77,
+    "second": 33,
+    "t_s": 4653,
+    "type": "mvp_rank_change",
+    "priority": 0.53,
+    "players": [
+      "E. Sandoval"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "E. Sandoval",
+      "from_rank": 4,
+      "to_rank": 2,
+      "mvp_score": 7.5,
+      "trigger_event_id": 1221,
+      "leader": "O. Félix",
+      "stats": {
+        "recoveries": 6,
+        "recoveries_opp_half": 1,
+        "duels_won": 5,
+        "key_passes": 2,
+        "progressive_passes": 20,
+        "line_breaking_passes": 3,
+        "shots": 1
+      },
+      "expected_for_role": {
+        "duels_won": 4.74,
+        "recoveries": 6.46,
+        "progressive_passes": 10.77,
+        "key_passes": 0.43
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.6
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.5
+        },
+        {
+          "rank": 3,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 7.3
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 7.3
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.2
+        }
+      ]
+    },
+    "evidence": [
+      1119,
+      1153,
+      1221
+    ]
+  },
+  {
+    "insight_id": "i64",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 80,
+    "second": 36,
+    "t_s": 4836,
     "type": "duel_state",
-    "priority": 0.37,
+    "priority": 0.4,
     "players": [
       "A. Olvera",
       "N. Ruelas"
@@ -3074,98 +2714,306 @@
     "facts": {
       "player_a": "A. Olvera",
       "player_b": "N. Ruelas",
-      "bar": 0.09,
-      "a_vs_role": 0.26,
-      "b_vs_role": 0.08,
-      "duels_won_a": 0,
-      "duels_won_b": 5,
-      "direct_duels": 5,
-      "chances_created_a": 7,
+      "bar": 0.27,
+      "a_vs_role": 0.1,
+      "b_vs_role": -0.43,
+      "duels_won_a": 1,
+      "duels_won_b": 0,
+      "direct_duels": 1,
+      "chances_created_a": 3,
       "chances_created_b": 0,
       "flipped": false
     },
     "evidence": [
-      1283
-    ]
-  },
-  {
-    "insight_id": "i64",
-    "match_id": "m001",
-    "period": 2,
-    "minute": 87,
-    "second": 17,
-    "t_s": 5237,
-    "type": "mvp_rank_change",
-    "priority": 0.83,
-    "players": [
-      "G. Cárdenas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "G. Cárdenas",
-      "from_rank": 3,
-      "to_rank": 1,
-      "mvp_score": 7.2,
-      "trigger_event_id": 1290,
-      "previous_leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 14,
-        "duels_won": 6,
-        "progressive_passes": 5,
-        "line_breaking_passes": 2
-      },
-      "expected_for_role": {
-        "duels_won": 2.91,
-        "recoveries": 4.85,
-        "progressive_passes": 9.7,
-        "key_passes": 0.0
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "G. Cárdenas",
-          "team": "Real Cardón",
-          "position": "DFC",
-          "mvp_score": 7.2
-        },
-        {
-          "rank": 2,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 7.0
-        },
-        {
-          "rank": 3,
-          "player": "J. Torres",
-          "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 7.0
-        },
-        {
-          "rank": 4,
-          "player": "O. Félix",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 6.9
-        },
-        {
-          "rank": 5,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 6.9
-        }
-      ]
-    },
-    "evidence": [
-      1204,
-      1205,
-      1290
+      1267
     ]
   },
   {
     "insight_id": "i65",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 83,
+    "second": 43,
+    "t_s": 5023,
+    "type": "team_phase",
+    "priority": 0.55,
+    "players": [
+      "E. Quiroz",
+      "L. Arce",
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "label": "possession_spell",
+      "window": "82:38-83:41",
+      "passes": 13,
+      "duration_s": 63,
+      "players_involved": 9,
+      "ended_in": "lost"
+    },
+    "evidence": [
+      1309,
+      1310,
+      1311,
+      1312,
+      1314,
+      1315,
+      1316,
+      1317,
+      1319,
+      1320,
+      1321,
+      1322,
+      1325
+    ]
+  },
+  {
+    "insight_id": "i66",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 83,
+    "second": 56,
+    "t_s": 5036,
+    "type": "goal_chain",
+    "priority": 1.0,
+    "players": [
+      "C. Ibarra"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "scoreline": {
+        "home": 3,
+        "away": 0
+      },
+      "scorer": "C. Ibarra",
+      "assist": null,
+      "xg": 0.33,
+      "duration_s": 2,
+      "chain": [
+        {
+          "event_id": 1333,
+          "player": "C. Ibarra",
+          "action": "remate",
+          "credit": 1.0,
+          "t_s": 5036,
+          "type": "shot",
+          "lines_broken": 0,
+          "start": [
+            98.0,
+            33.8
+          ],
+          "end": [
+            105.0,
+            38.6
+          ]
+        }
+      ],
+      "invisible_assist": null
+    },
+    "evidence": [
+      1333,
+      1334
+    ]
+  },
+  {
+    "insight_id": "i67",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 85,
+    "second": 53,
+    "t_s": 5153,
+    "type": "card_upgrade",
+    "priority": 0.6,
+    "players": [
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "V. Meza",
+      "attribute": "fisico",
+      "from": 76,
+      "to": 77,
+      "delta": 1,
+      "reason": "4 duelos ganados seguidos",
+      "reason_code": "duel_streak",
+      "reason_params": {
+        "count": 4
+      },
+      "overall_from": 65,
+      "overall_to": 65
+    },
+    "evidence": [
+      1349
+    ]
+  },
+  {
+    "insight_id": "i68",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 85,
+    "second": 57,
+    "t_s": 5157,
+    "type": "standout_milestone",
+    "priority": 0.75,
+    "players": [
+      "J. Torres"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "J. Torres",
+      "position": "ED",
+      "profile": "defensive",
+      "stats": {
+        "recoveries": 8,
+        "duels_won": 2,
+        "duels_total": 9,
+        "progressive_passes": 8,
+        "key_passes": 4
+      },
+      "expected_for_role": {
+        "duels_won": 3.34,
+        "recoveries": 3.34,
+        "progressive_passes": 5.25,
+        "key_passes": 2.39
+      },
+      "vs_role": 0.55,
+      "mvp_rank": 6,
+      "card_change": {
+        "attribute": "defensa",
+        "from": 60,
+        "to": 62,
+        "delta": 2,
+        "reason": "tercera recuperación en campo rival en menos de 10 minutos",
+        "reason_code": "opp_half_recoveries",
+        "reason_params": {
+          "count": 3,
+          "window_min": 10
+        },
+        "overall_from": 70,
+        "overall_to": 70
+      }
+    },
+    "evidence": [
+      904,
+      1001,
+      1260,
+      1339,
+      1351
+    ]
+  },
+  {
+    "insight_id": "i69",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 89,
+    "second": 24,
+    "t_s": 5364,
+    "type": "duel_state",
+    "priority": 0.42,
+    "players": [
+      "D. Mena",
+      "D. Verdugo"
+    ],
+    "team": null,
+    "facts": {
+      "player_a": "D. Mena",
+      "player_b": "D. Verdugo",
+      "bar": 0.35,
+      "a_vs_role": 0.53,
+      "b_vs_role": -0.16,
+      "duels_won_a": 4,
+      "duels_won_b": 2,
+      "direct_duels": 6,
+      "chances_created_a": 2,
+      "chances_created_b": 1,
+      "flipped": false
+    },
+    "evidence": [
+      1402,
+      1403
+    ]
+  },
+  {
+    "insight_id": "i70",
+    "match_id": "m001",
+    "period": 2,
+    "minute": 89,
+    "second": 43,
+    "t_s": 5383,
+    "type": "mvp_rank_change",
+    "priority": 0.49,
+    "players": [
+      "R. Salgado"
+    ],
+    "team": "Bahía FC",
+    "facts": {
+      "player": "R. Salgado",
+      "from_rank": 4,
+      "to_rank": 3,
+      "mvp_score": 7.7,
+      "trigger_event_id": 1407,
+      "leader": "O. Félix",
+      "stats": {
+        "recoveries": 7,
+        "recoveries_opp_half": 1,
+        "duels_won": 5,
+        "key_passes": 5,
+        "progressive_passes": 11,
+        "line_breaking_passes": 1,
+        "shots": 1
+      },
+      "expected_for_role": {
+        "duels_won": 5.48,
+        "recoveries": 7.48,
+        "progressive_passes": 12.46,
+        "key_passes": 0.5
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.7
+        },
+        {
+          "rank": 2,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.9
+        },
+        {
+          "rank": 3,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 7.7
+        },
+        {
+          "rank": 4,
+          "player": "F. Cota",
+          "team": "Bahía FC",
+          "position": "MCD",
+          "mvp_score": 7.6
+        },
+        {
+          "rank": 5,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.2
+        }
+      ]
+    },
+    "evidence": [
+      1294,
+      1314,
+      1407
+    ]
+  },
+  {
+    "insight_id": "i71",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -3174,83 +3022,82 @@
     "type": "top3",
     "priority": 1.0,
     "players": [
-      "G. Cárdenas",
-      "M. Ramírez",
-      "J. Torres"
+      "O. Félix",
+      "E. Sandoval",
+      "R. Salgado"
     ],
     "team": null,
     "facts": {
       "final_scoreline": {
-        "home": 4,
-        "away": 4
+        "home": 3,
+        "away": 0
       },
       "top3": [
         {
           "rank": 1,
-          "player": "G. Cárdenas",
-          "team": "Real Cardón",
-          "position": "DFC",
-          "mvp_score": 7.1,
+          "player": "O. Félix",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.7,
           "why": [
-            "inició la jugada de un gol",
-            "14 recuperaciones, el doble o más de lo esperado para su rol"
+            "3 recuperaciones en campo rival",
+            "13 de 16 duelos ganados",
+            "3 pases que rompieron líneas"
           ],
           "key_events": [
-            156,
-            348,
-            373
+            97,
+            1156,
+            1217
           ]
         },
         {
           "rank": 2,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 7.0,
+          "player": "E. Sandoval",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 7.9,
           "why": [
-            "3 goles",
-            "1 asistencia",
-            "inició la jugada de un gol"
+            "5 de 7 duelos ganados",
+            "3 pases que rompieron líneas",
+            "2 pases clave"
           ],
           "key_events": [
-            59,
-            102,
-            462
+            1221,
+            37,
+            300
           ]
         },
         {
           "rank": 3,
-          "player": "J. Torres",
+          "player": "R. Salgado",
           "team": "Bahía FC",
-          "position": "ED",
-          "mvp_score": 7.0,
+          "position": "MC",
+          "mvp_score": 7.7,
           "why": [
-            "1 gol",
-            "1 asistencia",
-            "3 recuperaciones en campo rival"
+            "5 pases clave"
           ],
           "key_events": [
-            203,
-            60,
-            270
+            598,
+            172,
+            243
           ]
         }
       ]
     },
     "evidence": [
-      59,
-      60,
-      102,
-      156,
-      203,
-      270,
-      348,
-      373,
-      462
+      37,
+      97,
+      172,
+      243,
+      300,
+      598,
+      1156,
+      1217,
+      1221
     ]
   },
   {
-    "insight_id": "i66",
+    "insight_id": "i72",
     "match_id": "m001",
     "period": 2,
     "minute": 90,
@@ -3262,135 +3109,90 @@
     "team": null,
     "facts": {
       "final_scoreline": {
-        "home": 4,
-        "away": 4
+        "home": 3,
+        "away": 0
       },
       "xg": {
-        "home": 1.79,
-        "away": 1.5
+        "home": 2.82,
+        "away": 1.29
       },
       "possession_pct": {
-        "home": 51,
-        "away": 49
+        "home": 50,
+        "away": 50
       },
       "goals": [
         {
-          "event_id": 60,
-          "t_s": 196,
+          "event_id": 137,
+          "t_s": 409,
           "team": "Bahía FC",
           "scorer": "M. Ramírez",
           "assist": "J. Torres"
         },
         {
-          "event_id": 103,
-          "t_s": 408,
+          "event_id": 810,
+          "t_s": 2946,
           "team": "Bahía FC",
           "scorer": "M. Ramírez",
-          "assist": "A. Olvera"
+          "assist": null
         },
         {
-          "event_id": 204,
-          "t_s": 838,
+          "event_id": 1334,
+          "t_s": 5036,
           "team": "Bahía FC",
-          "scorer": "J. Torres",
-          "assist": "M. Ramírez"
-        },
-        {
-          "event_id": 463,
-          "t_s": 1899,
-          "team": "Bahía FC",
-          "scorer": "M. Ramírez",
-          "assist": "A. Olvera"
-        },
-        {
-          "event_id": 521,
-          "t_s": 2160,
-          "team": "Real Cardón",
-          "scorer": "S. Leyva",
-          "assist": "D. Verdugo"
-        },
-        {
-          "event_id": 764,
-          "t_s": 3108,
-          "team": "Real Cardón",
-          "scorer": "D. Verdugo",
-          "assist": "L. Montaño"
-        },
-        {
-          "event_id": 1097,
-          "t_s": 4405,
-          "team": "Real Cardón",
-          "scorer": "S. Leyva",
-          "assist": "D. Verdugo"
-        },
-        {
-          "event_id": 1177,
-          "t_s": 4742,
-          "team": "Real Cardón",
-          "scorer": "S. Leyva",
-          "assist": "R. Amador"
+          "scorer": "C. Ibarra",
+          "assist": null
         }
       ],
       "phases": [
         {
-          "team": "Bahía FC",
+          "team": "Real Cardón",
           "label": "possession_spell",
-          "window": "05:17-06:22"
+          "window": "12:03-13:06"
         },
         {
           "team": "Real Cardón",
           "label": "possession_spell",
-          "window": "09:11-10:17"
-        },
-        {
-          "team": "Bahía FC",
-          "label": "possession_spell",
-          "window": "16:08-17:26"
-        },
-        {
-          "team": "Real Cardón",
-          "label": "possession_spell",
-          "window": "37:58-39:00"
-        },
-        {
-          "team": "Real Cardón",
-          "label": "possession_spell",
-          "window": "50:59-51:48"
+          "window": "27:57-28:53"
         },
         {
           "team": "Real Cardón",
           "label": "control",
-          "window": "47:00-57:00"
+          "window": "26:00-36:00"
+        },
+        {
+          "team": "Bahía FC",
+          "label": "possession_spell",
+          "window": "60:20-61:16"
+        },
+        {
+          "team": "Real Cardón",
+          "label": "possession_spell",
+          "window": "74:57-75:43"
+        },
+        {
+          "team": "Bahía FC",
+          "label": "possession_spell",
+          "window": "82:38-83:41"
         }
       ],
       "story": [
-        "Bahía FC anotó en el 3 con gol de M. Ramírez",
         "Bahía FC anotó en el 6 con gol de M. Ramírez",
-        "Bahía FC anotó en el 13 con gol de J. Torres",
-        "Bahía FC anotó en el 31 con gol de M. Ramírez",
-        "Real Cardón anotó en el 36 con gol de S. Leyva",
-        "Real Cardón controló el juego con la pelota entre el 47:00 y el 57:00",
-        "Real Cardón anotó en el 51 con gol de D. Verdugo",
-        "Real Cardón anotó en el 73 con gol de S. Leyva",
-        "Real Cardón anotó en el 79 con gol de S. Leyva"
+        "Real Cardón controló el juego con la pelota entre el 26:00 y el 36:00",
+        "Bahía FC anotó en el 49 con gol de M. Ramírez",
+        "Bahía FC anotó en el 83 con gol de C. Ibarra"
       ],
       "who_really_won": "Bahía FC dominó la pelota y también generó más peligro",
       "who_really_won_basis": {
         "xg_leader": "Bahía FC",
         "possession_leader": "Bahía FC",
-        "mvp": "G. Cárdenas",
-        "mvp_team": "Real Cardón"
+        "mvp": "O. Félix",
+        "mvp_team": "Bahía FC"
       }
     },
     "evidence": [
-      60,
-      103,
-      204,
-      463,
-      521,
-      764,
-      1097,
-      1177
+      137,
+      810,
+      1334
     ]
   }
 ]

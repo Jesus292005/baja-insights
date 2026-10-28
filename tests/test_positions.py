@@ -220,6 +220,49 @@ class FreeMatchPositionsTest(unittest.TestCase):
                   and (p := where(pos, e["player"], e["t_s"])) is not None and math.dist(p, e["start"]) > 1.2)
         self.assertLessEqual(far, 5)
 
+    def test_the_nearest_players_act(self):
+        """Whoever presses, tackles or wins a loose ball was one of the two nearest team-mates."""
+        events = generate_match(roster(), seed=5, script=None)
+        pos = build_positions(events, roster(), None)
+        frames = {round(f["t"] * HZ): f for f in pos["frames"]}
+        slots = {p["player"]: (side, p["slot"]) for side in ("home", "away") for p in pos["teams"][side]["players"]}
+        slots.update({c["player_in"]: (c["team"], c["slot"]) for c in pos["lineup_changes"]})
+        play = [e for e in events if e.get("team") and e.get("start")]
+        ranks = []
+        for a, b in zip(play, play[1:]):
+            loose = b["type"] == "recovery" and a["type"] == "pass" and a["outcome"] == "incomplete"
+            if not (loose or b["type"] in ("pressure", "tackle")) or b["player"] not in slots:
+                continue
+            frame = frames.get(round((a["t_s"] if loose else b["t_s"] - 4) * HZ))
+            side, slot = slots[b["player"]]
+            if frame is None or slot == 0:
+                continue
+            mates = frame["h" if side == "home" else "a"]
+            mine = math.dist(mates[slot], b["start"])
+            ranks.append(sorted(math.dist(p, b["start"]) for p in mates[1:]).index(mine) + 1)
+        self.assertGreater(len(ranks), 150)
+        self.assertGreaterEqual(sum(r <= 2 for r in ranks) / len(ranks), 0.8)  # about 0.7 with the scripted generator
+
+    def test_penalty_shape(self):
+        """Keeper on his line, the taker at the spot, everybody else outside the box and 9.15 m away."""
+        events = next(ev for ev in (generate_match(roster(), seed=s, script=None) for s in range(1, 60))
+                      if any(e.get("set_piece") == "penalty" for e in ev))
+        pos = build_positions(events, roster(), None)
+        penalties = [sp for sp in pos["set_pieces"] if sp["kind"] == "penalty"]
+        self.assertTrue(penalties)
+        for sp in penalties:
+            frame = pos["frames"][int(sp["t_s"] * HZ) - 1]
+            attack, defend = ("h", "a") if sp["team"] == "home" else ("a", "h")
+            goal_x = 105.0 if sp["team"] == "home" else 0.0
+            self.assertLessEqual(abs(frame[defend][0][0] - goal_x), 1.5)
+            for side in (attack, defend):
+                for i, p in enumerate(frame[side]):
+                    if i == 0 or math.dist(p, sp["spot"]) < 1.0:
+                        continue
+                    with self.subTest(t=sp["t_s"], side=side, slot=i):
+                        self.assertFalse(abs(p[0] - goal_x) < 16.5 and abs(p[1] - 34) < 20.16)
+                        self.assertGreaterEqual(math.dist(p, sp["spot"]), 9.15)
+
     def test_the_data_file_is_up_to_date(self):
         data = load(CONTRACTS.parent / "data" / "m001" / "positions.json")
         events = load(CONTRACTS.parent / "data" / "m001" / "events.jsonl")

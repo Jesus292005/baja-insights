@@ -124,3 +124,11 @@ Con `jsonschema` 4.26 y los esquemas de esta propuesta:
 - [x] Integrante 1
 - [x] Integrante 2
 - [x] Integrante 3
+
+## Agregado el 27 de octubre de 2026: penal
+
+Solo para partidos libres (`--script free`). El demo `m001` no cambia y no tiene penales.
+
+- `event.schema.json`: `set_piece` acepta `"penalty"`, y solo en un `shot`: el remate desde el punto tras una falta dentro del área, con su `xg` (0.76). Nunca sale `blocked`.
+- `positions.schema.json`: `set_pieces[].kind` acepta `"penalty"`. Portero en su línea, el que patea en el punto y los demás fuera del área y del arco.
+- Nada que ya existía deja de validar. La interfaz ya lee `kind` como texto y los agentes no leen `set_piece`, así que no hace falta cambiar nada para que funcione. Si se quiere una etiqueta para el penal, es opcional.

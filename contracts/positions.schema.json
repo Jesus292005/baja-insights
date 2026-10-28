@@ -39,13 +39,13 @@
       }
     },
     "set_pieces": {
-      "description": "Every restart, with the second the ball went dead and the second it is taken (the pass with set_piece in the events).",
+      "description": "Every restart, with the second the ball went dead and the second it is taken (the pass with set_piece in the events, or the shot of a penalty).",
       "type": "array",
       "items": {
         "type": "object", "required": ["t_s", "kind", "team", "taker", "spot", "ball_out_from_t_s"], "additionalProperties": false,
         "properties": {
           "t_s": {"type": "number"}, "ball_out_from_t_s": {"type": "number"},
-          "kind": {"enum": ["kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper"]},
+          "kind": {"enum": ["kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper", "penalty"]},
           "team": {"enum": ["home", "away"]}, "taker": {"type": "string"}, "spot": {"$ref": "#/$defs/point"}
         }
       }

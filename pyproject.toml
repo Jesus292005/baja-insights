@@ -22,7 +22,7 @@ baja-insights = "baja_insights.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"baja_insights.generator" = ["scripts/*.json"]
+"baja_insights.generator" = ["scripts/*.json", "tactics.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

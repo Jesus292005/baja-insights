@@ -448,6 +448,11 @@ class PositionModel:
                         a = self._anchor_now(name, t, anchor_times)
                         if a is not None:
                             pos[name] = (a.x, a.y)
+            for team, names in teams.items():
+                for name in names:
+                    if name not in pos:  # a substitute takes the place of the player he replaces
+                        out = next((c["player_out"] for c in self.changes if c["player_in"] == name), None)
+                        pos[name] = pos.get(out) or self.shape(team, name, t, ball, dead)
             vmax = V_DEAD if dead is not None else V_PLAY
             engaged: set[str] = set()
             holder_now = None if dead is not None or restart else self._holder_at(t, holder_list)
@@ -455,9 +460,6 @@ class PositionModel:
                 self._roles(t, teams, pos, holder_now, anchor_times)
             for team, names in teams.items():
                 for name in names:
-                    if name not in pos:  # a substitute takes the place of the player he replaces
-                        out = next((c["player_out"] for c in self.changes if c["player_in"] == name), None)
-                        pos[name] = pos.get(out) or self.shape(team, name, t, ball, dead)
                     if restart:
                         continue
                     cur = pos[name]
@@ -742,8 +744,22 @@ def _throw_in(model, team, name, position, lane_p, lane_y, dead, spot_p):
     return None
 
 
+PENALTY_ATTACK = {"DC": (84.0, 2.0), "ED": (86.0, 12.0), "EI": (86.0, 12.0), "MC": (82.5, 6.0), "MCD": (74.0, 0.0),
+                  "DFC": (58.0, 8.0), "LD": (62.0, 20.0), "LI": (62.0, 20.0), "POR": (32.0, 0.0)}
+PENALTY_DEFEND = {"DFC": (21.5, 4.0), "LD": (18.5, 15.0), "LI": (18.5, 15.0), "MCD": (24.0, 0.0), "MC": (23.0, 10.0),
+                  "ED": (19.0, 19.0), "EI": (19.0, 19.0), "DC": (35.0, 0.0), "POR": (0.5, 0.0)}
+
+
+def _penalty(model, team, name, position, lane_p, lane_y, dead, spot_p):
+    """Keeper on his line, the taker at the spot, everybody else outside the box and the arc."""
+    if name == dead.taker:
+        return None
+    p, dy = (PENALTY_ATTACK if team == dead.team else PENALTY_DEFEND).get(position, (lane_p, 0.0))
+    return p, 34.0 + (dy if lane_y >= 34.0 else -dy)
+
+
 SET_SHAPES = {"kickoff": _kickoff, "corner": _corner, "goal_kick": _goal_kick, "keeper": _keeper,
-              "free_kick": _free_kick, "throw_in": _throw_in}
+              "free_kick": _free_kick, "throw_in": _throw_in, "penalty": _penalty}
 
 
 def build_positions(events: list[dict], roster: Roster, script: str | dict | None = None) -> dict:

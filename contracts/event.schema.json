@@ -34,7 +34,7 @@
     "scoreline": {"$ref": "#/$defs/scoreline"},
     "dragged_defender": {"type": ["string", "null"]},
     "space_opened_m": {"type": ["number", "null"], "minimum": 0},
-    "set_piece": {"description": "Optional, added to v1.1. Only on passes that restart play: kickoff, throw_in from the touchline, corner from the flag, goal_kick from the goal area, free_kick after a foul, or keeper after a save.", "enum": ["kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper"]},
+    "set_piece": {"description": "Optional, added to v1.1. On passes that restart play: kickoff, throw_in from the touchline, corner from the flag, goal_kick from the goal area, free_kick after a foul, or keeper after a save. On a shot only penalty: after a foul inside the box, taken from the spot.", "enum": ["kickoff", "throw_in", "corner", "goal_kick", "free_kick", "keeper", "penalty"]},
     "out_of_play": {"description": "Optional, added to v1.1. Only on passes that went out: end is the point on the line where the ball left the pitch.", "type": "boolean"},
     "dragged_defender_start": {"description": "Optional, added to v1.1. Only on scripted off_ball_run events: where the dragged defender was when the run started.", "$ref": "#/$defs/point_or_null"},
     "dragged_defender_end": {"description": "Optional, added to v1.1. Only on scripted off_ball_run events: where the run left him.", "$ref": "#/$defs/point_or_null"},
