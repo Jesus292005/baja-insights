@@ -81,6 +81,9 @@ class SetPieceTest(unittest.TestCase):
                 x, y = e["start"]
                 prog = x if e["team"] == home else 105 - x
                 with self.subTest(kind=kind, event=e["event_id"]):
+                    if kind == "penalty":  # free matches only: a shot from the spot
+                        self.assertEqual((e["type"], prog, y), ("shot", 94.0, 34.0))
+                        continue
                     self.assertEqual(e["type"], "pass")
                     if kind == "throw_in":
                         self.assertIn(y, (0.0, 68.0))
@@ -110,12 +113,13 @@ class SetPieceTest(unittest.TestCase):
         self.assertGreater(checked, 20)
 
     def test_a_foul_is_followed_by_the_free_kick(self):
-        """Unless a scripted beat of the demo comes first: those are kept exactly as written."""
+        """Unless a scripted beat of the demo comes first: those are kept exactly as written. In a free
+        match a foul inside the box is a penalty (tests/test_decisions.py)."""
         beats = {(e["player"], e["type"], tuple(e["start"] or ())) for e in load(MOCKS / "events_sample.json")}
         for a, b in self.pairs():
             if a["type"] == "foul" and (b["player"], b["type"], tuple(b["start"])) not in beats:
                 with self.subTest(foul=a["event_id"]):
-                    self.assertEqual((b.get("set_piece"), b["team"]),
+                    self.assertEqual((b.get("set_piece") if b.get("set_piece") != "penalty" else "free_kick", b["team"]),
                                      ("free_kick", roster().players[a["fouled"]].team))
 
 

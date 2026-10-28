@@ -9,7 +9,7 @@ from helpers import roster
 
 class RealismTest(unittest.TestCase):
     def test_free_matches_are_inside_the_reference_ranges(self):
-        report = measure(roster(), range(1, 41))
+        report = measure(roster(), range(1, 101))
         self.assertEqual(out_of_range(report), {}, "\n" + format_report(report))
 
 
