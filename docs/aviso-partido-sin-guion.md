@@ -21,7 +21,13 @@ Semilla 91, sin guion. Nada está escrito de antemano: el motor y los agentes cu
 - **Final 2-2, con remontada de Bahía.** Cardón gana 0-2 con goles de Rosas (21') y Leyva (47'). Bahía empata con Ramírez (54') y un **penal** de Ibarra (78').
 - **El partido lo domina Bahía:** 2.31 xG contra 0.87, aunque Cardón tuvo más la pelota (53%).
 - **El 1-2 tiene asistencia sin balón:** el desmarque de Salgado arrastra a Meza y abre 7 m. Salgado ya había tocado el balón en esa jugada, así que no es "invisible" en sentido estricto.
-- **MVP:** Félix, que le quita el primer lugar a Salgado al final.
+- **MVP:** Félix, empatado con Salgado en 8.5. Félix le quita el primer lugar en el 87', y un empate no se lo quita, así que el top 3, el chat y la carrera del MVP dicen lo mismo.
+
+**Arreglos del 27 de octubre en la noche** (rama `motor/f091-fixes`), tras la revisión de Diego:
+- El top 3 decía que Salgado abrió un gol "sin tocar el balón", y sí lo había tocado. Ahora dice "desmarque que abrió el espacio de un gol". La frase "sin tocar el balón" queda solo para la asistencia invisible de verdad, como la de Torres en `m001`.
+- Con un empate en el MVP, el primer lugar podía cambiar de dueño sin anunciarse: la carrera decía Félix y el top 3, Salgado. Ahora un empate nunca le quita el primer lugar a quien lo tiene; solo cambia cuando alguien lo supera.
+- `m001` no cambia: sus insights quedan idénticos. En `f091` solo cambian el top 3 (`i75`) y el resumen (`i76`), así que **Diego debe regenerar las órdenes de `f091`**: solo esos dos gráficos piden llamadas nuevas.
+- `tests/test_contracts.py` ya valida `data/f091/overlays.json`.
 - 76 insights.
 
 `tests/test_decisions.py` comprueba que `data/f091` coincide con lo que genera el código. Si el generador vuelve a cambiar, hay que regenerarlo, y Diego regenerar sus órdenes.

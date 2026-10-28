@@ -126,6 +126,8 @@ class InsightEngine:
             out.append(self._top3())
             out.append(self._summary())
 
+        ranking = st.ranking()
+        st.mvp_leader = ranking[0][0] if ranking else None  # first place changes hands only when overtaken
         out.sort(key=lambda i: (i["t_s"], -i["priority"]))
         for ins in out:
             self._counter += 1
@@ -614,7 +616,10 @@ class InsightEngine:
         for facts in self.goal_chains.values():
             inv = facts.get("invisible_assist")
             if inv and inv["player"] == ps.name:
-                reasons.append((5, "desmarque que abrió un gol sin tocar el balón"))
+                if inv.get("touched_ball"):
+                    reasons.append((4, "desmarque que abrió el espacio de un gol"))
+                else:
+                    reasons.append((5, "desmarque que abrió un gol sin tocar el balón"))
             chain = facts["chain"]
             if chain and chain[0]["player"] == ps.name and chain[0]["action"] in ("recuperación", "entrada ganada"):
                 reasons.append((4, "inició la jugada de un gol"))

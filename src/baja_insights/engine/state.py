@@ -78,6 +78,7 @@ class MatchState:
         self._last_t: int | None = None
         self.goals: list[int] = []
         self.finished = False
+        self.mvp_leader: str | None = None  # a tie never takes first place away from whoever holds it
         self.recent_pressures: deque = deque()
         # Team time series used by windows: (t, value...)
         self.team_passes = defaultdict(list)        # team -> [(t, completed)]
@@ -121,7 +122,7 @@ class MatchState:
     def ranking(self) -> list[tuple[str, float]]:
         rows = [(name, self.mvp(ps)) for name, ps in self.players.items()
                 if ps.minutes(self.t) > 0 and ps.position != "POR"]
-        rows.sort(key=lambda r: (-r[1], -self.players[r[0]].raw_points, r[0]))
+        rows.sort(key=lambda r: (-r[1], r[0] != self.mvp_leader, -self.players[r[0]].raw_points, r[0]))
         return rows
 
     def ranking_rows(self, top: int, ranking: list[tuple[str, float]] | None = None) -> list[dict]:
