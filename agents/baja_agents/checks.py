@@ -32,6 +32,38 @@ STAT_WORDS = {
 }
 
 
+# Markdown in chat answers: list markers ("1. ", "- "), headings, quotes, emphasis and inline code.
+MD_BLOCK = re.compile(r"^[ \t]*(?:#{1,6}[ \t]+|>[ \t]?|[-*+][ \t]+|\d+[.)][ \t]+)", re.MULTILINE)
+MD_INLINE = re.compile(r"(\*\*|__|\*|`|~~)(?=\S)(.+?)(?<=\S)\1")
+
+
+def plain_text(markdown: str) -> str:
+    """``markdown`` without its markup, so "1. Cota" counts no figure and the stage shows no asterisks.
+    Underscore italics are left alone: they would break names like ``player_a``."""
+    text = MD_BLOCK.sub("", markdown or "")
+    for _ in range(2):  # **bold with *italic* inside**
+        text = MD_INLINE.sub(r"\2", text)
+    return text
+
+
+INLINE_BULLET = re.compile(r"(?<!\d)[ \t]+-[ \t]+(?!\d)")  # " - Defenders", not the "0 - 1" of a scoreline
+
+
+def tidy_markdown(markdown: str) -> str:
+    """Puts on their own lines the bullets the model sometimes writes in a row ("line-up: - Goalkeeper: Arce -
+    Defenders: ..."), which Markdown would show as one paragraph. Only lines with two or more of them that are
+    not a bullet already, so "- Defensas: Mena - Quiroz" stays as it is."""
+    lines = []
+    for line in (markdown or "").strip().split("\n"):
+        parts = INLINE_BULLET.split(line)
+        if len(parts) < 3 or line.lstrip().startswith(("- ", "* ")):
+            lines.append(line)
+            continue
+        head, items = parts[0].rstrip(), parts[1:]
+        lines.extend(([head] if head else []) + [f"- {item.strip()}" for item in items if item.strip()])
+    return "\n".join(lines)
+
+
 def numbers(text: str) -> set[float]:
     return {float(n.replace(",", ".")) for n in NUMBER.findall(text or "")}
 

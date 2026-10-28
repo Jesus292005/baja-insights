@@ -11,6 +11,7 @@ import hashlib
 from baja_insights.contract import fmt_clock
 from baja_insights.roster import Roster
 
+from .checks import plain_text
 from .models import VARIANT_KEYS
 
 # insight type -> (overlay type, slot, seconds on screen)
@@ -209,7 +210,8 @@ def chat_answer_order(answer: dict, mode: str, language: str, show_at_s: int | N
     at = min(answer["at_s"] if show_at_s is None else show_at_s, MAX_SHOW_AT_S)
     question = answer["question"].strip()
     title = question if len(question) <= CHAT_TITLE_CHARS else question[:CHAT_TITLE_CHARS - 1].rstrip() + "…"
-    seconds = max(CHAT_MIN_S, min(CHAT_MAX_S, 4 + len(answer["answer"].split()) // 3))
+    text = plain_text(answer["answer"]).strip()  # the chat renders the Markdown, the stage shows plain text
+    seconds = max(CHAT_MIN_S, min(CHAT_MAX_S, 4 + len(text.split()) // 3))
     data = {k: answer[k] for k in ("question", "status", "tools") if k in answer}
     if answer.get("evidence"):
         data["evidence"] = list(answer["evidence"])
@@ -227,7 +229,7 @@ def chat_answer_order(answer: dict, mode: str, language: str, show_at_s: int | N
         "language": language,
         "type": "chat_answer",
         "title": title,
-        "text": answer["answer"],
+        "text": text,
         "data": data,
     }
 

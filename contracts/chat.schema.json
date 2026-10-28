@@ -40,7 +40,7 @@
           "description": "answered: from the functions. not_tracked: the data is in not_tracked. not_found: player or goal not in the match. no_prediction: asked about the future. error: the agent or the engine failed, answer is null.",
           "enum": ["answered", "not_tracked", "not_found", "no_prediction", "error"]
         },
-        "answer": {"type": ["string", "null"], "description": "Text in the requested language and mode. null only when status is error."},
+        "answer": {"type": ["string", "null"], "description": "Text in the requested language and mode, in Markdown (paragraphs, - and 1. lists, **bold**, *italics*, `code`); the UI renders it. null only when status is error."},
         "tools": {"type": "array", "items": {"$ref": "#/$defs/tool"}, "description": "Functions whose results back the answer, in call order."},
         "evidence": {"type": "array", "items": {"type": "integer", "minimum": 1}, "description": "event_id values cited in the answer, if any."},
         "error": {"enum": ["timeout", "engine_unavailable", "agent_failed"], "description": "Only when status is error."}

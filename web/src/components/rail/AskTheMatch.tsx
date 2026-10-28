@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { askMatch, askUrl, chatToOverlay, type ChatFailure } from '../../chat/askClient';
+import { ChatMarkdown } from '../../chat/ChatMarkdown';
 import type { ChatAnswerOrder, ChatResponse, ConnectionStatus } from '../../contracts/overlay';
 import { usePrefs } from '../../i18n/prefs';
 import { clock, surname, t as fill } from '../../i18n/strings';
@@ -97,7 +98,7 @@ export function AskTheMatch({ matchId, t, connection, leader, onShowOrder }: Ask
             <li key={m.id} className={`bubble bubble-${m.role}${st && st !== 'answered' ? ' bubble-limited' : ''}`}>
               <span className="sr-only">{m.role === 'user' ? s.chat.you : s.chat.match}: </span>
               {statusNote(st) && <span className="bubble-flag">{statusNote(st)}</span>}
-              {m.text}
+              {m.role === 'match' ? <ChatMarkdown text={m.text} /> : m.text}
               {m.response && (
                 <span className="evidence">
                   <span className="evidence-label">{s.chat.answeredWith}</span>
