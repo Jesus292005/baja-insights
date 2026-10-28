@@ -11,7 +11,7 @@ from baja_insights.roster import Roster
 
 from . import config, curator, narrator, personalizer, verifier
 from .llm import LLMRunner
-from .narrator import score_text, slim
+from .narrator import score_text, slim, with_penalty
 from .overlays import duel_frames, number
 from .workflow import Block, MatchContext, build_workflow
 
@@ -52,6 +52,7 @@ class Crew:
 
     async def process_block(self, label: str, insights: list[dict]) -> list[dict]:
         """One block of play in, its overlays out (without ids yet). Usable live."""
+        insights = [with_penalty(i, self.query.events if self.query else None) for i in insights]
         result = await self.workflow.run(Block(label, insights))
         return [overlay for batch in result.get_outputs() for overlay in batch]
 
@@ -71,6 +72,7 @@ class Crew:
 
     async def audit(self, overlays: list[dict], insights: list[dict]) -> list[dict]:
         """Run the verifier over graphics already generated. Returns one entry per graphic with problems."""
+        insights = [with_penalty(i, self.query.events if self.query else None) for i in insights]
         by_id = {i["insight_id"]: i for i in insights}
         for insight in insights:
             if insight["type"] == "goal_chain":

@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from .models import VARIANT_KEYS
 from .narrator import DATA_NOTES
 
-VERSION = "verifier-5"
+VERSION = "verifier-6"
 INSTRUCTIONS = """
 You are the fact-checker of Baja-Insights. You receive a football insight in JSON produced by a deterministic engine,
 who is who (team and position of every player), the scoreline at that moment, and four on-screen versions of the

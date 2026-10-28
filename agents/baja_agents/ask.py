@@ -32,14 +32,14 @@ from . import config
 from .checks import (EVENT_ID_KEYS, UI_ONLY_FACTS, figures, numbers, plain_text, tidy_markdown, wrong_scorelines,
                      without_ui_only)
 from .llm import LLMRunner
-from .narrator import name_sides
+from .narrator import name_sides, penalty_of
 
 log = logging.getLogger(__name__)
 
 TOOLS_FILE = config.REPO_ROOT / "mocks" / "chat_tools_sample.json"
 MATCH_END_S = 5520
 MAX_FAN_FIGURES = 3  # a chat answer explains more than a graphic, which allows one
-VERSION = "ask-14"
+VERSION = "ask-16"
 
 # Questions about the future. The agent still answers with what each team needs, as in the examples.
 # Questions about who plays. `lineups` answers them in full, so they need no function call.
@@ -101,6 +101,9 @@ Which functions to call
 - A goal: get_match_state for its goal_event_id, then get_goal_chain.
 - A goal: if `goals` is there, explain it from its `chain`, in time order: who started it, who passed, who
   finished, and `invisible_assist` when someone opened the space without the ball. No function is needed for it.
+- A goal with `penalty` was scored from the spot: say so, with who drew the foul (`fouled`) and who gave it away
+  (`fouled_by`). An `invisible_assist` with `touched_ball` true dragged a defender without the ball, but the player
+  had touched it earlier in the move: never say they did not touch it.
 - Lineups, who is playing, the bench or the substitutions: answer from `lineups`, with no function needed.
   `on_pitch` is each team's eleven at `at`, `bench` who has not played, `substitutions` the changes so far. List
   exactly those names and positions, team by team; never take players from anywhere else. Each `position` is the
@@ -225,6 +228,9 @@ def goals_so_far(query: MatchQuery, at_s: int) -> list[dict]:
         if "error" in chain:
             continue
         facts = {k: chain[k] for k in ("scoreline", "xg", "duration_s", "chain", "invisible_assist") if k in chain}
+        penalty = penalty_of(chain.get("chain") or [], query.events)
+        if penalty:
+            facts["penalty"] = penalty
         out.append({"clock": fmt_clock(goal["t_s"]), "team": goal["team"], "scorer": goal["scorer"],
                     "assist": goal.get("assist"), **name_sides(_without_ids(without_ui_only(facts)), query.roster)})
     return out
@@ -251,10 +257,21 @@ def event_ids(value) -> list[int]:
     return found
 
 
+# UI_ONLY_FACTS is for insights, where `ranking` is the other players' scores. In a function result it is the
+# answer itself (get_mvp_ranking), so it stays: dropping it left the model with no ranking at all.
+DROPPED_FROM_RESULTS = tuple(k for k in UI_ONLY_FACTS if k != "ranking")
+
+
+def for_model(result: dict) -> dict:
+    """A function result as the model sees it: no pitch coordinates, but the MVP ranking kept."""
+    out = without_ui_only(result)
+    return {**out, "ranking": result["ranking"]} if "ranking" in result else out
+
+
 def _without_ids(value):
     if isinstance(value, dict):
         return {k: _without_ids(v) for k, v in value.items()
-                if k not in EVENT_ID_KEYS and k not in UI_ONLY_FACTS and k != "known_goals"}
+                if k not in EVENT_ID_KEYS and k not in DROPPED_FROM_RESULTS and k != "known_goals"}
     if isinstance(value, list):
         return [_without_ids(v) for v in value]
     return value
@@ -340,7 +357,10 @@ class ToolSession:
             def run(**arguments) -> str:
                 # The model sees team names instead of home/away and scorelines as text, as the graphics
                 # agents do; the checks keep using the raw result.
-                result = without_ui_only(self.call(name, arguments))  # no pitch coordinates for the model
+                result = for_model(self.call(name, arguments))
+                if name == "get_goal_chain" and "chain" in result:
+                    penalty = penalty_of(result["chain"], self.query.events)
+                    result = {**result, "penalty": penalty} if penalty else result
                 return json.dumps(name_sides(result, self.query.roster), ensure_ascii=False)
             run.__name__ = name
             return run

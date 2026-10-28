@@ -32,6 +32,8 @@ The agents share a context (`MatchContext` in `baja_agents/workflow.py`): the sc
 - Fan mode shows at most one figure, besides the scoreline.
 - Titles have at most 6 words and texts at most 30.
 
+**Penalties.** A goal's chain has only the shot, and the foul is not a link. When the shot event has `set_piece: "penalty"`, code adds `facts.penalty` (who drew the foul and who gave it away) for the agents and the templates, which then tell it as a penalty (`narrator.with_penalty`). The orders don't copy it, so the contract doesn't change. An `invisible_assist` with `touched_ball: true` (Salgado for f091's 1-2) is never told as "without touching the ball".
+
 Then the verifier reviews the versions that passed. If something fails, the model gets one retry with the problems listed, and each version keeps the latest attempt that passed. Whatever still fails is replaced by a template (`baja_agents/fallback.py`). The same happens when an agent fails, takes longer than 30 s, or the budget of 250 calls per match runs out. Responses are cached in `agents/.cache/`, so running again costs no tokens.
 
 **Duel bar frames.** These are the `duel_bar` orders with `source_insight: null` and `mode`/`language` set to `all`. Every 5 minutes, the bar of the last duel shown is refreshed with the engine's value (`MatchQuery.get_duel`). A frame is skipped if the bar moved less than 0.05, if its slot is busy, or if no duel notice has been shown yet. It needs `events.jsonl` next to the insights, or `--events`.
@@ -44,12 +46,20 @@ From the repo root, once:
 agents/venv/Scripts/python.exe -m pip install -e ".[dev]" -r agents/requirements.txt
 ```
 
-Demo match with Foundry. Writes `data/m001/overlays.json` and `data/m001/agents_report.json`:
+Scripted match with Foundry. Writes `data/m001/overlays.json` and `data/m001/agents_report.json`:
 
 ```bash
 cd agents
 venv/Scripts/python.exe -m baja_agents run
 ```
+
+The match without a script, `f091`, the one in the video (`docs/aviso-partido-sin-guion.md`). Regenerate it whenever the engine regenerates `data/f091`:
+
+```bash
+venv/Scripts/python.exe -m baja_agents run --insights ../data/f091/insights.json
+```
+
+The orders take their `match_id` from `events.jsonl`: the engine's CLI writes the insights of every match with `m001`.
 
 Without Foundry, templates and cache only:
 
@@ -143,7 +153,7 @@ The agent answers only through the six engine functions of `MatchQuery` (`get_ma
 - `not_tracked` (for example distance run) and `not_found` (a player who isn't in the match) come from what the functions return.
 - **Flank duels without names.** `get_duel` needs two players, and "who's winning the flank duel?" names none. With every question, code computes the flank duels up to that moment (each full-back against the opposing winger, plus any substitute pair that already had a duel), most contested first, and gives them to the agent as `flank_duels`. The agent takes the names from there and asks `get_duel` for the figures.
 - **Lineups.** No function returns lineups, so the agent used to guess them from the flat list of all 25 players in a `player_not_found`, mixing teams and substitutes. With every question, code now gives it `lineups` for that moment, from the roster and the substitution events: each team's eleven on the pitch with positions, the bench and the substitutions so far. A question about lineups, the bench or substitutions (detected in code, like predictions) may be answered from it with no function call; every other question still needs one.
-- **Goals.** For a question about a goal (detected in code), the agent also gets `goals`: every goal scored so far with its chain (who started it, who passed, who finished, the run without the ball), with team names and no ids or coordinates. Before this, gpt-4.1-mini sometimes explained the equaliser from the team's phase instead of the chain. It may answer from it with no function call, and the response lists `get_match_state` and `get_goal_chain` as the functions behind it.
+- **Goals.** For a question about a goal (detected in code), the agent also gets `goals`: every goal scored so far with its chain (who started it, who passed, who finished, the run without the ball), with team names and no ids or coordinates. Before this, gpt-4.1-mini sometimes explained the equaliser from the team's phase instead of the chain. It may answer from it with no function call, and the response lists `get_match_state` and `get_goal_chain` as the functions behind it. A goal scored from the spot comes with `penalty`, in `goals` and in what `get_goal_chain` returns to the agent.
 - **"Not in this match"** (`not_found`) may also be answered from `lineups` with no function call.
 - **Scorelines.** Only a scoreline written backwards ("1-0" when it is 0-1) is rejected; "3-1 in duels" is not a scoreline.
 - **Reasoning effort.** `FOUNDRY_REASONING_EFFORT` (`none`, `low`, `medium`...) is passed to reasoning models such as gpt-5.4-mini. Leave it empty for gpt-4.1 and gpt-4.1-mini, which reject the option.

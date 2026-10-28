@@ -228,6 +228,24 @@ def test_the_retry_can_fix_it():
     assert asyncio.run(chat.ask(request()))["status"] == "answered"
 
 
+def test_the_mvp_ranking_reaches_the_model_and_backs_its_numbers():
+    from baja_agents.ask import for_model
+    session = ToolSession(MATCHES["f091"], at_s=3600)
+    result = session.call("get_mvp_ranking", {})
+    assert [r["player"] for r in for_model(result)["ranking"][:2]] == ["R. Salgado", "O. Félix"]
+    assert {7.8, 7.7} <= session.allowed_numbers([])
+    chat = FakeChat([([("get_mvp_ranking", {})], answer("**Salgado** va primero con 7.8, por delante de Félix (7.7)."))])
+    out = asyncio.run(chat.ask({**request("¿Quién lidera la carrera al MVP?", at="60:00"), "match_id": "f091"}))
+    assert out["status"] == "answered" and len(chat.prompts) == 1
+
+
+def test_f091_goals_come_with_the_penalty():
+    from baja_agents.ask import goals_so_far
+    goals = goals_so_far(MATCHES["f091"], 5400)
+    assert [g["scorer"] for g in goals] == ["K. Rosas", "S. Leyva", "M. Ramírez", "C. Ibarra"]
+    assert [g.get("penalty") for g in goals] == [None, None, None, {"fouled": "C. Ibarra", "fouled_by": "J. Castro"}]
+
+
 def test_a_markdown_answer_is_checked_without_its_markup():
     # "1. " and "2. " are list markers, not figures; the bold scoreline is still checked home-away.
     md = "Real Cardón gana **0-1**:\n\n1. *Cota* recupera\n2. Torres arrastra a su marca"
