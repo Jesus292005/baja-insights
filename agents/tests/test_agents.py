@@ -256,9 +256,10 @@ def test_curator_keeps_must_show_and_caps_the_model():
     decision = CuratorDecision(show=[{"insight_id": iid, "reason": "sí"} for iid in candidates_ids + ["i999"]], drop=[])
     curator = Curator(runner(), FakeAgent(decision))
     selection = asyncio.run(curator.decide("60:00-65:00", block, history=[]))
-    chosen_types = [i["type"] for i in selection.chosen]
-    assert "goal_chain" in chosen_types
-    assert len([t for t in chosen_types if t != "goal_chain"]) <= MAX_PER_BLOCK
+    must = curator.triage(block, history=[])[0]  # the goal, and the half's first duel
+    assert "goal_chain" in [i["type"] for i in must]
+    assert all(i in selection.chosen for i in must)
+    assert len([i for i in selection.chosen if i not in must]) <= MAX_PER_BLOCK
     assert all(d["insight_id"] != "i999" for d in selection.decisions)
     assert len(selection.decisions) == len(block)
 
@@ -273,10 +274,23 @@ def test_curator_falls_back_to_priority_when_the_model_fails():
 
 def test_curator_drops_repeats():
     duel = find(M001, "duel_state", player_a="D. Mena", player_b="D. Verdugo", flipped=False)
-    history = [{"t_s": duel["t_s"] - 60, "insight_type": "duel_state", "players": duel["players"],
-                "team": None, "title": "x"}]
+    history = [{"t_s": duel["t_s"] - 60, "period": duel["period"], "insight_type": "duel_state",
+                "players": duel["players"], "team": None, "title": "x"}]
     _, candidates, decided = Curator(runner()).triage([duel], history)
     assert candidates == [] and decided[0]["reason"].startswith("repetido")
+
+
+def test_the_first_duel_of_each_half_always_shows():
+    # f091's duels all had low priority or lost to other graphics, so the match had no duel bar
+    first, second = [next(i for i in F091 if i["type"] == "duel_state" and i["period"] == p) for p in (1, 2)]
+    assert first["priority"] < 0.4
+    later = next(i for i in F091 if i["type"] == "duel_state" and i["period"] == 1 and i is not first)
+    must, _, decided = Curator(runner()).triage([first, later], history=[])
+    assert must == [first] and decided[0]["reason"].startswith("primer duelo")
+    shown = [{"t_s": first["t_s"], "period": 1, "insight_type": "duel_state", "players": first["players"],
+              "team": None, "title": "x"}]
+    assert Curator(runner()).triage([later], shown)[0] == []  # the half already has its duel
+    assert Curator(runner()).triage([second], shown)[0] == [second]  # the second half gets its own
 
 
 # ------------------------------------------------------------ personalizer

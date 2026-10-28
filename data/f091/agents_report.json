@@ -1,28 +1,28 @@
 {
   "match_id": "f091",
   "model_calls": {
-    "calls": 25,
-    "cache_hits": 196,
+    "calls": 199,
+    "cache_hits": 11,
     "failures": 0,
     "skipped": 0,
-    "rate_limit_retries": 0,
+    "rate_limit_retries": 4,
     "calls_by_agent": {
-      "personalizer": 9,
-      "verifier": 9,
-      "curator": 2,
-      "narrator": 5
+      "narrator": 45,
+      "personalizer": 71,
+      "verifier": 66,
+      "curator": 17
     }
   },
-  "graphics": 49,
-  "versions_by_agent": 195,
+  "graphics": 47,
+  "versions_by_agent": 187,
   "versions_by_template": 1,
   "curator": [
     {
       "block": "00:00-05:00",
       "insight_id": "i03",
-      "show": false,
+      "show": true,
       "by": "rule",
-      "reason": "prioridad baja"
+      "reason": "primer duelo del tiempo, siempre se muestra"
     },
     {
       "block": "00:00-05:00",
@@ -48,23 +48,23 @@
     {
       "block": "05:00-10:00",
       "insight_id": "i05",
-      "show": false,
+      "show": true,
       "by": "agent",
-      "reason": "Ya se mostró a Rosas con mejora en atributos recientemente, evitar saturar."
+      "reason": "Evita saturar repitiendo a Rosas tras reciente mejora, aunque su ritmo subió."
     },
     {
       "block": "05:00-10:00",
       "insight_id": "i06",
       "show": true,
       "by": "agent",
-      "reason": "Destacar el dominio prolongado de Bahía FC en posesión para balance de información."
+      "reason": "Destaca fase de posesión larga de Bahía FC, aporta variedad al relato."
     },
     {
       "block": "05:00-10:00",
       "insight_id": "i07",
       "show": true,
       "by": "agent",
-      "reason": "Mostrar la posesión que acabó en disparo para cambiar la historia del bloque."
+      "reason": "Fase ofensiva de Real Cardón con disparo, equilibra gráficos y equipos."
     },
     {
       "block": "10:00-15:00",
@@ -78,35 +78,35 @@
       "insight_id": "i08",
       "show": true,
       "by": "agent",
-      "reason": "P. Lugo sube al segundo lugar de MVP mostrando un rendimiento destacado para su rol."
+      "reason": "Lugo sube al segundo lugar en la carrera del MVP, cambiando el liderazgo."
     },
     {
       "block": "10:00-15:00",
       "insight_id": "i10",
       "show": true,
       "by": "agent",
-      "reason": "O. Félix entra al podio de MVP, importante cambio en la clasificación individual."
+      "reason": "Félix asciende a tercer lugar en la clasificación del MVP, destacando su impacto."
     },
     {
       "block": "15:00-20:00",
       "insight_id": "i11",
       "show": true,
       "by": "agent",
-      "reason": "S. Beltrán mejora su físico tras una recuperación clave, aporta novedad en el juego."
+      "reason": "Mejora física de Beltrán tras una jugada de recuperación clave para Bahía FC."
     },
     {
       "block": "15:00-20:00",
       "insight_id": "i12",
       "show": false,
       "by": "agent",
-      "reason": "K. Rosas ya apareció recientemente con mejora similar, se evita repetición."
+      "reason": "Rosas ya fue destacado varias veces; preferimos variar el tipo y protagonistas."
     },
     {
       "block": "15:00-20:00",
       "insight_id": "i13",
       "show": true,
       "by": "agent",
-      "reason": "E. Sandoval sube al segundo lugar en el ranking MVP, cambia la historia del partido."
+      "reason": "Sandoval sube rápido al 2º lugar de MVP, cambiando la historia del partido."
     },
     {
       "block": "20:00-25:00",
@@ -120,91 +120,91 @@
       "insight_id": "i15",
       "show": true,
       "by": "agent",
-      "reason": "Rosas sube su rango MVP destacando su impacto ofensivo y defensivo."
+      "reason": "Cambio de puesto importante en MVP con Rosas subiendo al 3º lugar."
     },
     {
       "block": "20:00-25:00",
       "insight_id": "i16",
       "show": true,
       "by": "agent",
-      "reason": "Salgado mejora su ritmo tras una carrera a alta velocidad, mostrando evolución clave."
+      "reason": "Mejora en atributo ritmo para Salgado, líder actual del MVP."
     },
     {
       "block": "20:00-25:00",
       "insight_id": "i17",
       "show": true,
       "by": "agent",
-      "reason": "Cota mejora su físico tras recuperación rápida terminando en remate, añade dinamismo al juego."
+      "reason": "Aumento físico en F. Cota tras recuperación clave, aporta variedad a la pantalla."
     },
     {
       "block": "20:00-25:00",
       "insight_id": "i18",
       "show": false,
       "by": "agent",
-      "reason": "Félix ya fue destacado recientemente y repetir un card upgrade similar saturaría la pantalla."
+      "reason": "Otro aumento de ritmo para Bahía FC similar a reciente, evitar saturar con lo mismo."
     },
     {
       "block": "25:00-30:00",
       "insight_id": "i19",
       "show": true,
       "by": "agent",
-      "reason": "Salgado destaca notablemente en defensa superando expectativas para su rol."
+      "reason": "Salgado destaca defensivamente superando expectativas, aporta novedad a MVP y defensas."
     },
     {
       "block": "25:00-30:00",
       "insight_id": "i20",
       "show": false,
       "by": "agent",
-      "reason": "Ya se mostró una mejora de atributo para Salgado recientemente, evitar repetición."
+      "reason": "Recién mostrada una mejora de Salgado, no repetir gráfica similar para no saturar."
     },
     {
       "block": "30:00-35:00",
       "insight_id": "i21",
       "show": true,
       "by": "agent",
-      "reason": "O. Félix destaca muy por encima de su rol, nuevo momento clave para el partido."
+      "reason": "O. Félix destaca creativamente superando expectativas, aportando valor nuevo."
     },
     {
       "block": "30:00-35:00",
       "insight_id": "i22",
       "show": true,
       "by": "agent",
-      "reason": "Cambio en el ranking MVP relevante con V. Meza entrando al top 3."
+      "reason": "Cambio en ranking MVP con nuevo ascenso de V. Meza, aporta variedad al relato."
     },
     {
       "block": "30:00-35:00",
       "insight_id": "i23",
       "show": true,
       "by": "agent",
-      "reason": "K. Rosas mejora su atributo de ritmo con una velocidad de desmarque notable."
+      "reason": "Rosas mejora su atributo ritmo con una velocidad notable, distinto al resto de gráficos."
     },
     {
       "block": "30:00-35:00",
       "insight_id": "i24",
       "show": false,
       "by": "agent",
-      "reason": "Repetición reciente de O. Félix en ranking MVP, se evita saturar con el mismo jugador."
+      "reason": "Reciente muestra de O. Félix en gráficos similares, evita repetición."
     },
     {
       "block": "35:00-40:00",
       "insight_id": "i25",
       "show": false,
       "by": "agent",
-      "reason": "Salgado mostró una mejora similar recientemente, evitar saturar con el mismo jugador."
+      "reason": "Salgado ya fue destacado recientemente y su mejora es menor en impacto."
     },
     {
       "block": "35:00-40:00",
       "insight_id": "i26",
       "show": true,
       "by": "agent",
-      "reason": "Rosas mejora visión tras una racha de pases completados, aportando a su evolución constante."
+      "reason": "Rosas mejora su visión tras 20 pases completados, aportando a la ventaja de Real Cardón."
     },
     {
       "block": "35:00-40:00",
       "insight_id": "i27",
       "show": true,
       "by": "agent",
-      "reason": "Meza destaca en defensa superando expectativas, aporta variedad tras recientes gráficos ofensivos."
+      "reason": "Meza sobresale en defensa, mostrando un rendimiento muy por encima de su rol esperado."
     },
     {
       "block": "40:00-45:00",
@@ -218,28 +218,28 @@
       "insight_id": "i29",
       "show": true,
       "by": "agent",
-      "reason": "E. Sandoval mejora su ritmo notablemente con una velocidad de desmarque alta."
+      "reason": "Sandoval mejora su atributo de ritmo con una nueva velocidad de desmarque a 31 km/h."
     },
     {
       "block": "40:00-45:00",
       "insight_id": "i30",
       "show": false,
       "by": "agent",
-      "reason": "La posesión prolongada no altera la historia principal del partido."
+      "reason": "fuera del cupo del bloque"
     },
     {
       "block": "40:00-45:00",
       "insight_id": "i31",
       "show": true,
       "by": "agent",
-      "reason": "K. Rosas sube al segundo lugar en la clasificación MVP, cambiando la dinámica del partido."
+      "reason": "Rosas sube al segundo puesto del ranking MVP, cambiando la dinámica de la estrella del partido."
     },
     {
       "block": "40:00-45:00",
       "insight_id": "i32",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "F. Cota aumenta su habilidad de regate tras dos regates exitosos recientes."
+      "reason": "Cota ya apareció recientemente y repetir una mejora similar saturaría la pantalla."
     },
     {
       "block": "45:00-50:00",
@@ -260,42 +260,42 @@
       "insight_id": "i34",
       "show": true,
       "by": "agent",
-      "reason": "Destacar a Salgado por su desempeño defensivo excepcional que lidera el partido."
+      "reason": "Salgado sigue destacando, mostrando un rendimiento defensivo muy superior al esperado para su rol."
     },
     {
       "block": "45:00-50:00",
       "insight_id": "i35",
-      "show": false,
+      "show": true,
       "by": "agent",
-      "reason": "Se ha mostrado recientemente un upgrade de Rosas, mejor evitar repetición de portero."
+      "reason": "Nueva atajada decisiva de Arce que mejora su defensa, aporta variedad y es reciente en el contexto."
     },
     {
       "block": "45:00-50:00",
       "insight_id": "i36",
       "show": false,
       "by": "agent",
-      "reason": "Juego colectivo, pero menos destacado que hitos individuales y cambios de MVP."
+      "reason": "No aporta novedad relevante, solo fase de posesión que terminó sin consecuencias claras."
     },
     {
       "block": "45:00-50:00",
       "insight_id": "i37",
       "show": false,
       "by": "agent",
-      "reason": "Rosas ya fue destacado varias veces, evitar saturar con el mismo jugador."
+      "reason": "Rosas ya fue mostrado varias veces recientemente y no hay cambio en su posición MVP ahora."
     },
     {
       "block": "45:00-50:00",
       "insight_id": "i38",
       "show": true,
       "by": "agent",
-      "reason": "Importante cambio en el ranking MVP que muestra dinamismo en Real Cardón con Sandoval."
+      "reason": "Sandoval sube al tercer lugar en el ranking MVP, lo que cambia la dinámica del duelo por el liderazgo."
     },
     {
       "block": "45:00-50:00",
       "insight_id": "i40",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Mostrar a Zamora por su atajada importante que ayuda en defensa reciente de Real Cardón."
+      "reason": "Aunque es una atajada buena, ya se mostró un caso similar con Arce y menos relevante."
     },
     {
       "block": "50:00-55:00",
@@ -309,28 +309,35 @@
       "insight_id": "i41",
       "show": true,
       "by": "agent",
-      "reason": "V. Meza destaca defensivamente superando su rol esperado, aportando a la narrativa del juego."
+      "reason": "Meza destaca de nuevo, pero desde un perfil defensivo que supera lo esperado para su rol."
     },
     {
       "block": "50:00-55:00",
       "insight_id": "i42",
       "show": true,
       "by": "agent",
-      "reason": "O. Félix toma la delantera como MVP, un cambio clave en la historia del partido."
+      "reason": "El líder MVP cambia generando un nuevo protagonista en el partido."
     },
     {
       "block": "50:00-55:00",
       "insight_id": "i43",
       "show": false,
       "by": "agent",
-      "reason": "Reciente foco en mejoras de atributos similares reduce novedad de T. Esquer."
+      "reason": "Esquér tuvo reciente mejora y repetimos tipo de actualización de carta, no aporta novedad."
     },
     {
       "block": "50:00-55:00",
       "insight_id": "i44",
       "show": true,
       "by": "agent",
-      "reason": "M. Ramírez mejora su atributo de disparo con un remate potente, ofreciendo variedad en gráficos."
+      "reason": "Actualización de carta por potente disparo, añade variedad al tipo de gráfica mostrada."
+    },
+    {
+      "block": "55:00-60:00",
+      "insight_id": "i48",
+      "show": true,
+      "by": "rule",
+      "reason": "primer duelo del tiempo, siempre se muestra"
     },
     {
       "block": "55:00-60:00",
@@ -342,72 +349,65 @@
     {
       "block": "55:00-60:00",
       "insight_id": "i46",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Real Cardón mantiene control prolongado en la fase."
+      "reason": "Ya se mostró información de control previo y sería redundante repetir."
     },
     {
       "block": "55:00-60:00",
       "insight_id": "i47",
       "show": true,
       "by": "agent",
-      "reason": "O. Félix sobresale defensivamente por encima de su rol."
-    },
-    {
-      "block": "55:00-60:00",
-      "insight_id": "i48",
-      "show": false,
-      "by": "agent",
-      "reason": "Duelo sin cambio sustancial para mostrar en pantalla."
+      "reason": "O. Félix sobresale defensivamente por encima de lo esperado, cambio relevante respecto a su rol."
     },
     {
       "block": "55:00-60:00",
       "insight_id": "i50",
       "show": true,
       "by": "agent",
-      "reason": "Un nuevo período de posesión de Real Cardón con buena culminación."
+      "reason": "Real Cardón mantiene una fase de posesión significativa con varios jugadores involucrados."
     },
     {
       "block": "60:00-65:00",
       "insight_id": "i51",
       "show": false,
       "by": "agent",
-      "reason": "Rosas ya destacó y no conviene saturar con otro upgrade similar suyo."
+      "reason": "Ya se mostró un upgrade de K. Rosas recientemente, evitamos saturar con el mismo jugador."
     },
     {
       "block": "60:00-65:00",
       "insight_id": "i52",
       "show": true,
       "by": "agent",
-      "reason": "Rosas destaca con un rendimiento defensivo superior a su rol, cambiando la historia del partido."
+      "reason": "K. Rosas destaca defensivamente y mejora su defensa, cambiando la historia del partido."
     },
     {
       "block": "60:00-65:00",
       "insight_id": "i53",
       "show": true,
       "by": "agent",
-      "reason": "Salgado sube atributo por una recuperación rápida que terminó en remate, mostrando impacto ofensivo"
+      "reason": "R. Salgado mejora su físico tras una recuperación clave, aportando peso ofensivo al partido."
     },
     {
       "block": "60:00-65:00",
       "insight_id": "i54",
       "show": true,
       "by": "agent",
-      "reason": "O. Félix mejora su posición MVP, mostrando un cambio relevante en el duelo individual."
+      "reason": "O. Félix escala en el ranking MVP, mostrando una nueva lucha por el liderazgo."
     },
     {
       "block": "60:00-65:00",
       "insight_id": "i55",
       "show": false,
       "by": "agent",
-      "reason": "Cota tiene un aumento físico menor y repetitivo respecto a otros upgrades recientes."
+      "reason": "Otro card upgrade de Bahía FC, preferimos variedad de jugadores y mayor impacto."
     },
     {
       "block": "60:00-65:00",
       "insight_id": "i56",
       "show": false,
       "by": "agent",
-      "reason": "Duel estado poco relevante y sin cambio decisivo, no añade valor ahora."
+      "reason": "Duel state de bajo impacto y sin cambio en el duelo, no aporta novedad significativa."
     },
     {
       "block": "65:00-70:00",
@@ -419,51 +419,51 @@
     {
       "block": "65:00-70:00",
       "insight_id": "i58",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Real Cardón mantiene una posesión importante con varios jugadores involucrados, mostrando dominio colectivo."
+      "reason": "Ya se mostró una fase de equipo de Real Cardón recientemente y no aporta novedad."
     },
     {
       "block": "65:00-70:00",
       "insight_id": "i59",
       "show": true,
       "by": "agent",
-      "reason": "Montaño sube su valor defensivo con un impacto reciente en recuperaciones en campo rival."
+      "reason": "Montano mejora defensa tras tres recuperaciones clave en 10 minutos."
     },
     {
       "block": "70:00-75:00",
       "insight_id": "i60",
       "show": false,
       "by": "agent",
-      "reason": "Leyva tiene un pequeño aumento de ritmo que no cambia la narrativa del juego."
+      "reason": "Subida mínima en ritmo de Leyva, poco impacto y ya hemos mostrado otras mejoras."
     },
     {
       "block": "70:00-75:00",
       "insight_id": "i61",
-      "show": false,
+      "show": true,
       "by": "agent",
-      "reason": "Ya se mostraron fases de dominio de Real Cardón recientemente, evitar repetición."
+      "reason": "Cambio en la fase del equipo Real Cardón, mucha presión y recuperación en campo contrario."
     },
     {
       "block": "70:00-75:00",
       "insight_id": "i62",
       "show": true,
       "by": "agent",
-      "reason": "Sandoval destaca defensivamente mucho más de lo esperado para su rol."
+      "reason": "Sandoval destaca muy por encima de su rol habitual, aportando en defensa y pase clave."
     },
     {
       "block": "70:00-75:00",
       "insight_id": "i63",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Mena mejora su visión con una racha de 20 pases completados, aportando creatividad."
+      "reason": "Mejora leve en visión de Mena, repetir tarjeta de mejora individual no prioritaria ahora."
     },
     {
       "block": "70:00-75:00",
       "insight_id": "i64",
       "show": true,
       "by": "agent",
-      "reason": "Verdugo hace una gran presión con recuperaciones en campo rival, mostrando impacto ofensivo."
+      "reason": "Verdugo mejora notablemente su defensa tras recuperar balones claves en campo rival."
     },
     {
       "block": "75:00-80:00",
@@ -482,58 +482,58 @@
     {
       "block": "75:00-80:00",
       "insight_id": "i65",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Real Cardón mantiene posesión larga que muestra control del juego."
+      "reason": "Se acaba de mostrar una fase extensa de posesión de Real Cardón hace poco tiempo."
     },
     {
       "block": "75:00-80:00",
       "insight_id": "i66",
       "show": true,
       "by": "agent",
-      "reason": "J. Torres destaca con mejora física tras ganar duelos."
+      "reason": "J. Torres mejora físicamente tras ganar varios duelos seguidos, aporta novedad positiva."
     },
     {
       "block": "75:00-80:00",
       "insight_id": "i67",
       "show": false,
       "by": "agent",
-      "reason": "Duelo de J. Torres y B. Haro no cambia la historia ni el ganador del duelo."
+      "reason": "Duelos entre J. Torres y B. Haro no cambian sustancialmente el relato, poca prioridad y ya se destaca a Torres."
     },
     {
       "block": "80:00-85:00",
       "insight_id": "i70",
-      "show": false,
+      "show": true,
       "by": "agent",
-      "reason": "Se acaba de mostrar a Meza recientemente, evitar repetición cercana."
+      "reason": "V. Meza mejora su visión tras una racha destacada de pases, aporta variedad."
     },
     {
       "block": "80:00-85:00",
       "insight_id": "i71",
       "show": true,
       "by": "agent",
-      "reason": "Cambio importante en el ranking MVP que altera la narrativa del partido."
+      "reason": "O. Félix sube al segundo lugar en MVP, cambia la historia del partido."
     },
     {
       "block": "80:00-85:00",
       "insight_id": "i72",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Actualización de atributo destacando la velocidad máxima del líder del equipo."
+      "reason": "Ya se mostró recientemente una mejora física de R. Salgado, evitar saturar con el mismo jugador."
     },
     {
       "block": "85:00-90:00",
       "insight_id": "i73",
-      "show": true,
+      "show": false,
       "by": "agent",
-      "reason": "Sandoval recibe una mejora física por su racha de duelos ganados, aportando variedad y persistencia en su rol."
+      "reason": "Sandoval ya fue destacado recientemente y su mejora física es leve, evitando saturar con el mismo jugador."
     },
     {
       "block": "85:00-90:00",
       "insight_id": "i74",
       "show": true,
       "by": "agent",
-      "reason": "O. Félix se convierte en el nuevo líder MVP, cambiando la historia del partido."
+      "reason": "O. Félix toma el liderato MVP en el tramo final del partido, cambiando el rumbo del reconocimiento individual."
     },
     {
       "block": "final",
@@ -572,6 +572,30 @@
       "problems": {}
     },
     {
+      "insight_id": "i03",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "fallback",
+        "analyst_en": "agent"
+      },
+      "problems": {
+        "fan_en": [
+          "fan text shows 2 figures, the limit is 1 besides the scoreline"
+        ]
+      }
+    },
+    {
+      "insight_id": "i05",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
       "insight_id": "i06",
       "sources": {
         "fan_es": "agent",
@@ -752,16 +776,6 @@
       "problems": {}
     },
     {
-      "insight_id": "i32",
-      "sources": {
-        "fan_es": "agent",
-        "analyst_es": "agent",
-        "fan_en": "agent",
-        "analyst_en": "agent"
-      },
-      "problems": {}
-    },
-    {
       "insight_id": "i33",
       "sources": {
         "fan_es": "agent",
@@ -782,6 +796,16 @@
       "problems": {}
     },
     {
+      "insight_id": "i35",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
       "insight_id": "i38",
       "sources": {
         "fan_es": "agent",
@@ -793,16 +817,6 @@
     },
     {
       "insight_id": "i39",
-      "sources": {
-        "fan_es": "agent",
-        "analyst_es": "agent",
-        "fan_en": "agent",
-        "analyst_en": "agent"
-      },
-      "problems": {}
-    },
-    {
-      "insight_id": "i40",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -852,7 +866,7 @@
       "problems": {}
     },
     {
-      "insight_id": "i46",
+      "insight_id": "i47",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -862,7 +876,7 @@
       "problems": {}
     },
     {
-      "insight_id": "i47",
+      "insight_id": "i48",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -912,7 +926,7 @@
       "problems": {}
     },
     {
-      "insight_id": "i58",
+      "insight_id": "i59",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -922,7 +936,7 @@
       "problems": {}
     },
     {
-      "insight_id": "i59",
+      "insight_id": "i61",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -942,27 +956,7 @@
       "problems": {}
     },
     {
-      "insight_id": "i63",
-      "sources": {
-        "fan_es": "agent",
-        "analyst_es": "agent",
-        "fan_en": "agent",
-        "analyst_en": "agent"
-      },
-      "problems": {}
-    },
-    {
       "insight_id": "i64",
-      "sources": {
-        "fan_es": "agent",
-        "analyst_es": "agent",
-        "fan_en": "agent",
-        "analyst_en": "agent"
-      },
-      "problems": {}
-    },
-    {
-      "insight_id": "i65",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -992,27 +986,17 @@
       "problems": {}
     },
     {
+      "insight_id": "i70",
+      "sources": {
+        "fan_es": "agent",
+        "analyst_es": "agent",
+        "fan_en": "agent",
+        "analyst_en": "agent"
+      },
+      "problems": {}
+    },
+    {
       "insight_id": "i71",
-      "sources": {
-        "fan_es": "agent",
-        "analyst_es": "agent",
-        "fan_en": "agent",
-        "analyst_en": "agent"
-      },
-      "problems": {}
-    },
-    {
-      "insight_id": "i72",
-      "sources": {
-        "fan_es": "agent",
-        "analyst_es": "agent",
-        "fan_en": "agent",
-        "analyst_en": "agent"
-      },
-      "problems": {}
-    },
-    {
-      "insight_id": "i73",
       "sources": {
         "fan_es": "agent",
         "analyst_es": "agent",
@@ -1025,15 +1009,11 @@
       "insight_id": "i74",
       "sources": {
         "fan_es": "agent",
-        "analyst_es": "fallback",
+        "analyst_es": "agent",
         "fan_en": "agent",
         "analyst_en": "agent"
       },
-      "problems": {
-        "analyst_es": [
-          "title has more than 6 words"
-        ]
-      }
+      "problems": {}
     },
     {
       "insight_id": "i75",
@@ -1047,5 +1027,5 @@
     }
   ],
   "unscheduled": [],
-  "duel_frames": 0
+  "duel_frames": 6
 }
