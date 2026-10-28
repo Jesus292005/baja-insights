@@ -305,8 +305,8 @@
     "match_id": "m001",
     "period": 1,
     "minute": 10,
-    "second": 46,
-    "t_s": 646,
+    "second": 48,
+    "t_s": 648,
     "type": "mvp_rank_change",
     "priority": 0.79,
     "players": [
@@ -317,13 +317,13 @@
       "player": "B. Haro",
       "from_rank": 2,
       "to_rank": 1,
-      "mvp_score": 2.9,
-      "trigger_event_id": 197,
+      "mvp_score": 3.1,
+      "trigger_event_id": 198,
       "previous_leader": "K. Rosas",
       "stats": {
         "recoveries": 2,
         "duels_won": 5,
-        "progressive_passes": 1,
+        "progressive_passes": 2,
         "line_breaking_passes": 1
       },
       "expected_for_role": {
@@ -338,7 +338,7 @@
           "player": "B. Haro",
           "team": "Real Cardón",
           "position": "LI",
-          "mvp_score": 2.9
+          "mvp_score": 3.1
         },
         {
           "rank": 2,
@@ -374,7 +374,7 @@
       59,
       100,
       109,
-      197
+      198
     ]
   },
   {
@@ -654,85 +654,6 @@
     "insight_id": "i18",
     "match_id": "m001",
     "period": 1,
-    "minute": 17,
-    "second": 24,
-    "t_s": 1044,
-    "type": "mvp_rank_change",
-    "priority": 0.79,
-    "players": [
-      "K. Rosas"
-    ],
-    "team": "Real Cardón",
-    "facts": {
-      "player": "K. Rosas",
-      "from_rank": 2,
-      "to_rank": 1,
-      "mvp_score": 3.9,
-      "trigger_event_id": 318,
-      "previous_leader": "M. Ramírez",
-      "stats": {
-        "recoveries": 2,
-        "recoveries_opp_half": 1,
-        "duels_won": 4,
-        "key_passes": 1,
-        "progressive_passes": 4,
-        "line_breaking_passes": 2
-      },
-      "expected_for_role": {
-        "duels_won": 1.06,
-        "recoveries": 1.45,
-        "progressive_passes": 2.42,
-        "key_passes": 0.1
-      },
-      "ranking": [
-        {
-          "rank": 1,
-          "player": "K. Rosas",
-          "team": "Real Cardón",
-          "position": "MC",
-          "mvp_score": 3.9
-        },
-        {
-          "rank": 2,
-          "player": "M. Ramírez",
-          "team": "Bahía FC",
-          "position": "DC",
-          "mvp_score": 3.9
-        },
-        {
-          "rank": 3,
-          "player": "B. Haro",
-          "team": "Real Cardón",
-          "position": "LI",
-          "mvp_score": 3.7
-        },
-        {
-          "rank": 4,
-          "player": "R. Salgado",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 3.1
-        },
-        {
-          "rank": 5,
-          "player": "A. Olvera",
-          "team": "Bahía FC",
-          "position": "EI",
-          "mvp_score": 2.9
-        }
-      ]
-    },
-    "evidence": [
-      175,
-      237,
-      286,
-      318
-    ]
-  },
-  {
-    "insight_id": "i19",
-    "match_id": "m001",
-    "period": 1,
     "minute": 18,
     "second": 22,
     "t_s": 1102,
@@ -758,6 +679,83 @@
     },
     "evidence": [
       333
+    ]
+  },
+  {
+    "insight_id": "i19",
+    "match_id": "m001",
+    "period": 1,
+    "minute": 18,
+    "second": 43,
+    "t_s": 1123,
+    "type": "mvp_rank_change",
+    "priority": 0.49,
+    "players": [
+      "V. Meza"
+    ],
+    "team": "Real Cardón",
+    "facts": {
+      "player": "V. Meza",
+      "from_rank": 4,
+      "to_rank": 3,
+      "mvp_score": 3.9,
+      "trigger_event_id": 344,
+      "leader": "M. Ramírez",
+      "stats": {
+        "recoveries": 2,
+        "duels_won": 4,
+        "progressive_passes": 4,
+        "shots": 1
+      },
+      "expected_for_role": {
+        "duels_won": 1.14,
+        "recoveries": 1.56,
+        "progressive_passes": 1.98,
+        "key_passes": 0.0
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "player": "M. Ramírez",
+          "team": "Bahía FC",
+          "position": "DC",
+          "mvp_score": 4.1
+        },
+        {
+          "rank": 2,
+          "player": "K. Rosas",
+          "team": "Real Cardón",
+          "position": "MC",
+          "mvp_score": 4.0
+        },
+        {
+          "rank": 3,
+          "player": "V. Meza",
+          "team": "Real Cardón",
+          "position": "MCD",
+          "mvp_score": 3.9
+        },
+        {
+          "rank": 4,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 3.7
+        },
+        {
+          "rank": 5,
+          "player": "B. Haro",
+          "team": "Real Cardón",
+          "position": "LI",
+          "mvp_score": 3.6
+        }
+      ]
+    },
+    "evidence": [
+      227,
+      307,
+      325,
+      344
     ]
   },
   {

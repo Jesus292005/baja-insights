@@ -231,5 +231,34 @@ class NewMomentsTest(unittest.TestCase):
             self.assertEqual(i["facts"]["reason_params"]["count"] % 20, 0)
 
 
+
+class DemoMatchesConsistencyTest(unittest.TestCase):
+    """What the graphics say about the MVP and the invisible assist agrees with the data."""
+
+    def test_first_place_agrees_everywhere(self):
+        from baja_insights.engine.tools import MatchQuery
+        for match in ("m001", "f091"):
+            insights = load(DATA / match / "insights.json")
+            top = next(i for i in insights if i["type"] == "top3")["facts"]["top3"][0]["player"]
+            announced = [i["facts"]["player"] for i in insights
+                         if i["type"] == "mvp_rank_change" and i["facts"]["to_rank"] == 1]
+            tool = MatchQuery.from_files(DATA / match / "events.jsonl").get_mvp_ranking("90:00", 1)
+            with self.subTest(match=match):
+                self.assertEqual(announced[-1], top)  # a tie never takes first place away
+                self.assertEqual(tool["ranking"][0]["player"], top)
+
+    def test_a_run_by_a_player_who_touched_the_ball_is_not_called_invisible(self):
+        for match in ("m001", "f091"):
+            insights = load(DATA / match / "insights.json")
+            chains = [i["facts"]["invisible_assist"] for i in insights
+                      if i["type"] == "goal_chain" and i["facts"].get("invisible_assist")]
+            top3 = next(i for i in insights if i["type"] == "top3")["facts"]["top3"]
+            for row in top3:
+                for inv in chains:
+                    if inv["player"] == row["player"] and inv["touched_ball"]:
+                        with self.subTest(match=match, player=row["player"]):
+                            self.assertNotIn("desmarque que abrió un gol sin tocar el balón", row["why"])
+
+
 if __name__ == "__main__":
     unittest.main()

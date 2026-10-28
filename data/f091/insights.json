@@ -3322,8 +3322,8 @@
     "type": "top3",
     "priority": 1.0,
     "players": [
-      "R. Salgado",
       "O. Félix",
+      "R. Salgado",
       "K. Rosas"
     ],
     "team": null,
@@ -3335,23 +3335,6 @@
       "top3": [
         {
           "rank": 1,
-          "player": "R. Salgado",
-          "team": "Bahía FC",
-          "position": "MC",
-          "mvp_score": 8.5,
-          "why": [
-            "desmarque que abrió un gol sin tocar el balón",
-            "1 asistencia",
-            "5 recuperaciones en campo rival"
-          ],
-          "key_events": [
-            955,
-            949,
-            11
-          ]
-        },
-        {
-          "rank": 2,
           "player": "O. Félix",
           "team": "Bahía FC",
           "position": "MC",
@@ -3365,6 +3348,23 @@
             727,
             910,
             948
+          ]
+        },
+        {
+          "rank": 2,
+          "player": "R. Salgado",
+          "team": "Bahía FC",
+          "position": "MC",
+          "mvp_score": 8.5,
+          "why": [
+            "1 asistencia",
+            "desmarque que abrió el espacio de un gol",
+            "5 recuperaciones en campo rival"
+          ],
+          "key_events": [
+            955,
+            949,
+            11
           ]
         },
         {
@@ -3511,7 +3511,7 @@
       "who_really_won_basis": {
         "xg_leader": "Bahía FC",
         "possession_leader": "Real Cardón",
-        "mvp": "R. Salgado",
+        "mvp": "O. Félix",
         "mvp_team": "Bahía FC"
       }
     },

@@ -20,6 +20,7 @@ class SchemaTest(unittest.TestCase):
         ("insight", DATA / "free-seed2" / "insights.json"),
         ("event", DATA / "f091" / "events.jsonl"),
         ("insight", DATA / "f091" / "insights.json"),
+        ("overlay", DATA / "f091" / "overlays.json"),
     ]
 
     def test_all_files_validate(self):
