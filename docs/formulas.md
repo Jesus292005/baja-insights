@@ -232,9 +232,13 @@ Desde el 27 de octubre de 2026, `--script free` (y `generate_match(..., script=N
 | --- | --- |
 | **Quién actúa** | El generador sabe dónde está cada bloque en cada momento, con la misma forma que dibuja el modelo de posiciones. El que presiona, entra, disputa, recibe o recoge un balón suelto es uno de los más cercanos a ese punto; la carta y el rol solo desempatan |
 | **Balón suelto** | Lo recoge el rival más cercano cuando de verdad llega, a unos 6 m/s |
-| **Tirar o no** | Probabilidad logística sobre el xG de la ocasión: la mitad de las veces con 0.27 xG para una carta de disparo media, casi siempre desde 0.4. Desde fuera del área, con espacio, un buen pateador a veces lo intenta |
+| **Tirar de primera** | Al recibir en zona de tiro, decide antes de que llegue el defensor. Dentro del área, el defensor ya está encima el 55% de las veces. El remate de primera vale 10% menos xG, y una carta de disparo media lo intenta la mitad de las veces con 0.23 xG |
+| **Tirar o no, después de conducir** | Probabilidad logística sobre el xG de la ocasión: la mitad de las veces con 0.27 xG para una carta de disparo media, casi siempre desde 0.4. Desde fuera del área, con espacio, un buen pateador a veces lo intenta |
+| **Presión: soltarla o aguantar** | Cuando un rival viene a presionar, el que tiene el balón decide. **La suelta antes de que llegue** (cerca del 60%, más con buena visión, en campo propio y si es defensa): un pase rápido y corto que se completa casi como sin presión. **O lo espera**: entradas y robos 1.6 veces más seguidos, el pase presionado mucho más difícil y, con buen regate, a veces lo elude. El presionador tarda lo que de verdad le toma llegar, a 6.5 m/s |
+| **Juego a uno o dos toques** | Sin presión, a veces también la juega de primera, más con buena visión |
 | **Pase dentro del área** | Si un compañero tiene una ocasión claramente mejor (0.05 xG más), se la busca, más seguido cuanto mejor sea su visión. Si no, la guarda corto y hacia el centro |
-| **Defensa cerca de su arco** | En el último tercio se cierra sobre el que tiene el balón (35% de las acciones, 80% en el área), contiene en lugar de tirarse (60% de las entradas) y nadie conduce hasta el área chica |
+| **Defensa cerca de su arco** | En el último tercio se cierra sobre el que tiene el balón (35% de las acciones, 80% en el área), contiene en lugar de tirarse (60% de las entradas) y nadie conduce hasta el área chica. Los centros al área los despeja casi siempre |
+| **Contragolpe** | Tras recuperar en campo propio, 3 acciones más rápidas y verticales: el rival presiona menos, se conduce más lejos y los compañeros arrancan al espacio |
 | **Desmarques** | Salen de donde está el jugador. Si arrastra a un defensor y el pase no va para él, a veces el balón va al hueco que dejó: la asistencia invisible sale sola |
 | **Faltas y penales** | En el área se cometen muchas menos faltas que en el resto de la cancha. Cada una es penal: un `shot` con `set_piece: "penalty"` desde el punto, con xG 0.76, que tira el mejor pateador en la cancha |
 
@@ -259,24 +263,32 @@ En 100 partidos libres (`tests/test_realism.py`):
 
 | Métrica | Generador con guion, sin guion | Generador de decisiones | Referencia |
 | --- | --- | --- | --- |
-| Goles por partido | 2.97 | 3.00 | 2.2 a 3.4 |
-| Empates | 24% | 21% | 12% a 35% |
+| Goles por partido | 2.97 | 2.89 | 2.2 a 3.4 |
+| Empates | 24% | 22% | 12% a 35% |
 | Tiros | 13.5 | 11.0 | 9 a 16 |
-| Tiros a puerta | 5.8 | 4.9 | 3 a 6 |
+| Tiros a puerta | 5.8 | 3.9 | 3 a 6 |
 | xG | 1.45 | 1.49 | 1.0 a 1.8 |
 | xG por tiro | 0.11 | 0.14 | 0.08 a 0.14 |
-| Tiros desde fuera del área | 32% | 35% | 25% a 50% |
-| Faltas | 10.5 | 9.5 | 8 a 14 |
-| Entradas | 14.9 | 17.9 | 10 a 22 |
-| Recuperaciones | 60.4 | 59.7 | 35 a 65 |
+| Tiros desde fuera del área | 32% | 36% | 25% a 50% |
+| Faltas | 10.5 | 9.3 | 8 a 14 |
+| Entradas | 14.9 | 13.7 | 10 a 22 |
+| Recuperaciones | 60.4 | 61.1 | 35 a 65 |
+| Pases | 462 | 513 | 350 a 600 |
 
-`tests/test_decisions.py` además pide, en 200 partidos: de 2.3 a 3.4 goles de promedio, 0-0 entre el 2% y el 15%, 8 goles o más en el 2% como mucho y nunca más de 10. Hoy: 2.9 de promedio, 3.5% de 0-0, uno solo de 8 goles y unos 0.3 penales por partido, como en la Premier League.
+`tests/test_decisions.py` además pide, en 200 partidos: de 2.3 a 3.4 goles de promedio, 0-0 entre el 2% y el 15%, 8 goles o más en el 2% como mucho y nunca más de 10. Hoy: 3.0 de promedio, 5% de 0-0, 1.5% de partidos de 8 goles, ninguno de más, y unos 0.3 penales por partido, como en la Premier League.
 
 | Lo que se veía en la cancha | Generador con guion | Generador de decisiones |
 | --- | --- | --- |
-| Presiones de alguien que no era de los 2 compañeros más cercanos | 31% | 15% |
+| Presiones de alguien que no era de los 2 compañeros más cercanos | 31% | 18% |
 | Balones sueltos ganados por alguien que no era de los 2 más cercanos | 33% | 14% |
 | Segundos del pase errado a la recuperación (mediana) | 4 | 2 |
 | Ocasiones de 0.35 xG o más, sin presión, en las que tiró | 30% | 94% |
 | Pases desde el área que van hacia atrás | 88% | 49% |
+| Presionado, la suelta antes de que llegue el rival | 0% | 59%, y ese pase se completa el 83% |
+| Presionado y esperándolo, pierde el balón | 26% | 53% |
+| Pases de primera sin presión (1 s o menos) | 3% | 15% |
+| Remates a menos de 2 s de recibir | 4% | 59% |
+| Centros completados | 49% | 31% |
+| Recuperaciones en campo propio que acaban en remate en 15 s | 0.6% | 1.8% |
+| Remates a puerta | 44% | 33% |
 

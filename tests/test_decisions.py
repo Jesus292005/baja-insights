@@ -74,6 +74,66 @@ class DecisionsTest(unittest.TestCase):
         self.assertEqual(fouls, penalties)
         self.assertTrue(0.1 <= penalties / len(self.matches) <= 0.5, penalties)  # about 0.3 in the Premier League
 
+    def test_a_pressed_player_often_lets_it_go_and_holding_it_is_a_risk(self):
+        released = released_ok = held = held_lost = 0
+        for events in self.matches:
+            play = [e for e in events if e.get("team") and e.get("start")]
+            for i, e in enumerate(play[:-1]):
+                if e["type"] != "pressure":
+                    continue
+                a = play[i + 1]
+                if a["type"] == "pass" and a["player"] == e["target"] and a["t_s"] - e["t_s"] <= 1:
+                    released += 1
+                    released_ok += a["outcome"] == "complete"
+                    continue
+                held += 1
+                for b in play[i + 1:i + 5]:
+                    if b["team"] == e["team"] and b["type"] in ("tackle", "recovery", "duel") \
+                            and (b["type"] != "tackle" or b["outcome"] == "won"):
+                        held_lost += 1
+                        break
+                    if b["type"] == "pass" and b["team"] != e["team"]:
+                        held_lost += b["outcome"] == "incomplete"
+                        break
+        self.assertTrue(0.35 <= released / (released + held) <= 0.8, (released, held))
+        self.assertGreaterEqual(released_ok / released, 0.75)
+        self.assertGreaterEqual(held_lost / held, 0.35)  # waiting for the presser loses the ball a lot
+
+    def test_strikers_shoot_first_time(self):
+        """Most shots in open play come within 2 seconds of receiving the ball."""
+        quick = total = 0
+        for events in self.matches:
+            play = [e for e in events if e.get("team") and e.get("start")]
+            for i, e in enumerate(play):
+                if e["type"] != "shot" or e.get("set_piece"):
+                    continue
+                prev = next((p for p in reversed(play[:i]) if p["type"] == "pass" and p["team"] == e["team"]), None)
+                if prev and prev["outcome"] == "complete" and prev.get("receiver") == e["player"] and not prev.get("cross"):
+                    total += 1
+                    quick += e["t_s"] - prev["t_s"] <= 2
+        self.assertGreaterEqual(quick / total, 0.5)
+
+    def test_crosses_are_hard_to_complete(self):
+        crosses = [e for events in self.matches for e in events if e["type"] == "pass" and e.get("cross")
+                   and not e.get("set_piece")]
+        self.assertTrue(0.15 <= sum(e["outcome"] == "complete" for e in crosses) / len(crosses) <= 0.4)
+
+    def test_there_are_counter_attacks(self):
+        """Some balls won in the own half end in a shot within 15 seconds."""
+        won = broke = 0
+        for events in self.matches:
+            by_possession = {}
+            for e in events:
+                if e.get("team") and e.get("start"):
+                    by_possession.setdefault(e["possession_id"], []).append(e)
+            for chain in by_possession.values():
+                first = chain[0]
+                if first["type"] == "recovery" and prog(first) < 52.5:
+                    won += 1
+                    broke += any(x["type"] == "shot" and x["team"] == first["team"] and x["t_s"] - first["t_s"] <= 15
+                                 for x in chain)
+        self.assertGreaterEqual(broke / won, 0.015)
+
     def test_the_score_never_changes_the_finishing(self):
         """Goals follow the xG of the shots, whoever is ahead."""
         xg = goals = 0.0

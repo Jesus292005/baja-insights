@@ -44,7 +44,7 @@ DEC = {
     "loose_speed": 6.0,       # m/s of the player who goes for a loose ball
     "shot_min_prog": 72.0,    # metres from own goal where a player starts to consider shooting
     "shot_x0": 0.27,          # xG at which a player with an average shooting card shoots half the time
-    "shot_s": 0.055,          # how sharp that choice is
+    "shot_s": 0.045,          # how sharp that choice is
     "square_margin": 0.05,    # a team-mate needs this much more xG to be worth the pass inside the box
     "square_prob": 0.7,       # ... and the pass is tried this often, times the passer's vision
     "foul_box": 0.18,         # fouls inside the box are this much rarer than elsewhere
@@ -57,6 +57,26 @@ DEC = {
     "deepest_carry": 90.0,    # nobody runs with the ball deep into the box: defenders are there
     "free_in_box": 0.35,
     "contain": 0.6,
+    "press_speed": 6.5,       # m/s of the presser closing the carrier down
+    "memory_s": 4.0,          # a player who acted this recently is still where he acted
+    "release": 0.5,           # a pressed carrier lets the ball go before the presser arrives this often (average card)
+    "release_s": (0.3, 0.8),  # ... in this many seconds, one or two touches
+    "one_touch": 0.18,        # unpressed, he still plays it first time this often
+    "hold_risk": 1.6,         # the one who waits for the presser loses it this much more often
+    "held_pass_hard": 0.45,   # a pass with the presser on him is much harder (about 65-70% completed)
+    "quick_pass_hard": 0.08,  # ... a pass released before he arrives, barely
+    "dribble": 0.25,          # the one who holds it takes the presser on this often, times his dribbling
+    "look_s": (0.9, 2.8),     # seconds to look up and pick the pass after a carry, before tempo
+    "first_time_xg": 0.9,     # a first-time shot is a little worse than a settled one
+    "first_time_x0": 0.23,    # xG at which a player with an average shooting card shoots first time half the time
+    "marked_on_arrival": 0.55,  # inside the box the defender is already on him when the ball arrives
+    "counter_steps": 3,       # actions on the break after winning the ball in the own half
+    "counter_tempo": 1.6,
+    "counter_direct": 0.3,
+    "counter_press": 0.5,     # the rival, caught upfield, presses less
+    "counter_runs": 3.0,      # and team-mates break forward
+    "foul_rate": 1.25,        # fouls happen on the actions where he keeps the ball, not on the quick ones
+    "accuracy": 0.18,         # base share of shots on target (plus half the xG): about a third on target
     "decoy_pass": 0.6,
     "run_rate": 0.05,         # chance per action in the last 40 m that a team-mate makes a run in behind
     "run_drags": 0.45,        # ... and that the run drags a defender with him        # a run that drags a defender and does not get the ball: the pass goes into the space
@@ -64,9 +84,9 @@ DEC = {
     "deepest_run": 96.0,      # a run in behind ends at the edge of the goal area at most ...
     "deepest_pass": 99.0,     # ... and so does a pass aimed at the box
     "cross_shot": 0.25,       # a completed cross ends in a header or a volley; most are cleared or controlled           # tackles tried near the own goal, against elsewhere
-    "long_shot": 0.03,        # chance per action of a shot from outside the box with room, average card
+    "long_shot": 0.025,        # chance per action of a shot from outside the box with room, average card
     "attack_line_max": 94.0,  # attackers wait at the penalty spot at most: the goal area is the keeper's
-    "cross_hard": 0.35,       # a cross into a crowded box is completed less often
+    "cross_hard": 0.9,        # a cross into a crowded box is completed less often (about a quarter)
     "final_third_hard": 0.45,  # passing against a compact defence is harder (about 70% completed)      # a team-mate in the box is unmarked this often
 }
 BOX_DEPTH_M = 16.5
@@ -96,6 +116,7 @@ class DecisionGenerator(MatchGenerator):
         self.tactics = load_tactics(tactics)
         self.ball_xy = (PITCH_LENGTH / 2, PITCH_WIDTH / 2)
         self.last_goal_t = -1e9
+        self.last_seen: dict[str, tuple[float, float, float]] = {}  # name -> (t, x, y) of his last action
         # good and bad days: each team plays a little better or worse than usual in this match
         sd = float(self.tactics.get("game_state", {}).get("day_form_sd", 0.0))
         self.day = {team: clip(self.rng.gauss(1.0, sd), 1.0 - 2 * sd, 1.0 + 2 * sd) if sd else 1.0
@@ -182,6 +203,25 @@ class DecisionGenerator(MatchGenerator):
                 p = min(p, max(bp - 3.0, 12.0))
         return self._to_x(clip(p, 3.0, 101.0), team), clip(y, 1.0, PITCH_WIDTH - 1.0)
 
+    def _where(self, name: str) -> tuple[float, float]:
+        """Where he really is: the point of his last action if it was a moment ago, else his spot in the shape."""
+        seen = self.last_seen.get(name)
+        if seen is not None and self.t - seen[0] < DEC["memory_s"]:
+            return seen[1], seen[2]
+        return self._spot(name)
+
+    def _append(self, e: dict) -> None:
+        super()._append(e)
+        t = e["t_s"]
+        if e.get("player") and e.get("start") is not None:
+            self.last_seen[e["player"]] = (t, e["start"][0], e["start"][1])
+        if e["type"] == "off_ball_run" and e.get("end") is not None:
+            self.last_seen[e["player"]] = (t + 2.0, e["end"][0], e["end"][1])
+            if e.get("dragged_defender") and e.get("dragged_defender_end"):
+                self.last_seen[e["dragged_defender"]] = (t + 2.0, *e["dragged_defender_end"])
+        if e["type"] == "pass" and e.get("receiver") and e.get("outcome") == "complete":
+            self.last_seen[e["receiver"]] = (t + 1.0, e["end"][0], e["end"][1])
+
     def _zone_xy(self, name: str) -> tuple[float, float]:
         return self._spot(name)
 
@@ -197,7 +237,7 @@ class DecisionGenerator(MatchGenerator):
                 continue
             if player.position in exclude or name in exclude_names or roles.get(player.position, 1.0) <= 0.0:
                 continue
-            sx, sy = self._spot(name)
+            sx, sy = self._where(name)
             candidates.append((name, math.hypot(sx - x, sy - y), player.position))
         if not candidates:
             return None
@@ -247,111 +287,161 @@ class DecisionGenerator(MatchGenerator):
         steps = 0
         arrival = self.t
         run_target = None
+        received = False  # the carrier has just received a pass: he may shoot first time
+        # a ball won in the own half with the rival pushed up: a few quick, vertical actions
+        counter = DEC["counter_steps"] if r.kind in ("recovery", "tackle") and self._prog(x, team) < 60 else 0
         while True:
             if self.t + 3 > limit:
                 return self._hold(team, x, y, carrier, pid, set_piece)
             self.ball_xy = (x, y)
             prog = self._prog(x, team)
             box = self._in_box(x, y, team)
-            under = False
+            under = quick = beat = False
+            pace = dict(style)
+            if counter:
+                pace["tempo"] *= DEC["counter_tempo"]
+                pace["directness"] = clip(pace["directness"] + DEC["counter_direct"], 0.1, 0.95)
 
-            # --- the nearest rival presses, more often when his team presses high; near its own goal
-            # the defence is compact and closes the carrier down
+            # --- first time: just received in a shooting spot, he shoots before the defender arrives
+            if received and not set_piece and prog >= DEC["shot_min_prog"]:
+                tight = (box and self.rng.random() < DEC["marked_on_arrival"]) or self._crowded(opp)
+                chance = round(max(0.01, expected_goals(prog, y, tight, False) * DEC["first_time_xg"]), 2)
+                threshold = DEC["first_time_x0"] / self._skill(carrier, "disparo")
+                if self.rng.random() < 1.0 / (1.0 + math.exp(-(chance - threshold) / DEC["shot_s"])):
+                    return self._shot(team, carrier, x, y, tight, pid, cross=False, xg=chance)
+            received = False
+
+            # --- the nearest rival comes to press, more often when his team presses high; near its own
+            # goal the defence is compact and closes the carrier down
             press_prob = opp_style["press"] * (1.25 - prog / PITCH_LENGTH)
             if prog >= DEC["final_third"]:
                 press_prob = max(press_prob, DEC["close_down_box"] if box else DEC["close_down"])
+            if counter:
+                press_prob *= DEC["counter_press"]
             if not set_piece and self.rng.random() < press_prob:
                 presser = self._pick(opp, x, y, weight_key="press")
-                self._emit("pressure", opp, presser, [x, y], pid=pid, target=carrier)
+                approach = clip(distance(self._where(presser), [x, y]) / DEC["press_speed"], 0.3, 3.0)
                 under = True
-                self.t += self.rng.uniform(0.5, 2.0)
-                position = self.roster.players[presser].position
-                # near his own goal a defender contains rather than dives in: a lost tackle there is a chance
-                attempt = GEN["tackle_attempt"] * ROLE_FACTOR["recover"].get(position, 1.0)
-                if prog >= DEC["final_third"]:
-                    attempt *= DEC["contain"]
-                if self.rng.random() < attempt:
-                    odds = GEN["tackle_win"] * self._form(presser, "duel_win") / self._form(carrier, "duel_win")
-                    won = self.rng.random() < clip(odds, 0.2, 0.85)
-                    self._emit("tackle", opp, presser, [x, y], outcome="won" if won else "lost", pid=pid,
-                               opponent=carrier)
-                    self.t += self.rng.uniform(1.0, 2.5)
-                    if won:
-                        return Resume("tackle", opp, x, y, presser)
-                    if self.rng.random() < GEN["foul_on_lost_tackle"] * self._foul_factor(opp, box):
-                        self._emit("foul", opp, presser, [x, y], pid=pid, fouled=carrier)
-                        if box:
-                            return self._penalty(team, pid, limit)
-                        self._free_kick_pause(limit)
-                        set_piece = "free_kick"
-                        continue
+                if self.rng.random() < self._release(carrier, prog):
+                    # he reads it and lets the ball go just before the presser arrives
+                    quick = True
+                    self.t += 0.6 * approach
+                    self._emit("pressure", opp, presser, [x, y], pid=pid, target=carrier)
+                    self.t += self.rng.uniform(*DEC["release_s"]) * 0.5
                 else:
-                    win = clip(GEN["press_win"] * self._form(presser, "recover") * opp_style["press"] / 0.3,
-                               0.02, 0.4)
-                    if position in ("DC", "ED", "EI"):
-                        win *= 0.4
-                    if self.rng.random() < win:
-                        self.t += self.rng.uniform(0.5, 2.0)
-                        return Resume("recovery", opp, x, y, presser)
+                    # he waits for him: the presser gets there, and keeping the ball is a risk
+                    self.t += approach
+                    self._emit("pressure", opp, presser, [x, y], pid=pid, target=carrier)
+                    self.t += self.rng.uniform(0.3, 0.9)
+                    position = self.roster.players[presser].position
+                    # near his own goal a defender contains rather than dives in: a lost tackle there is a chance
+                    attempt = GEN["tackle_attempt"] * ROLE_FACTOR["recover"].get(position, 1.0) * DEC["hold_risk"]
+                    if prog >= DEC["final_third"]:
+                        attempt *= DEC["contain"]
+                    if self.rng.random() < attempt:
+                        odds = GEN["tackle_win"] * self._form(presser, "duel_win") / self._form(carrier, "duel_win")
+                        won = self.rng.random() < clip(odds, 0.2, 0.85)
+                        self._emit("tackle", opp, presser, [x, y], outcome="won" if won else "lost", pid=pid,
+                                   opponent=carrier)
+                        self.t += self.rng.uniform(1.0, 2.5)
+                        if won:
+                            return Resume("tackle", opp, x, y, presser)
+                        if self.t + 8 < limit and self.rng.random() < GEN["foul_on_lost_tackle"] * self._foul_factor(opp, box):
+                            self._emit("foul", opp, presser, [x, y], pid=pid, fouled=carrier)
+                            if box:
+                                return self._penalty(team, pid, limit)
+                            self._free_kick_pause(limit)
+                            set_piece = "free_kick"
+                            continue
+                        beat = True  # he rode the tackle
+                    else:
+                        win = clip(GEN["press_win"] * self._form(presser, "recover") * opp_style["press"] / 0.3
+                                   * DEC["hold_risk"], 0.02, 0.5)
+                        if position in ("DC", "ED", "EI"):
+                            win *= 0.4
+                        if self.rng.random() < win:
+                            self.t += self.rng.uniform(0.5, 1.5)
+                            return Resume("recovery", opp, x, y, presser)
+                        if self.rng.random() < DEC["dribble"] * self._skill(carrier, "regate"):
+                            # he takes the presser on
+                            fa, fd = self._form(carrier, "duel_win"), self._form(presser, "duel_win")
+                            attacker_wins = self.rng.random() < fa / (fa + fd)
+                            winner, loser = (carrier, presser) if attacker_wins else (presser, carrier)
+                            self._emit("duel", team if attacker_wins else opp, winner, [x, y], outcome="won",
+                                       pid=pid, opponent=loser)
+                            self.t += self.rng.uniform(0.8, 1.8)
+                            if not attacker_wins:
+                                return Resume("recovery", opp, x, y, presser)
+                            beat = True
                 if self.t + 3 > limit:
                     return self._hold(team, x, y, carrier, pid, set_piece)
+            elif not set_piece and expected_goals(prog, y, False, False) < DEC["first_time_x0"] \
+                    and self.rng.random() < DEC["one_touch"] * self._skill(carrier, "vision"):
+                quick = True  # one or two touches and it is gone
+                self.t += self.rng.uniform(*DEC["release_s"])
 
-            # --- he runs with the ball first: far with space, little when pressed
-            if not set_piece:
-                x, y = self._carry(team, carrier, x, y, under, opp_style, arrival)
+            if not set_piece and not quick:
+                # --- he runs with the ball first: far with space, little when pressed, far again if he beat
+                # his man or on the break; then he looks up
+                x, y = self._carry(team, carrier, x, y, under and not beat, opp_style, arrival,
+                                   far=beat or bool(counter))
                 self.ball_xy = (x, y)
                 prog = self._prog(x, team)
                 box = self._in_box(x, y, team)
+                self.t += self.rng.uniform(*DEC["look_s"]) / pace["tempo"]
 
-            # --- 1 v 1 duel with the nearest rival
-            if not set_piece and self.rng.random() < GEN["duel"]:
-                defender = self._pick(opp, x, y, weight_key="duel", exclude=("POR",))
-                fa, fd = self._form(carrier, "duel_win"), self._form(defender, "duel_win")
-                attacker_wins = self.rng.random() < fa / (fa + fd)
-                winner, loser = (carrier, defender) if attacker_wins else (defender, carrier)
-                self._emit("duel", team if attacker_wins else opp, winner, [x, y], outcome="won", pid=pid,
-                           opponent=loser)
-                self.t += self.rng.uniform(1.0, 2.5)
-                if not attacker_wins:
-                    return Resume("recovery", opp, x, y, defender)
+                # --- 1 v 1 duel with the nearest rival
+                if not under and self.rng.random() < GEN["duel"]:
+                    defender = self._pick(opp, x, y, weight_key="duel", exclude=("POR",))
+                    fa, fd = self._form(carrier, "duel_win"), self._form(defender, "duel_win")
+                    attacker_wins = self.rng.random() < fa / (fa + fd)
+                    winner, loser = (carrier, defender) if attacker_wins else (defender, carrier)
+                    self._emit("duel", team if attacker_wins else opp, winner, [x, y], outcome="won", pid=pid,
+                               opponent=loser)
+                    self.t += self.rng.uniform(1.0, 2.5)
+                    if not attacker_wins:
+                        return Resume("recovery", opp, x, y, defender)
 
-            # --- shoot when the chance is worth it
-            if not set_piece and prog >= DEC["shot_min_prog"]:
-                pressed = under or self._crowded(opp)
-                chance = expected_goals(prog, y, pressed, False)
-                threshold = DEC["shot_x0"] / self._skill(carrier, "disparo")
-                want = 1.0 / (1.0 + math.exp(-(chance - threshold) / DEC["shot_s"]))
-                if not box and not pressed:  # with room outside the box, a good striker of the ball tries it
-                    want += DEC["long_shot"] * self._skill(carrier, "disparo") ** 2
-                if self.rng.random() < want:
-                    return self._shot(team, carrier, x, y, pressed, pid, cross=False)
+                # --- shoot when the chance is worth it
+                if prog >= DEC["shot_min_prog"]:
+                    pressed = (under and not beat) or self._crowded(opp)
+                    chance = expected_goals(prog, y, pressed, False)
+                    threshold = DEC["shot_x0"] / self._skill(carrier, "disparo")
+                    want = 1.0 / (1.0 + math.exp(-(chance - threshold) / DEC["shot_s"]))
+                    if not box and not pressed:  # with room outside the box, a good striker of the ball tries it
+                        want += DEC["long_shot"] * self._skill(carrier, "disparo") ** 2
+                    if self.rng.random() < want:
+                        return self._shot(team, carrier, x, y, pressed, pid, cross=False)
 
-            # --- foul suffered: rare inside the box, and then a penalty
-            if not set_piece and self.rng.random() < GEN["foul"] * self._foul_factor(opp, box):
-                fouler = self._pick(opp, x, y, exclude=("POR",))
-                self._emit("foul", opp, fouler, [x, y], pid=pid, fouled=carrier)
-                if box:
-                    return self._penalty(team, pid, limit)
-                self._free_kick_pause(limit)
-                set_piece = "free_kick"
-                continue
+                # --- foul suffered: rare inside the box, and then a penalty
+                if self.t + 8 < limit and self.rng.random() < GEN["foul"] * DEC["foul_rate"] * self._foul_factor(opp, box):
+                    fouler = self._pick(opp, x, y, exclude=("POR",))
+                    self._emit("foul", opp, fouler, [x, y], pid=pid, fouled=carrier)
+                    if box:
+                        return self._penalty(team, pid, limit)
+                    self._free_kick_pause(limit)
+                    set_piece = "free_kick"
+                    continue
 
-            # --- off-ball run by a team-mate near the ball, from where he really is
-            if not set_piece and prog > 62 and self.rng.random() < DEC["run_rate"] * self._skill(carrier, "vision"):
-                runner = self._pick(team, x, y, positions=("ED", "EI", "DC", "MC"), exclude_names=(carrier,))
-                if runner:
-                    run_target = self._off_ball_run(team, opp, runner, pid) or run_target
+                # --- off-ball run by a team-mate near the ball, from where he really is
+                runs = DEC["run_rate"] * self._skill(carrier, "vision") * (DEC["counter_runs"] if counter else 1.0)
+                if prog > 62 - (25 if counter else 0) and self.rng.random() < runs:
+                    runner = self._pick(team, x, y, positions=("ED", "EI", "DC", "MC"), exclude_names=(carrier,))
+                    if runner:
+                        run_target = self._off_ball_run(team, opp, runner, pid) or run_target
 
             # --- pass
             passed_at = self.t
-            result = self._pass(team, carrier, x, y, under, pid, style, set_piece, run_target)
+            result = self._pass(team, carrier, x, y, under and not beat, pid, pace, set_piece, run_target, quick=quick)
             set_piece = None
             run_target = None
             steps += 1
+            counter = max(counter - 1, 0)
             arrival = passed_at + result["travel_s"]
-            self.t += self.rng.uniform(2.5, 5.5) / style["tempo"]
+            self.t = max(self.t, arrival) + self.rng.uniform(0.2, 0.5)  # the ball arrives and he controls it
             if result["outcome"] == "complete":
                 carrier, x, y = result["receiver"], result["end"][0], result["end"][1]
+                received = not result.get("cross")  # a cross is met with a header or a volley, or not at all
                 if result.get("cross") and self.rng.random() < DEC["cross_shot"]:
                     if self.t + 2 > limit:
                         return self._hold(team, x, y, carrier, pid, set_piece)
@@ -371,6 +461,14 @@ class DecisionGenerator(MatchGenerator):
                     self.t = arrival + self.rng.uniform(*RESTART_PAUSE_S.get(restart.kind, (6, 14)))
                     return restart
             return self._loose_ball(opp, ex, ey, passed_at, arrival)
+
+    def _release(self, carrier: str, prog: float) -> float:
+        """How often the carrier lets the ball go before the presser arrives: more with a good passer, in
+        his own half and for defenders; less for forwards who like to hold it up."""
+        position = self.roster.players[carrier].position
+        zone = 1.25 if prog < 35 else 0.8 if prog >= DEC["final_third"] else 1.0
+        role = {"POR": 1.4, "DFC": 1.25, "LD": 1.1, "LI": 1.1, "MCD": 1.1, "DC": 0.75, "ED": 0.85, "EI": 0.85}
+        return clip(DEC["release"] * self._skill(carrier, "vision") * zone * role.get(position, 1.0), 0.1, 0.9)
 
     def _hold(self, team: str, x: float, y: float, carrier: str | None, pid: int, set_piece: str | None) -> None:
         """No time left before the next moment (a substitution): play goes on from here afterwards,
@@ -404,12 +502,12 @@ class DecisionGenerator(MatchGenerator):
         """The nearest rival goes for the misplaced pass and wins it when he can really get there."""
         self.ball_xy = (ex, ey)
         winner = self._pick(opp, ex, ey, weight_key="recover")
-        reach = distance(self._spot(winner), [ex, ey]) / DEC["loose_speed"]
+        reach = distance(self._where(winner), [ex, ey]) / DEC["loose_speed"]
         self.t = max(arrival, passed_at + reach) + self.rng.uniform(0.2, 0.8)
         return Resume("recovery", opp, ex, ey, winner)
 
     def _off_ball_run(self, team: str, opp: str, runner: str, pid: int) -> tuple | None:
-        rx, ry = self._spot(runner)
+        rx, ry = self._where(runner)
         end_x = self._to_x(min(self._prog(rx, team) + 8 * self._skill(runner, "ritmo"), DEC["deepest_run"]), team)
         end_y = clip(ry + self.rng.gauss(0, 6), 1, 67)
         speed = round(self.rng.uniform(22, 31) * self._skill(runner, "ritmo") ** 0.5, 1)
@@ -418,7 +516,7 @@ class DecisionGenerator(MatchGenerator):
         if dragged:
             back = 1.0 if team == self.home else -1.0
             towards_centre = 1.0 if ry < PITCH_WIDTH / 2 else -1.0
-            dx, dy = self._spot(dragged)
+            dx, dy = self._where(dragged)
             space = round(self.rng.uniform(3.0, 8.5), 1)
             extra = {"dragged_defender_start": [round(clip(dx, 1, 104), 1), round(clip(dy, 1, 67), 1)],
                      "dragged_defender_end": [round(clip(end_x + back * 1.5, 1, 104), 1),
@@ -445,14 +543,14 @@ class DecisionGenerator(MatchGenerator):
         return self._aggression(defending) * (DEC["foul_box"] if box else 1.0)
 
     def _carry(self, team: str, carrier: str, x: float, y: float, under: bool, opp_style: dict,
-               arrival: float) -> tuple[float, float]:
+               arrival: float, far: bool = False) -> tuple[float, float]:
         prog = self._prog(x, team)
         if self.roster.players[carrier].position == "POR":
             longest = 3.0
         elif under:
             longest = GEN["carry_pressed_max"]
         else:
-            room = 0.45 if prog > 75 else 0.7 if prog > 60 else 1.0
+            room = 1.0 if far else 0.45 if prog > 75 else 0.7 if prog > 60 else 1.0
             ability = (self._skill(carrier, "ritmo") + self._skill(carrier, "regate")) / 2
             longest = min(GEN["carry_max"] * room * ability * clip(1.15 - opp_style["press"], 0.5, 1.1),
                           GEN["carry_max"])
@@ -469,7 +567,7 @@ class DecisionGenerator(MatchGenerator):
 
     # ============================================================ passing
     def _pass(self, team, carrier, x, y, under, pid, style, set_piece: str | None = None,
-              run_target: tuple | None = None) -> dict:
+              run_target: tuple | None = None, quick: bool = False) -> dict:
         prog = self._prog(x, team)
         if set_piece in ("throw_in", "corner", "kickoff"):
             return self._set_piece_pass(team, carrier, x, y, pid, set_piece)
@@ -478,7 +576,7 @@ class DecisionGenerator(MatchGenerator):
         if run_target is None and not set_piece and prog > 86:
             run_target = self._better_placed(team, carrier, x, y, under)
         lines_form = self._form(carrier, "pass_lines")
-        back = GEN["backpass"] + (GEN["backpass_pressure"] if under else 0.0)
+        back = GEN["backpass"] + (GEN["backpass_pressure"] if under and not quick else 0.0)
         is_back = (run_target is None and prog < GEN["backpass_max_prog"]
                    and self.roster.players[carrier].position != "POR" and self.rng.random() < back)
         if is_back:
@@ -487,6 +585,9 @@ class DecisionGenerator(MatchGenerator):
         elif prog > 86:  # nobody better placed: keep it, short and towards the middle
             dp = self.rng.gauss(-5, 4)
             target_y = clip(y + 0.4 * (34 - y) + self.rng.gauss(0, 8), 2, 66)
+        elif quick:  # released early: short and safe, to the nearest option
+            dp = self.rng.gauss(1, 7)
+            target_y = clip(y + self.rng.gauss(0, 10), 2, 66)
         else:
             dp = self.rng.gauss(-1 + 10 * style["directness"] * lines_form, 10)
             if prog < 20:
@@ -514,7 +615,8 @@ class DecisionGenerator(MatchGenerator):
             lines = 1 if self.rng.random() < min(0.25 * lines_form, 0.9) else 0
         dist = distance([x, y], [ex, ey])
         cross = self._prog(ex, team) >= 90 and (y < 18 or y > 50) and (20 < ey < 48)
-        hard = (0.3 * min(dist / 40, 1) + 0.25 * under + 0.25 * min(lines / 2, 1) + DEC["cross_hard"] * cross
+        pressed = DEC["quick_pass_hard"] if quick else DEC["held_pass_hard"]
+        hard = (0.3 * min(dist / 40, 1) + pressed * under + 0.25 * min(lines / 2, 1) + DEC["cross_hard"] * cross
                 + 0.2 * clip(progress / 30, 0, 1) + 0.25 * in_box(self._prog(ex, team), ey)
                 + DEC["final_third_hard"] * (prog >= DEC["final_third"]))
         success = clip(style["pass_acc"] + 0.10 - 0.35 * hard + 0.3 * (self._skill(carrier, "vision") - 1.0),
@@ -561,7 +663,7 @@ class DecisionGenerator(MatchGenerator):
         prog = self._prog(x, team)
         if xg is None:
             xg = expected_goals(prog, y, under, cross)
-        accuracy = 0.27 + 0.5 * xg + 0.2 * (self._skill(shooter, "disparo") - 1.0)
+        accuracy = DEC["accuracy"] + 0.5 * xg + 0.2 * (self._skill(shooter, "disparo") - 1.0)
         blocked_share = DEC["blocked_crowded"] if under else 0.3
         if self.rng.random() < xg:  # the score never changes this: a shot goes in with its xG
             outcome = "goal"
