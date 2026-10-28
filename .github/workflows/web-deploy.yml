@@ -39,7 +39,10 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Tests
         run: npm test
-      - name: Build
+      - name: Build, with the match without a script (data/f091)
+        # Tests above run on the scripted demo m001; the published page shows f091.
+        env:
+          BAJA_MATCH: f091
         run: npm run build
       - name: Deploy to Azure Static Web Apps
         if: github.event_name != 'pull_request' && env.HAS_TOKEN == 'true'

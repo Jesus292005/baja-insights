@@ -14,7 +14,7 @@ npm test           # tests de la lógica (planificador, selectores, fuentes)
 npm run build      # typecheck + build en web/dist
 ```
 
-Por defecto la app repite el partido de demo `data/m001` (órdenes de los agentes y marcador desde los eventos). El selector **Repetición / En vivo** de la barra superior cambia al stream desplegado en Azure.
+Por defecto la app repite el partido de demo `data/m001` (órdenes de los agentes y marcador desde los eventos). `BAJA_MATCH` elige otra carpeta de `data/`: la versión publicada usa `f091`, el partido sin guion (`.github/workflows/web-deploy.yml`). En local: `$env:BAJA_MATCH = "f091"` en PowerShell antes de `npm run dev`. El selector **Repetición / En vivo** de la barra superior cambia al stream desplegado en Azure.
 
 ## Dos vistas, un build
 
