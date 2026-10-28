@@ -17,7 +17,7 @@ from .models import VARIANT_KEYS, Story, Variants
 from .narrator import DATA_NOTES, score_text, slim
 from .verifier import Verifier
 
-VERSION = "personalizer-6"
+VERSION = "personalizer-7"
 INSTRUCTIONS = """
 You are the personalization agent of Baja-Insights. You receive a football insight in JSON, the scoreline at that
 moment and, when available, the narrator's story about why it matters. Write the on-screen title and text in four

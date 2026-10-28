@@ -13,15 +13,20 @@ from baja_agents.config import Settings
 from baja_agents.curator import MAX_PER_BLOCK, Curator
 from baja_agents.llm import LLMRunner
 from baja_agents.models import CuratorDecision, Variants
+from baja_agents.narrator import with_penalty
 from baja_agents.overlays import Scheduler
 from baja_agents.personalizer import Personalizer
 from baja_agents.pipeline import Crew
+from baja_insights.cli import read_events
 from baja_insights.roster import Roster
 
 ROOT = Path(__file__).resolve().parents[2]
 M001 = json.loads((ROOT / "data" / "m001" / "insights.json").read_text(encoding="utf-8"))
 SAMPLE = json.loads((ROOT / "mocks" / "insights_sample.json").read_text(encoding="utf-8"))
 ROSTER = Roster.load(ROOT / "mocks" / "teams.json")
+F091_EVENTS = read_events(ROOT / "data" / "f091" / "events.jsonl")  # the match without a script, in the video
+F091 = [with_penalty(i, F091_EVENTS)
+        for i in json.loads((ROOT / "data" / "f091" / "insights.json").read_text(encoding="utf-8"))]
 
 
 def by_id(insights, iid):
@@ -89,11 +94,26 @@ def jsonschema_validator():
 
 
 # --------------------------------------------------------------- templates
-@pytest.mark.parametrize("insight", [i for i in M001 + SAMPLE if i["type"] != "match_summary"],
+@pytest.mark.parametrize("insight", [i for i in M001 + SAMPLE + F091 if i["type"] != "match_summary"],
                          ids=lambda i: f"{i['match_id']}-{i['insight_id']}-{i['type']}")
 def test_templates_pass_the_checks(insight):
     for key, v in fallback.variants(insight, ROSTER.home).items():
         assert check_variant(insight, v["title"], v["text"], mode=key.split("_")[0]) == [], key
+
+
+def test_f091_penalty_and_the_run_that_touched_the_ball():
+    penalties = [i for i in F091 if i["facts"].get("penalty")]
+    assert [(i["facts"]["scorer"], i["facts"]["penalty"]) for i in penalties] == [
+        ("C. Ibarra", {"fouled": "C. Ibarra", "fouled_by": "J. Castro"})]
+    v = fallback.variants(penalties[0], ROSTER.home)
+    assert v["fan_es"] == {"title": "Gol de penal de Ibarra", "text": "Ibarra lo cobra desde el punto penal. 2-2."}
+    assert v["analyst_en"]["text"].startswith("Castro fouls Ibarra in the box")
+    # Salgado's run dragged Meza for the 1-2, but Salgado had touched the ball earlier in the move
+    run = find(F091, "goal_chain", scoreline={"home": 1, "away": 2})
+    assert run["facts"]["invisible_assist"]["touched_ball"] is True
+    texts = " ".join(t["text"] for t in fallback.variants(run, ROSTER.home).values())
+    assert "Salgado arrastró a Meza y abrió el espacio." in texts and "sin tocar" not in texts
+    assert "without touching" not in texts
 
 
 def test_fan_text_allows_one_figure_besides_the_scoreline():

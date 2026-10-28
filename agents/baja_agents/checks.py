@@ -11,6 +11,7 @@ MAX_TEXT_WORDS = 30
 MAX_TEXT_WORDS_LONG = 40  # top3 and match_keys
 LONG_TYPES = ("top3", "match_keys")
 MAX_FAN_FIGURES = 1
+PENALTY = re.compile(r"penal|penalty|from the spot", re.IGNORECASE)  # penal, penalti, penalty
 
 # Facts copied to the overlay for the UI that the agents don't need: other players' MVP scores and the
 # pitch coordinates of the goal chain. They are dropped at any depth, so they stay out of the prompts,
@@ -162,4 +163,6 @@ def check_variant(insight: dict, title: str, text: str, allowed: set[float] | No
         problems.append(f"text has more than {limit} words")
     if not title.strip() or not text.strip():
         problems.append("empty title or text")
+    if insight["facts"].get("penalty") and not PENALTY.search(f"{title} {text}"):
+        problems.append("this goal was a penalty: say so (de penal, penalty, from the spot)")
     return problems

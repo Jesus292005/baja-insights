@@ -29,6 +29,16 @@ def validate(overlays: list[dict]) -> list[str]:
     return [f"{o['overlay_id']}: {e.message}" for o in overlays for e in validator.iter_errors(o)]
 
 
+def with_events_match_id(insights: list[dict], events: list[dict] | None) -> list[dict]:
+    """The insights with the events' match_id. The engine's CLI writes them without one, so a match like f091
+    gets insights that say m001, and every graphics order copies it from its insight."""
+    if not events or not insights or insights[0]["match_id"] == events[0]["match_id"]:
+        return insights
+    match_id = events[0]["match_id"]
+    print(f"insights say {insights[0]['match_id']}, events say {match_id}: using {match_id}")
+    return [{**i, "match_id": match_id} for i in insights]
+
+
 def cmd_run(args) -> int:
     insights_path = Path(args.insights)
     insights = json.loads(insights_path.read_text(encoding="utf-8"))
@@ -41,6 +51,7 @@ def cmd_run(args) -> int:
     roster = Roster.load(args.teams)
     events = Path(args.events) if args.events else insights_path.with_name("events.jsonl")
     query = MatchQuery(read_events(events), roster) if events.exists() else None
+    insights = with_events_match_id(insights, query.events if query else None)
     crew = Crew(roster, insights[0]["match_id"], settings, offline=args.offline, query=query)
     overlays, report = asyncio.run(crew.run_match(insights))
 
@@ -60,9 +71,13 @@ def cmd_run(args) -> int:
 
 def cmd_audit(args) -> int:
     insights = json.loads(Path(args.insights).read_text(encoding="utf-8"))
+    roster = Roster.load(args.teams)
+    events = Path(args.insights).with_name("events.jsonl")
+    query = MatchQuery(read_events(events), roster) if events.exists() else None  # for the penalties
+    insights = with_events_match_id(insights, query.events if query else None)
     overlays_path = Path(args.overlays) if args.overlays else Path(args.insights).with_name("overlays.json")
     overlays = json.loads(overlays_path.read_text(encoding="utf-8"))
-    crew = Crew(Roster.load(args.teams), insights[0]["match_id"], Settings())
+    crew = Crew(roster, insights[0]["match_id"], Settings(), query=query)
     findings = asyncio.run(crew.audit(overlays, insights))
     for finding in sorted(findings, key=lambda f: f["clock"]):
         for key, problems in finding["problems"].items():

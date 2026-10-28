@@ -201,9 +201,25 @@ def _goal(f: dict) -> dict:
         else f"La jugada nace en {first}"
     start_en = f"It starts with {first}'s {labels_en[0]}" if labels_en[0] else f"It starts with {first}"
     inv = f.get("invisible_assist")
-    extra_es = f" {surname(inv['player'])} abrió el espacio sin tocar el balón." if inv else ""
-    extra_en = f" {surname(inv['player'])} opened the space without touching the ball." if inv else ""
+    if inv and inv.get("touched_ball"):  # the run opened the space, but the player had touched the ball before
+        runner = surname(inv["player"])
+        dragged = surname(inv["dragged_defender"]) if inv.get("dragged_defender") else None
+        extra_es = f" {runner} arrastró a {dragged} y abrió el espacio." if dragged else f" {runner} abrió el espacio con su desmarque."
+        extra_en = f" {runner} dragged {dragged} away and opened the space." if dragged else f" {runner}'s run opened the space."
+    else:
+        extra_es = f" {surname(inv['player'])} abrió el espacio sin tocar el balón." if inv else ""
+        extra_en = f" {surname(inv['player'])} opened the space without touching the ball." if inv else ""
     tail_es, tail_en = f". xG {f['xg']} en {f['duration_s']} s.", f". xG {f['xg']} in {f['duration_s']} s."
+    if f.get("penalty"):
+        fouled, by = surname(f["penalty"]["fouled"]), f["penalty"].get("fouled_by")
+        foul_es = f"Falta de {surname(by)} sobre {fouled}" if by else f"Falta sobre {fouled}"
+        foul_en = f"{surname(by)} fouls {fouled}" if by else f"{fouled} is fouled"
+        return {
+            "fan_es": (f"Gol de penal de {scorer}", f"{scorer} lo cobra desde el punto penal. {score}."),
+            "analyst_es": (f"Penal, {score}", f"{foul_es} en el área y {scorer} lo cobra{tail_es}"),
+            "fan_en": (f"{scorer} scores from the spot", f"{scorer} converts the penalty. {score}."),
+            "analyst_en": (f"Penalty, {score}", f"{foul_en} in the box and {scorer} converts{tail_en}"),
+        }
     return {
         "fan_es": (f"Gol de {scorer}", _short_enough(f"{start_es} y la termina {scorer}. {score}.{extra_es}",
                                                     f"La jugada nace en {first} y la termina {scorer}. {score}.{extra_es}")),
