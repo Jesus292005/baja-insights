@@ -46,7 +46,7 @@ Las seis ideas no son productos separados. Son seis formas de mostrar lo que det
 **Cómo se conectan**
 - **Un hilo narrativo.** Todo responde a quién ganó realmente el partido. El top 3 es la respuesta final y los duelos, hitos y análisis del gol son las pistas.
 - **Un lenguaje visual.** Las cartas son la pieza común. Dos cartas frente a frente en los duelos, la del destacado en los hitos, la del protagonista oculto en el gol y tres cartas en el top 3.
-- **Una puerta de entrada.** Con Pregúntale al partido se puede pedir la explicación de cualquier otra idea, por ejemplo "¿por qué Torres va primero?".
+- **Una puerta de entrada.** Con Pregúntale al partido se puede pedir la explicación de cualquier otra idea, por ejemplo "¿quién lidera la carrera al MVP?".
 - **Personalización en todas.** Cada idea tiene modo analista con números y modo aficionado con la historia, en el idioma elegido.
 
 ---
@@ -284,12 +284,15 @@ Cada criterio vale 20%.
 
 ## 13. Guion sugerido para el video de menos de 2 minutos
 
-1. **0:00 a 0:15.** La frase guía y el problema. El marcador no cuenta toda la historia.
-2. **0:15 a 0:45.** Partido en vivo con la carrera por el MVP, una carta que sube un atributo y un hito del destacado.
-3. **0:45 a 1:05.** Cambio de modo analista a aficionado y de idioma, mostrando la misma jugada contada dos veces.
-4. **1:05 a 1:25.** Pregúntale al partido con "¿por qué Torres va primero?".
-5. **1:25 a 1:45.** Gol con su análisis y el top 3 final.
-6. **1:45 a 1:55.** Diagrama de arquitectura con Foundry, Agent Framework y Azure.
+El guion final, con los minutos del partido publicado (`f091`) y la narración en inglés, está en [video-script.md](video-script.md). En resumen:
+
+1. **0:00 a 0:12.** La frase guía sobre la cancha con los 22 jugadores.
+2. **0:12 a 0:30.** La carrera del MVP: Félix toma el control con Bahía perdiendo 0-2, y una carta que sube un atributo.
+3. **0:30 a 0:52.** El gol de Ramírez con su cadena y el desmarque de Salgado, contado en modo aficionado y analista, en español y en inglés.
+4. **0:52 a 1:08.** El penal del empate: nadie escribió esta remontada.
+5. **1:08 a 1:28.** Pregúntale al partido: "Who leads the MVP race?".
+6. **1:28 a 1:42.** El top 3 final.
+7. **1:42 a 1:55.** Diagrama de arquitectura con Foundry, Agent Framework, MCP y Azure.
 
 ---
 

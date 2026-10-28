@@ -6,7 +6,14 @@ WebSocket que le manda a la interfaz el reloj, el marcador y las órdenes de gr�
 python -m baja_insights serve --data data --port 8080 --speed 60 --half-time-pause 5
 ```
 
-Carga cada `data/<partido>/events.jsonl`, con su `overlays.json` si existe. Hoy son `m001` (119 órdenes) y `f002` (sin órdenes, solo reloj y marcador). `GET /healthz` responde `ok` para las sondas de Container Apps. Cualquier otra ruta con `Upgrade: websocket` abre el stream. La interfaz usa `/ws`.
+Carga cada `data/<partido>/events.jsonl`, con su `overlays.json` si existe. Hoy son `f091`, el partido sin guion que publica la web (196 órdenes); `m001`, el partido con guion de las pruebas (196 órdenes), y `f002` (sin órdenes, solo reloj y marcador). Cualquier ruta con `Upgrade: websocket` abre el stream; la interfaz usa `/ws`.
+
+Rutas HTTP:
+
+| Ruta | Qué devuelve |
+| --- | --- |
+| `GET /healthz` | `ok`, para las sondas de Container Apps |
+| `GET /positions/<match_id>` | El `positions.json` del partido (`contracts/positions.schema.json`): los 22 jugadores y el balón a 2 cuadros por segundo. Va comprimido con gzip y con CORS abierto, y se carga una sola vez al arrancar. 404 si el partido no tiene posiciones |
 
 ## Mensajes
 
