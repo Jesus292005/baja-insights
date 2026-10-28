@@ -24,6 +24,12 @@ class DecisionsTest(unittest.TestCase):
     def test_the_scripted_demo_is_untouched(self):
         self.assertEqual(generate_match(roster(), seed=DEMO_SEED, script="m001"), load(DATA / "m001" / "events.jsonl"))
 
+    def test_the_unscripted_demo_is_up_to_date(self):
+        """data/f091 is the match without a script that the team shows: regenerate it (and its graphics
+        orders) whenever the generator changes."""
+        self.assertEqual(generate_match(roster(), seed=91, script=None, match_id="f091"),
+                         load(DATA / "f091" / "events.jsonl"))
+
     def test_free_matches_follow_the_contract(self):
         v = validator("event")
         if v is None:
