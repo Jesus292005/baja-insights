@@ -7,17 +7,17 @@ Todo vive en la suscripción Azure for Students del integrante 2, junto al recur
 | Grupo de recursos | `rg-baja-insights` | Región `centralus` |
 | Foundry | `diegomanzo-2526-resource`, proyecto `diegomanzo-2526` | Modelo `gpt-4.1-mini-baja-insights` |
 | Entorno de Container Apps | `baja-env` | Modo `WorkloadProfiles`, perfil `Consumption`, con su Log Analytics `workspace-rgbajainsightsA2tF` |
-| Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-1cef039` (las 168 órdenes de `m001`, con las coordenadas de la cadena del gol de los PR #32 y #33), una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
-| Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-c28f8d3` (PR #38), con `gpt-4.1-mini-baja-insights`. Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
+| Servicio de stream | `baja-stream` | Imagen `ghcr.io/jesus292005/baja-stream:sha-e2e2786` (merge del PR #58): `m001`, el partido con guion, y `f091`, el partido sin guion, con 196 órdenes cada uno, una réplica fija (`min` y `max` en 1), 0.25 vCPU y 0.5 GiB |
+| Servicio del chat | `baja-chat` | `POST /api/ask`, `POST /api/chat-overlay` y `POST /mcp`, imagen `ghcr.io/jesus292005/baja-chat:sha-e2e2786` (merge del PR #58: respuestas en Markdown, penales y el ranking del MVP), conoce `m001` y `f091`, con `gpt-4.1-mini-baja-insights`. Una réplica fija (`min` y `max` en 1), 0.5 vCPU y 1 GiB, con identidad del sistema y el rol Foundry User |
 | Interfaz web | `baja-web` | Azure Static Web Apps, plan Free (sin costo), `centralus`. Sin repo ligado: se publica con el token de despliegue desde GitHub Actions (`web-deploy.yml`). En vivo desde el merge `cf3e5bd` |
 
 **URL del stream:** `wss://baja-stream.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/ws`
 
 **URL del chat:** `https://baja-chat.wonderfulmoss-802940a2.centralus.azurecontainerapps.io/api/ask`
 
-Probado en Azure: `/healthz` responde `ok`, una petición inválida recibe 400, y las preguntas reales responden con la identidad administrada (sin claves), cumpliendo `chat.schema.json`. Una pregunta nueva tarda de 3 a 9 s, y una repetida sale de la caché en milisegundos.
+Probado en Azure: `/healthz` responde `ok`, una petición inválida recibe 400, y las preguntas reales responden con la identidad administrada (sin claves), cumpliendo `chat.schema.json`. Con `sha-e2e2786` se probó `f091`: el líder del MVP a los 60:00 y el 2-2 de penal. Una pregunta nueva tarda de 3 a 9 s, y una repetida sale de la caché en milisegundos.
 
-Probado: `/healthz` responde `ok`, el WebSocket abre y, al suscribirse a `m001`, llegan `state` y un `clock` por segundo. Todos los mensajes validan con `stream.schema.json`.
+Probado: `/healthz` responde `ok`, el WebSocket abre y, al suscribirse a `m001` o a `f091`, llegan `state` y un `clock` por segundo. `/positions/m001` y `/positions/f091` responden 200. Todos los mensajes validan con `stream.schema.json`.
 
 ## No usar un entorno «express»
 
